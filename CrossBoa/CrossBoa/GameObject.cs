@@ -35,9 +35,9 @@ namespace CrossBoa
         /// <summary>
         /// A rectangle containing this GameObject's position and size
         /// </summary>
-        public Rectangle Rect
+        public Rectangle Rectangle
         {
-            get { return new Rectangle((int)position.X, (int)position.Y, size.X, size.Y); }
+            get { return new Rectangle(position.ToPoint(), size); }
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace CrossBoa
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite, Rect, Color.White);
+            spriteBatch.Draw(sprite, Rectangle, Color.White);
         }
     }
 }
