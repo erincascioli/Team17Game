@@ -12,7 +12,9 @@ namespace CrossBoa
 
         // Assets
         private Texture2D whiteSquareSprite;
+        private Texture2D tempCbSprite;
         private SpriteFont arial32;
+        private CrossBow crossbow;
 
 
 
@@ -29,7 +31,6 @@ namespace CrossBoa
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            
 
 
 
@@ -44,6 +45,9 @@ namespace CrossBoa
             // TODO: use this.Content to load your game content here
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
             arial32 = Content.Load<SpriteFont>("Arial32");
+
+
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -62,7 +66,6 @@ namespace CrossBoa
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-
 
 
 
