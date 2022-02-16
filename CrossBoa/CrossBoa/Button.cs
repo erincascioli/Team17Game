@@ -1,4 +1,6 @@
-﻿using System;
+﻿/*
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -91,7 +93,7 @@ namespace CrossBoa
         /// Restrictions: spritebatch.Draw must have been called already
         /// </summary>
         /// <param name="spriteBatch"></param>
-        /*public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             if (hovering == true)
             {
@@ -101,17 +103,19 @@ namespace CrossBoa
             {
                 spriteBatch.Draw(offButtonTexture, button, Color.White);
             }
-        }*/
+        }
 
         /// <summary>
         /// Purpose: Updates changing variables of object every frame
         /// Restrictions: should likley be called before any other class method
         /// </summary>
         /// <param name="cursor"></param>
-        /*public override void Update(MouseState cursor)
+        public override void Update(MouseState cursor)
         {
             mouse = cursor;
             hovering = isMouseOver();
-        }*/
+        }
     }
 }
+
+*/
