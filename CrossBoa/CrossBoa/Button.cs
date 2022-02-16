@@ -17,7 +17,10 @@ namespace CrossBoa
         private MouseState mouse;
         private MouseState previousState;
         private bool isInteractable;
+        private bool hovering;
         private Rectangle button;
+        private Texture2D onButtonTexture;
+        private Texture2D offButtonTexture;
 
         public bool IsInteractable
         {
@@ -25,19 +28,23 @@ namespace CrossBoa
         }
 
         // Already established location
-        public Button(MouseState cursor, bool unLocked, Rectangle rectangle) : base()
+        public Button(Texture2D onImage, Texture2D offImage, MouseState cursor, bool unLocked, Rectangle rectangle) : base()
         {
             mouse = cursor;
             isInteractable = unLocked;
             button = rectangle;
+            onButtonTexture = onImage;
+            offButtonTexture = offImage;
         }
 
         // Creates own rectangle
-        public Button(MouseState cursor, bool unLocked, int x, int y, int width, int height) : base()
+        public Button(Texture2D onImage, Texture2D offImage, MouseState cursor, bool unLocked, int x, int y, int width, int height) : base()
         {
             mouse = cursor;
             isInteractable = unLocked;
             button = new Rectangle(x, y, width, height);
+            onButtonTexture = onImage;
+            offButtonTexture = offImage;
         }
 
         /// <summary>
@@ -63,9 +70,9 @@ namespace CrossBoa
         /// Purpose: Determines if a button was clicked
         /// </summary>
         /// <returns></returns>
-        bool hasBeenPressed()
+        public bool hasBeenPressed()
         {
-            if (isMouseOver() && previousState.LeftButton == ButtonState.Pressed && mouse.LeftButton == ButtonState.Released)
+            if (hovering && previousState.LeftButton == ButtonState.Pressed && mouse.LeftButton == ButtonState.Released)
             {
                 previousState = mouse;
 
@@ -78,5 +85,33 @@ namespace CrossBoa
                 return false;
             }
         }
+
+        /// <summary>
+        /// Purpose: Draws button to the screen
+        /// Restrictions: spritebatch.Draw must have been called already
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /*public override void Draw(SpriteBatch spriteBatch)
+        {
+            if (hovering == true)
+            {
+                spriteBatch.Draw(onButtonTexture, button, Color.White);
+            }
+            else
+            {
+                spriteBatch.Draw(offButtonTexture, button, Color.White);
+            }
+        }*/
+
+        /// <summary>
+        /// Purpose: Updates changing variables of object every frame
+        /// Restrictions: should likley be called before any other class method
+        /// </summary>
+        /// <param name="cursor"></param>
+        /*public override void Update(MouseState cursor)
+        {
+            mouse = cursor;
+            hovering = isMouseOver();
+        }*/
     }
 }
