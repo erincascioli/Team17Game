@@ -67,9 +67,9 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Purpose: Determines if a button was clicked
+        /// Purpose: Determines if a button was clicked during this frame
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true if the mouse button was released on this frame; otherwise returns false</returns>
         public bool hasBeenPressed()
         {
             if (hovering && previousState.LeftButton == ButtonState.Pressed && mouse.LeftButton == ButtonState.Released)
