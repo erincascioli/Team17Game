@@ -120,8 +120,8 @@ namespace CrossBoa
         /// </summary>
         /// <param name="sprite">The sprite for this GameObject</param>
         /// <param name="position">The GameObject's position</param>
-        /// <param name="width">The width of this GameObject in </param>
-        /// <param name="height"></param>
+        /// <param name="width">The width of this GameObject in pixels</param>
+        /// <param name="height">The height of this GameObject in pixels</param>
         public GameObject(Texture2D sprite, Vector2 position, int width, int height)
         {
             this.sprite = sprite;
@@ -135,8 +135,8 @@ namespace CrossBoa
         /// <param name="sprite">The sprite for this GameObject</param>
         /// <param name="X">The X position of this GameObject</param>
         /// <param name="Y">The X position of this GameObject</param>
-        /// <param name="width">The width of this GameObject in </param>
-        /// <param name="height"></param>
+        /// <param name="width">The width of this GameObject in pixels</param>
+        /// <param name="height">The height of this GameObject in pixels</param>
         public GameObject(Texture2D sprite, float X, float Y, int width, int height)
         {
             this.sprite = sprite;
@@ -164,8 +164,8 @@ namespace CrossBoa
         /// <param name="sprite">The sprite for this GameObject</param>
         /// <param name="X">The X position of this GameObject</param>
         /// <param name="Y">The X position of this GameObject</param>
-        /// <param name="width">The width of this GameObject in </param>
-        /// <param name="height"></param>
+        /// <param name="width">The width of this GameObject in pixels</param>
+        /// <param name="height">The height of this GameObject in pixels</param>
         public GameObject(Texture2D sprite, int X, int Y, int width, int height)
         {
             this.sprite = sprite;
