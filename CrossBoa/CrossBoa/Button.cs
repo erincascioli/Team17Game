@@ -1,6 +1,4 @@
-﻿/*
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -29,8 +27,16 @@ namespace CrossBoa
             get { return isInteractable; }
         }
 
-        // Already established location
-        public Button(Texture2D onImage, Texture2D offImage, MouseState cursor, bool unLocked, Rectangle rectangle) : base()
+        /// <summary>
+        /// Used for an already established location
+        /// </summary>
+        /// <param name="onImage"></param>
+        /// <param name="offImage"></param>
+        /// <param name="cursor"></param>
+        /// <param name="unLocked"></param>
+        /// <param name="rectangle"></param>
+        public Button(Texture2D onImage, Texture2D offImage, MouseState cursor, bool unLocked, Rectangle rectangle) 
+            : base(offImage,  rectangle)
         {
             mouse = cursor;
             isInteractable = unLocked;
@@ -39,8 +45,19 @@ namespace CrossBoa
             offButtonTexture = offImage;
         }
 
-        // Creates own rectangle
-        public Button(Texture2D onImage, Texture2D offImage, MouseState cursor, bool unLocked, int x, int y, int width, int height) : base()
+        /// <summary>
+        /// Let's gameObject create it's own rectangle
+        /// </summary>
+        /// <param name="onImage"></param>
+        /// <param name="offImage"></param>
+        /// <param name="cursor"></param>
+        /// <param name="unLocked"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        public Button(Texture2D onImage, Texture2D offImage, MouseState cursor, bool unLocked, int x, int y, int width, int height) 
+            : base(offImage, x, y, width, height)
         {
             mouse = cursor;
             isInteractable = unLocked;
@@ -54,7 +71,7 @@ namespace CrossBoa
         /// Restrictions: none
         /// </summary>
         /// <returns></returns>
-        public bool isMouseOver()
+        public bool IsMouseOver()
         {
             if (mouse.X > button.X && mouse.X < button.X + button.Width && 
                 mouse.Y > button.Y && mouse.Y < button.Y + button.Height)
@@ -72,7 +89,7 @@ namespace CrossBoa
         /// Purpose: Determines if a button was clicked during this frame
         /// </summary>
         /// <returns>true if the mouse button was released on this frame; otherwise returns false</returns>
-        public bool hasBeenPressed()
+        public bool HasBeenPressed()
         {
             if (hovering && previousState.LeftButton == ButtonState.Pressed && mouse.LeftButton == ButtonState.Released)
             {
@@ -110,12 +127,10 @@ namespace CrossBoa
         /// Restrictions: should likley be called before any other class method
         /// </summary>
         /// <param name="cursor"></param>
-        public override void Update(MouseState cursor)
+        /*public override void Update(MouseState cursor)
         {
             mouse = cursor;
             hovering = isMouseOver();
-        }
+        }*/
     }
 }
-
-*/
