@@ -177,6 +177,15 @@ namespace CrossBoa
         //   Methods
         // -----------
         /// <summary>
+        /// Empty Update() method to allow for Polymorphism
+        /// </summary>
+        /// <param name="gameTime">A reference to the GameTime</param>
+        public virtual void Update(GameTime gameTime)
+        {
+
+        }
+
+        /// <summary>
         /// Draws this GameObject to the screen
         /// </summary>
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
