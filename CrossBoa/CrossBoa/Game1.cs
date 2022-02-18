@@ -36,6 +36,8 @@ namespace CrossBoa
             // TODO: Add your initialization logic here
             gameObjectList = new List<GameObject>();
 
+            LevelManager levelManager = new LevelManager(Content);
+
 
 
             base.Initialize();
