@@ -20,24 +20,36 @@ namespace CrossBoa
         private List<string[]> tileList;
         private List<GameObject> levelTiles;
         private StreamReader reader;
+        private const int blockWidth = 16;
+        private const int blockHeight = 16;
+        private bool isInteractable;
+        Microsoft.Xna.Framework.Content.ContentManager Content;
 
-        public LevelManager()
+        public bool IsInteractable
+        {
+            get { return isInteractable; }
+        }
+
+        public LevelManager(Microsoft.Xna.Framework.Content.ContentManager loading)
         {
             levelTiles = new List<GameObject>();
             tileList = new List<string[]>();
+            Content = loading;
 
             // tileList is immediatly filled as it's data is needed
             // before any other method can be made
             try
             {
-                reader = new StreamReader("../../LevelObjectList.txt");
+                reader = new StreamReader("../../../LevelObjectList.txt");
 
                 // Gets the default instructions out of the file
                 string[] fileData = reader.ReadLine().Split(',');
                 
-                while ((fileData = reader.ReadLine().Split(',')) != null)
+                while (!reader.EndOfStream)
                 {
-
+                    fileData = reader.ReadLine().Split(',');
+                    // Data for each basic block type is added
+                    tileList.Add(fileData);
                 }
             }
             catch (Exception e)
@@ -58,18 +70,26 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Purpose: fills different lists with tiles
-        /// Restrictions: Must have a list of positions and list of assets set up to this specific pattern
+        /// Purpose: Fills level with tiles
+        /// Restrictions: Given file must exist and be accurate
         /// </summary>
         /// <param name="i"></param>
-        /*public void LoadLevel(string fileName, List<Texture2D> assets, List<Rectangle> position)
+        public void LoadLevel(string fileName)
         {
             try
             {
                 // file is accessed by the reader
                 reader = new StreamReader("../../" + fileName + ".txt");
 
-                string[] symbolInfo = reader.ReadLine().Split(',');
+                // Data for table size is stored
+                int numColumns;
+                int numRows;
+
+                string[] tableInfo = reader.ReadLine().Split(',');
+                int.TryParse(tableInfo[0], out numColumns);
+                int.TryParse(tableInfo[1], out numRows);
+                
+
                 List<string> tableState = new List<string>();
 
                 // Rest of the file is input into the list
@@ -79,64 +99,39 @@ namespace CrossBoa
                     tableState.Add(line);
                 }
 
-
                 // Reader is closed to prevent program self destruction
                 reader.Close();
 
                 // List is turned into a long string to make parsing easier
                 string parsingString = "";
-
-
                 for (int l = 0; l < tableState.Count; l++)
                 {
                     parsingString = string.Format(parsingString + tableState[l]);
                 }
 
-                // Program currently allows for a level to use 10 different at a time
-                // Extend the loop if more are needed (very unlikely)
-                // Alternates between background and object tiles
-                // Useless placeholders can be added if skipping is required
-                for (int i = 0; i < parsingString.Length; i++)
+                int stringIndex = 0;
+
+                // All levelObjects are put into a single list
+                for(int yIterator = 0; yIterator < numRows; yIterator++)
                 {
-                    if (parsingString[i] == char.Parse(symbolInfo[0]))
+                    for (int xIterator = 0; xIterator < numColumns; xIterator++)
                     {
-                        backgroundTiles.Add(new GameObject(assets[0], position[i]));
-                    }
-                    else if (parsingString[i] == char.Parse(symbolInfo[1])) 
-                    {
-                        obstacleTiles.Add(new GameObject(assets[1], position[i]));
-                    }
-                    else if (parsingString[i] == char.Parse(symbolInfo[2]))
-                    {
-                        backgroundTiles.Add(new GameObject(assets[2], position[i]));
-                    }
-                    else if (symbolInfo.Length >= 3 && parsingString[i] == char.Parse(symbolInfo[3]))
-                    {
-                        obstacleTiles.Add(new GameObject(assets[3], position[i]));
-                    }
-                    else if (symbolInfo.Length >= 4 && parsingString[i] == char.Parse(symbolInfo[4]))
-                    {
-                        backgroundTiles.Add(new GameObject(assets[4], position[i]));
-                    }
-                    else if (symbolInfo.Length >= 5 && parsingString[i] == char.Parse(symbolInfo[5]))
-                    {
-                        obstacleTiles.Add(new GameObject(assets[5], position[i]));
-                    }
-                    else if (symbolInfo.Length >= 6 && parsingString[i] == char.Parse(symbolInfo[6]))
-                    {
-                        backgroundTiles.Add(new GameObject(assets[6], position[i]));
-                    }
-                    else if (symbolInfo.Length >= 7 && parsingString[i] == char.Parse(symbolInfo[7]))
-                    {
-                        obstacleTiles.Add(new GameObject(assets[7], position[i]));
-                    }
-                    else if (symbolInfo.Length >= 8 && parsingString[i] == char.Parse(symbolInfo[8]))
-                    {
-                        backgroundTiles.Add(new GameObject(assets[8], position[i]));
-                    }
-                    else if (symbolInfo.Length >= 9 && parsingString[i] == char.Parse(symbolInfo[9]))
-                    {
-                        obstacleTiles.Add(new GameObject(assets[9], position[i]));
+                        foreach (string[] i in tileList)
+                        {
+                            if (char.Parse(i[2]) == parsingString[stringIndex])
+                            {
+                                levelTiles.Add(new GameObject(             
+                                    Content.Load<Texture2D>(i[0]),        // Asset
+                                    new Rectangle(xIterator * blockWidth, // X position
+                                    yIterator * blockHeight,              // Y position
+                                    blockWidth, blockHeight)));           // Constant dimensions
+
+                                levelTiles[levelTiles.Count - 1].
+                            }
+                        }
+
+                        // Moves on to next tile
+                        stringIndex++;
                     }
                 }
             }
@@ -157,7 +152,7 @@ namespace CrossBoa
                     // This block is required for the try block
                 }
             }
-        }*/
+        }
 
         /// <summary>
         /// Purpose: Draws the level to the screen each frame

@@ -32,6 +32,8 @@ namespace CrossBoa
         {
             // TODO: Add your initialization logic here
 
+            LevelManager levelManager = new LevelManager(Content);
+
 
 
 
