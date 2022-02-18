@@ -18,21 +18,16 @@ namespace CrossBoa
     public class LevelManager
     {
         private List<string[]> tileList;
-        private List<GameObject> levelTiles;
+        private List<Tile> levelTiles;
         private StreamReader reader;
         private const int blockWidth = 16;
         private const int blockHeight = 16;
-        private bool isInteractable;
         Microsoft.Xna.Framework.Content.ContentManager Content;
 
-        public bool IsInteractable
-        {
-            get { return isInteractable; }
-        }
 
         public LevelManager(Microsoft.Xna.Framework.Content.ContentManager loading)
         {
-            levelTiles = new List<GameObject>();
+            levelTiles = new List<Tile>();
             tileList = new List<string[]>();
             Content = loading;
 
@@ -72,6 +67,7 @@ namespace CrossBoa
         /// <summary>
         /// Purpose: Fills level with tiles
         /// Restrictions: Given file must exist and be accurate
+        ///               16 x 16 is the only accepted file size at the moment
         /// </summary>
         /// <param name="i"></param>
         public void LoadLevel(string fileName)
@@ -85,12 +81,9 @@ namespace CrossBoa
                 reader = new StreamReader("../../" + fileName + ".txt");
 
                 // Data for table size is stored
-                int numColumns;
-                int numRows;
-
                 string[] tableInfo = reader.ReadLine().Split(',');
-                int.TryParse(tableInfo[0], out numColumns);
-                int.TryParse(tableInfo[1], out numRows);
+                int.TryParse(tableInfo[0], out int numColumns);
+                int.TryParse(tableInfo[1], out int numRows);
                 
 
                 List<string> tableState = new List<string>();
@@ -123,13 +116,12 @@ namespace CrossBoa
                         {
                             if (char.Parse(i[2]) == parsingString[stringIndex])
                             {
-                                levelTiles.Add(new GameObject(             
+                                levelTiles.Add(new Tile(             
                                     Content.Load<Texture2D>(i[0]),        // Asset
                                     new Rectangle(xIterator * blockWidth, // X position
                                     yIterator * blockHeight,              // Y position
-                                    blockWidth, blockHeight)));           // Constant dimensions
-
-                                // levelTiles[levelTiles.Count - 1].
+                                    blockWidth, blockHeight),             // Constant dimensions
+                                    bool.Parse(i[1])));                   // IsInteractable   
                             }
                         }
 
