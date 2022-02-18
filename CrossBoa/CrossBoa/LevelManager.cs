@@ -76,6 +76,9 @@ namespace CrossBoa
         /// <param name="i"></param>
         public void LoadLevel(string fileName)
         {
+            // Level is cleared so that the next may be loaded
+            levelTiles.Clear();
+
             try
             {
                 // file is accessed by the reader
@@ -126,7 +129,7 @@ namespace CrossBoa
                                     yIterator * blockHeight,              // Y position
                                     blockWidth, blockHeight)));           // Constant dimensions
 
-                                levelTiles[levelTiles.Count - 1].
+                                // levelTiles[levelTiles.Count - 1].
                             }
                         }
 
@@ -168,13 +171,5 @@ namespace CrossBoa
                     Color.White);   // Background color
             }
         }
-
-        /// <summary>
-        /// Purpose: Just needs to be active to comply with abstract method
-        /// Restrictions: none
-        /// </summary>
-        /*public override void Update()
-        {
-        }*/
     }
 }
