@@ -57,7 +57,7 @@ namespace CrossBoa
             // CREDIT TO https://stackoverflow.com/questions/2276855/xna-2d-vector-angles-whats-the-correct-way-to-calculate
             get { return MathF.Atan2(velocity.Y, velocity.X); }
 
-            // Creates a new normalized vector based on the angle, then multiplies it by the old vector's speed.
+            // Creates a new normal vector based on the angle, then multiplies it by the old vector's speed.
             set { velocity = (new Vector2(MathF.Cos(value), MathF.Sin(value))) * Speed; }
         }
 
@@ -222,7 +222,8 @@ namespace CrossBoa
         {
             // Get a friction vector that is facing the opposite direction of the object's movement
             frictionVector = velocity * -1;
-            frictionVector.Normalize();
+            if (frictionVector != Vector2.Zero)
+                frictionVector.Normalize();
             frictionVector *= frictionForce;
 
             // Apply the vector to the acceleration
