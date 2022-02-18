@@ -269,14 +269,9 @@ namespace CrossBoa
             velocity += netAcceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Cap velocity
-            if (velocity.X > maxSpeed)
-                velocity.X = maxSpeed;
-            if (velocity.Y > maxSpeed)
-                velocity.Y = maxSpeed;
-            if (velocity.X < -maxSpeed)
-                velocity.X = -maxSpeed;
-            if (velocity.Y < -maxSpeed)
-                velocity.Y = -maxSpeed;
+            if (Speed > maxSpeed)
+                Speed = maxSpeed;
+
 
             // Update position based on velocity
             position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;

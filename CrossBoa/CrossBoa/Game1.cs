@@ -60,11 +60,10 @@ namespace CrossBoa
                 250,
                 64,
                 64,
-                250,
-                50,
-                150
+                5000,
+                300,
+                2500
             );
-
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
