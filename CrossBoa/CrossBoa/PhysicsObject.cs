@@ -210,7 +210,7 @@ namespace CrossBoa
         /// Applies a friction force to the object in the opposite direction of its motion
         /// <para>Stops object from moving if it's moving too slowly</para>
         /// </summary>
-        public void ApplyFriction()
+        public void ApplyFriction(GameTime gameTime)
         {
             // Get a friction vector that is facing the opposite direction of the object's movement
             Vector2 frictionVector = velocity * -1;
@@ -218,15 +218,20 @@ namespace CrossBoa
                 frictionVector.Normalize();
             frictionVector *= friction;
 
-            // If the friction would reverse the object's movement, stop the object from moving in that direction instead
-            int xSign = MathF.Sign(frictionVector.X);
-            int ySign = MathF.Sign(frictionVector.Y);
+            Vector2 frictionApplied = velocity + (frictionVector * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
-            bool isFrictionXOvershooting = xSign == MathF.Sign(velocity.X) && xSign != 0;
-            bool isFrictionYOvershooting = ySign == MathF.Sign(velocity.Y) && ySign != 0;
+            // If the friction would reverse the object's movement, stop the object from moving in that direction instead
+            int xSign = MathF.Sign(frictionApplied.X);
+            int ySign = MathF.Sign(frictionApplied.Y);
+
+            bool isFrictionXOvershooting = xSign != MathF.Sign(velocity.X) && xSign != 0;
+            bool isFrictionYOvershooting = ySign != MathF.Sign(velocity.Y) && ySign != 0;
 
             if (isFrictionXOvershooting || isFrictionYOvershooting)
-                frictionVector = Vector2.Zero;
+            {
+                frictionVector = Vector2.Zero;         
+                velocity = Vector2.Zero; 
+            }
 
             // Apply the vector to the acceleration
             netAcceleration += frictionVector;
