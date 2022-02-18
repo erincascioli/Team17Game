@@ -1,0 +1,2 @@
+asset, isInteractable, file character, This line is just the guide,
+"Block", false, 'x',  

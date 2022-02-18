@@ -127,10 +127,11 @@ namespace CrossBoa
         /// Restrictions: should likley be called before any other class method
         /// </summary>
         /// <param name="cursor"></param>
-        /*public override void Update(MouseState cursor)
+        public override void Update(GameTime gameTime)
         {
+            MouseState cursor = Mouse.GetState();
             mouse = cursor;
-            hovering = isMouseOver();
-        }*/
+            hovering = IsMouseOver();
+        }
     }
 }

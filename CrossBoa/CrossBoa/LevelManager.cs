@@ -17,14 +17,44 @@ namespace CrossBoa
 {
     public class LevelManager
     {
-        private List<GameObject> backgroundTiles;
-        private List<GameObject> obstacleTiles;
+        private List<string[]> tileList;
+        private List<GameObject> levelTiles;
         private StreamReader reader;
 
         public LevelManager()
         {
-            backgroundTiles = new List<GameObject>();
-            obstacleTiles = new List<GameObject>();
+            levelTiles = new List<GameObject>();
+            tileList = new List<string[]>();
+
+            // tileList is immediatly filled as it's data is needed
+            // before any other method can be made
+            try
+            {
+                reader = new StreamReader("../../LevelObjectList.txt");
+
+                // Gets the default instructions out of the file
+                string[] fileData = reader.ReadLine().Split(',');
+                
+                while ((fileData = reader.ReadLine().Split(',')) != null)
+                {
+
+                }
+            }
+            catch (Exception e)
+            {
+                // Specific error can be read in the debug menu
+                Console.WriteLine("Error: {0}", e);
+
+                try
+                {
+                    // Just in case it's open
+                    reader.Close();
+                }
+                catch
+                {
+                    // Needed in case the file failed to open or already closed
+                }
+            }
         }
 
         /// <summary>
@@ -32,7 +62,7 @@ namespace CrossBoa
         /// Restrictions: Must have a list of positions and list of assets set up to this specific pattern
         /// </summary>
         /// <param name="i"></param>
-        public void LoadLevel(string fileName, List<Texture2D> assets, List<Rectangle> position)
+        /*public void LoadLevel(string fileName, List<Texture2D> assets, List<Rectangle> position)
         {
             try
             {
@@ -127,6 +157,29 @@ namespace CrossBoa
                     // This block is required for the try block
                 }
             }
+        }*/
+
+        /// <summary>
+        /// Purpose: Draws the level to the screen each frame
+        /// Restrictions: Level must have been loaded in already
+        /// </summary>
+        /// <param name="sb"></param>
+        public void Draw(SpriteBatch sb)
+        {
+            foreach (GameObject i in levelTiles)
+            {
+                sb.Draw(i.Sprite,   // Asset
+                    i.Position,     // Location
+                    Color.White);   // Background color
+            }
         }
+
+        /// <summary>
+        /// Purpose: Just needs to be active to comply with abstract method
+        /// Restrictions: none
+        /// </summary>
+        /*public override void Update()
+        {
+        }*/
     }
 }
