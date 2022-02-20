@@ -7,6 +7,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
+    /// <summary>
+    /// Author: Donovan Scullion
+    /// Purpose: Tracks collisions between objects
+    /// Restrictions: All fields must be instantiated before
+    ///               this class is first used, I think.
+    /// </summary>
     public static class CollisionManager
     {
         private static Player player;
@@ -20,6 +26,20 @@ namespace CrossBoa
             get { return player; }
         }
 
-        //static
+        static CrossBow Crossbow
+        {
+            get { return crossbow; }
+        }
+
+        static Projectile Arrow
+        {
+            get { return arrow; }
+            set { arrow = value; }
+        }
+
+        static CollisionManager()
+        {
+
+        }
     }
 }

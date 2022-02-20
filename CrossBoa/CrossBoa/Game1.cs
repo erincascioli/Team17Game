@@ -8,8 +8,10 @@ namespace CrossBoa
 {
     public class Game1 : Game
     {
+        // Managers
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
 
         // Assets
         private Texture2D whiteSquareSprite;
@@ -35,8 +37,6 @@ namespace CrossBoa
         {
             // TODO: Add your initialization logic here
             gameObjectList = new List<GameObject>();
-
-            LevelManager levelManager = new LevelManager(Content);
 
 
 
