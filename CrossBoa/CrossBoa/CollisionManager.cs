@@ -14,5 +14,12 @@ namespace CrossBoa
         private static Projectile arrow;
         private static List<Enemy> enemies;
         private static List<Projectile> enemyProjectiles;
+
+        static Player Player
+        {
+            get { return player; }
+        }
+
+        //static
     }
 }

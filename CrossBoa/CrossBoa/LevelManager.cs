@@ -15,21 +15,20 @@ using Microsoft.Xna.Framework.Input;
 /// </summary>
 namespace CrossBoa
 {
-    public class LevelManager
+    public static class LevelManager
     {
-        private List<string[]> tileList;
-        private List<Tile> levelTiles;
-        private StreamReader reader;
+        private static List<string[]> tileList;
+        private static List<Tile> levelTiles;
+        private static StreamReader reader;
         private const int blockWidth = 16;
         private const int blockHeight = 16;
-        Microsoft.Xna.Framework.Content.ContentManager Content;
+        private static Microsoft.Xna.Framework.Content.ContentManager Content;
 
 
-        public LevelManager(Microsoft.Xna.Framework.Content.ContentManager loading)
+        static LevelManager()
         {
             levelTiles = new List<Tile>();
             tileList = new List<string[]>();
-            Content = loading;
 
             // tileList is immediatly filled as it's data is needed
             // before any other method can be made
@@ -70,7 +69,7 @@ namespace CrossBoa
         ///               16 x 16 is the only accepted file size at the moment
         /// </summary>
         /// <param name="i"></param>
-        public void LoadLevel(string fileName)
+        public static void LoadLevel(string fileName)
         {
             // Level is cleared so that the next may be loaded
             levelTiles.Clear();
@@ -154,7 +153,7 @@ namespace CrossBoa
         /// Restrictions: Level must have been loaded in already
         /// </summary>
         /// <param name="sb"></param>
-        public void Draw(SpriteBatch sb)
+        public static void Draw(SpriteBatch sb)
         {
             foreach (GameObject i in levelTiles)
             {
