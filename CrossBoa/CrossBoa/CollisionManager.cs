@@ -11,7 +11,8 @@ namespace CrossBoa
     {
         private static Player player;
         private static CrossBow crossbow;
-        private static Projectile projectile;
-
+        private static Projectile arrow;
+        private static List<Enemy> enemies;
+        private static List<Projectile> enemyProjectiles;
     }
 }
