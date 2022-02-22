@@ -38,6 +38,9 @@ namespace CrossBoa
             // TODO: Add your initialization logic here
             gameObjectList = new List<GameObject>();
 
+            _graphics.PreferredBackBufferWidth = 1600;
+            _graphics.PreferredBackBufferHeight = 900;
+            _graphics.ApplyChanges();
 
 
             base.Initialize();
@@ -56,13 +59,13 @@ namespace CrossBoa
             // Load objects
             player = new Player(
                 whiteSquareSprite,
-                250,
-                250,
-                64,
-                64,
+                new Rectangle(250, 250, 64, 64),
                 5000,
                 300,
-                2500
+                2500,
+                3,
+                3.5f,
+                10
             );
 
             // Add all GameObjects to GameObject list

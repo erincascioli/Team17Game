@@ -238,25 +238,26 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Applies a force to the object based on its movementForce
+        /// Applies a force to the object
         /// </summary>
-        /// <param name="direction">The direction this object should move toward in radians</param>
-        public virtual void ApplyMovementForce(float direction)
+        /// <param name="direction">The direction this object should be pushed toward in radians</param>
+        /// <param name="magnitude">How hard the object should be moved</param>
+        public virtual void ApplyForce(float direction, float magnitude)
         {
             // Create a new vector based on the direction
-            Vector2 movementVector = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * movementForce;
+            Vector2 movementVector = new Vector2(MathF.Cos(direction), MathF.Sin(direction));
 
             // Apply the vector to the net acceleration
             netAcceleration += movementVector;
         }
 
         /// <summary>
-        /// Applies a force to the object based on its movementForce
+        /// Applies a force to the object
         /// </summary>
-        /// <param name="direction">A normal vector representing the object to move this object</param>
-        public virtual void ApplyMovementForce(Vector2 direction)
+        /// <param name="force">A vector representing how hard and in what direction to push the object</param>
+        public virtual void ApplyForce(Vector2 force)
         {
-            netAcceleration += direction * movementForce;
+            netAcceleration += force;
         }
 
         /// <summary>
