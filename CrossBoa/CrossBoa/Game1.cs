@@ -21,6 +21,7 @@ namespace CrossBoa
         // Objects
         private CrossBow crossbow;
         private Player player;
+        private Slime slime;
 
         private List<GameObject> gameObjectList;
 
@@ -68,15 +69,22 @@ namespace CrossBoa
                 3.5f,
                 10
             );
-
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
                 0);
+            slime = new Slime(
+                3,
+                whiteSquareSprite,
+                new Rectangle(1250, 1250, 64, 64),
+                10,
+                3f,
+                4f);
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow);
+            gameObjectList.Add(slime);
         }
 
         protected override void Update(GameTime gameTime)
@@ -89,6 +97,7 @@ namespace CrossBoa
             // Update all GameObjects
             player.Update(gameTime);
             crossbow.Update(player);
+            slime.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -105,7 +114,6 @@ namespace CrossBoa
             {
                 gameObject.Draw(_spriteBatch);
             }
-            
 
             _spriteBatch.End();
             base.Draw(gameTime);
