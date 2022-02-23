@@ -11,7 +11,7 @@ namespace CrossBoa
     /// A crossbow, which points towards the mouse and can fire
     /// an arrow. Inherits from GameObject.
     /// </summary>
-    class CrossBow : GameObject
+    public class CrossBow : GameObject
     {
         // ~~~ FIELDS ~~~
         /// <summary>
