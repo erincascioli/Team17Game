@@ -77,6 +77,10 @@ namespace CrossBoa
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow);
+
+
+            LevelManager.LContent = Content;
+            LevelManager.LoadLevel("TestingFile");
         }
 
         protected override void Update(GameTime gameTime)
@@ -105,7 +109,8 @@ namespace CrossBoa
             {
                 gameObject.Draw(_spriteBatch);
             }
-            
+
+            LevelManager.Draw(_spriteBatch);
 
             _spriteBatch.End();
             base.Draw(gameTime);

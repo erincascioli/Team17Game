@@ -1,4 +1,6 @@
 Asset's file name, isInteractable, Text file character. This line is just the guide,
-"Block", false, 'x', 
-"Block2", true, 'y',
-"Block3", false, 'z',
+Block, false,12, 
+Block2, true,42,
+Block3, false,2,
+DirtTest, false,1,
+GrassTest, false,3

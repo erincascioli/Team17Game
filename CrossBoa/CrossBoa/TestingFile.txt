@@ -1,5 +1,5 @@
 3, 4
-xxy
-yzy
-zxz
-yxy
+o,o,u
+o,u,o
+o,u,u
+u,o,o
