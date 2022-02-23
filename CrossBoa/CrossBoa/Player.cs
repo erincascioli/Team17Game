@@ -14,11 +14,30 @@ namespace CrossBoa
         private int maxHealth;
         private float invulnerabilityTime;
         private float dodgeCooldown;
+        private float dodgeLength;
+        private float dodgeSpeed;
 
         // Player status tracking
         private int currentHealth;
-        private float timeSinceDodge;
-        private float timeSinceHit;
+        private float timeUntilDodge;
+        private float timeLeftInvincible;
+        private bool canMove;
+
+        /// <summary>
+        /// Checks if the player is dead
+        /// </summary>
+        public bool IsDead
+        {
+            get { return currentHealth <= 0; }
+        }
+
+        /// <summary>
+        /// Checks if the player is currently invincible
+        /// </summary>
+        public bool IsInvincible
+        {
+            get { return timeLeftInvincible > 0; }
+        }
 
         /// <summary>
         /// The current health of the player
@@ -48,13 +67,18 @@ namespace CrossBoa
         /// <param name="maxHealth">The maximum health of this player</param>
         /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
         /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
+        /// <param name="dodgeLength">How long the player will dodge for</param>
+        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         public Player(Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown) :
+            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
             base(sprite, rectangle, movementForce, maxSpeed, friction)
         {
             this.maxHealth = maxHealth;
             this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
+            this.dodgeLength = dodgeLength;
+            this.dodgeSpeed = dodgeSpeed;
+            this.canMove = true;
         }
 
         /// <summary>
@@ -69,13 +93,18 @@ namespace CrossBoa
         /// <param name="maxHealth">The maximum health of this player</param>
         /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
         /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
+        /// <param name="dodgeLength">How long the player will dodge for</param>
+        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         public Player(Texture2D sprite, Vector2 position, Point size, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown) :
+            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
             base(sprite, position, size, movementForce, maxSpeed, friction)
         {
             this.maxHealth = maxHealth;
             this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
+            this.dodgeLength = dodgeLength;
+            this.dodgeSpeed = dodgeSpeed;
+            this.canMove = true;
         }
 
         /// <summary>
@@ -91,13 +120,18 @@ namespace CrossBoa
         /// <param name="maxHealth">The maximum health of this player</param>
         /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
         /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
+        /// <param name="dodgeLength">How long the player will dodge for</param>
+        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         public Player(Texture2D sprite, float X, float Y, Point size, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown) :
+            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
             base(sprite, X, Y, size, movementForce, maxSpeed, friction)
         {
             this.maxHealth = maxHealth;
             this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
+            this.dodgeLength = dodgeLength;
+            this.dodgeSpeed = dodgeSpeed;
+            this.canMove = true;
         }
 
         /// <summary>
@@ -113,13 +147,18 @@ namespace CrossBoa
         /// <param name="maxHealth">The maximum health of this player</param>
         /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
         /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
+        /// <param name="dodgeLength">How long the player will dodge for</param>
+        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         public Player(Texture2D sprite, Vector2 position, int width, int height, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown) :
+            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
             base(sprite, position, width, height, movementForce, maxSpeed, friction)
         {
             this.maxHealth = maxHealth;
             this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
+            this.dodgeLength = dodgeLength;
+            this.dodgeSpeed = dodgeSpeed;
+            this.canMove = true;
         }
 
         /// <summary>
@@ -136,13 +175,18 @@ namespace CrossBoa
         /// <param name="maxHealth">The maximum health of this player</param>
         /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
         /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
+        /// <param name="dodgeLength">How long the player will dodge for</param>
+        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         public Player(Texture2D sprite, float X, float Y, int width, int height, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown) :
+            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
             base(sprite, X, Y, width, height, movementForce, maxSpeed, friction)
         {
             this.maxHealth = maxHealth;
             this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
+            this.dodgeLength = dodgeLength;
+            this.dodgeSpeed = dodgeSpeed;
+            this.canMove = true;
         }
 
         /// <summary>
@@ -158,13 +202,18 @@ namespace CrossBoa
         /// <param name="maxHealth">The maximum health of this player</param>
         /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
         /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
+        /// <param name="dodgeLength">How long the player will dodge for</param>
+        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         public Player(Texture2D sprite, int X, int Y, Point size, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown) :
+            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
             base(sprite, X, Y, size, movementForce, maxSpeed, friction)
         {
             this.maxHealth = maxHealth;
             this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
+            this.dodgeLength = dodgeLength;
+            this.dodgeSpeed = dodgeSpeed;
+            this.canMove = true;
         }
 
         /// <summary>
@@ -181,13 +230,18 @@ namespace CrossBoa
         /// <param name="maxHealth">The maximum health of this player</param>
         /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
         /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
+        /// <param name="dodgeLength">How long the player will dodge for</param>
+        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         public Player(Texture2D sprite, int X, int Y, int width, int height, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown) :
+            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
             base(sprite, X, Y, width, height, movementForce, maxSpeed, friction)
         {
             this.maxHealth = maxHealth;
             this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
+            this.dodgeLength = dodgeLength;
+            this.dodgeSpeed = dodgeSpeed;
+            this.canMove = true;
         }
 
 
@@ -197,28 +251,53 @@ namespace CrossBoa
         /// <param name="gameTime">A reference to the GameTime</param>
         public override void Update(GameTime gameTime)
         {
+            KeyboardState kbState = Keyboard.GetState();
+
             // Update timers
-            float totalSeconds = (float) gameTime.ElapsedGameTime.TotalSeconds;
-            timeSinceDodge += totalSeconds;
-            timeSinceHit += totalSeconds;
+            float totalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            timeUntilDodge -= totalSeconds;
+            timeLeftInvincible -= totalSeconds;
 
-            // Check the player's input
-            Vector2 movementVector = CheckPlayerInput();
+            if(canMove)
+            {
+                // Check the player's input
+                Vector2 movementVector = CheckMovementInput(kbState);
 
-            // Apply the movement
-            ApplyForce(movementVector * movementForce);
-            ApplyFriction(gameTime);
+                // Apply the movement
+                ApplyForce(movementVector * movementForce);
+                ApplyFriction(gameTime);
 
-            UpdatePhysics(gameTime);
+                UpdatePhysics(gameTime);
+            }
+        }
+
+        /// <summary>
+        /// Draws this GameObject to the screen
+        /// </summary>
+        /// <param name="spriteBatch">A reference to the SpriteBatch</param>
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+        }
+
+        /// <summary>
+        /// Checks if the player is invincible and deals damage
+        /// </summary>
+        /// <param name="amount"></param>
+        public void TakeDamage(int amount)
+        {
+            if (!IsInvincible)
+            {
+                currentHealth -= amount;
+                timeLeftInvincible = invulnerabilityTime;
+            }
         }
 
         /// <summary>
         /// Helper method to check for player input
         /// </summary>
-        public Vector2 CheckPlayerInput()
+        public Vector2 CheckMovementInput(KeyboardState kbState)
         {
-            KeyboardState kbState = Keyboard.GetState();
-
             Vector2 movementVector = new Vector2(0, 0);
 
             if (kbState.IsKeyDown(Keys.W))
@@ -236,5 +315,24 @@ namespace CrossBoa
 
             return movementVector;
         }
+
+
+        /*
+        // UNFINISHED FEATURE - STRETCH GOAL
+
+        /// <summary>
+        /// Makes the player dodge
+        /// </summary>
+        public void Dodge(KeyboardState kbState)
+        {
+            // If the player presses space and can dodge
+            if (kbState.IsKeyDown(Keys.Space) && timeUntilDodge < 0)
+            {
+                // Dodge
+
+            }
+        }
+        */
+
     }
 }

@@ -17,7 +17,7 @@ namespace CrossBoa
         private Player player;
         private CrossBow crossbow;
         private Projectile arrow;
-        private List<Enemy> enemies;
+        private List<IEnemy> enemies;
         private List<Projectile> enemyProjectiles;
 
         public Player Player
@@ -44,7 +44,7 @@ namespace CrossBoa
             arrow = bolt;
 
             // Lists are created
-            enemies = new List<Enemy>();
+            enemies = new List<IEnemy>();
             enemyProjectiles = new List<Projectile>();
         }
     }
