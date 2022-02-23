@@ -111,6 +111,8 @@ namespace CrossBoa
                     parsingString = string.Format(parsingString + tableState[l]);
                 }
 
+                string[] allTiles = parsingString.Split(',');
+
                 int stringIndex = 0;
 
                 // All levelObjects are put into a single list
@@ -120,7 +122,7 @@ namespace CrossBoa
                     {
                         foreach (string[] i in tileList)
                         {
-                            if (char.Parse(i[2]) == parsingString[stringIndex])
+                            if (i[2] == allTiles[stringIndex])
                             {
                                 levelTiles.Add(new Tile(             
                                     Content.Load<Texture2D>(i[0]),        // Asset

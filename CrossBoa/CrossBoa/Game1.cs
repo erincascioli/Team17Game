@@ -104,13 +104,15 @@ namespace CrossBoa
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
+            //Level
+            LevelManager.Draw(_spriteBatch);
+
             // Draw all GameObjects
             foreach (GameObject gameObject in gameObjectList)
             {
                 gameObject.Draw(_spriteBatch);
             }
 
-            LevelManager.Draw(_spriteBatch);
 
             _spriteBatch.End();
             base.Draw(gameTime);
