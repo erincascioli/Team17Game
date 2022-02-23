@@ -280,13 +280,17 @@ namespace CrossBoa
             base.Draw(spriteBatch);
         }
 
+        /// <summary>
+        /// Checks if the player is invincible and deals damage
+        /// </summary>
+        /// <param name="amount"></param>
         public void TakeDamage(int amount)
         {
-            currentHealth -= amount;
-            timeLeftInvincible = invulnerabilityTime;
-
-
-
+            if (!IsInvincible)
+            {
+                currentHealth -= amount;
+                timeLeftInvincible = invulnerabilityTime;
+            }
         }
 
         /// <summary>
