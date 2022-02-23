@@ -8,6 +8,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
+    /// <summary>
+    /// Author: Ian Knecht
+    /// Purpose: Allows the user to interact with the game world 
+    /// </summary>
     public class Player : PhysicsObject
     {
         // Player stats
