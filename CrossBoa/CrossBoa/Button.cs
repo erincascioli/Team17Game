@@ -14,12 +14,12 @@ namespace CrossBoa
     /// </summary>
     public class Button : GameObject
     {
-        private MouseState mouse;
+        private MouseState mouseState;
         private MouseState previousState;
         private bool isInteractable;
         private bool hovering;
         private Rectangle button;
-        private Texture2D onButtonTexture;
+        private Texture2D hoverButtonTexture;
         private Texture2D offButtonTexture;
 
         public bool IsInteractable
@@ -30,39 +30,37 @@ namespace CrossBoa
         /// <summary>
         /// Used for an already established location
         /// </summary>
-        /// <param name="onImage"></param>
+        /// <param name="hoverImage"></param>
         /// <param name="offImage"></param>
         /// <param name="cursor"></param>
-        /// <param name="unLocked"></param>
+        /// <param name="isInteractible"></param>
         /// <param name="rectangle"></param>
-        public Button(Texture2D onImage, Texture2D offImage, MouseState cursor, bool unLocked, Rectangle rectangle) 
+        public Button(Texture2D hoverImage, Texture2D offImage, bool isInteractable, Rectangle rectangle) 
             : base(offImage,  rectangle)
         {
-            mouse = cursor;
-            isInteractable = unLocked;
+            this.isInteractable = isInteractable;
             button = rectangle;
-            onButtonTexture = onImage;
+            hoverButtonTexture = hoverImage;
             offButtonTexture = offImage;
         }
 
         /// <summary>
         /// Let's gameObject create it's own rectangle
         /// </summary>
-        /// <param name="onImage"></param>
+        /// <param name="hoverImage"></param>
         /// <param name="offImage"></param>
         /// <param name="cursor"></param>
-        /// <param name="unLocked"></param>
+        /// <param name="isInteractible"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Button(Texture2D onImage, Texture2D offImage, MouseState cursor, bool unLocked, int x, int y, int width, int height) 
+        public Button(Texture2D hoverImage, Texture2D offImage, bool isInteractable, int x, int y, int width, int height) 
             : base(offImage, x, y, width, height)
         {
-            mouse = cursor;
-            isInteractable = unLocked;
+            this.isInteractable = isInteractable;
             button = new Rectangle(x, y, width, height);
-            onButtonTexture = onImage;
+            hoverButtonTexture = hoverImage;
             offButtonTexture = offImage;
         }
 
@@ -73,8 +71,8 @@ namespace CrossBoa
         /// <returns></returns>
         public bool IsMouseOver()
         {
-            if (mouse.X > button.X && mouse.X < button.X + button.Width && 
-                mouse.Y > button.Y && mouse.Y < button.Y + button.Height)
+            if (mouseState.X > button.Left && mouseState.X < button.Right &&
+                mouseState.Y > button.Top && mouseState.Y < button.Bottom)
             {
                 // Mouse is over the button
                 return true;
@@ -91,16 +89,16 @@ namespace CrossBoa
         /// <returns>true if the mouse button was released on this frame; otherwise returns false</returns>
         public bool HasBeenPressed()
         {
-            if (hovering && previousState.LeftButton == ButtonState.Pressed && mouse.LeftButton == ButtonState.Released)
+            if (hovering && previousState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
             {
-                previousState = mouse;
+                previousState = mouseState;
 
                 // Button was clicked
                 return true;
             }
             else
             {
-                previousState = mouse;
+                previousState = mouseState;
                 return false;
             }
         }
@@ -112,9 +110,9 @@ namespace CrossBoa
         /// <param name="spriteBatch"></param>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (hovering == true)
+            if (hovering)
             {
-                spriteBatch.Draw(onButtonTexture, button, Color.White);
+                spriteBatch.Draw(hoverButtonTexture, button, Color.White);
             }
             else
             {
@@ -124,13 +122,12 @@ namespace CrossBoa
 
         /// <summary>
         /// Purpose: Updates changing variables of object every frame
-        /// Restrictions: should likley be called before any other class method
+        /// Restrictions: should likely be called before any other class method
         /// </summary>
         /// <param name="cursor"></param>
         public override void Update(GameTime gameTime)
         {
-            MouseState cursor = Mouse.GetState();
-            mouse = cursor;
+            mouseState = Mouse.GetState();
             hovering = IsMouseOver();
         }
     }

@@ -28,6 +28,7 @@ namespace CrossBoa
         private SpriteFont arial32;
 
         // Objects
+        private Button testButton;
         private CrossBow crossbow;
         private Player player;
 
@@ -85,9 +86,13 @@ namespace CrossBoa
                 tempCbSprite.Bounds,
                 0);
 
+            // TODO: TEST CODE
+            testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(500, 500, 250, 50));
+
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
-            gameObjectList.Add(crossbow);
+            gameObjectList.Add(crossbow); 
+            gameObjectList.Add(testButton);
         }
 
         protected override void Update(GameTime gameTime)
@@ -100,6 +105,7 @@ namespace CrossBoa
             // Update all GameObjects
             player.Update(gameTime);
             crossbow.Update(player);
+            testButton.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -116,7 +122,6 @@ namespace CrossBoa
             {
                 gameObject.Draw(_spriteBatch);
             }
-            
 
             _spriteBatch.End();
             base.Draw(gameTime);
