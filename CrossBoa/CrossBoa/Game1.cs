@@ -31,6 +31,7 @@ namespace CrossBoa
         private Button testButton;
         private CrossBow crossbow;
         private Player player;
+        private Slime slime;
 
         private List<GameObject> gameObjectList;
 
@@ -80,11 +81,17 @@ namespace CrossBoa
                 DefaultPlayerDodgeLength,
                 DefaultPlayerDodgeSpeed
             );
-
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
                 0);
+            slime = new Slime(
+                3,
+                whiteSquareSprite,
+                new Rectangle(1250, 1250, 64, 64),
+                10,
+                3f,
+                4f);
 
             // TODO: TEST CODE
             testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(500, 500, 250, 50));
@@ -93,6 +100,12 @@ namespace CrossBoa
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow); 
             gameObjectList.Add(testButton);
+            gameObjectList.Add(slime);
+
+            LevelManager.LContent = Content;
+            LevelManager.LoadLevel("TestingFile");
+            
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -106,6 +119,7 @@ namespace CrossBoa
             player.Update(gameTime);
             crossbow.Update(player);
             testButton.Update(gameTime);
+            slime.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -117,11 +131,15 @@ namespace CrossBoa
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
+            //Level
+            LevelManager.Draw(_spriteBatch);
+
             // Draw all GameObjects
             foreach (GameObject gameObject in gameObjectList)
             {
                 gameObject.Draw(_spriteBatch);
             }
+
 
             _spriteBatch.End();
             base.Draw(gameTime);

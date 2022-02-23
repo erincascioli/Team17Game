@@ -19,6 +19,6 @@ namespace CrossBoa
         /// <summary>
         /// Method to deal damage on contact with the player.
         /// </summary>
-        void DealDamage(Player player);
+        void DealContactDamage(Player player);
     }
 }
