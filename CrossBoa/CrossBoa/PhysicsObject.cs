@@ -12,7 +12,7 @@ namespace CrossBoa
     /// <summary>
     /// A specialized GameObject parent class that contains physics-related fields
     /// </summary>
-    class PhysicsObject : GameObject
+    public class PhysicsObject : GameObject
     {
         protected Vector2 velocity;
         private Vector2 netAcceleration;
@@ -207,7 +207,7 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Applies a friction force to the object in the opposite direction of its motion
+        /// Automatically calculates and applies a friction force to the object in the opposite direction of its motion
         /// <para>Stops object from moving if it's moving too slowly</para>
         /// </summary>
         public void ApplyFriction(GameTime gameTime)

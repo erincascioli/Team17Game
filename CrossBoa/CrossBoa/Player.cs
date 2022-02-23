@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
-    class Player : PhysicsObject
+    public class Player : PhysicsObject
     {
         // Player stats
         private int maxHealth;
