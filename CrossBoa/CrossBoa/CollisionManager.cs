@@ -10,36 +10,42 @@ namespace CrossBoa
     /// <summary>
     /// Author: Donovan Scullion
     /// Purpose: Tracks collisions between objects
-    /// Restrictions: All fields must be instantiated before
-    ///               this class is first used, I think.
+    /// Restrictions: This class must only be created once
     /// </summary>
-    public static class CollisionManager
+    public class CollisionManager
     {
-        private static Player player;
-        private static CrossBow crossbow;
-        private static Projectile arrow;
-        private static List<Enemy> enemies;
-        private static List<Projectile> enemyProjectiles;
+        private Player player;
+        private CrossBow crossbow;
+        private Projectile arrow;
+        private List<Enemy> enemies;
+        private List<Projectile> enemyProjectiles;
 
-        static Player Player
+        public Player Player
         {
             get { return player; }
         }
 
-        static CrossBow Crossbow
+        public CrossBow Crossbow
         {
             get { return crossbow; }
         }
 
-        static Projectile Arrow
+        public Projectile Arrow
         {
             get { return arrow; }
             set { arrow = value; }
         }
 
-        static CollisionManager()
+        public CollisionManager(Player character, CrossBow weapon, Projectile bolt)
         {
+            // All fields get a reference location
+            player = character;
+            crossbow = weapon;
+            arrow = bolt;
 
+            // Lists are created
+            enemies = new List<Enemy>();
+            enemyProjectiles = new List<Projectile>();
         }
     }
 }

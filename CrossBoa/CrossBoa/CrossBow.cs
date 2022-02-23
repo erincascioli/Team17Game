@@ -11,7 +11,7 @@ namespace CrossBoa
     /// A crossbow, which points towards the mouse and can fire
     /// an arrow. Inherits from GameObject.
     /// </summary>
-    class CrossBow : GameObject
+    public class CrossBow : GameObject
     {
         // ~~~ FIELDS ~~~
         /// <summary>
@@ -139,11 +139,13 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Moves the bow
+        /// Moves the bow to the player's position, centered in the middle
+        /// of the sprite.
         /// </summary>
-        public void Update()
+        public void Update(Player player)
         {
-
+            this.position.X = player.Position.X + player.Width / 2;
+            this.position.Y = player.Position.Y + player.Height / 2;
         }
     }
 }
