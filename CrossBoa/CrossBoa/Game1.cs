@@ -55,6 +55,7 @@ namespace CrossBoa
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
             arial32 = Content.Load<SpriteFont>("Arial32");
+            tempCbSprite = Content.Load<Texture2D>("Crossbow_Pull_0");
 
             // Load objects
             player = new Player(
@@ -68,8 +69,14 @@ namespace CrossBoa
                 10
             );
 
+            crossbow = new CrossBow(
+                tempCbSprite,
+                tempCbSprite.Bounds,
+                0);
+
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
+            gameObjectList.Add(crossbow);
         }
 
         protected override void Update(GameTime gameTime)
@@ -80,10 +87,8 @@ namespace CrossBoa
             // TODO: Add your update logic here
 
             // Update all GameObjects
-            foreach (GameObject gameObject in gameObjectList)
-            {
-                gameObject.Update(gameTime);
-            }
+            player.Update(gameTime);
+            crossbow.Update(player);
 
             base.Update(gameTime);
         }
@@ -100,7 +105,7 @@ namespace CrossBoa
             {
                 gameObject.Draw(_spriteBatch);
             }
-
+            
 
             _spriteBatch.End();
             base.Draw(gameTime);
