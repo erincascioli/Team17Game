@@ -20,9 +20,16 @@ namespace CrossBoa
         private static List<string[]> tileList;
         private static List<Tile> levelTiles;
         private static StreamReader reader;
-        private const int blockWidth = 16;
-        private const int blockHeight = 16;
+        private const int blockWidth = 64;
+        private const int blockHeight = 64;
         private static Microsoft.Xna.Framework.Content.ContentManager Content;
+
+        // Requires a reference
+        public static Microsoft.Xna.Framework.Content.ContentManager LContent
+        {
+            get { return Content; }
+            set { Content = value; }
+        }
 
 
         static LevelManager()
@@ -77,7 +84,7 @@ namespace CrossBoa
             try
             {
                 // file is accessed by the reader
-                reader = new StreamReader("../../" + fileName + ".txt");
+                reader = new StreamReader("../../../" + fileName + ".txt");
 
                 // Data for table size is stored
                 string[] tableInfo = reader.ReadLine().Split(',');
@@ -104,6 +111,8 @@ namespace CrossBoa
                     parsingString = string.Format(parsingString + tableState[l]);
                 }
 
+                string[] allTiles = parsingString.Split(',');
+
                 int stringIndex = 0;
 
                 // All levelObjects are put into a single list
@@ -113,7 +122,7 @@ namespace CrossBoa
                     {
                         foreach (string[] i in tileList)
                         {
-                            if (char.Parse(i[2]) == parsingString[stringIndex])
+                            if (i[2] == allTiles[stringIndex])
                             {
                                 levelTiles.Add(new Tile(             
                                     Content.Load<Texture2D>(i[0]),        // Asset
@@ -158,7 +167,7 @@ namespace CrossBoa
             foreach (GameObject i in levelTiles)
             {
                 sb.Draw(i.Sprite,   // Asset
-                    i.Position,     // Location
+                    i.Rectangle,     // Location
                     Color.White);   // Background color
             }
         }

@@ -12,6 +12,15 @@ namespace CrossBoa
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        // Fields
+        private const int DefaultPlayerMovementForce = 5000;
+        private const int DefaultPlayerMaxSpeed = 300;
+        private const int DefaultPlayerFriction = 2500;
+        private const int DefaultPlayerHealth = 3;
+        private const float DefaultPlayerInvulnerabilityFrames = 3.5f;
+        private const float DefaultPlayerDodgeCooldown = 10;
+        private const float DefaultPlayerDodgeLength = 0.35f;
+        private const float DefaultPlayerDodgeSpeed = 500;
 
         // Assets
         private Texture2D whiteSquareSprite;
@@ -62,12 +71,14 @@ namespace CrossBoa
             player = new Player(
                 whiteSquareSprite,
                 new Rectangle(250, 250, 64, 64),
-                5000,
-                300,
-                2500,
-                3,
-                3.5f,
-                10
+                DefaultPlayerMovementForce,
+                DefaultPlayerMaxSpeed,
+                DefaultPlayerFriction,
+                DefaultPlayerHealth,
+                DefaultPlayerInvulnerabilityFrames,
+                DefaultPlayerDodgeCooldown,
+                DefaultPlayerDodgeLength,
+                DefaultPlayerDodgeSpeed
             );
             crossbow = new CrossBow(
                 tempCbSprite,
@@ -84,6 +95,10 @@ namespace CrossBoa
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow);
+
+
+            LevelManager.LContent = Content;
+            LevelManager.LoadLevel("TestingFile");
             gameObjectList.Add(slime);
         }
 
@@ -109,11 +124,16 @@ namespace CrossBoa
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
+            //Level
+            LevelManager.Draw(_spriteBatch);
+
             // Draw all GameObjects
             foreach (GameObject gameObject in gameObjectList)
             {
                 gameObject.Draw(_spriteBatch);
             }
+
+
 
             _spriteBatch.End();
             base.Draw(gameTime);
