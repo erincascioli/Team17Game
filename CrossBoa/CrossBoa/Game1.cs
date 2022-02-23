@@ -35,8 +35,6 @@ namespace CrossBoa
 
         private List<GameObject> gameObjectList;
 
-
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -52,6 +50,7 @@ namespace CrossBoa
             _graphics.PreferredBackBufferWidth = 1600;
             _graphics.PreferredBackBufferHeight = 900;
             _graphics.ApplyChanges();
+
 
 
             base.Initialize();
@@ -114,8 +113,11 @@ namespace CrossBoa
                 Exit();
 
             // TODO: Add your update logic here
+            KeyboardState kbState = Keyboard.GetState();
+            MouseState mState = Mouse.GetState();
 
             // Update all GameObjects
+            Camera.Update(kbState);
             player.Update(gameTime);
             crossbow.Update(player);
             testButton.Update(gameTime);
@@ -129,7 +131,7 @@ namespace CrossBoa
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Camera.Matrix);
 
             //Level
             LevelManager.Draw(_spriteBatch);
