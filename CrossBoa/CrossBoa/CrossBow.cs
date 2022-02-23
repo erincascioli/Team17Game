@@ -139,11 +139,13 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Moves the bow
+        /// Moves the bow to the player's position, centered in the middle
+        /// of the sprite.
         /// </summary>
-        public void Update()
+        public void Update(Player player)
         {
-
+            this.position.X = player.Position.X + player.Width / 2;
+            this.position.Y = player.Position.Y + player.Height / 2;
         }
     }
 }
