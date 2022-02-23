@@ -84,7 +84,7 @@ namespace CrossBoa
         public GameObject(Texture2D sprite, Rectangle rectangle)
         {
             this.sprite = sprite;
-            this.position = new Vector2(rectangle.X, rectangle.Y);
+            this.position = rectangle.Location.ToVector2();
             this.size = rectangle.Size;
         }
 
