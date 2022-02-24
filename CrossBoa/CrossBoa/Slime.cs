@@ -7,6 +7,11 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
+    /// <summary>
+    /// A slime. It moves towards the player in spurts
+    /// and damages them on contact. Inherits from PhysicsObject.
+    /// Writtern by: Leo Schindler-Gerendasi
+    /// </summary>
     public class Slime : PhysicsObject, IEnemy
     {
         // ~~~ FIELDS ~~~
@@ -30,6 +35,8 @@ namespace CrossBoa
         /// </summary>
         private float timeSinceMove;
 
+        private Color currentColor;
+
         // ~~~ PROPERTIES ~~~
         /// <summary>
         /// The health of the slime. Get/set property.
@@ -52,11 +59,15 @@ namespace CrossBoa
         {
             this.health = health;
             timeSinceMove = 0;
+            currentColor = Color.Green;
         }
 
+        /// <summary>
+        /// Moves the slime towards the player.
+        /// </summary>
         public void Move()
         {
-            float direction;
+            float direction = 0;
             // Formula used for calculations: 
             // Cos(A) = (b^2 + c^2 - a^2) / 2bc
             // A = arccos the formula above
@@ -66,29 +77,38 @@ namespace CrossBoa
                 Math.Pow(horizDist, 2));
             double cosA = (Math.Pow(totalDist, 2) + Math.Pow(horizDist, 2) - Math.Pow(vertDist, 2))
                 / (2 * horizDist * totalDist);
-            if (targetY < position.Y)
-                 direction = (float)Math.Acos(cosA) * -1;
             direction = (float)Math.Acos(cosA);
-
-            ApplyForce(direction, 2.5f);
+            if (targetY < position.Y)
+                 direction *= -1;
+            ApplyForce(direction, movementForce);
+            
         }
 
         /// <summary>
-        /// if the enemy is within the vicinity of the player,
+        /// If the enemy is within the vicinity of the player,
         /// deals damage to them.
         /// </summary>
         /// <param name="player">The player to check the collision of.</param>
         public void DealContactDamage(Player player)
         {
             if (player.Rectangle.Intersects(this.Rectangle))
-                return;
+            {
+                player.TakeDamage(0);
+                currentColor = Color.MediumVioletRed;
+            }
+            else
+                currentColor = Color.Green;
         }
 
+        /// <summary>
+        /// Draws the slime.
+        /// </summary>
+        /// <param name="sb">The active SpriteBatch.</param>
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(sprite,
                 Rectangle,
-                Color.Green);
+                currentColor);
         }
 
         public void Update(GameTime gameTime, Player player)
@@ -98,15 +118,16 @@ namespace CrossBoa
             timeSinceMove += totalSeconds;
 
             // If it's been at least 1 second since the last slime movement,
-            // move the slime
+            // push the slime towards the player.
             if (timeSinceMove >= 1)
             {
                 targetX = (int)player.Position.X;
                 targetY = (int)player.Position.Y;
-                timeSinceMove = 0;
+                timeSinceMove -= 1;
                 Move();
             }
             ApplyFriction(gameTime);
+            UpdatePhysics(gameTime);
 
             // Deal damage to the player if they're touching the slime
             DealContactDamage(player);

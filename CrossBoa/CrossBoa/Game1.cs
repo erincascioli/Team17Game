@@ -92,19 +92,19 @@ namespace CrossBoa
             slime = new Slime(
                 3,
                 whiteSquareSprite,
-                new Rectangle(1250, 1250, 64, 64),
-                10,
-                3f,
-                4f);
+                new Rectangle(400, 400, 64, 64),
+                20000f,
+                500f,
+                2500f);
 
             // TODO: TEST CODE
             testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(500, 500, 250, 50));
 
             // Add all GameObjects to GameObject list
+            gameObjectList.Add(slime);
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow); 
             gameObjectList.Add(testButton);
-            gameObjectList.Add(slime);
 
             LevelManager.LContent = Content;
             LevelManager.LoadLevel("TestingFile");
@@ -123,6 +123,7 @@ namespace CrossBoa
 
             // Update all GameObjects
             Camera.Update(kbState);
+
             foreach (GameObject gameObject in gameObjectList)
             {
                 gameObject.Update(gameTime);
@@ -142,8 +143,6 @@ namespace CrossBoa
 
                 gameObjectList.Add(testProjectile);
             }
-            
-
 
             previousKBState = kbState;
             previousMState = mState;
