@@ -245,7 +245,7 @@ namespace CrossBoa
         public virtual void ApplyForce(float direction, float magnitude)
         {
             // Create a new vector based on the direction
-            Vector2 movementVector = new Vector2(MathF.Cos(direction), MathF.Sin(direction));
+            Vector2 movementVector = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
 
             // Apply the vector to the net acceleration
             netAcceleration += movementVector;
