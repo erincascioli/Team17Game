@@ -14,6 +14,8 @@ namespace CrossBoa
     public class CrossBow : GameObject
     {
         // ~~~ FIELDS ~~~
+        private Player player;
+
         /// <summary>
         /// The time since the bow was last shot.
         /// </summary>
@@ -29,11 +31,6 @@ namespace CrossBoa
         /// in it and is ready to fire.
         /// </summary>
         private bool isLoaded;
-
-        /// <summary>
-        /// A reference to the player object
-        /// </summary>
-        private Player player;
 
         // ~~~ PROPERTIES ~~~
         /// <summary>
