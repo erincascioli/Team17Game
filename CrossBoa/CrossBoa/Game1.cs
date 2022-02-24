@@ -95,7 +95,8 @@ namespace CrossBoa
                 new Rectangle(400, 400, 64, 64),
                 20000f,
                 500f,
-                2500f);
+                2500f,
+                player);
 
             // TODO: TEST CODE
             testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(500, 500, 250, 50));

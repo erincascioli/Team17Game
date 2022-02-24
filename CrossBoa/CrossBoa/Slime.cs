@@ -15,6 +15,8 @@ namespace CrossBoa
     public class Slime : PhysicsObject, IEnemy
     {
         // ~~~ FIELDS ~~~
+        private Player player;
+
         /// <summary>
         /// The health of the slime.
         /// </summary>
@@ -54,9 +56,11 @@ namespace CrossBoa
         }
 
         // ~~~ CONSTRUCTORS ~~~
-        public Slime(int health, Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed, float friction) :
+        public Slime(int health, Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed,
+            float friction, Player playerReference) :
             base(sprite, rectangle, movementForce, maxSpeed, friction)
         {
+            player = playerReference;
             this.health = health;
             timeSinceMove = 0;
             currentColor = Color.Green;
@@ -111,7 +115,7 @@ namespace CrossBoa
                 currentColor);
         }
 
-        public void Update(GameTime gameTime, Player player)
+        public override void Update(GameTime gameTime)
         {
             // Update the timer
             float totalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
