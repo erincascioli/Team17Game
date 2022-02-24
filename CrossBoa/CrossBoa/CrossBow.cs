@@ -97,9 +97,9 @@ namespace CrossBoa
 
         /// <summary>
         /// Calculates the angle between the crossbow and the mouse cursor,
-        /// and returns that.
+        /// and returns that in degrees.
         /// </summary>
-        /// <returns>The anle between the crossbow and the mouse cursor,</returns>
+        /// <returns>The anle between the crossbow and the mouse cursor, in degrees.</returns>
         public float FollowCursor()
         {
             // Formula used for calculations: 
