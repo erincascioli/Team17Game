@@ -22,6 +22,9 @@ namespace CrossBoa
         private const float DefaultPlayerDodgeLength = 0.35f;
         private const float DefaultPlayerDodgeSpeed = 500;
 
+        private KeyboardState previousKBState;
+        private MouseState previousMState;
+
         // Assets
         private Texture2D whiteSquareSprite;
         private Texture2D tempCbSprite;
@@ -29,6 +32,7 @@ namespace CrossBoa
 
         // Objects
         private Button testButton;
+        private Projectile testProjectile;
         private CrossBow crossbow;
         private Player player;
         private Slime slime;
@@ -83,7 +87,8 @@ namespace CrossBoa
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
-                0);
+                0,
+                player);
             slime = new Slime(
                 3,
                 whiteSquareSprite,
@@ -118,11 +123,30 @@ namespace CrossBoa
 
             // Update all GameObjects
             Camera.Update(kbState);
-            player.Update(gameTime);
-            crossbow.Update(player);
-            testButton.Update(gameTime);
-            slime.Update(gameTime);
+            foreach (GameObject gameObject in gameObjectList)
+            {
+                gameObject.Update(gameTime);
+            }
 
+            // Spawn a test projectile if the player clicks
+            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
+            {
+                testProjectile = new Projectile(
+                    whiteSquareSprite,
+                    crossbow.Position,
+                    new Point(50, 15),
+                    crossbow.Direction,
+                    5,
+                    true
+                );
+
+                gameObjectList.Add(testProjectile);
+            }
+            
+
+
+            previousKBState = kbState;
+            previousMState = mState;
             base.Update(gameTime);
         }
 
