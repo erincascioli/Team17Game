@@ -30,6 +30,11 @@ namespace CrossBoa
         /// </summary>
         private bool isLoaded;
 
+        /// <summary>
+        /// A reference to the player object
+        /// </summary>
+        private Player player;
+
         // ~~~ PROPERTIES ~~~
         /// <summary>
         /// The time since the bow was last shot. Get-only.
@@ -69,6 +74,14 @@ namespace CrossBoa
             }
         }
 
+        /// <summary>
+        /// Returns the direction that the crossbow is facing
+        /// </summary>
+        public float Direction
+        {
+            get { return FollowCursor(); }
+        }
+
         // ~~~ CONSTRUCTOR ~~~
         /// <summary>
         /// Creates a CrossBow.
@@ -76,10 +89,12 @@ namespace CrossBoa
         /// <param name="sprite">The sprite that the crossbow uses.</param>
         /// <param name="rectangle">The rectangle that represents the crossbow's hitbox.</param>
         /// <param name="shotCoolDown">The cooldown per shot.</param>
-        public CrossBow(Texture2D sprite, Rectangle rectangle, float shotCoolDown) :
+        /// <param name="playerReference">A reference to the player object</param>
+        public CrossBow(Texture2D sprite, Rectangle rectangle, float shotCoolDown, Player playerReference) :
             base(sprite, rectangle)
         {
             this.shotCoolDown = shotCoolDown;
+            player = playerReference;
             isLoaded = true;
             timeSinceShot = 0f;
         }
@@ -142,7 +157,7 @@ namespace CrossBoa
         /// Moves the bow to the player's position, centered in the middle
         /// of the sprite.
         /// </summary>
-        public void Update(Player player)
+        public override void Update(GameTime gameTime)
         {
             this.position.X = player.Position.X + player.Width / 2;
             this.position.Y = player.Position.Y + player.Height / 2;
