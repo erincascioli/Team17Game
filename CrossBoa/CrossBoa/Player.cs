@@ -12,7 +12,7 @@ namespace CrossBoa
     /// Author:  TacNayn
     /// Purpose: Allows the user to interact with the game world 
     /// </summary>
-    public class Player : PhysicsObject
+    public class Player : PhysicsObject, ICollidable
     {
         // Player stats
         private int maxHealth;
@@ -60,6 +60,11 @@ namespace CrossBoa
             set { dodgeCooldown = value; }
         }
 
+        public Rectangle Hitbox
+        {
+            get { return Rectangle; }
+        }
+
         /// <summary>
         /// Constructs a Player object
         /// </summary>
@@ -86,170 +91,6 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Constructs a Player object
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="position">The GameObject's position</param>
-        /// <param name="size">The GameObject's size in pixels</param>
-        /// <param name="friction">How fast this object will stop moving.</param>
-        /// <param name="maxSpeed">The maximum speed this object can reach</param>
-        /// <param name="movementForce">The force applied to the object when pressing the arrow keys</param>
-        /// <param name="maxHealth">The maximum health of this player</param>
-        /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
-        /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
-        /// <param name="dodgeLength">How long the player will dodge for</param>
-        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
-        public Player(Texture2D sprite, Vector2 position, Point size, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
-            base(sprite, position, size, movementForce, maxSpeed, friction)
-        {
-            this.maxHealth = maxHealth;
-            this.invulnerabilityTime = invulnerabilityTime;
-            this.dodgeCooldown = dodgeCooldown;
-            this.dodgeLength = dodgeLength;
-            this.dodgeSpeed = dodgeSpeed;
-            this.canMove = true;
-        }
-
-        /// <summary>
-        /// Constructs a Player object
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="X">The X position of this GameObject</param>
-        /// <param name="Y">The X position of this GameObject</param>
-        /// <param name="size">The GameObject's size in pixels</param>
-        /// <param name="friction">How fast this object will stop moving.</param>
-        /// <param name="maxSpeed">The maximum speed this object can reach</param>
-        /// <param name="movementForce">The force applied to the object when pressing the arrow keys</param>
-        /// <param name="maxHealth">The maximum health of this player</param>
-        /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
-        /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
-        /// <param name="dodgeLength">How long the player will dodge for</param>
-        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
-        public Player(Texture2D sprite, float X, float Y, Point size, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
-            base(sprite, X, Y, size, movementForce, maxSpeed, friction)
-        {
-            this.maxHealth = maxHealth;
-            this.invulnerabilityTime = invulnerabilityTime;
-            this.dodgeCooldown = dodgeCooldown;
-            this.dodgeLength = dodgeLength;
-            this.dodgeSpeed = dodgeSpeed;
-            this.canMove = true;
-        }
-
-        /// <summary>
-        /// Constructs a Player object
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="position">The GameObject's position</param>
-        /// <param name="width">The width of this GameObject in pixels</param>
-        /// <param name="height">The height of this GameObject in pixels</param>
-        /// <param name="friction">How fast this object will stop moving.</param>
-        /// <param name="maxSpeed">The maximum speed this object can reach</param>
-        /// <param name="movementForce">The force applied to the object when pressing the arrow keys</param>
-        /// <param name="maxHealth">The maximum health of this player</param>
-        /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
-        /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
-        /// <param name="dodgeLength">How long the player will dodge for</param>
-        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
-        public Player(Texture2D sprite, Vector2 position, int width, int height, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
-            base(sprite, position, width, height, movementForce, maxSpeed, friction)
-        {
-            this.maxHealth = maxHealth;
-            this.invulnerabilityTime = invulnerabilityTime;
-            this.dodgeCooldown = dodgeCooldown;
-            this.dodgeLength = dodgeLength;
-            this.dodgeSpeed = dodgeSpeed;
-            this.canMove = true;
-        }
-
-        /// <summary>
-        /// Constructs a Player object
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="X">The X position of this GameObject</param>
-        /// <param name="Y">The X position of this GameObject</param>
-        /// <param name="width">The width of this GameObject in pixels</param>
-        /// <param name="height">The height of this GameObject in pixels</param>
-        /// <param name="friction">How fast this object will stop moving.</param>
-        /// <param name="maxSpeed">The maximum speed this object can reach</param>
-        /// <param name="movementForce">The force applied to the object when pressing the arrow keys</param>
-        /// <param name="maxHealth">The maximum health of this player</param>
-        /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
-        /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
-        /// <param name="dodgeLength">How long the player will dodge for</param>
-        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
-        public Player(Texture2D sprite, float X, float Y, int width, int height, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
-            base(sprite, X, Y, width, height, movementForce, maxSpeed, friction)
-        {
-            this.maxHealth = maxHealth;
-            this.invulnerabilityTime = invulnerabilityTime;
-            this.dodgeCooldown = dodgeCooldown;
-            this.dodgeLength = dodgeLength;
-            this.dodgeSpeed = dodgeSpeed;
-            this.canMove = true;
-        }
-
-        /// <summary>
-        /// Constructs a Player object
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="X">The X position of this GameObject</param>
-        /// <param name="Y">The X position of this GameObject</param>
-        /// <param name="size">The GameObject's size in pixels</param>
-        /// <param name="friction">How fast this object will stop moving.</param>
-        /// <param name="maxSpeed">The maximum speed this object can reach</param>
-        /// <param name="movementForce">The force applied to the object when pressing the arrow keys</param>
-        /// <param name="maxHealth">The maximum health of this player</param>
-        /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
-        /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
-        /// <param name="dodgeLength">How long the player will dodge for</param>
-        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
-        public Player(Texture2D sprite, int X, int Y, Point size, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
-            base(sprite, X, Y, size, movementForce, maxSpeed, friction)
-        {
-            this.maxHealth = maxHealth;
-            this.invulnerabilityTime = invulnerabilityTime;
-            this.dodgeCooldown = dodgeCooldown;
-            this.dodgeLength = dodgeLength;
-            this.dodgeSpeed = dodgeSpeed;
-            this.canMove = true;
-        }
-
-        /// <summary>
-        /// Constructs a Player object
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="X">The X position of this GameObject</param>
-        /// <param name="Y">The X position of this GameObject</param>
-        /// <param name="width">The width of this GameObject in pixels</param>
-        /// <param name="height">The height of this GameObject in pixels</param>
-        /// <param name="friction">How fast this object will stop moving.</param>
-        /// <param name="maxSpeed">The maximum speed this object can reach</param>
-        /// <param name="movementForce">The force applied to the object when pressing the arrow keys</param>
-        /// <param name="maxHealth">The maximum health of this player</param>
-        /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
-        /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
-        /// <param name="dodgeLength">How long the player will dodge for</param>
-        /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
-        public Player(Texture2D sprite, int X, int Y, int width, int height, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
-            base(sprite, X, Y, width, height, movementForce, maxSpeed, friction)
-        {
-            this.maxHealth = maxHealth;
-            this.invulnerabilityTime = invulnerabilityTime;
-            this.dodgeCooldown = dodgeCooldown;
-            this.dodgeLength = dodgeLength;
-            this.dodgeSpeed = dodgeSpeed;
-            this.canMove = true;
-        }
-
-
-        /// <summary>
         /// Updates this Object's fields 
         /// </summary>
         /// <param name="gameTime">A reference to the GameTime</param>
@@ -273,15 +114,6 @@ namespace CrossBoa
 
                 UpdatePhysics(gameTime);
             }
-        }
-
-        /// <summary>
-        /// Draws this GameObject to the screen
-        /// </summary>
-        /// <param name="spriteBatch">A reference to the SpriteBatch</param>
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            base.Draw(spriteBatch);
         }
 
         /// <summary>

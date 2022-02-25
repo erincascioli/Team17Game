@@ -85,11 +85,13 @@ namespace CrossBoa
                 DefaultPlayerDodgeLength,
                 DefaultPlayerDodgeSpeed
             );
+
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
                 0,
                 player);
+
             slime = new Slime(
                 3,
                 whiteSquareSprite,
@@ -146,7 +148,6 @@ namespace CrossBoa
 
                 gameObjectList.Add(testProjectile);
             }
-
 
             previousKBState = kbState;
             previousMState = mState;

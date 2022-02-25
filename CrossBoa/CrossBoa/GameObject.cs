@@ -20,6 +20,8 @@ namespace CrossBoa
         protected Vector2 position;
         protected Point size;
 
+        private Rectangle rectCache;
+
         // ------------
         //  Properties
         // ------------
@@ -37,7 +39,10 @@ namespace CrossBoa
         /// </summary>
         public Rectangle Rectangle
         {
-            get { return new Rectangle(position.ToPoint(), size); }
+            get
+            {
+                return new Rectangle(position.ToPoint(), size);
+            }
         }
 
         /// <summary>
@@ -86,6 +91,7 @@ namespace CrossBoa
             this.sprite = sprite;
             this.position = rectangle.Location.ToVector2();
             this.size = rectangle.Size;
+            this.rectCache = Rectangle.Empty;
         }
 
         /// <summary>
@@ -99,85 +105,14 @@ namespace CrossBoa
             this.sprite = sprite;
             this.position = position;
             this.size = size;
-        }
-
-        /// <summary>
-        /// Constructs a GameObject
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="X">The X position of this GameObject</param>
-        /// <param name="Y">The X position of this GameObject</param>
-        /// <param name="size">The GameObject's size in pixels</param>
-        public GameObject(Texture2D sprite, float X, float Y, Point size)
-        {
-            this.sprite = sprite;
-            this.position = new Vector2(X, Y);
-            this.size = size;
-        }
-
-        /// <summary>
-        /// Constructs a GameObject
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="position">The GameObject's position</param>
-        /// <param name="width">The width of this GameObject in pixels</param>
-        /// <param name="height">The height of this GameObject in pixels</param>
-        public GameObject(Texture2D sprite, Vector2 position, int width, int height)
-        {
-            this.sprite = sprite;
-            this.position = position;
-            this.size = new Point(width, height);
-        }
-
-        /// <summary>
-        /// Constructs a GameObject
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="X">The X position of this GameObject</param>
-        /// <param name="Y">The X position of this GameObject</param>
-        /// <param name="width">The width of this GameObject in pixels</param>
-        /// <param name="height">The height of this GameObject in pixels</param>
-        public GameObject(Texture2D sprite, float X, float Y, int width, int height)
-        {
-            this.sprite = sprite;
-            this.position = new Vector2(X, Y);
-            this.size = new Point(width, height);
-        }
-
-        /// <summary>
-        /// Constructs a GameObject
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="X">The X position of this GameObject</param>
-        /// <param name="Y">The X position of this GameObject</param>
-        /// <param name="size">The GameObject's size in pixels</param>
-        public GameObject(Texture2D sprite, int X, int Y, Point size)
-        {
-            this.sprite = sprite;
-            this.position = new Vector2(X, Y);
-            this.size = size;
-        }
-
-        /// <summary>
-        /// Constructs a GameObject
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="X">The X position of this GameObject</param>
-        /// <param name="Y">The X position of this GameObject</param>
-        /// <param name="width">The width of this GameObject in pixels</param>
-        /// <param name="height">The height of this GameObject in pixels</param>
-        public GameObject(Texture2D sprite, int X, int Y, int width, int height)
-        {
-            this.sprite = sprite;
-            this.position = new Vector2(X, Y);
-            this.size = new Point(width, height);
+            this.rectCache = Rectangle.Empty;
         }
 
         // -----------
         //   Methods
         // -----------
         /// <summary>
-        /// Empty Update() method to allow for Polymorphism
+        /// Put this in the Game1 Update() method
         /// </summary>
         /// <param name="gameTime">A reference to the GameTime</param>
         public virtual void Update(GameTime gameTime)

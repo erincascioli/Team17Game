@@ -45,26 +45,6 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Let's gameObject create it's own rectangle
-        /// </summary>
-        /// <param name="hoverImage"></param>
-        /// <param name="offImage"></param>
-        /// <param name="cursor"></param>
-        /// <param name="isInteractible"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        public Button(Texture2D hoverImage, Texture2D offImage, bool isInteractable, int x, int y, int width, int height) 
-            : base(offImage, x, y, width, height)
-        {
-            this.isInteractable = isInteractable;
-            button = new Rectangle(x, y, width, height);
-            hoverButtonTexture = hoverImage;
-            offButtonTexture = offImage;
-        }
-
-        /// <summary>
         /// Purpose: Determines whether or not the cursor is currently over a button
         /// Restrictions: none
         /// </summary>
