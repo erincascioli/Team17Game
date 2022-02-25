@@ -16,7 +16,7 @@ namespace CrossBoa
     {
         private Player player;
         private CrossBow crossbow;
-        private Projectile arrow;
+        private Projectile playerArrow;
         private List<IEnemy> enemies;
         private List<Projectile> enemyProjectiles;
         private List<Tile> levelObstacles;
@@ -31,10 +31,10 @@ namespace CrossBoa
             get { return crossbow; }
         }
 
-        public Projectile Arrow
+        public Projectile PlayerArrow
         {
-            get { return arrow; }
-            set { arrow = value; }
+            get { return playerArrow; }
+            set { playerArrow = value; }
         }
 
 
@@ -43,7 +43,7 @@ namespace CrossBoa
             // All fields get a reference location
             player = character;
             crossbow = weapon;
-            arrow = bolt;
+            playerArrow = bolt;
 
             // Lists are created
             enemies = new List<IEnemy>();
@@ -60,7 +60,7 @@ namespace CrossBoa
             foreach (Projectile i in enemyProjectiles)
             {
                 // First checks for player projectile collisions
-                if (i.Rectangle.Intersects(player.Rectangle))
+                if (i.Hitbox.Intersects(player.Rectangle))
                 {
                     i.HitSomething();
                 }
@@ -84,7 +84,6 @@ namespace CrossBoa
                 if (player.Rectangle.Intersects(i.Rectangle))
                 {
                     i.DealContactDamage(player);
-
                 }
                 else
                 {
@@ -92,19 +91,22 @@ namespace CrossBoa
                 }
 
                 // with player arrow
-                /*if (arrow.Rectangle.Intersects(i.Rectangle))
+                if (playerArrow != null && playerArrow.Hitbox.Intersects(i.Rectangle))
                 {
                     // Health value not decided on yet
                     i.Health -= 1;
-                }*/
+
+                    // Change enemy color
+                    i.CurrentColor = Color.Red;
+                }
             }
 
             // Player arrow with wall
             /*foreach (Tile i in levelObstacles)
             {
-                if (arrow.Rectangle.Intersects(i.Rectangle))
+                if (playerArrow.Rectangle.Intersects(i.Rectangle))
                 {
-                    arrow.HitSomething();
+                    playerArrow.HitSomething();
                 }
             }*/
         }

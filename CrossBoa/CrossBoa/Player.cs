@@ -60,8 +60,11 @@ namespace CrossBoa
             set { dodgeCooldown = value; }
         }
 
+        /// <summary>
+        /// The hitbox for this object
+        /// </summary>
         public Rectangle Hitbox
-        {
+        { 
             get { return Rectangle; }
         }
 

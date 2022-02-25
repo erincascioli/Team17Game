@@ -7,6 +7,9 @@ namespace CrossBoa
 {
     public interface ICollidable
     {
+        /// <summary>
+        /// The hitbox for this object
+        /// </summary>
         public Rectangle Hitbox { get; }
     }
 }
