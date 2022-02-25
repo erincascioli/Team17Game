@@ -171,5 +171,25 @@ namespace CrossBoa
                     Color.White);   // Background color
             }
         }
+
+        /// <summary>
+        /// Purpose: Compiles list of tiles that can be interacted with
+        /// Restrictions: Level must already have been loaded
+        /// </summary>
+        /// <returns></returns>
+        public static List<Tile> GetCollidables()
+        {
+            List<Tile> collidables = new List<Tile>();
+
+            foreach (Tile i in levelTiles)
+            {
+                if (i.IsInteractable)
+                {
+                    collidables.Add(i);
+                }
+            }
+
+            return collidables;
+        }
     }
 }
