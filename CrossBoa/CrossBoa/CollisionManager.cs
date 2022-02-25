@@ -92,12 +92,21 @@ namespace CrossBoa
                 }
 
                 // with player arrow
-                if (arrow.Rectangle.Intersects(i.Rectangle))
+                /*if (arrow.Rectangle.Intersects(i.Rectangle))
                 {
                     // Health value not decided on yet
                     i.Health -= 1;
-                }
+                }*/
             }
+
+            // Player arrow with wall
+            /*foreach (Tile i in levelObstacles)
+            {
+                if (arrow.Rectangle.Intersects(i.Rectangle))
+                {
+                    arrow.HitSomething();
+                }
+            }*/
         }
 
         public void Update()
@@ -105,6 +114,11 @@ namespace CrossBoa
             // parses in level collidables; will likely be put somewhere else
             // eventually because it shouldn't happen every update
             levelObstacles = LevelManager.GetCollidables();
+        }
+
+        public void AddEnemy(IEnemy enemy)
+        {
+            enemies.Add(enemy);
         }
     }
 }

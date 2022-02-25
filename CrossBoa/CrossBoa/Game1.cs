@@ -36,6 +36,7 @@ namespace CrossBoa
         private CrossBow crossbow;
         private Player player;
         private Slime slime;
+        private CollisionManager manager;
 
         private List<GameObject> gameObjectList;
 
@@ -109,8 +110,9 @@ namespace CrossBoa
 
             LevelManager.LContent = Content;
             LevelManager.LoadLevel("TestingFile");
-            
 
+            manager = new CollisionManager(player, crossbow, testProjectile);
+            manager.AddEnemy(slime);
         }
 
         protected override void Update(GameTime gameTime)
@@ -148,6 +150,8 @@ namespace CrossBoa
 
             previousKBState = kbState;
             previousMState = mState;
+
+            manager.CheckCollision();
             base.Update(gameTime);
         }
 

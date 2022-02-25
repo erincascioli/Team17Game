@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
-    interface IEnemy
+    public interface IEnemy
     {
         /// <summary>
         /// Property to get the current health of the enemy.
