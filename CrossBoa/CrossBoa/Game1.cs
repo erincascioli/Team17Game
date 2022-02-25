@@ -145,6 +145,7 @@ namespace CrossBoa
                 gameObjectList.Add(testProjectile);
             }
 
+
             previousKBState = kbState;
             previousMState = mState;
             base.Update(gameTime);

@@ -56,6 +56,7 @@ namespace CrossBoa
         /// </summary>
         public void CheckCollision()
         {
+            // Projectiles
             foreach (Projectile i in enemyProjectiles)
             {
                 // First checks for player projectile collisions
@@ -73,6 +74,28 @@ namespace CrossBoa
                             i.HitSomething();
                         }
                     }
+                }
+            }
+
+            // Enemies
+            foreach (IEnemy i in enemies)
+            {
+                // with player
+                if (player.Rectangle.Intersects(i.Rectangle))
+                {
+                    i.DealContactDamage(player);
+
+                }
+                else
+                {
+                    i.CurrentColor = Color.Green;
+                }
+
+                // with player arrow
+                if (arrow.Rectangle.Intersects(i.Rectangle))
+                {
+                    // Health value not decided on yet
+                    i.Health -= 1;
                 }
             }
         }

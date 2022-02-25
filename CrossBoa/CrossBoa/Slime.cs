@@ -55,6 +55,15 @@ namespace CrossBoa
             }
         }
 
+        /// <summary>
+        /// Color of the slime ; test code
+        /// </summary>
+        Color IEnemy.CurrentColor 
+        {
+            get { return currentColor; }
+            set { currentColor = value; }
+        }
+
         // ~~~ CONSTRUCTORS ~~~
         public Slime(int health, Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed,
             float friction, Player playerReference) :
@@ -95,13 +104,8 @@ namespace CrossBoa
         /// <param name="player">The player to check the collision of.</param>
         public void DealContactDamage(Player player)
         {
-            if (player.Rectangle.Intersects(this.Rectangle))
-            {
                 player.TakeDamage(0);
                 currentColor = Color.MediumVioletRed;
-            }
-            else
-                currentColor = Color.Green;
         }
 
         /// <summary>
@@ -132,9 +136,6 @@ namespace CrossBoa
             }
             ApplyFriction(gameTime);
             UpdatePhysics(gameTime);
-
-            // Deal damage to the player if they're touching the slime
-            DealContactDamage(player);
         }
     }
 }
