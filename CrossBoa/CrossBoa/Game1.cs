@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -134,21 +135,30 @@ namespace CrossBoa
                 gameObject.Update(gameTime);
             }
 
+            if (testProjectile != null)
+                testProjectile.Update(gameTime);
+
             // Spawn a test projectile if the player clicks
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
             {
                 testProjectile = new Projectile(
-                    whiteSquareSprite,
-                    crossbow.Position,
-                    new Point(50, 15),
-                    crossbow.Direction,
-                    5,
-                    true
+                    whiteSquareSprite,              // Sprite
+                    crossbow.Position,              // Position
+                    new Point(50, 15),              // Size
+                    crossbow.Direction,             // Direction
+                    5,                              // Velocity
+                    true                            // IsPlayerArrow
                 );
 
-                gameObjectList.Add(testProjectile);
+                // Makes the projectile appear from the bow instead of behind the player
+                testProjectile.Position += testProjectile.Velocity * 10;
+
+                manager.PlayerArrow = testProjectile;
             }
 
+            // TEST CODE THAT MAKES THE PROJECTILE FOLLOW THE MOUSE
+            // if (testProjectile != null) testProjectile.Position = mState.Position.ToVector2();
+            
             previousKBState = kbState;
             previousMState = mState;
 
@@ -172,9 +182,22 @@ namespace CrossBoa
                 gameObject.Draw(_spriteBatch);
             }
 
+            if (testProjectile != null)
+                testProjectile.Draw(_spriteBatch);
+
+            // TEST CODE THAT VISUALIZES THE PROJECTILE'S HITBOX AND UNROTATED RECTANGLE
+            /* (testProjectile != null)
+            {
+                // VISUALIZES THE ARROW RECTANGLE
+                _spriteBatch.Draw(whiteSquareSprite, testProjectile.Rectangle, Color.BlanchedAlmond);
+
+                // VISUALIZES THE ARROW HITBOX
+                _spriteBatch.Draw(whiteSquareSprite, testProjectile.Hitbox, Color.Purple);
+            }*/
 
             _spriteBatch.End();
-            base.Draw(gameTime);
+
+                base.Draw(gameTime);
         }
     }
 }

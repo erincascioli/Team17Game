@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
-    public class Projectile : GameObject
+    public class Projectile : GameObject, ICollidable
     {
         private Vector2 velocity;
         private float direction;
@@ -37,6 +37,16 @@ namespace CrossBoa
             get { return isPlayerArrow; }
         }
 
+        /// <summary>
+        /// A single point at the tip of this arrow, represented as a rectangle
+        /// </summary>
+        public Rectangle Hitbox
+        {
+            get
+            {
+                return new Rectangle(position.ToPoint(), Point.Zero);
+            }
+        }
 
         /// <summary>
         /// Constructs a Projectile
@@ -130,12 +140,13 @@ namespace CrossBoa
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite,
+            spriteBatch.Draw(
+                sprite,
                 position,
                 null,
                 Color.White,
                 direction,
-                Vector2.Zero,
+                new Vector2(1, 0.5f),
                 size.ToVector2(),
                 SpriteEffects.None,
                 0.5f);
