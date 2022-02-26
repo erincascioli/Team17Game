@@ -153,6 +153,9 @@ namespace CrossBoa
             previousKBState = kbState;
             previousMState = mState;
 
+            // CollisionManager checks for collisions
+            manager.Update();
+
             manager.CheckCollision();
             base.Update(gameTime);
         }

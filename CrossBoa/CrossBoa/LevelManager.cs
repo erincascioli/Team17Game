@@ -122,7 +122,7 @@ namespace CrossBoa
                     {
                         foreach (string[] i in tileList)
                         {
-                            if (i[2] == allTiles[stringIndex])
+                            if (int.Parse(i[2]) == int.Parse(allTiles[stringIndex]))
                             {
                                 levelTiles.Add(new Tile(             
                                     Content.Load<Texture2D>(i[0]),        // Asset
