@@ -29,11 +29,11 @@ namespace CrossBoa
         // Assets
         private Texture2D whiteSquareSprite;
         private Texture2D tempCbSprite;
+        private Texture2D hitBox;
         private SpriteFont arial32;
 
         // Objects
         private Button testButton;
-        private Projectile testProjectile;
         private CrossBow crossbow;
         private Player player;
         private Slime slime;
@@ -72,6 +72,7 @@ namespace CrossBoa
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
             arial32 = Content.Load<SpriteFont>("Arial32");
             tempCbSprite = Content.Load<Texture2D>("Crossbow_Pull_0");
+            hitBox = Content.Load<Texture2D>("SquareHitbox");
 
             // Load objects
             player = new Player(
@@ -104,7 +105,7 @@ namespace CrossBoa
                 player);
 
             // TODO: TEST CODE
-            testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(500, 500, 250, 50));
+            testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(1000, 800, 250, 50));
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(slime);
@@ -112,11 +113,14 @@ namespace CrossBoa
             gameObjectList.Add(crossbow); 
             gameObjectList.Add(testButton);
 
-            LevelManager.LContent = Content;
-            LevelManager.LoadLevel("TestingFile");
+            
 
-            manager = new CollisionManager(player, crossbow, testProjectile);
+            manager = new CollisionManager(player, crossbow);
             manager.AddEnemy(slime);
+
+            LevelManager.LContent = Content;
+            LevelManager.Collide = manager;
+            LevelManager.LoadLevel("TestingFile");
         }
 
         protected override void Update(GameTime gameTime)
@@ -154,8 +158,6 @@ namespace CrossBoa
             previousMState = mState;
 
             // CollisionManager checks for collisions
-            manager.Update();
-
             manager.CheckCollision();
             base.Update(gameTime);
         }
@@ -179,18 +181,11 @@ namespace CrossBoa
             if (manager.PlayerArrow != null)
                 manager.PlayerArrow.Draw(_spriteBatch);
 
-            // TEST CODE THAT VISUALIZES THE PROJECTILE'S HITBOX AND UNROTATED RECTANGLE
-            /* (testProjectile != null)
-            {
-                // VISUALIZES THE ARROW RECTANGLE
-                _spriteBatch.Draw(whiteSquareSprite, testProjectile.Rectangle, Color.BlanchedAlmond);
-
-                // VISUALIZES THE ARROW HITBOX
-                _spriteBatch.Draw(whiteSquareSprite, testProjectile.Hitbox, Color.Purple);
-            }*/
-
             // ~~~ Draws the crossbow's timeSinceShot timer
-            // _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
+             _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
+
+            // Shows working hitboxes that don' use points
+            manager.Draw(_spriteBatch, hitBox);
 
             _spriteBatch.End();
 
