@@ -90,8 +90,9 @@ namespace CrossBoa
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
-                0,
-                player);
+                1,
+                player,
+                whiteSquareSprite);
 
             slime = new Slime(
                 3,
@@ -135,26 +136,16 @@ namespace CrossBoa
                 gameObject.Update(gameTime);
             }
 
-            if (testProjectile != null)
-                testProjectile.Update(gameTime);
-
-            // Spawn a test projectile if the player clicks
+            // Fires the bow on click.
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
             {
-                testProjectile = new Projectile(
-                    whiteSquareSprite,              // Sprite
-                    crossbow.Position,              // Position
-                    new Point(50, 15),              // Size
-                    crossbow.Direction,             // Direction
-                    5,                              // Velocity
-                    true                            // IsPlayerArrow
-                );
-
-                // Makes the projectile appear from the bow instead of behind the player
-                testProjectile.Position += testProjectile.Velocity * 10;
-
-                manager.PlayerArrow = testProjectile;
+                manager.PlayerArrow = crossbow.Shoot();
             }
+
+            if (manager.PlayerArrow != null)
+               manager.PlayerArrow.Update(gameTime);
+
+            
 
             // TEST CODE THAT MAKES THE PROJECTILE FOLLOW THE MOUSE
             // if (testProjectile != null) testProjectile.Position = mState.Position.ToVector2();
@@ -182,8 +173,8 @@ namespace CrossBoa
                 gameObject.Draw(_spriteBatch);
             }
 
-            if (testProjectile != null)
-                testProjectile.Draw(_spriteBatch);
+            if (manager.PlayerArrow != null)
+                manager.PlayerArrow.Draw(_spriteBatch);
 
             // TEST CODE THAT VISUALIZES THE PROJECTILE'S HITBOX AND UNROTATED RECTANGLE
             /* (testProjectile != null)
@@ -194,6 +185,9 @@ namespace CrossBoa
                 // VISUALIZES THE ARROW HITBOX
                 _spriteBatch.Draw(whiteSquareSprite, testProjectile.Hitbox, Color.Purple);
             }*/
+
+            // ~~~ Draws the crossbow's timeSinceShot timer
+            // _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
 
             _spriteBatch.End();
 
