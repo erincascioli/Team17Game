@@ -102,13 +102,13 @@ namespace CrossBoa
             }
 
             // Player arrow with wall
-            /*foreach (Tile i in levelObstacles)
+            foreach (Tile i in levelObstacles)
             {
-                if (playerArrow.Rectangle.Intersects(i.Rectangle))
+                if (playerArrow != null && playerArrow.Rectangle.Intersects(i.Rectangle))
                 {
                     playerArrow.HitSomething();
                 }
-            }*/
+            }
         }
 
         public void Update()
