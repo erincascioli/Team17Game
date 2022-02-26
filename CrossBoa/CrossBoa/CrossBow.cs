@@ -32,6 +32,16 @@ namespace CrossBoa
         /// </summary>
         private bool isLoaded;
 
+        /// <summary>
+        /// The sprite used to represent the fired arrow.
+        /// </summary>
+        private Texture2D boltSprite;
+
+        /// <summary>
+        /// The current projectile currently being fired.
+        /// </summary>
+        private Projectile arrow;
+
         // ~~~ PROPERTIES ~~~
         /// <summary>
         /// The time since the bow was last shot. Get-only.
@@ -57,7 +67,7 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// The cooldown per shot. Get/set property.
+        /// The cooldown per shot. Get-only property.
         /// </summary>
         public float ShotCoolDown
         {
@@ -65,14 +75,10 @@ namespace CrossBoa
             {
                 return shotCoolDown;
             }
-            set
-            {
-                shotCoolDown = value;
-            }
         }
 
         /// <summary>
-        /// Returns the direction that the crossbow is facing
+        /// Returns the direction that the crossbow is facing.
         /// </summary>
         public float Direction
         {
@@ -87,31 +93,46 @@ namespace CrossBoa
         /// <param name="rectangle">The rectangle that represents the crossbow's hitbox.</param>
         /// <param name="shotCoolDown">The cooldown per shot.</param>
         /// <param name="playerReference">A reference to the player object</param>
-        public CrossBow(Texture2D sprite, Rectangle rectangle, float shotCoolDown, Player playerReference) :
-            base(sprite, rectangle)
+        public CrossBow(Texture2D sprite, Rectangle rectangle, float shotCoolDown, Player playerReference,
+            Texture2D boltSprite) : base(sprite, rectangle)
         {
             this.shotCoolDown = shotCoolDown;
             player = playerReference;
             isLoaded = true;
             timeSinceShot = 0f;
+            this.boltSprite = boltSprite;
         }
 
         // ~~~ METHODS ~~~
         /// <summary>
         /// If not on cooldown, shoots the bow, which sends
         /// a projectile forward and resets the cooldown.
-        /// Can't be worked on since we don't have a
-        /// Projectile class yet.
         /// </summary>
-        /// <param name="arrow">The projectile tp shoot forward.</param>
-        // public void Shoot(Projectile arrow)
+        public Projectile Shoot()
+        {
+            if (timeSinceShot >= shotCoolDown)
+            {
+                timeSinceShot = 0f;
+                arrow = new Projectile(
+                boltSprite,                 // Sprite
+                Position,                   // Position
+                new Point(50, 15),          // Size
+                Direction,                  // Direction
+                5,                          // Velocity
+                true);                      // IsPlayerArrow
 
+                // Makes the projectile appear from the bow instead of behind the player.
+                arrow.Position += arrow.Velocity * 10;
+            }
+            return arrow;
+        }
+            
 
         /// <summary>
         /// Calculates the angle between the crossbow and the mouse cursor,
         /// and returns that in degrees.
         /// </summary>
-        /// <returns>The anle between the crossbow and the mouse cursor, in degrees.</returns>
+        /// <returns>The angle between the crossbow and the mouse cursor, in degrees.</returns>
         public float FollowCursor()
         {
             // Formula used for calculations: 
@@ -158,6 +179,7 @@ namespace CrossBoa
         {
             this.position.X = player.Position.X + player.Width / 2;
             this.position.Y = player.Position.Y + player.Height / 2;
+            timeSinceShot += (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 }
