@@ -55,11 +55,11 @@ namespace CrossBoa
         /// </summary>
         public void CheckCollision()
         {
-            // Projectiles
+            // enemy Projectiles
             foreach (Projectile i in enemyProjectiles)
             {
                 // First checks for player projectile collisions
-                if (i.Hitbox.Intersects(player.Rectangle))
+                if (i.Hitbox.Intersects(player.Hitbox))
                 {
                     i.HitSomething();
                 }
@@ -68,7 +68,7 @@ namespace CrossBoa
                     // Next checks if any projectiles hit a wall/Obstacle
                     foreach(Tile j in levelObstacles)
                     {
-                        if (i.Rectangle.Intersects(j.Rectangle))
+                        if (i.Hitbox.Intersects(j.Rectangle))
                         {
                             i.HitSomething();
                         }
@@ -80,7 +80,7 @@ namespace CrossBoa
             foreach (IEnemy i in enemies)
             {
                 // with player
-                if (player.Rectangle.Intersects(i.Rectangle))
+                if (player.Hitbox.Intersects(i.Rectangle))
                 {
                     i.DealContactDamage(player);
                 }
@@ -98,12 +98,13 @@ namespace CrossBoa
                     // Change enemy color
                     i.CurrentColor = Color.Red;
                 }
+
             }
 
             // Player arrow with wall
             foreach (Tile i in levelObstacles)
             {
-                if (playerArrow != null && playerArrow.Rectangle.Intersects(i.Rectangle))
+                if (playerArrow != null && playerArrow.Hitbox.Intersects(i.Rectangle))
                 {
                     playerArrow.HitSomething();
                 }
@@ -116,29 +117,29 @@ namespace CrossBoa
         /// Restrictions: none
         /// </summary>
         /// <param name="sb"></param>
-        public void Draw(SpriteBatch sb, Texture2D hitBox)
+        public void Draw(SpriteBatch sb, Texture2D hitBox, Texture2D arrowPoint)
         {
-            sb.Draw(hitBox, player.Hitbox, Color.Red);
+            sb.Draw(hitBox, player.Hitbox, Color.White);
 
             if(playerArrow != null)
             {
-                sb.Draw(hitBox, playerArrow.Hitbox, Color.Red);
+                sb.Draw(arrowPoint, new Rectangle(playerArrow.Hitbox.X - 2, PlayerArrow.Hitbox.Y - 2, 5, 5), Color.Red);
             }
 
             foreach(Projectile i in enemyProjectiles)
             {
-                sb.Draw(hitBox, i.Hitbox, Color.Red);
+                sb.Draw(arrowPoint, new Rectangle(i.Hitbox.X - 2, i.Hitbox.Y - 2, 5, 5), Color.Red);
             }
 
             foreach (IEnemy i in enemies)
             {
                 // Doesn't use ICollidable yet
-                sb.Draw(hitBox, i.Rectangle, Color.Red);
+                sb.Draw(hitBox, i.Rectangle, Color.White);
             }
 
             foreach (Tile i in levelObstacles)
             {
-                sb.Draw(hitBox, i.Rectangle, Color.Red);
+                sb.Draw(hitBox, i.Rectangle, Color.White);
             }
         }
 
