@@ -38,12 +38,11 @@ namespace CrossBoa
         }
 
 
-        public CollisionManager(Player character, CrossBow weapon, Projectile bolt)
+        public CollisionManager(Player character, CrossBow weapon)
         {
             // All fields get a reference location
             player = character;
             crossbow = weapon;
-            playerArrow = bolt;
 
             // Lists are created
             enemies = new List<IEnemy>();
@@ -111,16 +110,66 @@ namespace CrossBoa
             }
         }
 
-        public void Update()
+        /// <summary>
+        /// Purpose: draws all hitboxes to screen
+        ///          best for debugging
+        /// Restrictions: none
+        /// </summary>
+        /// <param name="sb"></param>
+        public void Draw(SpriteBatch sb, Texture2D hitBox)
         {
-            // parses in level collidables; will likely be put somewhere else
-            // eventually because it shouldn't happen every update
-            levelObstacles = LevelManager.GetCollidables();
+            sb.Draw(hitBox, player.Hitbox, Color.Red);
+
+            if(playerArrow != null)
+            {
+                sb.Draw(hitBox, playerArrow.Hitbox, Color.Red);
+            }
+
+            foreach(Projectile i in enemyProjectiles)
+            {
+                sb.Draw(hitBox, i.Hitbox, Color.Red);
+            }
+
+            foreach (IEnemy i in enemies)
+            {
+                // Doesn't use ICollidable yet
+                sb.Draw(hitBox, i.Rectangle, Color.Red);
+            }
+
+            foreach (Tile i in levelObstacles)
+            {
+                sb.Draw(hitBox, i.Rectangle, Color.Red);
+            }
         }
 
+
+        /// <summary>
+        /// Purpose: Let's the manager add an enemy to check it's hitboxes
+        /// Restrictions: none
+        /// </summary>
+        /// <param name="enemy"></param>
         public void AddEnemy(IEnemy enemy)
         {
             enemies.Add(enemy);
+        }
+
+        /// <summary>
+        /// Purpose: stores new projectiles every time an enemy shoots
+        /// Restrictions: none
+        /// </summary>
+        /// <param name="projectile"></param>
+        public void AddProjectile(Projectile projectile)
+        {
+            enemyProjectiles.Add(projectile);
+        }
+
+        /// <summary>
+        /// Purpose: Stores a levels innate collisions when it is first loaded
+        /// Restrictions: should be called as soon as possible after loading a level
+        /// </summary>
+        public void UpdateLevel()
+        {
+            levelObstacles = LevelManager.GetCollidables();
         }
     }
 }

@@ -131,7 +131,8 @@ namespace CrossBoa
         /// </summary>
         public void HitSomething()
         {
-
+            // Test code
+            velocity = new Vector2(); // Stops projectile
         }
 
         /// <summary>
