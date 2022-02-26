@@ -30,6 +30,7 @@ namespace CrossBoa
         private Texture2D whiteSquareSprite;
         private Texture2D tempCbSprite;
         private Texture2D hitBox;
+        private Texture2D arrowHitBox;
         private SpriteFont arial32;
 
         // Objects
@@ -72,7 +73,8 @@ namespace CrossBoa
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
             arial32 = Content.Load<SpriteFont>("Arial32");
             tempCbSprite = Content.Load<Texture2D>("Crossbow_Pull_0");
-            hitBox = Content.Load<Texture2D>("SquareHitbox");
+            hitBox = Content.Load<Texture2D>("Hitbox");
+            arrowHitBox = Content.Load<Texture2D>("White Pixel");
 
             // Load objects
             player = new Player(
@@ -185,7 +187,7 @@ namespace CrossBoa
              _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
 
             // Shows working hitboxes that don' use points
-            manager.Draw(_spriteBatch, hitBox);
+            manager.Draw(_spriteBatch, hitBox, arrowHitBox);
 
             _spriteBatch.End();
 
