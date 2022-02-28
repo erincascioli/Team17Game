@@ -4,6 +4,9 @@ using System.Text;
 
 namespace CrossBoa
 {
+    /// <summary>
+    /// Written by Leo Schindler-Gerendasi
+    /// </summary>
     interface IShoot
     {
         /// <summary>

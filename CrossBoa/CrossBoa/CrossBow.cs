@@ -10,8 +10,9 @@ namespace CrossBoa
     /// <summary>
     /// A crossbow, which points towards the mouse and can fire
     /// an arrow. Inherits from GameObject.
+    /// Written by Leo Schinder-Gerendasi
     /// </summary>
-    public class CrossBow : GameObject
+    public class CrossBow : GameObject//, IShoot
     {
         // ~~~ FIELDS ~~~
         private Player player;
@@ -38,7 +39,7 @@ namespace CrossBoa
         private Texture2D boltSprite;
 
         /// <summary>
-        /// The current projectile currently being fired.
+        /// The current projectile that can get fired.
         /// </summary>
         private Projectile arrow;
 
@@ -177,8 +178,7 @@ namespace CrossBoa
         /// </summary>
         public override void Update(GameTime gameTime)
         {
-            this.position.X = player.Position.X + player.Width / 2;
-            this.position.Y = player.Position.Y + player.Height / 2;
+            this.position = player.Position + player.Size.ToVector2() / 2;
             timeSinceShot += (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
     }
