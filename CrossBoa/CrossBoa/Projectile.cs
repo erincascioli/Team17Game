@@ -7,10 +7,15 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
+    /// <summary>
+    /// Author: Ian Knecht
+    /// <para>Represents a projectile with a rotation and a constant movement speed</para>
+    /// </summary>
     public class Projectile : GameObject, ICollidable
     {
         private Vector2 velocity;
         private float direction;
+        private bool isActive;
         private bool isPlayerArrow;
 
         /// <summary>
@@ -27,6 +32,14 @@ namespace CrossBoa
         public float Direction
         {
             get { return direction; }
+        }
+
+        /// <summary>
+        /// Whether this arrow is currently active or not
+        /// </summary>
+        public bool IsActive
+        {
+            get { return isActive; }
         }
 
         /// <summary>
@@ -60,6 +73,7 @@ namespace CrossBoa
             this.velocity = velocity;
             this.isPlayerArrow = isPlayerArrow;
             direction = MathF.Atan2(velocity.Y, velocity.X);
+            this.isActive = true;
         }
 
         /// <summary>
@@ -75,6 +89,7 @@ namespace CrossBoa
             this.velocity = velocity;
             this.isPlayerArrow = isPlayerArrow;
             direction = MathF.Atan2(velocity.Y, velocity.X);
+            this.isActive = true;
         }
 
         /// <summary>
@@ -90,6 +105,7 @@ namespace CrossBoa
             this.direction = direction;
             this.isPlayerArrow = isPlayerArrow;
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
+            this.isActive = true;
         }
 
         /// <summary>
@@ -106,6 +122,7 @@ namespace CrossBoa
             this.direction = direction;
             this.isPlayerArrow = isPlayerArrow;
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
+            this.isActive = true;
         }
 
         /// <summary>
@@ -123,7 +140,18 @@ namespace CrossBoa
         /// </summary>
         public void Move()
         {
-            position += velocity;
+            if (isActive)
+            {
+                position += velocity;
+            }
+        }
+
+        public void ChangeVelocity(Vector2 position, float direction, float magnitude)
+        {
+            isActive = true;
+            this.position = position;
+            this.direction = direction;
+            this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
         }
 
         /// <summary>
@@ -131,8 +159,7 @@ namespace CrossBoa
         /// </summary>
         public void HitSomething()
         {
-            // Test code
-            velocity = new Vector2(); // Stops projectile
+            isActive = false; // Stops projectile
         }
 
         /// <summary>

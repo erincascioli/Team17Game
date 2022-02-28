@@ -181,7 +181,12 @@ namespace CrossBoa
             }
 
             if (manager.PlayerArrow != null)
+            {
                 manager.PlayerArrow.Draw(_spriteBatch);
+
+                // TEST CODE TO DRAW ARROW RECTANGLE
+                // _spriteBatch.Draw(whiteSquareSprite, manager.PlayerArrow.Rectangle, Color.Tan);
+            }
 
             // ~~~ Draws the crossbow's timeSinceShot timer
              _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
