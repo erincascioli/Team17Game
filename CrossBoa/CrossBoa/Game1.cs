@@ -92,19 +92,18 @@ namespace CrossBoa
             );
 
             arrow = new Projectile(
-                whiteSquareSprite,                 // Sprite
-                new Vector2(0,0),                   // Position
-                new Point(50, 15),          // Size
-                0f,                  // Direction
-                5,                          // Velocity
-                true);                      // IsPlayerArrow)
+                whiteSquareSprite,
+                new Vector2(-100,-100),
+                new Point(50, 15),
+                0f,
+                0,
+                true);
 
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
                 1,
-                player,
-                whiteSquareSprite);
+                player);
 
             slime = new Slime(
                 3,
@@ -128,6 +127,7 @@ namespace CrossBoa
 
             manager = new CollisionManager(player, crossbow);
             manager.AddEnemy(slime);
+            manager.PlayerArrow = arrow;
 
             LevelManager.LContent = Content;
             LevelManager.Collide = manager;
@@ -154,7 +154,7 @@ namespace CrossBoa
             // Fires the bow on click.
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
             {
-                manager.PlayerArrow = crossbow.Shoot();
+                crossbow.Shoot(arrow);
             }
 
             if (manager.PlayerArrow != null)
