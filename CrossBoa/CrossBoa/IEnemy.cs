@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
+    /// <summary>
+    /// Written by Leo Schindler-Gerendasi
+    /// </summary>
     public interface IEnemy
     {
         /// <summary>

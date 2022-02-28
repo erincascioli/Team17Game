@@ -42,6 +42,7 @@ namespace CrossBoa
         private CrossBow crossbow;
         private Player player;
         private Slime slime;
+        private Projectile arrow;
         private CollisionManager manager;
         private List<Button> buttonList;
 
@@ -99,12 +100,19 @@ namespace CrossBoa
                 DefaultPlayerDodgeSpeed
             );
 
+            arrow = new Projectile(
+                whiteSquareSprite,
+                new Vector2(-100,-100),
+                new Point(50, 15),
+                0f,
+                0,
+                true);
+
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
                 1,
-                player,
-                whiteSquareSprite);
+                player);
 
             slime = new Slime(
                 3,
@@ -137,6 +145,7 @@ namespace CrossBoa
 
             manager = new CollisionManager(player, crossbow);
             manager.AddEnemy(slime);
+            manager.PlayerArrow = arrow;
 
             LevelManager.LContent = Content;
             LevelManager.Collide = manager;
@@ -175,11 +184,11 @@ namespace CrossBoa
                         gameObject.Update(gameTime);
                     }
 
-                    // Fires the bow on click.
-                    if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
-                    {
-                        manager.PlayerArrow = crossbow.Shoot();
-                    }
+            // Fires the bow on click.
+            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
+            {
+                crossbow.Shoot(arrow);
+            }
 
                     if (manager.PlayerArrow != null)
                         manager.PlayerArrow.Update(gameTime);
@@ -260,11 +269,16 @@ namespace CrossBoa
                         gameObject.Draw(_spriteBatch);
                     }
 
-                    if (manager.PlayerArrow != null)
-                        manager.PlayerArrow.Draw(_spriteBatch);
+            if (manager.PlayerArrow != null)
+            {
+                manager.PlayerArrow.Draw(_spriteBatch);
 
-                    // ~~~ Draws the crossbow's timeSinceShot timer
-                    _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
+                // TEST CODE TO DRAW ARROW RECTANGLE
+                // _spriteBatch.Draw(whiteSquareSprite, manager.PlayerArrow.Rectangle, Color.Tan);
+            }
+
+            // ~~~ Draws the crossbow's timeSinceShot timer
+             _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
 
                     buttonList[1].Draw(_spriteBatch);
 
