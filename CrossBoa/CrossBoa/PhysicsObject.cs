@@ -7,10 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
+
+
 namespace CrossBoa
 {
     /// <summary>
-    /// A specialized GameObject parent class that contains physics-related fields
+    /// Author:  TacNayn
+    /// <para>A specialized GameObject parent class that contains physics-related fields</para>
     /// </summary>
     public class PhysicsObject : GameObject
     {
