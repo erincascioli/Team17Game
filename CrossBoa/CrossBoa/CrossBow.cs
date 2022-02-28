@@ -12,7 +12,7 @@ namespace CrossBoa
     /// an arrow. Inherits from GameObject.
     /// Written by Leo Schinder-Gerendasi
     /// </summary>
-    public class CrossBow : GameObject//, IShoot
+    public class CrossBow : GameObject, IShoot
     {
         // ~~~ FIELDS ~~~
         private Player player;
@@ -32,16 +32,6 @@ namespace CrossBoa
         /// in it and is ready to fire.
         /// </summary>
         private bool isLoaded;
-
-        /// <summary>
-        /// The sprite used to represent the fired arrow.
-        /// </summary>
-        private Texture2D boltSprite;
-
-        /// <summary>
-        /// The current projectile that can get fired.
-        /// </summary>
-        private Projectile arrow;
 
         // ~~~ PROPERTIES ~~~
         /// <summary>
@@ -94,14 +84,12 @@ namespace CrossBoa
         /// <param name="rectangle">The rectangle that represents the crossbow's hitbox.</param>
         /// <param name="shotCoolDown">The cooldown per shot.</param>
         /// <param name="playerReference">A reference to the player object</param>
-        public CrossBow(Texture2D sprite, Rectangle rectangle, float shotCoolDown, Player playerReference,
-            Texture2D boltSprite) : base(sprite, rectangle)
+        public CrossBow(Texture2D sprite, Rectangle rectangle, float shotCoolDown, Player playerReference) : base(sprite, rectangle)
         {
             this.shotCoolDown = shotCoolDown;
             player = playerReference;
             isLoaded = true;
             timeSinceShot = 0f;
-            this.boltSprite = boltSprite;
         }
 
         // ~~~ METHODS ~~~
@@ -109,23 +97,19 @@ namespace CrossBoa
         /// If not on cooldown, shoots the bow, which sends
         /// a projectile forward and resets the cooldown.
         /// </summary>
-        public Projectile Shoot()
+        public void Shoot(Projectile projectile)
         {
             if (timeSinceShot >= shotCoolDown)
             {
                 timeSinceShot = 0f;
-                arrow = new Projectile(
-                boltSprite,                 // Sprite
-                Position,                   // Position
-                new Point(50, 15),          // Size
-                Direction,                  // Direction
-                5,                          // Velocity
-                true);                      // IsPlayerArrow
+                projectile.ChangeVelocity(
+                    position,
+                    Direction,
+                    5f);
 
                 // Makes the projectile appear from the bow instead of behind the player.
-                arrow.Position += arrow.Velocity * 10;
+                projectile.Position += projectile.Velocity * 10;
             }
-            return arrow;
         }
             
 
