@@ -101,12 +101,39 @@ namespace CrossBoa
 
             }
 
-            // Player arrow with wall
+            // Collidable tiles
             foreach (Tile i in levelObstacles)
             {
                 if (playerArrow != null && playerArrow.Hitbox.Intersects(i.Rectangle))
                 {
                     playerArrow.HitSomething();
+                }
+
+                if (player.Hitbox.Intersects(i.Rectangle)) 
+                {
+                    // Against left wall
+                    if (new Rectangle(player.Hitbox.X, player.Hitbox.Y + player.Hitbox.Height / 4, player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Left < i.Rectangle.Right)
+                    {
+                        player.Position = new Vector2(i.Rectangle.Right, player.Position.Y);
+                    }
+                    // Against right wall
+                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 2, player.Hitbox.Y + player.Hitbox.Height / 4, player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Right > i.Rectangle.Left)
+                    {
+                        player.Position = new Vector2(i.Rectangle.Left - player.Width, player.Position.Y);
+                    }
+                    
+
+                    // Player top of tile
+                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 4, player.Hitbox.Y + player.Height / 2, player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Top < i.Rectangle.Bottom) 
+                    {
+                        player.Position = new Vector2(player.Position.X, i.Rectangle.Top - player.Height);
+                    }
+
+                    // Against bottom of tile
+                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 4, player.Hitbox.Y, player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Bottom > i.Rectangle.Top)
+                    {
+                        player.Position = new Vector2(player.Position.X, i.Rectangle.Top + player.Height);
+                    }
                 }
             }
         }
