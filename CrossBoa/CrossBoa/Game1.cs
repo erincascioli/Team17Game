@@ -31,6 +31,10 @@ namespace CrossBoa
         private Texture2D tempCbSprite;
         private Texture2D hitBox;
         private Texture2D arrowHitBox;
+        private Texture2D playHoverSprite;
+        private Texture2D playPressedSprite;
+        private Texture2D settingsHoverSprite;
+        private Texture2D settingsPressedSprite;
         private SpriteFont arial32;
 
         // Objects
@@ -38,9 +42,13 @@ namespace CrossBoa
         private CrossBow crossbow;
         private Player player;
         private Slime slime;
+        private Projectile arrow;
         private CollisionManager manager;
+        private List<Button> buttonList;
 
         private List<GameObject> gameObjectList;
+
+        private GameState gameState;
 
         public Game1()
         {
@@ -53,6 +61,8 @@ namespace CrossBoa
         {
             // TODO: Add your initialization logic here
             gameObjectList = new List<GameObject>();
+
+            buttonList = new List<Button>();
 
             _graphics.PreferredBackBufferWidth = 1600;
             _graphics.PreferredBackBufferHeight = 900;
@@ -90,12 +100,19 @@ namespace CrossBoa
                 DefaultPlayerDodgeSpeed
             );
 
+            arrow = new Projectile(
+                whiteSquareSprite,
+                new Vector2(-100,-100),
+                new Point(50, 15),
+                0f,
+                0,
+                true);
+
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
                 1,
-                player,
-                whiteSquareSprite);
+                player);
 
             slime = new Slime(
                 3,
@@ -106,19 +123,29 @@ namespace CrossBoa
                 2500f,
                 player);
 
+            playHoverSprite = Content.Load<Texture2D>("PlayPressed");
+            playPressedSprite = Content.Load<Texture2D>("PlayRegular");
+            settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
+            settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
+
             // TODO: TEST CODE
             testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(1000, 800, 250, 50));
+
+            buttonList.Add(new Button(playHoverSprite, playPressedSprite, true, new Rectangle(GraphicsDeviceManager.DefaultBackBufferWidth/2 + playHoverSprite.Width * 2, GraphicsDeviceManager.DefaultBackBufferHeight/2 + playHoverSprite.Height * 2, playHoverSprite.Width, playHoverSprite.Height)));
+
+            buttonList.Add(new Button(settingsPressedSprite, settingsHoverSprite, true, new Rectangle(GraphicsDeviceManager.DefaultBackBufferWidth / 2 + settingsHoverSprite.Width * 2, GraphicsDeviceManager.DefaultBackBufferHeight / 2 + settingsHoverSprite.Height * 2, settingsHoverSprite.Width, settingsHoverSprite.Height)));
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(slime);
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow); 
-            gameObjectList.Add(testButton);
+            //gameObjectList.Add(testButton);
 
             
 
             manager = new CollisionManager(player, crossbow);
             manager.AddEnemy(slime);
+            manager.PlayerArrow = arrow;
 
             LevelManager.LContent = Content;
             LevelManager.Collide = manager;
@@ -134,28 +161,79 @@ namespace CrossBoa
             KeyboardState kbState = Keyboard.GetState();
             MouseState mState = Mouse.GetState();
 
-            // Update all GameObjects
-            Camera.Update(kbState);
-
-            foreach (GameObject gameObject in gameObjectList)
+            switch (gameState)
             {
-                gameObject.Update(gameTime);
-            }
+                case GameState.MainMenu:
+
+                    buttonList[0].Update(gameTime);
+
+                    if (buttonList[0].HasBeenPressed())
+                    {
+                        gameState = GameState.Game;
+                    }
+
+                    break;
+
+                case GameState.Game:
+
+                    // Update all GameObjects
+                    Camera.Update(kbState);
+
+                    foreach (GameObject gameObject in gameObjectList)
+                    {
+                        gameObject.Update(gameTime);
+                    }
 
             // Fires the bow on click.
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
             {
-                manager.PlayerArrow = crossbow.Shoot();
+                crossbow.Shoot(arrow);
             }
 
-            if (manager.PlayerArrow != null)
-               manager.PlayerArrow.Update(gameTime);
+                    if (manager.PlayerArrow != null)
+                        manager.PlayerArrow.Update(gameTime);
 
-            
+                    buttonList[1].Update(gameTime);
+
+                    if (buttonList[1].HasBeenPressed())
+                    {
+                        gameState = GameState.Pause;
+                    }
+
+                    break;
+
+                case GameState.Settings:
+
+                    break;
+
+                case GameState.Credits:
+
+                    break;
+
+                case GameState.Pause:
+
+                    buttonList[0].Update(gameTime);
+
+                    if (buttonList[0].HasBeenPressed())
+                    {
+                        gameState = GameState.Game;
+                    }
+
+                    break;
+
+                case GameState.GameOver:
+
+                    break;
+
+                case GameState.GameWin:
+
+                    break;
+
+            }
 
             // TEST CODE THAT MAKES THE PROJECTILE FOLLOW THE MOUSE
             // if (testProjectile != null) testProjectile.Position = mState.Position.ToVector2();
-            
+
             previousKBState = kbState;
             previousMState = mState;
 
@@ -171,27 +249,90 @@ namespace CrossBoa
             // TODO: Add your drawing code here
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Camera.Matrix);
 
-            //Level
-            LevelManager.Draw(_spriteBatch);
-
-            // Draw all GameObjects
-            foreach (GameObject gameObject in gameObjectList)
+            switch (gameState)
             {
-                gameObject.Draw(_spriteBatch);
-            }
+                case GameState.MainMenu:
+
+                    _spriteBatch.DrawString(arial32, "Main Menu", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    buttonList[0].Draw(_spriteBatch);
+
+                    break;
+
+                case GameState.Game:
+
+                    //Level
+                    LevelManager.Draw(_spriteBatch);
+
+                    // Draw all GameObjects
+                    foreach (GameObject gameObject in gameObjectList)
+                    {
+                        gameObject.Draw(_spriteBatch);
+                    }
 
             if (manager.PlayerArrow != null)
+            {
                 manager.PlayerArrow.Draw(_spriteBatch);
+
+                // TEST CODE TO DRAW ARROW RECTANGLE
+                // _spriteBatch.Draw(whiteSquareSprite, manager.PlayerArrow.Rectangle, Color.Tan);
+            }
 
             // ~~~ Draws the crossbow's timeSinceShot timer
              _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
 
-            // Shows working hitboxes that don' use points
-            manager.Draw(_spriteBatch, hitBox, arrowHitBox);
+                    buttonList[1].Draw(_spriteBatch);
 
+                    // Shows working hitboxes that don't use points
+                    manager.Draw(_spriteBatch, hitBox, arrowHitBox);
+
+                    break;
+
+                case GameState.Settings:
+
+                    _spriteBatch.DrawString(arial32, "Settings", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+
+                    break;
+
+                case GameState.Credits:
+
+                    _spriteBatch.DrawString(arial32, "Credits", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+
+                    break;
+
+                case GameState.Pause:
+
+                    _spriteBatch.DrawString(arial32, "Pause", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    buttonList[0].Draw(_spriteBatch);
+
+                    break;
+
+                case GameState.GameOver:
+
+                    _spriteBatch.DrawString(arial32, "Game Over", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+
+                    break;
+
+                case GameState.GameWin:
+
+                    _spriteBatch.DrawString(arial32, "Game Win", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+
+                    break;
+            }
+           
             _spriteBatch.End();
 
                 base.Draw(gameTime);
+        }
+
+        public enum GameState
+        {
+            MainMenu,
+            Game,
+            Settings,
+            Credits,
+            Pause,
+            GameOver,
+            GameWin,
         }
     }
 }
