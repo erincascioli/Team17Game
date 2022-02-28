@@ -17,6 +17,7 @@ namespace CrossBoa
         public bool IsCollected
         {
             get { return isCollected; }
+            set { isCollected = value; }
         }
 
         public Rectangle Hitbox
@@ -30,6 +31,7 @@ namespace CrossBoa
             this.isCollected = isCollected;
         }
 
+        //Needs to be fixed so that the collectible is not drawn if it has been collected
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (!IsCollected)
