@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework;
 
 namespace CrossBoa
 {
+    /// <summary>
+    /// Interface that gives classes a hitbox property, allowing for easier collision checking
+    /// </summary>
     public interface ICollidable
     {
         /// <summary>
