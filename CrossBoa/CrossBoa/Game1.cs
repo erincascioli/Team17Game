@@ -38,6 +38,7 @@ namespace CrossBoa
         private CrossBow crossbow;
         private Player player;
         private Slime slime;
+        private Projectile arrow;
         private CollisionManager manager;
 
         private List<GameObject> gameObjectList;
@@ -89,6 +90,14 @@ namespace CrossBoa
                 DefaultPlayerDodgeLength,
                 DefaultPlayerDodgeSpeed
             );
+
+            arrow = new Projectile(
+                whiteSquareSprite,                 // Sprite
+                new Vector2(0,0),                   // Position
+                new Point(50, 15),          // Size
+                0f,                  // Direction
+                5,                          // Velocity
+                true);                      // IsPlayerArrow)
 
             crossbow = new CrossBow(
                 tempCbSprite,
