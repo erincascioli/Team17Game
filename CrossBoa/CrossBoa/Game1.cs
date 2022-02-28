@@ -186,7 +186,7 @@ namespace CrossBoa
             // ~~~ Draws the crossbow's timeSinceShot timer
              _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
 
-            // Shows working hitboxes that don' use points
+            // Shows working hitboxes that don't use points
             manager.Draw(_spriteBatch, hitBox, arrowHitBox);
 
             _spriteBatch.End();
