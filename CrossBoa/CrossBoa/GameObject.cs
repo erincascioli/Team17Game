@@ -9,7 +9,8 @@ using Microsoft.Xna.Framework.Input;
 namespace CrossBoa
 {
     /// <summary>
-    /// Base class for any objects that will be rendered to the screen
+    /// Author:  TacNayn
+    /// <para>Base class for any objects that will be rendered to the screen</para>
     /// </summary>
     public class GameObject
     {
