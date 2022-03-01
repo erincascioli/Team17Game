@@ -37,7 +37,6 @@ namespace CrossBoa
             set { playerArrow = value; }
         }
 
-
         public CollisionManager(Player character, CrossBow weapon)
         {
             // All fields get a reference location
@@ -111,26 +110,34 @@ namespace CrossBoa
 
                 if (player.Hitbox.Intersects(i.Rectangle)) 
                 {
+                    // All collisions check by creating a smaller rectangle within the player charachter
+                    // to check collisions with the wall against
+                    // This prevents any part of the rectangle triggering a right side collision for example
+
                     // Against left wall
-                    if (new Rectangle(player.Hitbox.X, player.Hitbox.Y + player.Hitbox.Height / 4, player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Left < i.Rectangle.Right)
+                    if (new Rectangle(player.Hitbox.X, player.Hitbox.Y + player.Hitbox.Height / 4, 
+                        player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Left < i.Rectangle.Right)
                     {
                         player.Position = new Vector2(i.Rectangle.Right, player.Position.Y);
                     }
                     // Against right wall
-                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 2, player.Hitbox.Y + player.Hitbox.Height / 4, player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Right > i.Rectangle.Left)
+                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 2, player.Hitbox.Y + player.Hitbox.Height / 4, 
+                        player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Right > i.Rectangle.Left)
                     {
                         player.Position = new Vector2(i.Rectangle.Left - player.Width, player.Position.Y);
                     }
                     
 
                     // Player top of tile
-                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 4, player.Hitbox.Y + player.Height / 2, player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Top < i.Rectangle.Bottom) 
+                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 4, player.Hitbox.Y + player.Height / 2, 
+                        player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Top < i.Rectangle.Bottom) 
                     {
                         player.Position = new Vector2(player.Position.X, i.Rectangle.Top - player.Height);
                     }
 
                     // Against bottom of tile
-                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 4, player.Hitbox.Y, player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Bottom > i.Rectangle.Top)
+                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 4, player.Hitbox.Y, 
+                        player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Bottom > i.Rectangle.Top)
                     {
                         player.Position = new Vector2(player.Position.X, i.Rectangle.Top + player.Height);
                     }
@@ -169,7 +176,6 @@ namespace CrossBoa
                 sb.Draw(hitBox, i.Rectangle, Color.White);
             }
         }
-
 
         /// <summary>
         /// Purpose: Let's the manager add an enemy to check it's hitboxes
