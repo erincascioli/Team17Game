@@ -179,8 +179,16 @@ namespace CrossBoa
                     // Update all GameObjects
                     Camera.Update(kbState);
 
+                    
+
                     foreach (GameObject gameObject in gameObjectList)
                     {
+                        // Fixes crossbow moving off of player character
+                        if (gameObject is CrossBow)
+                        {
+                            // CollisionManager checks for collisions
+                            manager.CheckCollision();
+                        }
                         gameObject.Update(gameTime);
                     }
 
@@ -237,8 +245,7 @@ namespace CrossBoa
             previousKBState = kbState;
             previousMState = mState;
 
-            // CollisionManager checks for collisions
-            manager.CheckCollision();
+
             base.Update(gameTime);
         }
 
