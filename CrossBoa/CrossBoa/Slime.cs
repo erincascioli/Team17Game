@@ -68,6 +68,11 @@ namespace CrossBoa
             }
         }
 
+        public Rectangle Hitbox
+        {
+            get { return Rectangle; }
+        }
+
         /// <summary>
         /// Color of the slime ; test code
         /// </summary>
@@ -155,7 +160,7 @@ namespace CrossBoa
 
                 // If it's been at least 1 second since the last slime movement,
                 // push the slime towards the player.
-                if (timeSinceMove >= 1)
+                //if (timeSinceMove >= 1)
                 {
                     targetX = (int)player.Position.X;
                     targetY = (int)player.Position.Y;
