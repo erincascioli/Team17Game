@@ -132,7 +132,7 @@ namespace CrossBoa
 
                     // Player top of tile
                     if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 10, player.Hitbox.Y + player.Height - player.Height / 16, 
-                        player.Hitbox.Width - Player.Hitbox.Width / 5, player.Hitbox.Height / 16).Intersects(i.Rectangle) && player.Hitbox.Top < i.Rectangle.Bottom) 
+                        player.Hitbox.Width - player.Hitbox.Width / 5, player.Hitbox.Height / 16).Intersects(i.Rectangle) && player.Hitbox.Top < i.Rectangle.Bottom) 
                     {
                         player.Position = new Vector2(player.Position.X, i.Rectangle.Top - player.Height);
                     }
@@ -144,6 +144,40 @@ namespace CrossBoa
                         player.Position = new Vector2(player.Position.X, i.Rectangle.Bottom);
                     }
                 }
+
+                // Enemies with tile
+                foreach (IEnemy j in enemies)
+                {
+                    if (j.Hitbox.Intersects(i.Rectangle))
+                    {
+                        // Against left wall
+                        if (new Rectangle(j.Hitbox.X, j.Hitbox.Y + j.Hitbox.Height / 10,
+                            j.Hitbox.Width / 16, j.Hitbox.Height - j.Hitbox.Height / 5).Intersects(j.Rectangle) && j.Hitbox.Left < i.Rectangle.Right)
+                        {
+                            j.Position = new Vector2(i.Rectangle.Right, j.Position.Y);
+                        }
+                        // Against right wall
+                        if (new Rectangle(j.Hitbox.X + j.Hitbox.Width - j.Hitbox.Width / 16, j.Hitbox.Y + j.Hitbox.Height / 10,
+                            j.Hitbox.Width / 16, j.Hitbox.Height - j.Hitbox.Height / 5).Intersects(i.Rectangle) && j.Hitbox.Right > i.Rectangle.Left)
+                        {
+                            j.Position = new Vector2(i.Rectangle.Left - j.Rectangle.Width, j.Position.Y);
+                        }
+
+                        // Player top of tile
+                        if (new Rectangle(j.Hitbox.X + j.Hitbox.Width / 10, j.Hitbox.Y + j.Rectangle.Height - j.Rectangle.Height / 16,
+                            j.Hitbox.Width - j.Hitbox.Width / 5, j.Hitbox.Height / 16).Intersects(i.Rectangle) && j.Hitbox.Top < i.Rectangle.Bottom)
+                        {
+                            j.Position = new Vector2(j.Position.X, i.Rectangle.Top - j.Rectangle.Height);
+                        }
+
+                        // Against bottom of tile
+                        if (new Rectangle(j.Hitbox.X + j.Hitbox.Width / 10, j.Hitbox.Y,
+                            j.Hitbox.Width - j.Hitbox.Width / 5, j.Hitbox.Height / 16).Intersects(i.Rectangle) && j.Hitbox.Bottom > i.Rectangle.Top)
+                        {
+                            j.Position = new Vector2(j.Position.X, i.Rectangle.Bottom);
+                        }
+                    }
+                }
             }
 
             // Player against an inactive player's arrow
@@ -152,6 +186,8 @@ namespace CrossBoa
                 crossbow.PickUpArrow();
                 playerArrow.IsActive = false;
             }
+
+            
                 
         }
 
