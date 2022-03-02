@@ -117,10 +117,10 @@ namespace CrossBoa
                 projectile.ChangeVelocity(
                     position,
                     Direction,
-                    5f);
+                    300f);
 
                 // Makes the projectile appear from the bow instead of behind the player.
-                projectile.Position += projectile.Velocity * 10;
+                projectile.Position += projectile.Velocity * 0.2f;
             }
         }
            

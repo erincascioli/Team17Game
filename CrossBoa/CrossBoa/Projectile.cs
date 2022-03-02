@@ -35,11 +35,16 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Whether this arrow is currently active or not
+        /// Whether this arrow is currently being used, or if it should be pooled
         /// </summary>
         public bool IsActive
         {
             get { return isActive; }
+            set
+            {
+                isActive = value;
+                position = new Vector2(-1000, -1000);
+            }
         }
 
         /// <summary>
@@ -148,27 +153,23 @@ namespace CrossBoa
         /// <param name="gameTime">A reference to the GameTime</param>
         public override void Update(GameTime gameTime)
         {
-            Move();
-            base.Update(gameTime);
-        }
-
-        /// <summary>
-        /// Updates the arrow's movement
-        /// </summary>
-        public void Move()
-        {
-            if (isActive)
+            if (isPlayerArrow)
             {
-                position += velocity;
+                ApplyFriction(gameTime);
             }
+
+            base.Update(gameTime);
         }
 
         public void ChangeVelocity(Vector2 position, float direction, float magnitude)
         {
             isActive = true;
+            isInAir = true;
             this.position = position;
             this.direction = direction;
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
+            friction = 0;
+            maxSpeed = null;
         }
 
         /// <summary>
@@ -176,13 +177,20 @@ namespace CrossBoa
         /// </summary>
         public void HitSomething()
         {
-            isActive = false; // Stops projectile
-
-            // Code specifically for the player's arrow
             if (isPlayerArrow)
             {
-                direction *= -1;
+                // Code specifically for the player's arrow
 
+                // Bounce off the wall
+                velocity *= -1;
+                friction = 1000;
+                isInAir = false;
+            }
+            else
+            {
+                // Stops projectile
+                velocity = Vector2.Zero;
+                isActive = false;
             }
         }
 
@@ -192,16 +200,19 @@ namespace CrossBoa
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(
-                sprite,
-                position,
-                null,
-                Color.White,
-                direction,
-                new Vector2(1, 0.5f),
-                size.ToVector2(),
-                SpriteEffects.None,
-                0.5f);
+            if (isActive)
+            {
+                spriteBatch.Draw(
+                    sprite,
+                    position,
+                    null,
+                    Color.White,
+                    direction,
+                    new Vector2(1, 0.5f),
+                    size.ToVector2(),
+                    SpriteEffects.None,
+                    0.5f);
+            }
         }
     }
 }
