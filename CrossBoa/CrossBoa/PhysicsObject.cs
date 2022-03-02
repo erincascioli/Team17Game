@@ -20,7 +20,7 @@ namespace CrossBoa
         protected Vector2 velocity;
         private Vector2 netAcceleration;
         protected float friction;
-        protected float maxSpeed;
+        protected float? maxSpeed;
 
         // ------------
         //  Properties
@@ -73,7 +73,7 @@ namespace CrossBoa
         /// <param name="rectangle">A Rectangle containing this GameObject's position and size</param>
         /// <param name="friction">How fast this object will stop moving.</param>
         /// <param name="maxSpeed">The maximum speed this object can reach</param>
-        public PhysicsObject(Texture2D sprite, Rectangle rectangle, float maxSpeed, float friction) : 
+        public PhysicsObject(Texture2D sprite, Rectangle rectangle, float? maxSpeed, float friction) : 
             base(sprite, rectangle)
         {
             this.friction = friction;
@@ -89,7 +89,7 @@ namespace CrossBoa
         /// <param name="size">The GameObject's size in pixels</param>
         /// <param name="friction">How fast this object will stop moving.</param>
         /// <param name="maxSpeed">The maximum speed this object can reach</param>
-        public PhysicsObject(Texture2D sprite, Vector2 position, Point size, float maxSpeed, float friction) :
+        public PhysicsObject(Texture2D sprite, Vector2 position, Point size, float? maxSpeed, float friction) :
             base(sprite, position, size)
         {
             this.friction = friction;
@@ -170,9 +170,8 @@ namespace CrossBoa
             velocity += netAcceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Cap velocity
-            if (Speed > maxSpeed)
-                Speed = maxSpeed;
-
+            if (maxSpeed.HasValue && Speed > maxSpeed)
+                Speed = maxSpeed.Value;
 
             // Update position based on velocity
             position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;

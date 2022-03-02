@@ -78,7 +78,7 @@ namespace CrossBoa
         /// <param name="velocity">The direction that the projectile will move in</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
         public Projectile(Texture2D sprite, Rectangle rectangle, Vector2 velocity, bool isPlayerArrow) :
-            base(sprite, rectangle, 0, )
+            base(sprite, rectangle, null, 0)
         {
             this.velocity = velocity;
             this.isPlayerArrow = isPlayerArrow;
@@ -96,7 +96,7 @@ namespace CrossBoa
         /// <param name="velocity">The direction that the projectile will move in</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
         public Projectile(Texture2D sprite, Vector2 position, Point size, Vector2 velocity, bool isPlayerArrow) :
-            base(sprite, position, size)
+            base(sprite, position, size, null, 0)
         {
             this.velocity = velocity;
             this.isPlayerArrow = isPlayerArrow;
@@ -114,7 +114,7 @@ namespace CrossBoa
         /// <param name="magnitude">How quickly the projectile will move in that direction</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
         public Projectile(Texture2D sprite, Rectangle rectangle, float direction, float magnitude, bool isPlayerArrow) :
-            base(sprite, rectangle)
+            base(sprite, rectangle, null, 0)
         {
             this.direction = direction;
             this.isPlayerArrow = isPlayerArrow;
@@ -133,7 +133,7 @@ namespace CrossBoa
         /// <param name="magnitude">How quickly the projectile will move in that direction</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
         public Projectile(Texture2D sprite, Vector2 position, Point size, float direction, float magnitude, bool isPlayerArrow) :
-            base(sprite, position, size)
+            base(sprite, position, size, null, 0)
         {
             this.direction = direction;
             this.isPlayerArrow = isPlayerArrow;
