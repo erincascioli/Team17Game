@@ -192,11 +192,11 @@ namespace CrossBoa
                         gameObject.Update(gameTime);
                     }
 
-            // Fires the bow on click.
-            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
-            {
-                crossbow.Shoot(arrow);
-            }
+                    // Fires the bow on click.
+                    if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
+                    {
+                        crossbow.Shoot(arrow);
+                    }
 
                     if (manager.PlayerArrow != null)
                         manager.PlayerArrow.Update(gameTime);
