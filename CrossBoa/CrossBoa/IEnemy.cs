@@ -10,7 +10,7 @@ namespace CrossBoa
     /// <summary>
     /// Written by Leo Schindler-Gerendasi
     /// </summary>
-    public interface IEnemy
+    public interface IEnemy : ICollidable
     {
         /// <summary>
         /// Property to get the current health of the enemy.
@@ -24,6 +24,8 @@ namespace CrossBoa
 
         // Test code
         Color CurrentColor { get; set; }
+
+        Vector2 Position { get; set; }
 
         /// <summary>
         /// Method on how the enemy moves.
