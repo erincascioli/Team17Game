@@ -11,9 +11,8 @@ namespace CrossBoa
     /// Author:  TacNayn
     /// <para>Represents a projectile with a rotation and a constant movement speed</para>
     /// </summary>
-    public class Projectile : GameObject, ICollidable
+    public class Projectile : PhysicsObject, ICollidable
     {
-        private Vector2 velocity;
         private float direction;
         private bool isActive;
         private bool isInAir;
@@ -78,7 +77,8 @@ namespace CrossBoa
         /// <param name="rectangle">a Rectangle containing this GameObject's position and size</param>
         /// <param name="velocity">The direction that the projectile will move in</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public Projectile(Texture2D sprite, Rectangle rectangle, Vector2 velocity, bool isPlayerArrow) : base(sprite, rectangle)
+        public Projectile(Texture2D sprite, Rectangle rectangle, Vector2 velocity, bool isPlayerArrow) :
+            base(sprite, rectangle, null, 0)
         {
             this.velocity = velocity;
             this.isPlayerArrow = isPlayerArrow;
@@ -95,7 +95,8 @@ namespace CrossBoa
         /// <param name="size">The GameObject's size in pixels</param>
         /// <param name="velocity">The direction that the projectile will move in</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public Projectile(Texture2D sprite, Vector2 position, Point size, Vector2 velocity, bool isPlayerArrow) : base(sprite, position, size)
+        public Projectile(Texture2D sprite, Vector2 position, Point size, Vector2 velocity, bool isPlayerArrow) :
+            base(sprite, position, size, null, 0)
         {
             this.velocity = velocity;
             this.isPlayerArrow = isPlayerArrow;
@@ -112,7 +113,8 @@ namespace CrossBoa
         /// <param name="direction">The direction that the projectile will move in</param>
         /// <param name="magnitude">How quickly the projectile will move in that direction</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public Projectile(Texture2D sprite, Rectangle rectangle, float direction, float magnitude, bool isPlayerArrow) : base(sprite, rectangle)
+        public Projectile(Texture2D sprite, Rectangle rectangle, float direction, float magnitude, bool isPlayerArrow) :
+            base(sprite, rectangle, null, 0)
         {
             this.direction = direction;
             this.isPlayerArrow = isPlayerArrow;
@@ -130,7 +132,8 @@ namespace CrossBoa
         /// <param name="direction">The direction that the projectile will move in</param>
         /// <param name="magnitude">How quickly the projectile will move in that direction</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public Projectile(Texture2D sprite, Vector2 position, Point size, float direction, float magnitude, bool isPlayerArrow) : base(sprite, position, size)
+        public Projectile(Texture2D sprite, Vector2 position, Point size, float direction, float magnitude, bool isPlayerArrow) :
+            base(sprite, position, size, null, 0)
         {
             this.direction = direction;
             this.isPlayerArrow = isPlayerArrow;
