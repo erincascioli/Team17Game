@@ -192,17 +192,19 @@ namespace CrossBoa
                         gameObject.Update(gameTime);
                     }
 
-                    /*if (kbState.IsKeyDown(Keys.E) && !previousKBState.IsKeyDown(Keys.E))
+                    if (kbState.IsKeyDown(Keys.E) && !previousKBState.IsKeyDown(Keys.E))
                     {
-                        manager.AddEnemy(new Slime(
+                        Slime newSlime = new Slime(
                             3,
                             whiteSquareSprite,
                             new Rectangle(400, 400, 64, 64),
                             20000f,
                             500f,
                             2500f,
-                            player));
-                    }*/
+                            player);
+                        manager.AddEnemy(newSlime);
+                        gameObjectList.Add(newSlime);
+                    }
 
                     // Fires the bow on click.
                     if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
