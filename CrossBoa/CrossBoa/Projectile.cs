@@ -75,6 +75,11 @@ namespace CrossBoa
             }
         }
 
+        /*public Point PickupHitbox
+        {
+            get {return position}
+        }*/
+
         /// <summary>
         /// Constructs a Projectile
         /// </summary>
