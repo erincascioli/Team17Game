@@ -181,7 +181,7 @@ namespace CrossBoa
             // Code specifically for the player's arrow
             if (isPlayerArrow)
             {
-                direction *= -1;
+                direction += (float)Math.PI;
 
             }
         }
