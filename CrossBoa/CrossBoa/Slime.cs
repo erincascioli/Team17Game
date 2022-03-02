@@ -118,10 +118,10 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// If the enemy is within the vicinity of the player,
-        /// deals damage to them.
+        /// Deals damage to the player that is currently in contact
+        /// with the slime.
         /// </summary>
-        /// <param name="player">The player to check the collision of.</param>
+        /// <param name="player">The player to damage.</param>
         public void DealContactDamage(Player player)
         {
             player.TakeDamage(0);
@@ -134,6 +134,7 @@ namespace CrossBoa
             if (health <= 0)
             {
                 isAlive = EnemyState.Dead;
+
             }
         }
 
