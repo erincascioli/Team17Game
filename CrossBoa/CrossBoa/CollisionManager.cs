@@ -146,7 +146,7 @@ namespace CrossBoa
             }
 
             // Player against an inactive player's arrow
-            if (player.Hitbox.Intersects(playerArrow.Hitbox) && !playerArrow.IsInAir)
+            if (!playerArrow.IsInAir && !crossbow.IsOnCooldown && player.Hitbox.Intersects(playerArrow.Hitbox))
             {
                 crossbow.PickUpArrow();
                 playerArrow.IsActive = false;

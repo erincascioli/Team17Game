@@ -111,7 +111,7 @@ namespace CrossBoa
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
-                1,
+                0.5f,
                 player);
 
             slime = new Slime(
