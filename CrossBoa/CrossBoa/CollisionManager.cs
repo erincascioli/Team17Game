@@ -116,31 +116,30 @@ namespace CrossBoa
                     // This prevents any part of the rectangle triggering a right side collision for example
 
                     // Against left wall
-                    if (new Rectangle(player.Hitbox.X, player.Hitbox.Y + player.Hitbox.Height / 4, 
-                        player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Left < i.Rectangle.Right)
+                    if (new Rectangle(player.Hitbox.X, player.Hitbox.Y + player.Hitbox.Height / 10, 
+                        player.Hitbox.Width / 16, player.Hitbox.Height - player.Hitbox.Height / 5).Intersects(i.Rectangle) && player.Hitbox.Left < i.Rectangle.Right)
                     {
                         player.Position = new Vector2(i.Rectangle.Right, player.Position.Y);
                     }
                     // Against right wall
-                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 2, player.Hitbox.Y + player.Hitbox.Height / 4, 
-                        player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Right > i.Rectangle.Left)
+                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width - player.Hitbox.Width / 16, player.Hitbox.Y + player.Hitbox.Height / 10, 
+                        player.Hitbox.Width / 16, player.Hitbox.Height - player.Hitbox.Height / 5).Intersects(i.Rectangle) && player.Hitbox.Right > i.Rectangle.Left)
                     {
                         player.Position = new Vector2(i.Rectangle.Left - player.Width, player.Position.Y);
                     }
-                    
 
                     // Player top of tile
-                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 4, player.Hitbox.Y + player.Height / 2, 
-                        player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Top < i.Rectangle.Bottom) 
+                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 10, player.Hitbox.Y + player.Height - player.Height / 16, 
+                        player.Hitbox.Width - Player.Hitbox.Width / 5, player.Hitbox.Height / 16).Intersects(i.Rectangle) && player.Hitbox.Top < i.Rectangle.Bottom) 
                     {
                         player.Position = new Vector2(player.Position.X, i.Rectangle.Top - player.Height);
                     }
 
                     // Against bottom of tile
-                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 4, player.Hitbox.Y, 
-                        player.Hitbox.Width / 2, player.Hitbox.Height / 2).Intersects(i.Rectangle) && player.Hitbox.Bottom > i.Rectangle.Top)
+                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 10, player.Hitbox.Y, 
+                        player.Hitbox.Width - player.Hitbox.Width / 5, player.Hitbox.Height / 16).Intersects(i.Rectangle) && player.Hitbox.Bottom > i.Rectangle.Top)
                     {
-                        player.Position = new Vector2(player.Position.X, i.Rectangle.Top + player.Height);
+                        player.Position = new Vector2(player.Position.X, i.Rectangle.Bottom);
                     }
                 }
             }
@@ -162,9 +161,20 @@ namespace CrossBoa
         /// <param name="sb"></param>
         public void Draw(SpriteBatch sb, Texture2D hitBox, Texture2D arrowPoint)
         {
-            sb.Draw(hitBox, player.Hitbox, Color.White);
+            sb.Draw(hitBox, new Rectangle(player.Hitbox.X, player.Hitbox.Y + player.Hitbox.Height / 10,
+                        player.Hitbox.Width / 16, player.Hitbox.Height - player.Hitbox.Height / 5), Color.White);
+            sb.Draw(hitBox, new Rectangle(player.Hitbox.X + player.Hitbox.Width - player.Hitbox.Width / 16, player.Hitbox.Y + player.Hitbox.Height / 10,
+                        player.Hitbox.Width / 16, player.Hitbox.Height - player.Hitbox.Height / 5), Color.White);
+            sb.Draw(hitBox, new Rectangle(player.Hitbox.X + player.Hitbox.Width / 10, player.Hitbox.Y + player.Height - player.Height / 16,
+                        player.Hitbox.Width - Player.Hitbox.Width / 5, player.Hitbox.Height / 16), Color.White);
+            sb.Draw(hitBox, new Rectangle(player.Hitbox.X + player.Hitbox.Width / 10, player.Hitbox.Y,
+                        player.Hitbox.Width - player.Hitbox.Width / 5, player.Hitbox.Height / 16), Color.White);
 
-            if(playerArrow != null)
+
+
+            //sb.Draw(hitBox, player.Hitbox, Color.White);
+
+            if (playerArrow != null)
             {
                 sb.Draw(arrowPoint, new Rectangle(playerArrow.Hitbox.X - 2, PlayerArrow.Hitbox.Y - 2, 5, 5), Color.Red);
             }
