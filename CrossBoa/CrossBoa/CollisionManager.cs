@@ -111,7 +111,7 @@ namespace CrossBoa
 
                 if (player.Hitbox.Intersects(i.Rectangle)) 
                 {
-                    // All collisions check by creating a smaller rectangle within the player charachter
+                    // All collisions check by creating a smaller rectangle within the player character
                     // to check collisions with the wall against
                     // This prevents any part of the rectangle triggering a right side collision for example
 
@@ -146,11 +146,10 @@ namespace CrossBoa
             }
 
             // Player against an inactive player's arrow
-            if (player.Hitbox.Intersects(playerArrow.Hitbox) && !playerArrow.IsActive
-                && !crossbow.IsOnCooldown)
+            if (player.Hitbox.Intersects(playerArrow.Hitbox) && !playerArrow.IsInAir)
             {
                 crossbow.PickUpArrow();
-                playerArrow.Position = new Vector2(-100, -100);
+                playerArrow.IsActive = false;
             }
                 
         }
