@@ -20,6 +20,7 @@ namespace CrossBoa
         private float dodgeCooldown;
         private float dodgeLength;
         private float dodgeSpeed;
+        private float movementForce;
 
         // Player status tracking
         private int currentHealth;
@@ -83,8 +84,9 @@ namespace CrossBoa
         /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         public Player(Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed, float friction,
             int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
-            base(sprite, rectangle, movementForce, maxSpeed, friction)
+            base(sprite, rectangle, maxSpeed, friction)
         {
+            this.movementForce = movementForce;
             this.maxHealth = maxHealth;
             this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
