@@ -27,6 +27,8 @@ namespace CrossBoa
         /// </summary>
         private float shotCoolDown;
 
+        private Color tint;
+
         /// <summary>
         /// Whether or not the crossbow has an arrow
         /// in it and is ready to fire.
@@ -101,6 +103,7 @@ namespace CrossBoa
             player = playerReference;
             isLoaded = true;
             timeSinceShot = 0f;
+            tint = Color.White;
         }
 
         // ~~~ METHODS ~~~
@@ -156,6 +159,11 @@ namespace CrossBoa
         /// <param name="spriteBatch">The active SpriteBatch.</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (isLoaded && !IsOnCooldown)
+                tint = Color.PaleTurquoise;
+            else
+                tint = Color.White;
+
             spriteBatch.Draw(sprite,                    // Texture2D
                              new Rectangle(             // Rectangle
                                  (int)position.X,       // Rectangle X
@@ -163,7 +171,7 @@ namespace CrossBoa
                                  sprite.Width,          // Rectangle width
                                  sprite.Height),        // Rectangle height
                              null,                      // Nullable rectangle
-                             Color.White,               // Color
+                             tint,                      // Color
                              FollowCursor(),            // Rotation
                              new Vector2(               // Origin
                                  sprite.Width / 2,      // Origin X
