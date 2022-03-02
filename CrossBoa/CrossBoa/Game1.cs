@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -139,13 +140,19 @@ namespace CrossBoa
             testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(1000, 800, 250, 50));
 
             // Play Button
-            playButton = new Button(playHoverSprite, playPressedSprite, true, new Rectangle(screenWidth / 2 - playHoverSprite.Width / 2, screenHeight / 2 - playHoverSprite.Height / 2, playHoverSprite.Width, playHoverSprite.Height));
+            playButton = new Button(playHoverSprite, playPressedSprite, true,
+                new Rectangle(screenWidth / 2 - playHoverSprite.Width / 2,
+                    screenHeight / 2 - playHoverSprite.Height / 2, playHoverSprite.Width, playHoverSprite.Height));
 
             // Pause Button
-            pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true, new Rectangle(screenWidth - settingsPressedSprite.Width - 5, 5, settingsHoverSprite.Width, settingsHoverSprite.Height));
+            pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
+                new Rectangle(screenWidth - settingsPressedSprite.Width - 5, 5, settingsHoverSprite.Width,
+                    settingsHoverSprite.Height));
 
             // Debug Button
-            debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true, new Rectangle(screenWidth - 100, screenHeight - 100, settingsHoverSprite.Width, settingsHoverSprite.Height));
+            debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
+                new Rectangle(screenWidth - 100, screenHeight - 100, settingsHoverSprite.Width,
+                    settingsHoverSprite.Height));
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(slime);
@@ -197,21 +204,14 @@ namespace CrossBoa
                             // CollisionManager checks for collisions
                             manager.CheckCollision();
                         }
+
                         gameObject.Update(gameTime);
                     }
 
-                    if (kbState.IsKeyDown(Keys.E) && !previousKBState.IsKeyDown(Keys.E))
+                    // Spawn slime when pressing E while debug is active
+                    if (isDebugActive && kbState.IsKeyDown(Keys.E) && !previousKBState.IsKeyDown(Keys.E))
                     {
-                        Slime newSlime = new Slime(
-                            3,
-                            whiteSquareSprite,
-                            new Rectangle(mState.X, mState.Y, 64, 64),
-                            20000f,
-                            500f,
-                            2500f,
-                            player);
-                        manager.AddEnemy(newSlime);
-                        gameObjectList.Add(newSlime);
+                        SpawnSlime(mState.Position);
                     }
 
                     // Fires the bow on click.
@@ -287,7 +287,9 @@ namespace CrossBoa
             {
                 case GameState.MainMenu:
 
-                    _spriteBatch.DrawString(arial32, "Main Menu", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    _spriteBatch.DrawString(arial32, "Main Menu",
+                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
+                            GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
                     playButton.Draw(_spriteBatch);
 
                     break;
@@ -328,36 +330,46 @@ namespace CrossBoa
 
                 case GameState.Settings:
 
-                    _spriteBatch.DrawString(arial32, "Settings", new Vector2(screenWidth - 175, screenHeight / 2), Color.White);
+                    _spriteBatch.DrawString(arial32, "Settings", new Vector2(screenWidth - 175, screenHeight / 2),
+                        Color.White);
 
                     break;
 
                 case GameState.Credits:
 
-                    _spriteBatch.DrawString(arial32, "Credits", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    _spriteBatch.DrawString(arial32, "Credits",
+                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
+                            GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
 
                     break;
 
                 case GameState.Pause:
 
-                    _spriteBatch.DrawString(arial32, "Pause", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    _spriteBatch.DrawString(arial32, "Pause",
+                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
+                            GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
                     playButton.Draw(_spriteBatch);
 
                     // Debug button
-                    _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:", new Vector2(screenWidth - 400, screenHeight - 100), isDebugActive ? Color.Red : Color.Green);
+                    _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:",
+                        new Vector2(screenWidth - 400, screenHeight - 100), isDebugActive ? Color.Red : Color.Green);
                     debugButton.Draw(_spriteBatch);
 
                     break;
 
                 case GameState.GameOver:
 
-                    _spriteBatch.DrawString(arial32, "Game Over", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    _spriteBatch.DrawString(arial32, "Game Over",
+                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
+                            GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
 
                     break;
 
                 case GameState.GameWin:
 
-                    _spriteBatch.DrawString(arial32, "Game Win", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    _spriteBatch.DrawString(arial32, "Game Win",
+                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
+                            GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
 
                     break;
             }
@@ -365,17 +377,39 @@ namespace CrossBoa
             _spriteBatch.End();
 
             base.Draw(gameTime);
+
+
         }
 
-        public enum GameState
+        // HELPER METHODS
+
+        /// <summary>
+        /// Spawns a slime enemy
+        /// </summary>
+        /// <param name="position">The position to spawn the slime at</param>
+        void SpawnSlime(Point position)
         {
-            MainMenu,
-            Game,
-            Settings,
-            Credits,
-            Pause,
-            GameOver,
-            GameWin,
+            Slime newSlime = new Slime(
+                3,
+                whiteSquareSprite,
+                new Rectangle(position, new Point(64, 64)),
+                20000f,
+                500f,
+                2500f,
+                player);
+            manager.AddEnemy(newSlime);
+            gameObjectList.Add(newSlime);
         }
+    }
+
+    public enum GameState
+    {
+        MainMenu,
+        Game,
+        Settings,
+        Credits,
+        Pause,
+        GameOver,
+        GameWin,
     }
 }
