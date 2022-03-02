@@ -17,6 +17,8 @@ namespace CrossBoa
         // ~~~ FIELDS ~~~
         private Player player;
 
+        private float movementForce;
+
         /// <summary>
         /// The health of the slime.
         /// </summary>
@@ -67,9 +69,10 @@ namespace CrossBoa
         // ~~~ CONSTRUCTORS ~~~
         public Slime(int health, Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed,
             float friction, Player playerReference) :
-            base(sprite, rectangle, movementForce, maxSpeed, friction)
+            base(sprite, rectangle, maxSpeed, friction)
         {
             player = playerReference;
+            this.movementForce = movementForce;
             this.health = health;
             timeSinceMove = 0;
             currentColor = Color.Green;
