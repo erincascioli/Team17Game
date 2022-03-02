@@ -89,11 +89,12 @@ namespace CrossBoa
                 }
 
                 // with player arrow
-                if (playerArrow != null && playerArrow.Hitbox.Intersects(i.Rectangle) && 
-                    playerArrow.IsActive && i.Health > 0)
+                if (playerArrow != null && playerArrow.IsInAir &&
+                    playerArrow.Hitbox.Intersects(i.Rectangle) && i.Health > 0)
                 {
                     // Health value not decided on yet
                     i.TakeDamage(1);
+                    playerArrow.HitSomething();
 
                     // Change enemy color
                     i.CurrentColor = Color.Red;
@@ -104,7 +105,8 @@ namespace CrossBoa
             // Collidable tiles
             foreach (Tile i in levelObstacles)
             {
-                if (playerArrow != null && playerArrow.Hitbox.Intersects(i.Rectangle) && playerArrow.IsActive)
+                if (playerArrow != null && playerArrow.IsActive
+                    && playerArrow.IsInAir && playerArrow.Hitbox.Intersects(i.Rectangle))
                 {
                     playerArrow.HitSomething();
                 }
@@ -179,7 +181,7 @@ namespace CrossBoa
             }
 
             // Player against an inactive player's arrow
-            if (player.Hitbox.Intersects(playerArrow.Hitbox) && !playerArrow.IsInAir)
+            if (!playerArrow.IsInAir && !crossbow.IsOnCooldown && player.Hitbox.Intersects(playerArrow.Hitbox))
             {
                 crossbow.PickUpArrow();
                 playerArrow.IsActive = false;
@@ -223,7 +225,8 @@ namespace CrossBoa
             foreach (IEnemy i in enemies)
             {
                 // Doesn't use ICollidable yet
-                sb.Draw(hitBox, i.Rectangle, Color.White);
+                if (i.Health > 0)
+                    sb.Draw(hitBox, i.Rectangle, Color.White);
             }
 
             foreach (Tile i in levelObstacles)
