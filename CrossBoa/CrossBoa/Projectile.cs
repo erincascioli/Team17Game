@@ -16,6 +16,7 @@ namespace CrossBoa
         private Vector2 velocity;
         private float direction;
         private bool isActive;
+        private bool isInAir;
         private bool isPlayerArrow;
 
         /// <summary>
@@ -40,6 +41,15 @@ namespace CrossBoa
         public bool IsActive
         {
             get { return isActive; }
+        }
+
+        /// <summary>
+        /// Whether the arrow is currently able to hit anything, or if it is on the ground
+        /// </summary>
+        public bool IsInAir
+        {
+            get { return isInAir; }
+            set { isInAir = value; }
         }
 
         /// <summary>
@@ -74,6 +84,7 @@ namespace CrossBoa
             this.isPlayerArrow = isPlayerArrow;
             direction = MathF.Atan2(velocity.Y, velocity.X);
             this.isActive = true;
+            this.isInAir = true;
         }
 
         /// <summary>
@@ -90,6 +101,7 @@ namespace CrossBoa
             this.isPlayerArrow = isPlayerArrow;
             direction = MathF.Atan2(velocity.Y, velocity.X);
             this.isActive = true;
+            this.isInAir = true;
         }
 
         /// <summary>
@@ -106,6 +118,7 @@ namespace CrossBoa
             this.isPlayerArrow = isPlayerArrow;
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
             this.isActive = true;
+            this.isInAir = true;
         }
 
         /// <summary>
@@ -123,6 +136,7 @@ namespace CrossBoa
             this.isPlayerArrow = isPlayerArrow;
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
             this.isActive = true;
+            this.isInAir = true;
         }
 
         /// <summary>
