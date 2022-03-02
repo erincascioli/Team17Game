@@ -23,6 +23,11 @@ namespace CrossBoa
         private const float DefaultPlayerDodgeLength = 0.35f;
         private const float DefaultPlayerDodgeSpeed = 500;
 
+        private const int screenWidth = 1600;
+        private const int screenHeight = 900;
+
+        private bool isDebugActive;
+
         private KeyboardState previousKBState;
         private MouseState previousMState;
 
@@ -44,7 +49,11 @@ namespace CrossBoa
         private Slime slime;
         private Projectile arrow;
         private CollisionManager manager;
-        private List<Button> buttonList;
+
+        // Buttons
+        private Button playButton;
+        private Button pauseButton;
+        private Button debugButton;
 
         private List<GameObject> gameObjectList;
 
@@ -62,10 +71,8 @@ namespace CrossBoa
             // TODO: Add your initialization logic here
             gameObjectList = new List<GameObject>();
 
-            buttonList = new List<Button>();
-
-            _graphics.PreferredBackBufferWidth = 1600;
-            _graphics.PreferredBackBufferHeight = 900;
+            _graphics.PreferredBackBufferWidth = screenWidth;
+            _graphics.PreferredBackBufferHeight = screenHeight;
             _graphics.ApplyChanges();
 
 
@@ -78,7 +85,7 @@ namespace CrossBoa
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            
+
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
             arial32 = Content.Load<SpriteFont>("Arial32");
@@ -102,7 +109,7 @@ namespace CrossBoa
 
             arrow = new Projectile(
                 whiteSquareSprite,
-                new Vector2(-100,-100),
+                new Vector2(-100, -100),
                 new Point(50, 15),
                 0f,
                 0,
@@ -111,7 +118,7 @@ namespace CrossBoa
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
-                0.5f,
+                0.3f,
                 player);
 
             slime = new Slime(
@@ -131,17 +138,21 @@ namespace CrossBoa
             // TODO: TEST CODE
             testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(1000, 800, 250, 50));
 
-            buttonList.Add(new Button(playHoverSprite, playPressedSprite, true, new Rectangle(_graphics.PreferredBackBufferWidth/2 - playHoverSprite.Width / 2, _graphics.PreferredBackBufferHeight/ 2 - playHoverSprite.Height / 2, playHoverSprite.Width, playHoverSprite.Height)));
+            // Play Button
+            playButton = new Button(playHoverSprite, playPressedSprite, true, new Rectangle(screenWidth / 2 - playHoverSprite.Width / 2, screenHeight / 2 - playHoverSprite.Height / 2, playHoverSprite.Width, playHoverSprite.Height));
 
-            buttonList.Add(new Button(settingsPressedSprite, settingsHoverSprite, true, new Rectangle(_graphics.PreferredBackBufferWidth - settingsPressedSprite.Width - 5, 5, settingsHoverSprite.Width, settingsHoverSprite.Height)));
+            // Pause Button
+            pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true, new Rectangle(screenWidth - settingsPressedSprite.Width - 5, 5, settingsHoverSprite.Width, settingsHoverSprite.Height));
+
+            // Debug Button
+            debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true, new Rectangle(screenWidth - 100, screenHeight - 100, settingsHoverSprite.Width, settingsHoverSprite.Height));
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(slime);
             gameObjectList.Add(player);
-            gameObjectList.Add(crossbow); 
-            //gameObjectList.Add(testButton);
+            gameObjectList.Add(crossbow);
 
-            
+
 
             manager = new CollisionManager(player, crossbow);
             manager.AddEnemy(slime);
@@ -154,9 +165,6 @@ namespace CrossBoa
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             // TODO: Add your update logic here
             KeyboardState kbState = Keyboard.GetState();
             MouseState mState = Mouse.GetState();
@@ -165,9 +173,9 @@ namespace CrossBoa
             {
                 case GameState.MainMenu:
 
-                    buttonList[0].Update(gameTime);
+                    playButton.Update(gameTime);
 
-                    if (buttonList[0].HasBeenPressed())
+                    if (playButton.HasBeenPressed())
                     {
                         gameState = GameState.Game;
                     }
@@ -179,7 +187,7 @@ namespace CrossBoa
                     // Update all GameObjects
                     Camera.Update(kbState);
 
-                    
+
 
                     foreach (GameObject gameObject in gameObjectList)
                     {
@@ -213,12 +221,12 @@ namespace CrossBoa
                     if (manager.PlayerArrow != null)
                         manager.PlayerArrow.Update(gameTime);
 
-                    buttonList[1].Update(gameTime);
+                    pauseButton.Update(gameTime);
 
-                    if (buttonList[1].HasBeenPressed())
-                    {
+                    // Pause if player presses pause key or escape
+                    if (pauseButton.HasBeenPressed() ||
+                        (kbState.IsKeyDown(Keys.Escape) && previousKBState.IsKeyUp(Keys.Escape)))
                         gameState = GameState.Pause;
-                    }
 
                     break;
 
@@ -232,12 +240,17 @@ namespace CrossBoa
 
                 case GameState.Pause:
 
-                    buttonList[0].Update(gameTime);
+                    playButton.Update(gameTime);
+                    debugButton.Update(gameTime);
 
-                    if (buttonList[0].HasBeenPressed())
-                    {
+                    // Resume if player presses pause key or escape
+                    if (playButton.HasBeenPressed() ||
+                        (kbState.IsKeyDown(Keys.Escape) && previousKBState.IsKeyUp(Keys.Escape)))
                         gameState = GameState.Game;
-                    }
+
+                    // Enables debug if player presses debug button
+                    if (debugButton.HasBeenPressed())
+                        isDebugActive = !isDebugActive;
 
                     break;
 
@@ -273,7 +286,7 @@ namespace CrossBoa
                 case GameState.MainMenu:
 
                     _spriteBatch.DrawString(arial32, "Main Menu", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
-                    buttonList[0].Draw(_spriteBatch);
+                    playButton.Draw(_spriteBatch);
 
                     break;
 
@@ -288,27 +301,32 @@ namespace CrossBoa
                         gameObject.Draw(_spriteBatch);
                     }
 
-            if (manager.PlayerArrow != null)
-            {
-                manager.PlayerArrow.Draw(_spriteBatch);
+                    arrow.Draw(_spriteBatch);
 
-                // TEST CODE TO DRAW ARROW RECTANGLE
-                // _spriteBatch.Draw(whiteSquareSprite, manager.PlayerArrow.Rectangle, Color.Tan);
-            }
+                    pauseButton.Draw(_spriteBatch);
 
-            // ~~~ Draws the crossbow's timeSinceShot timer
-             _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
 
-                    buttonList[1].Draw(_spriteBatch);
+                    // DEBUG
+                    if (isDebugActive)
+                    {
+                        // ~~~ Draws the crossbow's timeSinceShot timer
+                        _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
 
-                    // Shows working hitboxes that don't use points
-                    manager.Draw(_spriteBatch, hitBox, arrowHitBox);
+                        // Shows working hitboxes that don't use points
+                        manager.Draw(_spriteBatch, hitBox, arrowHitBox);
+
+                        // TEST CODE TO DRAW ARROW RECTANGLE
+                        _spriteBatch.Draw(whiteSquareSprite, arrow.Rectangle, Color.Tan);
+                    }
+
+
+
 
                     break;
 
                 case GameState.Settings:
 
-                    _spriteBatch.DrawString(arial32, "Settings", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    _spriteBatch.DrawString(arial32, "Settings", new Vector2(screenWidth - 175, screenHeight / 2), Color.White);
 
                     break;
 
@@ -321,7 +339,11 @@ namespace CrossBoa
                 case GameState.Pause:
 
                     _spriteBatch.DrawString(arial32, "Pause", new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175, GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
-                    buttonList[0].Draw(_spriteBatch);
+                    playButton.Draw(_spriteBatch);
+
+                    // Debug button
+                    _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:", new Vector2(screenWidth - 400, screenHeight - 100), isDebugActive ? Color.Red : Color.Green);
+                    debugButton.Draw(_spriteBatch);
 
                     break;
 
@@ -337,10 +359,10 @@ namespace CrossBoa
 
                     break;
             }
-           
+
             _spriteBatch.End();
 
-                base.Draw(gameTime);
+            base.Draw(gameTime);
         }
 
         public enum GameState
