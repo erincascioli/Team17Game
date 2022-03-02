@@ -7,6 +7,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
+    enum EnemyState
+    {
+        Alive,
+        Dead
+    }
+
     /// <summary>
     /// A slime. It moves towards the player in spurts
     /// and damages them on contact. Inherits from PhysicsObject.
@@ -37,7 +43,12 @@ namespace CrossBoa
         /// </summary>
         private float timeSinceMove;
 
+        /// <summary>
+        /// The color of the slime.
+        /// </summary>
         private Color currentColor;
+
+        private EnemyState isAlive;
 
         // ~~~ PROPERTIES ~~~
         /// <summary>
@@ -73,6 +84,7 @@ namespace CrossBoa
             this.health = health;
             timeSinceMove = 0;
             currentColor = Color.Green;
+            isAlive = EnemyState.Alive;
         }
 
         /// <summary>
@@ -104,8 +116,17 @@ namespace CrossBoa
         /// <param name="player">The player to check the collision of.</param>
         public void DealContactDamage(Player player)
         {
-                player.TakeDamage(0);
-                currentColor = Color.MediumVioletRed;
+            player.TakeDamage(0);
+            currentColor = Color.MediumVioletRed;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            health -= damage;
+            if (health <= 0)
+            {
+                isAlive = EnemyState.Dead;
+            }
         }
 
         /// <summary>
@@ -114,28 +135,32 @@ namespace CrossBoa
         /// <param name="sb">The active SpriteBatch.</param>
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(sprite,
+            if (isAlive == EnemyState.Alive)
+                sb.Draw(sprite,
                 Rectangle,
                 currentColor);
         }
 
         public override void Update(GameTime gameTime)
         {
-            // Update the timer
-            float totalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            timeSinceMove += totalSeconds;
-
-            // If it's been at least 1 second since the last slime movement,
-            // push the slime towards the player.
-            if (timeSinceMove >= 1)
+            if (isAlive == EnemyState.Alive)
             {
-                targetX = (int)player.Position.X;
-                targetY = (int)player.Position.Y;
-                timeSinceMove -= 1;
-                Move();
+                // Update the timer
+                float totalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                timeSinceMove += totalSeconds;
+
+                // If it's been at least 1 second since the last slime movement,
+                // push the slime towards the player.
+                if (timeSinceMove >= 1)
+                {
+                    targetX = (int)player.Position.X;
+                    targetY = (int)player.Position.Y;
+                    timeSinceMove -= 1;
+                    Move();
+                }
+                ApplyFriction(gameTime);
+                UpdatePhysics(gameTime);
             }
-            ApplyFriction(gameTime);
-            UpdatePhysics(gameTime);
         }
     }
 }

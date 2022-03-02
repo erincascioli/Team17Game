@@ -174,6 +174,13 @@ namespace CrossBoa
         public void HitSomething()
         {
             isActive = false; // Stops projectile
+
+            // Code specifically for the player's arrow
+            if (isPlayerArrow)
+            {
+                direction *= -1;
+
+            }
         }
 
         /// <summary>

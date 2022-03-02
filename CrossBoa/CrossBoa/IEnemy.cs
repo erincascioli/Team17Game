@@ -34,5 +34,11 @@ namespace CrossBoa
         /// Method to deal damage on contact with the player.
         /// </summary>
         void DealContactDamage(Player player);
+
+        /// <summary>
+        /// Method to have the enemy take damage, and if their health reaches 0,
+        /// destroy them.
+        /// </summary>
+        void TakeDamage(int damage);
     }
 }

@@ -69,6 +69,17 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Whether or not the crossbow is currently on cooldown.
+        /// Get-only property.
+        /// </summary>
+        public bool IsOnCooldown
+        {
+            get
+            {
+                return timeSinceShot < shotCoolDown;
+            }
+        }
+        /// <summary>
         /// Returns the direction that the crossbow is facing.
         /// </summary>
         public float Direction
@@ -99,9 +110,10 @@ namespace CrossBoa
         /// </summary>
         public void Shoot(Projectile projectile)
         {
-            if (timeSinceShot >= shotCoolDown)
+            if (timeSinceShot >= shotCoolDown && isLoaded)
             {
                 timeSinceShot = 0f;
+                isLoaded = false;
                 projectile.ChangeVelocity(
                     position,
                     Direction,
@@ -111,7 +123,11 @@ namespace CrossBoa
                 projectile.Position += projectile.Velocity * 10;
             }
         }
-            
+           
+        public void PickUpArrow()
+        {
+            isLoaded = true;
+        }
 
         /// <summary>
         /// Calculates the angle between the crossbow and the mouse cursor,
