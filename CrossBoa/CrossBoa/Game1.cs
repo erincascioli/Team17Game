@@ -131,9 +131,9 @@ namespace CrossBoa
             // TODO: TEST CODE
             testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(1000, 800, 250, 50));
 
-            buttonList.Add(new Button(playHoverSprite, playPressedSprite, true, new Rectangle(GraphicsDeviceManager.DefaultBackBufferWidth/2 + playHoverSprite.Width * 2, GraphicsDeviceManager.DefaultBackBufferHeight/2 + playHoverSprite.Height * 2, playHoverSprite.Width, playHoverSprite.Height)));
+            buttonList.Add(new Button(playHoverSprite, playPressedSprite, true, new Rectangle(_graphics.PreferredBackBufferWidth/2 - playHoverSprite.Width / 2, _graphics.PreferredBackBufferHeight/ 2 - playHoverSprite.Height / 2, playHoverSprite.Width, playHoverSprite.Height)));
 
-            buttonList.Add(new Button(settingsPressedSprite, settingsHoverSprite, true, new Rectangle(GraphicsDeviceManager.DefaultBackBufferWidth / 2 + settingsHoverSprite.Width * 2, GraphicsDeviceManager.DefaultBackBufferHeight / 2 + settingsHoverSprite.Height * 2, settingsHoverSprite.Width, settingsHoverSprite.Height)));
+            buttonList.Add(new Button(settingsPressedSprite, settingsHoverSprite, true, new Rectangle(_graphics.PreferredBackBufferWidth - settingsPressedSprite.Width - 5, 5, settingsHoverSprite.Width, settingsHoverSprite.Height)));
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(slime);
