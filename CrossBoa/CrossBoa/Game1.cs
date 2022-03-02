@@ -296,35 +296,25 @@ namespace CrossBoa
 
                 case GameState.Game:
 
-                    //Level
-                    LevelManager.Draw(_spriteBatch);
+                    DrawGame();
 
-                    // Draw all GameObjects
-                    foreach (GameObject gameObject in gameObjectList)
-                    {
-                        gameObject.Draw(_spriteBatch);
-                    }
+                    break;
 
-                    arrow.Draw(_spriteBatch);
+                case GameState.Pause:
 
-                    pauseButton.Draw(_spriteBatch);
+                    // Draws the game with a darkened overlay
+                    DrawGame();
+                    _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(screenWidth, screenHeight)), new Color(Color.Black, 150));
 
+                    _spriteBatch.DrawString(arial32, "Pause",
+                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
+                            GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    playButton.Draw(_spriteBatch);
 
-                    // DEBUG
-                    if (isDebugActive)
-                    {
-                        // ~~~ Draws the crossbow's timeSinceShot timer
-                        _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
-
-                        // Shows working hitboxes that don't use points
-                        manager.Draw(_spriteBatch, hitBox, arrowHitBox);
-
-                        // TEST CODE TO DRAW ARROW RECTANGLE
-                        _spriteBatch.Draw(whiteSquareSprite, arrow.Rectangle, Color.Tan);
-                    }
-
-
-
+                    // Debug button
+                    _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:",
+                        new Vector2(screenWidth - 400, screenHeight - 100), isDebugActive ? Color.Red : Color.Green);
+                    debugButton.Draw(_spriteBatch);
 
                     break;
 
@@ -340,20 +330,6 @@ namespace CrossBoa
                     _spriteBatch.DrawString(arial32, "Credits",
                         new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
                             GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
-
-                    break;
-
-                case GameState.Pause:
-
-                    _spriteBatch.DrawString(arial32, "Pause",
-                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
-                            GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
-                    playButton.Draw(_spriteBatch);
-
-                    // Debug button
-                    _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:",
-                        new Vector2(screenWidth - 400, screenHeight - 100), isDebugActive ? Color.Red : Color.Green);
-                    debugButton.Draw(_spriteBatch);
 
                     break;
 
@@ -382,6 +358,39 @@ namespace CrossBoa
         }
 
         // HELPER METHODS
+
+        /// <summary>
+        /// Includes all of the Draw code for GameState.Game
+        /// </summary>
+        void DrawGame()
+        {
+            //Level
+            LevelManager.Draw(_spriteBatch);
+
+            // Draw all GameObjects
+            foreach (GameObject gameObject in gameObjectList)
+            {
+                gameObject.Draw(_spriteBatch);
+            }
+
+            arrow.Draw(_spriteBatch);
+
+            pauseButton.Draw(_spriteBatch);
+
+
+            // DEBUG
+            if (isDebugActive)
+            {
+                // ~~~ Draws the crossbow's timeSinceShot timer
+                _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
+
+                // Shows working hitboxes that don't use points
+                manager.Draw(_spriteBatch, hitBox, arrowHitBox);
+
+                // TEST CODE TO DRAW ARROW RECTANGLE
+                _spriteBatch.Draw(whiteSquareSprite, arrow.Rectangle, Color.Tan);
+            }
+        }
 
         /// <summary>
         /// Spawns a slime enemy
