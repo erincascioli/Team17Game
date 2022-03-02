@@ -11,11 +11,11 @@ namespace CrossBoa
     /// Author: Ian Knecht
     /// <para>Represents a projectile with a rotation and a constant movement speed</para>
     /// </summary>
-    public class Projectile : GameObject, ICollidable
+    public class Projectile : PhysicsObject, ICollidable
     {
-        private Vector2 velocity;
         private float direction;
         private bool isActive;
+        private bool isInAir;
         private bool isPlayerArrow;
 
         /// <summary>
@@ -35,11 +35,25 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Whether this arrow is currently active or not
+        /// Whether this arrow is currently being used, or if it should be pooled
         /// </summary>
         public bool IsActive
         {
             get { return isActive; }
+            set
+            {
+                isActive = value;
+                position = new Vector2(-1000, -1000);
+            }
+        }
+
+        /// <summary>
+        /// Whether the arrow is currently able to hit anything, or if it is on the ground
+        /// </summary>
+        public bool IsInAir
+        {
+            get { return isInAir; }
+            set { isInAir = value; }
         }
 
         /// <summary>
@@ -68,12 +82,14 @@ namespace CrossBoa
         /// <param name="rectangle">a Rectangle containing this GameObject's position and size</param>
         /// <param name="velocity">The direction that the projectile will move in</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public Projectile(Texture2D sprite, Rectangle rectangle, Vector2 velocity, bool isPlayerArrow) : base(sprite, rectangle)
+        public Projectile(Texture2D sprite, Rectangle rectangle, Vector2 velocity, bool isPlayerArrow) :
+            base(sprite, rectangle, null, 0)
         {
             this.velocity = velocity;
             this.isPlayerArrow = isPlayerArrow;
             direction = MathF.Atan2(velocity.Y, velocity.X);
             this.isActive = true;
+            this.isInAir = true;
         }
 
         /// <summary>
@@ -84,12 +100,14 @@ namespace CrossBoa
         /// <param name="size">The GameObject's size in pixels</param>
         /// <param name="velocity">The direction that the projectile will move in</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public Projectile(Texture2D sprite, Vector2 position, Point size, Vector2 velocity, bool isPlayerArrow) : base(sprite, position, size)
+        public Projectile(Texture2D sprite, Vector2 position, Point size, Vector2 velocity, bool isPlayerArrow) :
+            base(sprite, position, size, null, 0)
         {
             this.velocity = velocity;
             this.isPlayerArrow = isPlayerArrow;
             direction = MathF.Atan2(velocity.Y, velocity.X);
             this.isActive = true;
+            this.isInAir = true;
         }
 
         /// <summary>
@@ -100,12 +118,14 @@ namespace CrossBoa
         /// <param name="direction">The direction that the projectile will move in</param>
         /// <param name="magnitude">How quickly the projectile will move in that direction</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public Projectile(Texture2D sprite, Rectangle rectangle, float direction, float magnitude, bool isPlayerArrow) : base(sprite, rectangle)
+        public Projectile(Texture2D sprite, Rectangle rectangle, float direction, float magnitude, bool isPlayerArrow) :
+            base(sprite, rectangle, null, 0)
         {
             this.direction = direction;
             this.isPlayerArrow = isPlayerArrow;
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
             this.isActive = true;
+            this.isInAir = true;
         }
 
         /// <summary>
@@ -117,12 +137,14 @@ namespace CrossBoa
         /// <param name="direction">The direction that the projectile will move in</param>
         /// <param name="magnitude">How quickly the projectile will move in that direction</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public Projectile(Texture2D sprite, Vector2 position, Point size, float direction, float magnitude, bool isPlayerArrow) : base(sprite, position, size)
+        public Projectile(Texture2D sprite, Vector2 position, Point size, float direction, float magnitude, bool isPlayerArrow) :
+            base(sprite, position, size, null, 0)
         {
             this.direction = direction;
             this.isPlayerArrow = isPlayerArrow;
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
             this.isActive = true;
+            this.isInAir = true;
         }
 
         /// <summary>
@@ -131,27 +153,23 @@ namespace CrossBoa
         /// <param name="gameTime">A reference to the GameTime</param>
         public override void Update(GameTime gameTime)
         {
-            Move();
-            base.Update(gameTime);
-        }
-
-        /// <summary>
-        /// Updates the arrow's movement
-        /// </summary>
-        public void Move()
-        {
-            if (isActive)
+            if (isPlayerArrow)
             {
-                position += velocity;
+                ApplyFriction(gameTime);
             }
+
+            base.Update(gameTime);
         }
 
         public void ChangeVelocity(Vector2 position, float direction, float magnitude)
         {
             isActive = true;
+            isInAir = true;
             this.position = position;
             this.direction = direction;
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
+            friction = 0;
+            maxSpeed = null;
         }
 
         /// <summary>
@@ -159,7 +177,21 @@ namespace CrossBoa
         /// </summary>
         public void HitSomething()
         {
-            isActive = false; // Stops projectile
+            if (isPlayerArrow)
+            {
+                // Code specifically for the player's arrow
+
+                // Bounce off the wall
+                velocity *= -1;
+                friction = 1000;
+                isInAir = false;
+            }
+            else
+            {
+                // Stops projectile
+                velocity = Vector2.Zero;
+                isActive = false;
+            }
         }
 
         /// <summary>
@@ -168,16 +200,19 @@ namespace CrossBoa
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(
-                sprite,
-                position,
-                null,
-                Color.White,
-                direction,
-                new Vector2(1, 0.5f),
-                size.ToVector2(),
-                SpriteEffects.None,
-                0.5f);
+            if (isActive)
+            {
+                spriteBatch.Draw(
+                    sprite,
+                    position,
+                    null,
+                    Color.White,
+                    direction,
+                    new Vector2(1, 0.5f),
+                    size.ToVector2(),
+                    SpriteEffects.None,
+                    0.5f);
+            }
         }
     }
 }
