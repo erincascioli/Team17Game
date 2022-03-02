@@ -197,7 +197,7 @@ namespace CrossBoa
                         Slime newSlime = new Slime(
                             3,
                             whiteSquareSprite,
-                            new Rectangle(400, 400, 64, 64),
+                            new Rectangle(mState.X, mState.Y, 64, 64),
                             20000f,
                             500f,
                             2500f,
