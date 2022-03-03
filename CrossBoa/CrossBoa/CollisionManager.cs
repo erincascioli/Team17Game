@@ -184,7 +184,7 @@ namespace CrossBoa
             if (!playerArrow.IsInAir && !crossbow.IsOnCooldown && player.Hitbox.Intersects(playerArrow.Hitbox))
             {
                 crossbow.PickUpArrow();
-                playerArrow.IsActive = false;
+                playerArrow.Disable();
             }
 
             
