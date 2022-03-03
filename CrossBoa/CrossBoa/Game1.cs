@@ -154,6 +154,9 @@ namespace CrossBoa
                 new Rectangle(screenWidth - 100, screenHeight - 100, settingsHoverSprite.Width,
                     settingsHoverSprite.Height));
 
+            // PASS-IN REFERENCES
+            arrow.CrossbowReference = crossbow;
+
             // Add all GameObjects to GameObject list
             gameObjectList.Add(slime);
             gameObjectList.Add(player);

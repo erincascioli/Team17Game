@@ -13,10 +13,13 @@ namespace CrossBoa
     /// </summary>
     public class Projectile : PhysicsObject, ICollidable
     {
+        private CrossBow crossbowReference;
+
         private float direction;
         private bool isActive;
         private bool isInAir;
         private bool isPlayerArrow;
+        private float timeUntilDespawn;
 
         /// <summary>
         /// The velocity vector of the arrow
@@ -40,11 +43,6 @@ namespace CrossBoa
         public bool IsActive
         {
             get { return isActive; }
-            set
-            {
-                isActive = value;
-                position = new Vector2(-1000, -1000);
-            }
         }
 
         /// <summary>
@@ -53,7 +51,6 @@ namespace CrossBoa
         public bool IsInAir
         {
             get { return isInAir; }
-            set { isInAir = value; }
         }
 
         /// <summary>
@@ -72,6 +69,20 @@ namespace CrossBoa
             get
             {
                 return new Rectangle(position.ToPoint(), Point.Zero);
+            }
+        }
+
+        /// <summary>
+        /// A reference to the crossbow for the player arrow
+        /// </summary>
+        public CrossBow CrossbowReference
+        {
+            set
+            {
+                if (isPlayerArrow)
+                    crossbowReference = value;
+                else
+                    throw new Exception("Enemy arrows should not collect a reference to the crossbow.");
             }
         }
 
@@ -161,6 +172,19 @@ namespace CrossBoa
             if (isPlayerArrow)
             {
                 ApplyFriction(gameTime);
+
+                // If it's on the ground, tick down the despawn time
+                if (!isInAir)
+                {
+                    timeUntilDespawn -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    
+                    // If there's no time left on the despawn timer, give it back to the player
+                    if (timeUntilDespawn <= 0)
+                    {
+                        Disable();
+                        crossbowReference.PickUpArrow();
+                    }
+                }
             }
 
             base.Update(gameTime);
@@ -178,22 +202,30 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Disables this arrow and moves it offscreen for later reuse
+        /// </summary>
+        public void Disable()
+        {
+            isActive = false;
+            position = new Vector2(-1000, -1000);
+        }
+
+        /// <summary>
         /// Run this whenever the arrow hits something
         /// </summary>
         public void HitSomething()
         {
             if (isPlayerArrow)
             {
-                // Code specifically for the player's arrow
-
-                // Bounce off the wall
+                // If it's the player's arrow, bounce off the wall
                 velocity *= -1;
                 friction = 1000;
                 isInAir = false;
+                timeUntilDespawn = 10f;
             }
             else
             {
-                // Stops projectile
+                // If it's an enemy arrow, delete projectile
                 velocity = Vector2.Zero;
                 isActive = false;
             }
