@@ -25,7 +25,7 @@ namespace CrossBoa
         // Test code
         Color CurrentColor { get; set; }
 
-        Vector2 Position { get; set; }
+        //Vector2 Position { get; set; }
 
         /// <summary>
         /// Method on how the enemy moves.
