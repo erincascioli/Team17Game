@@ -14,5 +14,7 @@ namespace CrossBoa
         /// The hitbox for this object
         /// </summary>
         public Rectangle Hitbox { get; }
+
+        public Vector2 Position { get; set; }
     }
 }

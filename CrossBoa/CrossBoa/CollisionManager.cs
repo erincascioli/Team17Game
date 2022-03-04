@@ -65,7 +65,7 @@ namespace CrossBoa
                 else
                 {
                     // Next checks if any projectiles hit a wall/Obstacle
-                    foreach(Tile j in levelObstacles)
+                    foreach (Tile j in levelObstacles)
                     {
                         if (i.Hitbox.Intersects(j.Rectangle))
                         {
@@ -111,38 +111,9 @@ namespace CrossBoa
                     playerArrow.HitSomething();
                 }
 
-                if (player.Hitbox.Intersects(i.Rectangle)) 
+                if (player.Hitbox.Intersects(i.Rectangle))
                 {
-                    // All collisions check by creating a smaller rectangle within the player character
-                    // to check collisions with the wall against
-                    // This prevents any part of the rectangle triggering a right side collision for example
-
-                    // Against left wall
-                    if (new Rectangle(player.Hitbox.X, player.Hitbox.Y + player.Hitbox.Height / 10, 
-                        player.Hitbox.Width / 16, player.Hitbox.Height - player.Hitbox.Height / 5).Intersects(i.Rectangle) && player.Hitbox.Left < i.Rectangle.Right)
-                    {
-                        player.Position = new Vector2(i.Rectangle.Right, player.Position.Y);
-                    }
-                    // Against right wall
-                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width - player.Hitbox.Width / 16, player.Hitbox.Y + player.Hitbox.Height / 10, 
-                        player.Hitbox.Width / 16, player.Hitbox.Height - player.Hitbox.Height / 5).Intersects(i.Rectangle) && player.Hitbox.Right > i.Rectangle.Left)
-                    {
-                        player.Position = new Vector2(i.Rectangle.Left - player.Width, player.Position.Y);
-                    }
-
-                    // Player top of tile
-                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 10, player.Hitbox.Y + player.Height - player.Height / 16, 
-                        player.Hitbox.Width - player.Hitbox.Width / 5, player.Hitbox.Height / 16).Intersects(i.Rectangle) && player.Hitbox.Top < i.Rectangle.Bottom) 
-                    {
-                        player.Position = new Vector2(player.Position.X, i.Rectangle.Top - player.Height);
-                    }
-
-                    // Against bottom of tile
-                    if (new Rectangle(player.Hitbox.X + player.Hitbox.Width / 10, player.Hitbox.Y, 
-                        player.Hitbox.Width - player.Hitbox.Width / 5, player.Hitbox.Height / 16).Intersects(i.Rectangle) && player.Hitbox.Bottom > i.Rectangle.Top)
-                    {
-                        player.Position = new Vector2(player.Position.X, i.Rectangle.Bottom);
-                    }
+                    EntityEnvironmentCollide<Player>(player, i);
                 }
 
                 // Enemies with tile
@@ -150,32 +121,7 @@ namespace CrossBoa
                 {
                     if (j.Hitbox.Intersects(i.Rectangle))
                     {
-                        // Against left wall
-                        if (new Rectangle(j.Hitbox.X, j.Hitbox.Y + j.Hitbox.Height / 10,
-                            j.Hitbox.Width / 16, j.Hitbox.Height - j.Hitbox.Height / 5).Intersects(j.Rectangle) && j.Hitbox.Left < i.Rectangle.Right)
-                        {
-                            j.Position = new Vector2(i.Rectangle.Right, j.Position.Y);
-                        }
-                        // Against right wall
-                        if (new Rectangle(j.Hitbox.X + j.Hitbox.Width - j.Hitbox.Width / 16, j.Hitbox.Y + j.Hitbox.Height / 10,
-                            j.Hitbox.Width / 16, j.Hitbox.Height - j.Hitbox.Height / 5).Intersects(i.Rectangle) && j.Hitbox.Right > i.Rectangle.Left)
-                        {
-                            j.Position = new Vector2(i.Rectangle.Left - j.Rectangle.Width, j.Position.Y);
-                        }
-
-                        // Player top of tile
-                        if (new Rectangle(j.Hitbox.X + j.Hitbox.Width / 10, j.Hitbox.Y + j.Rectangle.Height - j.Rectangle.Height / 16,
-                            j.Hitbox.Width - j.Hitbox.Width / 5, j.Hitbox.Height / 16).Intersects(i.Rectangle) && j.Hitbox.Top < i.Rectangle.Bottom)
-                        {
-                            j.Position = new Vector2(j.Position.X, i.Rectangle.Top - j.Rectangle.Height);
-                        }
-
-                        // Against bottom of tile
-                        if (new Rectangle(j.Hitbox.X + j.Hitbox.Width / 10, j.Hitbox.Y,
-                            j.Hitbox.Width - j.Hitbox.Width / 5, j.Hitbox.Height / 16).Intersects(i.Rectangle) && j.Hitbox.Bottom > i.Rectangle.Top)
-                        {
-                            j.Position = new Vector2(j.Position.X, i.Rectangle.Bottom);
-                        }
+                        EntityEnvironmentCollide<IEnemy>(j, i);
                     }
                 }
             }
@@ -187,8 +133,8 @@ namespace CrossBoa
                 playerArrow.Disable();
             }
 
-            
-                
+
+
         }
 
         /// <summary>
@@ -217,7 +163,7 @@ namespace CrossBoa
                 sb.Draw(arrowPoint, new Rectangle(playerArrow.Hitbox.X - 2, PlayerArrow.Hitbox.Y - 2, 5, 5), Color.Red);
             }
 
-            foreach(Projectile i in enemyProjectiles)
+            foreach (Projectile i in enemyProjectiles)
             {
                 sb.Draw(arrowPoint, new Rectangle(i.Hitbox.X - 2, i.Hitbox.Y - 2, 5, 5), Color.Red);
             }
@@ -263,5 +209,47 @@ namespace CrossBoa
         {
             levelObstacles = LevelManager.GetCollidables();
         }
+
+        /// <summary>
+        /// Purpose: Handles all colisions with tiles
+        /// Restrictions: only objects with a hitbox may use it
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="tile"></param>
+        public void EntityEnvironmentCollide<T>(T entity, Tile tile) where T : ICollidable 
+        {
+            // All collisions check by creating a smaller rectangle within the player character
+            // to check collisions with the wall against
+            // This prevents any part of the rectangle triggering a right side collision for example
+
+            // Against left wall
+            if (new Rectangle(entity.Hitbox.X, entity.Hitbox.Y + entity.Hitbox.Height / 10,
+                entity.Hitbox.Width / 16,entity.Hitbox.Height - entity.Hitbox.Height / 5).Intersects(tile.Rectangle) && entity.Hitbox.Left < tile.Rectangle.Right)
+            {
+                entity.Position = new Vector2(tile.Rectangle.Right, entity.Position.Y);
+            }
+            // Against right wall
+            if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width - entity.Hitbox.Width / 16, entity.Hitbox.Y + entity.Hitbox.Height / 10,
+                entity.Hitbox.Width / 16, entity.Hitbox.Height - entity.Hitbox.Height / 5).Intersects(tile.Rectangle) && entity.Hitbox.Right > tile.Rectangle.Left)
+            {
+                entity.Position = new Vector2(tile.Rectangle.Left - entity.Hitbox.Width, entity.Position.Y);
+            }
+
+            // Player top of tile
+            if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width / 10, entity.Hitbox.Y + entity.Hitbox.Height - entity.Hitbox.Height / 16,
+                entity.Hitbox.Width - entity.Hitbox.Width / 5, entity.Hitbox.Height / 16).Intersects(tile.Rectangle) && entity.Hitbox.Top < tile.Rectangle.Bottom)
+            {
+                entity.Position = new Vector2(entity.Position.X, tile.Rectangle.Top - entity.Hitbox.Height);
+            }
+
+            // Against bottom of tile
+            if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width / 10, entity.Hitbox.Y,
+                entity.Hitbox.Width - entity.Hitbox.Width / 5, entity.Hitbox.Height / 16).Intersects(tile.Rectangle) && entity.Hitbox.Bottom > tile.Rectangle.Top)
+            {
+                entity.Position = new Vector2(entity.Position.X, tile.Rectangle.Bottom);
+            }
+        }
+ 
     }
 }
