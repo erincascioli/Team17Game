@@ -114,6 +114,7 @@ namespace CrossBoa
         {
             // Get a friction vector that is facing the opposite direction of the object's movement
             Vector2 frictionVector = velocity * -1;
+
             if (frictionVector != Vector2.Zero)
                 frictionVector.Normalize();
             frictionVector *= friction;

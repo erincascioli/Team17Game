@@ -22,14 +22,6 @@ namespace CrossBoa
         private float timeUntilDespawn;
 
         /// <summary>
-        /// The velocity vector of the arrow
-        /// </summary>
-        public Vector2 Velocity
-        {
-            get { return velocity; }
-        }
-
-        /// <summary>
         /// The direction vector of the arrow
         /// </summary>
         public float Direction
