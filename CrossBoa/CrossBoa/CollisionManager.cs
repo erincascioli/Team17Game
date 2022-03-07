@@ -223,33 +223,71 @@ namespace CrossBoa
             // to check collisions with the wall against
             // This prevents any part of the rectangle triggering a right side collision for example
 
-            // Against left wall
-            if (new Rectangle(entity.Hitbox.X, entity.Hitbox.Y + entity.Hitbox.Height / 10,
-                entity.Hitbox.Width / 16,entity.Hitbox.Height - entity.Hitbox.Height / 5).Intersects(tile.Rectangle) && entity.Hitbox.Left < tile.Rectangle.Right)
+            // Rectangle that holds the intersection area
+            Rectangle overlap = Rectangle.Intersect(entity.Hitbox, tile.Rectangle);
+
+
+            // Is the overlapping rectangle taller than it is wide
+            if (overlap.Width >= overlap.Height)
             {
-                entity.Position = new Vector2(tile.Rectangle.Right, entity.Position.Y);
+                // Y value must be changed
+
+                // Is the entity below the tile
+                if (entity.Hitbox.Y >= overlap.Y)
+                {
+                    entity.Position = new Vector2(entity.Position.X, entity.Position.Y + overlap.Height);
+                }
+                else
+                {
+                    entity.Position = new Vector2(entity.Position.X, entity.Position.Y - overlap.Height);
+
+                }
             }
-            // Against right wall
-            if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width - entity.Hitbox.Width / 16, entity.Hitbox.Y + entity.Hitbox.Height / 10,
-                entity.Hitbox.Width / 16, entity.Hitbox.Height - entity.Hitbox.Height / 5).Intersects(tile.Rectangle) && entity.Hitbox.Right > tile.Rectangle.Left)
+            else
             {
-                entity.Position = new Vector2(tile.Rectangle.Left - entity.Hitbox.Width, entity.Position.Y);
+                // X value must be changed
+
+                // Is the entity below the rectangle
+                if (entity.Hitbox.X >= overlap.X)
+                {
+                    entity.Position = new Vector2(entity.Position.X + overlap.Width, entity.Position.Y);
+                }
+                else
+                {
+                    entity.Position = new Vector2(entity.Position.X  - overlap.Width, entity.Position.Y);
+                }
             }
 
-            // Player top of tile
-            if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width / 10, entity.Hitbox.Y + entity.Hitbox.Height - entity.Hitbox.Height / 16,
-                entity.Hitbox.Width - entity.Hitbox.Width / 5, entity.Hitbox.Height / 16).Intersects(tile.Rectangle) && entity.Hitbox.Top < tile.Rectangle.Bottom)
-            {
-                entity.Position = new Vector2(entity.Position.X, tile.Rectangle.Top - entity.Hitbox.Height);
-            }
 
-            // Against bottom of tile
-            if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width / 10, entity.Hitbox.Y,
-                entity.Hitbox.Width - entity.Hitbox.Width / 5, entity.Hitbox.Height / 16).Intersects(tile.Rectangle) && entity.Hitbox.Bottom > tile.Rectangle.Top)
-            {
-                entity.Position = new Vector2(entity.Position.X, tile.Rectangle.Bottom);
+
+                /*
+                // Against left wall
+                if (new Rectangle(entity.Hitbox.X, entity.Hitbox.Y + entity.Hitbox.Height / 10,
+                    entity.Hitbox.Width / 16,entity.Hitbox.Height - entity.Hitbox.Height / 5).Intersects(tile.Rectangle) && entity.Hitbox.Left < tile.Rectangle.Right)
+                {
+                    entity.Position = new Vector2(tile.Rectangle.Right, entity.Position.Y);
+                }
+                // Against right wall
+                if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width - entity.Hitbox.Width / 16, entity.Hitbox.Y + entity.Hitbox.Height / 10,
+                    entity.Hitbox.Width / 16, entity.Hitbox.Height - entity.Hitbox.Height / 5).Intersects(tile.Rectangle) && entity.Hitbox.Right > tile.Rectangle.Left)
+                {
+                    entity.Position = new Vector2(tile.Rectangle.Left - entity.Hitbox.Width, entity.Position.Y);
+                }
+
+                // Player top of tile
+                if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width / 10, entity.Hitbox.Y + entity.Hitbox.Height - entity.Hitbox.Height / 16,
+                    entity.Hitbox.Width - entity.Hitbox.Width / 5, entity.Hitbox.Height / 16).Intersects(tile.Rectangle) && entity.Hitbox.Top < tile.Rectangle.Bottom)
+                {
+                    entity.Position = new Vector2(entity.Position.X, tile.Rectangle.Top - entity.Hitbox.Height);
+                }
+
+                // Against bottom of tile
+                if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width / 10, entity.Hitbox.Y,
+                    entity.Hitbox.Width - entity.Hitbox.Width / 5, entity.Hitbox.Height / 16).Intersects(tile.Rectangle) && entity.Hitbox.Bottom > tile.Rectangle.Top)
+                {
+                    entity.Position = new Vector2(entity.Position.X, tile.Rectangle.Bottom);
+                }*/
             }
-        }
  
     }
 }
