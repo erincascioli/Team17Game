@@ -90,7 +90,7 @@ namespace CrossBoa
 
                 // with player arrow
                 if (playerArrow != null && playerArrow.IsInAir &&
-                    playerArrow.Hitbox.Intersects(i.Rectangle) && i.Health > 0)
+                    playerArrow.Hitbox.Intersects(i.Hitbox) && i.Health > 0)
                 {
                     // Health value not decided on yet
                     i.TakeDamage(1);
@@ -132,9 +132,6 @@ namespace CrossBoa
                 crossbow.PickUpArrow();
                 playerArrow.Disable();
             }
-
-
-
         }
 
         /// <summary>
@@ -145,18 +142,7 @@ namespace CrossBoa
         /// <param name="sb"></param>
         public void Draw(SpriteBatch sb, Texture2D hitBox, Texture2D arrowPoint)
         {
-            sb.Draw(hitBox, new Rectangle(player.Hitbox.X, player.Hitbox.Y + player.Hitbox.Height / 10,
-                        player.Hitbox.Width / 16, player.Hitbox.Height - player.Hitbox.Height / 5), Color.White);
-            sb.Draw(hitBox, new Rectangle(player.Hitbox.X + player.Hitbox.Width - player.Hitbox.Width / 16, player.Hitbox.Y + player.Hitbox.Height / 10,
-                        player.Hitbox.Width / 16, player.Hitbox.Height - player.Hitbox.Height / 5), Color.White);
-            sb.Draw(hitBox, new Rectangle(player.Hitbox.X + player.Hitbox.Width / 10, player.Hitbox.Y + player.Height - player.Height / 16,
-                        player.Hitbox.Width - Player.Hitbox.Width / 5, player.Hitbox.Height / 16), Color.White);
-            sb.Draw(hitBox, new Rectangle(player.Hitbox.X + player.Hitbox.Width / 10, player.Hitbox.Y,
-                        player.Hitbox.Width - player.Hitbox.Width / 5, player.Hitbox.Height / 16), Color.White);
-
-
-
-            //sb.Draw(hitBox, player.Hitbox, Color.White);
+            sb.Draw(hitBox, player.Hitbox, Color.White);
 
             if (playerArrow != null)
             {
@@ -170,7 +156,7 @@ namespace CrossBoa
 
             foreach (IEnemy i in enemies)
             {
-                // Doesn't use ICollidable yet
+
                 if (i.Health > 0)
                     sb.Draw(hitBox, i.Rectangle, Color.White);
             }
@@ -219,10 +205,6 @@ namespace CrossBoa
         /// <param name="tile"></param>
         public void EntityEnvironmentCollide<T>(T entity, Tile tile) where T : ICollidable 
         {
-            // All collisions check by creating a smaller rectangle within the player character
-            // to check collisions with the wall against
-            // This prevents any part of the rectangle triggering a right side collision for example
-
             // Rectangle that holds the intersection area
             Rectangle overlap = Rectangle.Intersect(entity.Hitbox, tile.Rectangle);
 
@@ -257,37 +239,6 @@ namespace CrossBoa
                     entity.Position = new Vector2(entity.Position.X  - overlap.Width, entity.Position.Y);
                 }
             }
-
-
-
-                /*
-                // Against left wall
-                if (new Rectangle(entity.Hitbox.X, entity.Hitbox.Y + entity.Hitbox.Height / 10,
-                    entity.Hitbox.Width / 16,entity.Hitbox.Height - entity.Hitbox.Height / 5).Intersects(tile.Rectangle) && entity.Hitbox.Left < tile.Rectangle.Right)
-                {
-                    entity.Position = new Vector2(tile.Rectangle.Right, entity.Position.Y);
-                }
-                // Against right wall
-                if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width - entity.Hitbox.Width / 16, entity.Hitbox.Y + entity.Hitbox.Height / 10,
-                    entity.Hitbox.Width / 16, entity.Hitbox.Height - entity.Hitbox.Height / 5).Intersects(tile.Rectangle) && entity.Hitbox.Right > tile.Rectangle.Left)
-                {
-                    entity.Position = new Vector2(tile.Rectangle.Left - entity.Hitbox.Width, entity.Position.Y);
-                }
-
-                // Player top of tile
-                if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width / 10, entity.Hitbox.Y + entity.Hitbox.Height - entity.Hitbox.Height / 16,
-                    entity.Hitbox.Width - entity.Hitbox.Width / 5, entity.Hitbox.Height / 16).Intersects(tile.Rectangle) && entity.Hitbox.Top < tile.Rectangle.Bottom)
-                {
-                    entity.Position = new Vector2(entity.Position.X, tile.Rectangle.Top - entity.Hitbox.Height);
-                }
-
-                // Against bottom of tile
-                if (new Rectangle(entity.Hitbox.X + entity.Hitbox.Width / 10, entity.Hitbox.Y,
-                    entity.Hitbox.Width - entity.Hitbox.Width / 5, entity.Hitbox.Height / 16).Intersects(tile.Rectangle) && entity.Hitbox.Bottom > tile.Rectangle.Top)
-                {
-                    entity.Position = new Vector2(entity.Position.X, tile.Rectangle.Bottom);
-                }*/
-            }
- 
+        }
     }
 }
