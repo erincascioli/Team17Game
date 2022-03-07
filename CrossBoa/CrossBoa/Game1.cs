@@ -197,8 +197,6 @@ namespace CrossBoa
                     // Update all GameObjects
                     Camera.Update(kbState);
 
-
-
                     foreach (GameObject gameObject in gameObjectList)
                     {
                         // Fixes crossbow moving off of player character
