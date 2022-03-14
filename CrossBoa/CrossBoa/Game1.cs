@@ -47,7 +47,7 @@ namespace CrossBoa
         private Button testButton;
         private CrossBow crossbow;
         private Player player;
-        private Slime slime;
+        private Slime testSlime;
         private Projectile arrow;
         private CollisionManager manager;
 
@@ -122,13 +122,12 @@ namespace CrossBoa
                 0.3f,
                 player);
 
-            slime = new Slime(
+            testSlime = new Slime(
                 3,
                 whiteSquareSprite,
                 new Rectangle(400, 400, 64, 64),
-                20000f,
-                500f,
-                2500f,
+                39000f,
+                1900f,
                 player);
 
             playHoverSprite = Content.Load<Texture2D>("PlayPressed");
@@ -158,14 +157,14 @@ namespace CrossBoa
             arrow.CrossbowReference = crossbow;
 
             // Add all GameObjects to GameObject list
-            gameObjectList.Add(slime);
+            gameObjectList.Add(testSlime);
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow);
 
 
 
             manager = new CollisionManager(player, crossbow);
-            manager.AddEnemy(slime);
+            manager.AddEnemy(testSlime);
             manager.PlayerArrow = arrow;
 
             LevelManager.LContent = Content;
@@ -404,7 +403,6 @@ namespace CrossBoa
                 whiteSquareSprite,
                 new Rectangle(position, new Point(64, 64)),
                 20000f,
-                500f,
                 2500f,
                 player);
             manager.AddEnemy(newSlime);
