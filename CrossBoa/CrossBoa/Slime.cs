@@ -21,7 +21,7 @@ namespace CrossBoa
     public class Slime : PhysicsObject, IEnemy, ICollidable
     {
         // ~~~ FIELDS ~~~
-        private const float timeBetweenJumps = 1.75f;
+        private const float timeBetweenJumps = 1.6f;
 
         private Player player;
 
