@@ -23,7 +23,6 @@ namespace CrossBoa
         private const int blockWidth = 64;
         private const int blockHeight = 64;
         private static Microsoft.Xna.Framework.Content.ContentManager Content;
-        private static CollisionManager manager;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
@@ -31,14 +30,6 @@ namespace CrossBoa
             get { return Content; }
             set { Content = value; }
         }
-
-        // Rrequires a reference
-        public static CollisionManager Collide
-        {
-            get { return manager; }
-            set { manager = value; }
-        }
-
 
         static LevelManager()
         {
@@ -147,7 +138,7 @@ namespace CrossBoa
                 }
 
                 // passes all active tiles to the collision manager
-                manager.UpdateLevel();
+                CollisionManager.UpdateLevel();
             }
             catch (Exception e)
             {
