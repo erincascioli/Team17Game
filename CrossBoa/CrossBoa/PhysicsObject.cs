@@ -117,6 +117,8 @@ namespace CrossBoa
 
             if (frictionVector != Vector2.Zero)
                 frictionVector.Normalize();
+
+            // TODO: program might crash if both velocity and friction are zero
             frictionVector *= friction;
 
             Vector2 frictionApplied = velocity + (frictionVector * (float)gameTime.ElapsedGameTime.TotalSeconds);
