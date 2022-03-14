@@ -21,6 +21,8 @@ namespace CrossBoa
     public class Slime : PhysicsObject, IEnemy, ICollidable
     {
         // ~~~ FIELDS ~~~
+        private const float timeBetweenJumps = 1.6f;
+
         private Player player;
 
         private float movementForce;
@@ -83,9 +85,9 @@ namespace CrossBoa
         }
 
         // ~~~ CONSTRUCTORS ~~~
-        public Slime(int health, Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed,
+        public Slime(int health, Texture2D sprite, Rectangle rectangle, float movementForce,
             float friction, Player playerReference) :
-            base(sprite, rectangle, maxSpeed, friction)
+            base(sprite, rectangle, null, friction)
         {
             player = playerReference;
             this.movementForce = movementForce;
@@ -160,11 +162,11 @@ namespace CrossBoa
 
                 // If it's been at least 1 second since the last slime movement,
                 // push the slime towards the player.
-                if (timeSinceMove >= .15f)
+                if (timeSinceMove >= timeBetweenJumps)
                 {
                     targetX = (int)player.Position.X;
                     targetY = (int)player.Position.Y;
-                    timeSinceMove -= .15f;
+                    timeSinceMove -= timeBetweenJumps;
                     Move();
                 }
                 ApplyFriction(gameTime);
