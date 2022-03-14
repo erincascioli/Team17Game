@@ -49,7 +49,6 @@ namespace CrossBoa
         private Player player;
         private Slime slime;
         private Projectile arrow;
-        private CollisionManager manager;
 
         // Buttons
         private Button playButton;
@@ -131,6 +130,12 @@ namespace CrossBoa
                 2500f,
                 player);
 
+            // CollisionManager is established and recieves important permanent references
+            CollisionManager.Player = player;
+            CollisionManager.Crossbow = crossbow;
+            CollisionManager.PlayerArrow = arrow;
+
+
             playHoverSprite = Content.Load<Texture2D>("PlayPressed");
             playPressedSprite = Content.Load<Texture2D>("PlayRegular");
             settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
@@ -163,13 +168,9 @@ namespace CrossBoa
             gameObjectList.Add(crossbow);
 
 
-
-            manager = new CollisionManager(player, crossbow);
-            manager.AddEnemy(slime);
-            manager.PlayerArrow = arrow;
+            CollisionManager.AddEnemy(slime);
 
             LevelManager.LContent = Content;
-            LevelManager.Collide = manager;
             LevelManager.LoadLevel("TestingFile");
         }
 
@@ -203,7 +204,7 @@ namespace CrossBoa
                         if (gameObject is CrossBow)
                         {
                             // CollisionManager checks for collisions
-                            manager.CheckCollision();
+                            CollisionManager.CheckCollision();
                         }
 
                         gameObject.Update(gameTime);
@@ -221,8 +222,8 @@ namespace CrossBoa
                         crossbow.Shoot(arrow);
                     }
 
-                    if (manager.PlayerArrow != null)
-                        manager.PlayerArrow.Update(gameTime);
+                    if (CollisionManager.PlayerArrow != null)
+                        CollisionManager.PlayerArrow.Update(gameTime);
 
                     pauseButton.Update(gameTime);
 
@@ -386,7 +387,7 @@ namespace CrossBoa
                 _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
 
                 // Shows working hitboxes that don't use points
-                manager.Draw(_spriteBatch, hitBox, arrowHitBox);
+                CollisionManager.Draw(_spriteBatch, hitBox, arrowHitBox);
 
                 // TEST CODE TO DRAW ARROW RECTANGLE
                 _spriteBatch.Draw(whiteSquareSprite, arrow.Rectangle, Color.Tan);
@@ -407,7 +408,7 @@ namespace CrossBoa
                 500f,
                 2500f,
                 player);
-            manager.AddEnemy(newSlime);
+            CollisionManager.AddEnemy(newSlime);
             gameObjectList.Add(newSlime);
         }
     }
