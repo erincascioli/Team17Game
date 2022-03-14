@@ -402,8 +402,8 @@ namespace CrossBoa
                 3,
                 whiteSquareSprite,
                 new Rectangle(position, new Point(64, 64)),
-                20000f,
-                2500f,
+                39000f,
+                1900f,
                 player);
             manager.AddEnemy(newSlime);
             gameObjectList.Add(newSlime);
