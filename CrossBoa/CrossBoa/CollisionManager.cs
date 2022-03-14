@@ -12,37 +12,36 @@ namespace CrossBoa
     /// Purpose: Tracks collisions between objects
     /// Restrictions: This class must only be created once
     /// </summary>
-    public class CollisionManager
+    public static class CollisionManager
     {
-        private Player player;
-        private CrossBow crossbow;
-        private Projectile playerArrow;
-        private List<IEnemy> enemies;
-        private List<Projectile> enemyProjectiles;
-        private List<Tile> levelObstacles;
+        private static Player player;
+        private static CrossBow crossbow;
+        private static Projectile playerArrow;
+        private static List<IEnemy> enemies;
+        private static List<Projectile> enemyProjectiles;
+        private static List<Tile> levelObstacles;
 
-        public Player Player
+        // Every field requires a reference
+        public static Player Player
         {
             get { return player; }
+            set { player = value; }
         }
 
-        public CrossBow Crossbow
+        public static CrossBow Crossbow
         {
             get { return crossbow; }
+            set { crossbow = value; }
         }
 
-        public Projectile PlayerArrow
+        public static Projectile PlayerArrow
         {
             get { return playerArrow; }
             set { playerArrow = value; }
         }
 
-        public CollisionManager(Player character, CrossBow weapon)
+        static CollisionManager()
         {
-            // All fields get a reference location
-            player = character;
-            crossbow = weapon;
-
             // Lists are created
             enemies = new List<IEnemy>();
             enemyProjectiles = new List<Projectile>();
@@ -52,7 +51,7 @@ namespace CrossBoa
         /// Purpose: Checks for collisions between all things in the level
         /// Restrictions: Level collidables must be parsed in beforehand
         /// </summary>
-        public void CheckCollision()
+        public static void CheckCollision()
         {
             // enemy Projectiles
             foreach (Projectile i in enemyProjectiles)
@@ -140,7 +139,7 @@ namespace CrossBoa
         /// Restrictions: none
         /// </summary>
         /// <param name="sb"></param>
-        public void Draw(SpriteBatch sb, Texture2D hitBox, Texture2D arrowPoint)
+        public static void Draw(SpriteBatch sb, Texture2D hitBox, Texture2D arrowPoint)
         {
             sb.Draw(hitBox, player.Hitbox, Color.White);
 
@@ -172,7 +171,7 @@ namespace CrossBoa
         /// Restrictions: none
         /// </summary>
         /// <param name="enemy"></param>
-        public void AddEnemy(IEnemy enemy)
+        public static void AddEnemy(IEnemy enemy)
         {
             enemies.Add(enemy);
         }
@@ -182,7 +181,7 @@ namespace CrossBoa
         /// Restrictions: none
         /// </summary>
         /// <param name="projectile"></param>
-        public void AddProjectile(Projectile projectile)
+        public static void AddProjectile(Projectile projectile)
         {
             enemyProjectiles.Add(projectile);
         }
@@ -191,7 +190,7 @@ namespace CrossBoa
         /// Purpose: Stores a levels innate collisions when it is first loaded
         /// Restrictions: should be called as soon as possible after loading a level
         /// </summary>
-        public void UpdateLevel()
+        public static void UpdateLevel()
         {
             levelObstacles = LevelManager.GetCollidables();
         }
@@ -203,7 +202,7 @@ namespace CrossBoa
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <param name="tile"></param>
-        public void EntityEnvironmentCollide<T>(T entity, Tile tile) where T : ICollidable 
+        public static void EntityEnvironmentCollide<T>(T entity, Tile tile) where T : ICollidable 
         {
             // Rectangle that holds the intersection area
             Rectangle overlap = Rectangle.Intersect(entity.Hitbox, tile.Rectangle);
