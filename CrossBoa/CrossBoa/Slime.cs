@@ -93,7 +93,7 @@ namespace CrossBoa
             this.movementForce = movementForce;
             this.health = health;
             timeSinceMove = 0;
-            currentColor = Color.Green;
+            currentColor = Color.Blue;
             isAlive = EnemyState.Alive;
         }
 
@@ -127,7 +127,7 @@ namespace CrossBoa
         public void DealContactDamage(Player player)
         {
             player.TakeDamage(0);
-            currentColor = Color.MediumVioletRed;
+            currentColor = Color.Red;
         }
 
         public void TakeDamage(int damage)
