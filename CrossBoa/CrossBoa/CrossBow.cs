@@ -148,6 +148,8 @@ namespace CrossBoa
                 Math.Pow(horizDist, 2));
             double cosA = (Math.Pow(totalDist, 2) + Math.Pow(horizDist, 2) - Math.Pow(vertDist, 2))
                 / (2 * horizDist * totalDist);
+            if (double.IsNaN(cosA))
+                cosA = 0;
             if (Mouse.GetState().Y < position.Y)
                 return (float)Math.Acos(cosA) * -1;
             return (float)Math.Acos(cosA);
