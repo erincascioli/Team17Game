@@ -235,7 +235,7 @@ namespace CrossBoa
                 }
                 else
                 {
-                    entity.Position = new Vector2(entity.Position.X - overlap.Width, entity.Position.Y);
+                    entity.Position = new Vector2(entity.Position.X  - overlap.Width, entity.Position.Y);
                 }
             }
         }
