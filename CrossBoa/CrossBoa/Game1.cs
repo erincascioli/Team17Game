@@ -289,6 +289,7 @@ namespace CrossBoa
             switch (gameState)
             {
                 case GameState.MainMenu:
+                    GraphicsDevice.Clear(new Color(174, 222, 203));
 
                     _spriteBatch.DrawString(arial32, "Main Menu",
                         new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
@@ -298,7 +299,7 @@ namespace CrossBoa
                     break;
 
                 case GameState.Game:
-
+                    GraphicsDevice.Clear(Color.Black);
                     DrawGame();
 
                     break;
@@ -410,6 +411,14 @@ namespace CrossBoa
                 player);
             CollisionManager.AddEnemy(newSlime);
             gameObjectList.Add(newSlime);
+        }
+
+        /// <summary>
+        /// Animates the main menu with parallax
+        /// </summary>
+        void AnimateMainMenu()
+        {
+
         }
     }
 
