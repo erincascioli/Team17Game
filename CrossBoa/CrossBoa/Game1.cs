@@ -25,7 +25,7 @@ namespace CrossBoa
         private const float DefaultPlayerDodgeSpeed = 500;
 
         private const int screenWidth = 1600;
-        private const int screenHeight = 900;
+        private const int screenHeight = 896;
 
         private bool isDebugActive;
 
@@ -96,7 +96,7 @@ namespace CrossBoa
             // Load objects
             player = new Player(
                 whiteSquareSprite,
-                new Rectangle(250, 250, 64, 64),
+                new Rectangle(250, 250, 48, 48),
                 DefaultPlayerMovementForce,
                 DefaultPlayerMaxSpeed,
                 DefaultPlayerFriction,
@@ -193,6 +193,8 @@ namespace CrossBoa
                     break;
 
                 case GameState.Game:
+
+                    CollisionManager.UpdateLevel();
 
                     // Update all GameObjects
                     Camera.Update(kbState);
