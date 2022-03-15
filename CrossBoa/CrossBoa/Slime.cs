@@ -112,6 +112,8 @@ namespace CrossBoa
                 Math.Pow(horizDist, 2));
             double cosA = (Math.Pow(totalDist, 2) + Math.Pow(horizDist, 2) - Math.Pow(vertDist, 2))
                 / (2 * horizDist * totalDist);
+            if (double.IsNaN(cosA))
+                cosA = 0;
             direction = (float)Math.Acos(cosA);
             if (targetY < position.Y)
                  direction *= -1;
