@@ -255,7 +255,6 @@ namespace CrossBoa
                         && !pauseButton.IsMouseOver())
                     {
                         crossbow.Shoot(playerArrow);
-                        Camera.ShakeScreen(12);
                     }
 
                     if (CollisionManager.PlayerArrow != null)
