@@ -82,10 +82,6 @@ namespace CrossBoa
                 {
                     i.DealContactDamage(player);
                 }
-                else
-                {
-                    i.CurrentColor = Color.White;
-                }
 
                 // with player arrow
                 if (playerArrow != null && playerArrow.IsInAir &&
@@ -94,9 +90,6 @@ namespace CrossBoa
                     // Health value not decided on yet
                     i.TakeDamage(1);
                     playerArrow.HitSomething();
-
-                    // Change enemy color
-                    i.CurrentColor = Color.Red;
                 }
 
             }
