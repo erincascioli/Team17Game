@@ -324,7 +324,7 @@ namespace CrossBoa
             {
                 // Main Menu
                 case GameState.MainMenu:
-                    _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Camera.Matrix);
+                    _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
                     GraphicsDevice.Clear(new Color(174, 222, 203));
 
                     foreach (GameObject background in menuBGLayers)
@@ -356,11 +356,12 @@ namespace CrossBoa
                 // Pause Menu
                 case GameState.Pause:
 
-                    _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+                    _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Camera.Matrix);
+                    GraphicsDevice.Clear(Color.Black);
 
                     // Draws the game with a darkened overlay
                     DrawGame();
-                    _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(screenWidth, screenHeight)), new Color(Color.Black, 150));
+                    _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(screenWidth, screenHeight)), new Color(Color.Black, 160));
 
                     _spriteBatch.DrawString(arial32, "Pause",
                         new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
