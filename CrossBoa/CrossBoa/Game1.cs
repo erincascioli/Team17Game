@@ -19,7 +19,7 @@ namespace CrossBoa
         private const int DefaultPlayerMaxSpeed = 300;
         private const int DefaultPlayerFriction = 2500;
         private const int DefaultPlayerHealth = 5;
-        private const float DefaultPlayerInvulnerabilityFrames = 3f;
+        private const float DefaultPlayerInvulnerabilityFrames = 1f;
         private const float DefaultPlayerDodgeCooldown = 10;
         private const float DefaultPlayerDodgeLength = 0.35f;
         private const float DefaultPlayerDodgeSpeed = 500;
@@ -47,6 +47,9 @@ namespace CrossBoa
         private Texture2D emptyHeart;
         private Texture2D fullHeart;
         private Texture2D[] menuBGSpriteList;
+        private Texture2D titleText;
+        private Texture2D pauseText;
+        private Texture2D gameOverText;
 
         private SpriteFont arial32;
 
@@ -101,10 +104,13 @@ namespace CrossBoa
             fullHeart = Content.Load<Texture2D>("Full Heart");
             snakeSprite = Content.Load<Texture2D>("snake");
             arial32 = Content.Load<SpriteFont>("Arial32");
-            tempCbSprite = Content.Load<Texture2D>("Crossbow_Pull_0");
+            tempCbSprite = Content.Load<Texture2D>("bow");
             hitBox = Content.Load<Texture2D>("Hitbox");
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
-            playerArrowSprite = Content.Load<Texture2D>("Minecraft Arrow");
+            playerArrowSprite = Content.Load<Texture2D>("arrow2");
+            titleText = Content.Load<Texture2D>("TitleText");
+            pauseText = Content.Load<Texture2D>("PauseText");
+            gameOverText = Content.Load<Texture2D>("GameOverText");
 
             for (int i = 0; i < 5; i++)
             {
@@ -133,7 +139,7 @@ namespace CrossBoa
             playerArrow = new Projectile(
                 playerArrowSprite,
                 new Vector2(-100, -100),
-                new Point(70, 21),
+                new Point(60, 60),
                 0f,
                 0,
                 true);
@@ -237,6 +243,12 @@ namespace CrossBoa
 
                         gameObject.Update(gameTime);
                     }
+                    
+                    if (player.CurrentHealth <= 0)
+                    {
+                        gameState = GameState.GameOver;
+                        player.CurrentHealth = DefaultPlayerHealth;
+                    }
 
                     // Spawn slime when pressing E while debug is active
                     if (isDebugActive && kbState.IsKeyDown(Keys.E) && !previousKBState.IsKeyDown(Keys.E))
@@ -296,6 +308,18 @@ namespace CrossBoa
 
                 case GameState.GameOver:
 
+                    AnimateMainMenuBG();
+
+                    /*
+                    playButton.Update(gameTime);
+
+                    if (playButton.HasBeenPressed())
+                    {
+                        gameState = GameState.Game;
+                    }
+
+                    */
+
                     break;
 
                 case GameState.GameWin:
@@ -332,10 +356,16 @@ namespace CrossBoa
                         background.Draw(_spriteBatch);
                     }
 
+                    _spriteBatch.Draw(titleText, new Vector2(0, 0), Color.White);
+
+                    /*
                     _spriteBatch.DrawString(arial32, "Crossboa",
                         new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 94,
                             GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    */
+
                     playButton.Draw(_spriteBatch);
+                    
 
                     _spriteBatch.End();
                     break;
@@ -363,9 +393,13 @@ namespace CrossBoa
                     DrawGame();
                     _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(screenWidth, screenHeight)), new Color(Color.Black, 160));
 
+                    _spriteBatch.Draw(pauseText, new Vector2(0, 0), Color.White);
+                    /*
                     _spriteBatch.DrawString(arial32, "Pause",
                         new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 63,
                             GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    */
+
                     playButton.Draw(_spriteBatch);
 
                     // Debug button
@@ -393,17 +427,36 @@ namespace CrossBoa
 
                 case GameState.GameOver:
 
+                    _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+                    GraphicsDevice.Clear(new Color(174, 222, 203));
+
+                    foreach (GameObject background in menuBGLayers)
+                    {
+                        background.Draw(_spriteBatch);
+                    }
+
+                    _spriteBatch.Draw(gameOverText, new Vector2(0, 0), Color.White);
+
+                    /*
                     _spriteBatch.DrawString(arial32, "Game Over",
                         new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
                             GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+                    */
+
+
+                    _spriteBatch.End();
 
                     break;
 
                 case GameState.GameWin:
 
+                    _spriteBatch.Begin();
+
                     _spriteBatch.DrawString(arial32, "Game Win",
                         new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
                             GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+
+                    _spriteBatch.End();
 
                     break;
             }
