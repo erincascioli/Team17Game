@@ -19,13 +19,13 @@ namespace CrossBoa
         private const int DefaultPlayerMaxSpeed = 300;
         private const int DefaultPlayerFriction = 2500;
         private const int DefaultPlayerHealth = 3;
-        private const float DefaultPlayerInvulnerabilityFrames = 3.5f;
+        private const float DefaultPlayerInvulnerabilityFrames = 3f;
         private const float DefaultPlayerDodgeCooldown = 10;
         private const float DefaultPlayerDodgeLength = 0.35f;
         private const float DefaultPlayerDodgeSpeed = 500;
 
         private const int screenWidth = 1600;
-        private const int screenHeight = 896;
+        private const int screenHeight = 900;
 
         private bool isDebugActive;
 
@@ -34,6 +34,7 @@ namespace CrossBoa
 
         // Assets
         private Texture2D whiteSquareSprite;
+        private Texture2D playerArrowSprite;
         private Texture2D slimeSpritesheet;
         private Texture2D snakeSprite;
         private Texture2D tempCbSprite;
@@ -43,16 +44,18 @@ namespace CrossBoa
         private Texture2D playPressedSprite;
         private Texture2D settingsHoverSprite;
         private Texture2D settingsPressedSprite;
+        private Texture2D emptyHeart;
+        private Texture2D fullHeart;
         private Texture2D[] menuBGSpriteList;
 
         private SpriteFont arial32;
 
         // Objects
         private GameObject[] menuBGLayers;
-        private Button testButton;
+        private List<GameObject> playerHealthBar;
         private CrossBow crossbow;
         private Player player;
-        private Projectile arrow;
+        private Projectile playerArrow;
 
         // Buttons
         private Button playButton;
@@ -76,6 +79,7 @@ namespace CrossBoa
             gameObjectList = new List<GameObject>();
             menuBGSpriteList = new Texture2D[5];
             menuBGLayers = new GameObject[10];
+            playerHealthBar = new List<GameObject>();
 
             _graphics.PreferredBackBufferWidth = screenWidth;
             _graphics.PreferredBackBufferHeight = screenHeight;
@@ -93,11 +97,14 @@ namespace CrossBoa
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
             slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
+            emptyHeart = Content.Load<Texture2D>("Empty Heart");
+            fullHeart = Content.Load<Texture2D>("Full Heart");
             snakeSprite = Content.Load<Texture2D>("snake");
             arial32 = Content.Load<SpriteFont>("Arial32");
             tempCbSprite = Content.Load<Texture2D>("Crossbow_Pull_0");
             hitBox = Content.Load<Texture2D>("Hitbox");
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
+            playerArrowSprite = Content.Load<Texture2D>("Minecraft Arrow");
 
             for (int i = 0; i < 5; i++)
             {
@@ -107,7 +114,7 @@ namespace CrossBoa
             // Load objects
             player = new Player(
                 snakeSprite,
-                new Rectangle(250, 250, 48, 48),
+                new Rectangle(250, 250, 64, 64),
                 DefaultPlayerMovementForce,
                 DefaultPlayerMaxSpeed,
                 DefaultPlayerFriction,
@@ -118,7 +125,12 @@ namespace CrossBoa
                 DefaultPlayerDodgeSpeed
             );
 
-            arrow = new Projectile(
+            for (int i = 0; i < DefaultPlayerHealth; i++)
+            {
+                playerHealthBar.Add(new GameObject(fullHeart, new Rectangle(5 + (i * 80), 0, 80, 80)));
+            }
+
+            playerArrow = new Projectile(
                 whiteSquareSprite,
                 new Vector2(-100, -100),
                 new Point(50, 15),
@@ -133,6 +145,8 @@ namespace CrossBoa
                 player);
 
             SpawnSlime(new Point(400, 400));
+            SpawnSlime(new Point(1280, 448));
+
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -151,15 +165,12 @@ namespace CrossBoa
             // CollisionManager is established and receives important permanent references
             CollisionManager.Player = player;
             CollisionManager.Crossbow = crossbow;
-            CollisionManager.PlayerArrow = arrow;
+            CollisionManager.PlayerArrow = playerArrow;
 
             playHoverSprite = Content.Load<Texture2D>("PlayPressed");
             playPressedSprite = Content.Load<Texture2D>("PlayRegular");
             settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
             settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
-
-            // TODO: TEST CODE
-            testButton = new Button(whiteSquareSprite, tempCbSprite, true, new Rectangle(1000, 800, 250, 50));
 
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
@@ -177,7 +188,7 @@ namespace CrossBoa
                     settingsHoverSprite.Height));
 
             // PASS-IN REFERENCES
-            arrow.CrossbowReference = crossbow;
+            playerArrow.CrossbowReference = crossbow;
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
@@ -237,7 +248,7 @@ namespace CrossBoa
                     if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
                         && !pauseButton.IsMouseOver())
                     {
-                        crossbow.Shoot(arrow);
+                        crossbow.Shoot(playerArrow);
                     }
 
                     if (CollisionManager.PlayerArrow != null)
@@ -331,7 +342,7 @@ namespace CrossBoa
 
 
                     _spriteBatch.End();
-                    _spriteBatch.Begin();
+                    _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
                     DrawGameUI();
                     _spriteBatch.End();
                     break;
@@ -447,19 +458,19 @@ namespace CrossBoa
                 gameObject.Draw(_spriteBatch);
             }
 
-            arrow.Draw(_spriteBatch);
+            playerArrow.Draw(_spriteBatch);
 
             // DEBUG
             if (isDebugActive)
             {
-                // ~~~ Draws the crossbow's timeSinceShot timer
-                _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(0, 0), Color.Black);
-
                 // Shows working hitboxes that don't use points
                 CollisionManager.Draw(_spriteBatch, hitBox, arrowHitBox);
 
                 // TEST CODE TO DRAW ARROW RECTANGLE
-                _spriteBatch.Draw(whiteSquareSprite, arrow.Rectangle, Color.Tan);
+                _spriteBatch.Draw(whiteSquareSprite, playerArrow.Rectangle, Color.Tan);
+
+                // ~~~ Draws the crossbow's timeSinceShot timer
+                _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(10, screenHeight - 50), Color.White);
             }
         }
 
@@ -469,6 +480,21 @@ namespace CrossBoa
         void DrawGameUI()
         {
             pauseButton.Draw(_spriteBatch);
+            for (int i = 0; i < playerHealthBar.Count; i++)
+            {
+                if (i < player.CurrentHealth)
+                {
+                    playerHealthBar[i].Draw(_spriteBatch);
+                }
+                else
+                {
+                    if (playerHealthBar[i].Sprite != emptyHeart)
+                    {
+                        playerHealthBar[i].Sprite = emptyHeart;
+                    }
+                    playerHealthBar[i].Draw(_spriteBatch);
+                }
+            }
         }
 
         /// <summary>
