@@ -22,7 +22,7 @@ namespace CrossBoa
         private float timeUntilDespawn;
         private bool flashFrames;
 
-        private const float PlayerArrowDespawn = 5f;
+        private const float PlayerArrowDespawn = 15f;
 
         /// <summary>
         /// The direction vector of the arrow
@@ -181,7 +181,7 @@ namespace CrossBoa
                     {
                         flashFrames = !flashFrames;
                         if (flashFrames)
-                            color = new Color(Color.White, 60);
+                            color = new Color(Color.Black, 60);
                         else
                             color = Color.White;
                     }
