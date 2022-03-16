@@ -13,19 +13,27 @@ namespace CrossBoa
         Dead
     }
 
+    enum SlimeAnimState
+    {
+        Resting,
+        Jumping,
+        Falling,
+        Squished
+    }
+
     /// <summary>
     /// A slime. It moves towards the player in spurts
     /// and damages them on contact. Inherits from PhysicsObject.
-    /// Writtern by: Leo Schindler-Gerendasi
+    /// Written by: Leo Schindler-Gerendasi
     /// </summary>
     public class Slime : PhysicsObject, IEnemy, ICollidable
     {
         // ~~~ FIELDS ~~~
-        private const float timeBetweenJumps = 1.6f;
+        private const float timeBetweenJumps = 2.5f;
+        private const float movementForce = 45000f;
+        private const float frictionForce = 2000f;
 
         private Player player;
-
-        private float movementForce;
 
         /// <summary>
         /// The health of the slime.
@@ -47,12 +55,10 @@ namespace CrossBoa
         /// </summary>
         private float timeSinceMove;
 
-        /// <summary>
-        /// The color of the slime.
-        /// </summary>
-        private Color currentColor;
-
+        private float hurtFlashTime;
+            
         private EnemyState isAlive;
+        private SlimeAnimState animationState;
 
         // ~~~ PROPERTIES ~~~
         /// <summary>
@@ -72,29 +78,28 @@ namespace CrossBoa
 
         public Rectangle Hitbox
         {
-            get { return Rectangle; }
+            get { return new Rectangle(Rectangle.X + 4, Rectangle.Y + 12, 56, 56); }
         }
 
         /// <summary>
         /// Color of the slime ; test code
         /// </summary>
-        Color IEnemy.CurrentColor 
+        Color IEnemy.CurrentColor
         {
-            get { return currentColor; }
-            set { currentColor = value; }
+            get { return color; }
+            set { color = value; }
         }
 
         // ~~~ CONSTRUCTORS ~~~
-        public Slime(int health, Texture2D sprite, Rectangle rectangle, float movementForce,
-            float friction, Player playerReference) :
-            base(sprite, rectangle, null, friction)
+        public Slime(int health, Texture2D spriteSheet, Rectangle rectangle, Player playerReference) :
+            base(spriteSheet, rectangle, null, frictionForce)
         {
             player = playerReference;
-            this.movementForce = movementForce;
             this.health = health;
-            timeSinceMove = 0;
-            currentColor = Color.Blue;
+            timeSinceMove = (float)Program.RNG.NextDouble() * 1.25f + 0.25f;
+            color = Color.White;
             isAlive = EnemyState.Alive;
+            animationState = SlimeAnimState.Resting;
         }
 
         /// <summary>
@@ -116,9 +121,9 @@ namespace CrossBoa
                 cosA = 0;
             direction = (float)Math.Acos(cosA);
             if (targetY < position.Y)
-                 direction *= -1;
+                direction *= -1;
             ApplyForce(direction, movementForce);
-            
+
         }
 
         /// <summary>
@@ -128,8 +133,7 @@ namespace CrossBoa
         /// <param name="player">The player to damage.</param>
         public void DealContactDamage(Player player)
         {
-            player.TakeDamage(0);
-            currentColor = Color.Red;
+            player.TakeDamage(1);
         }
 
         public void TakeDamage(int damage)
@@ -138,8 +142,9 @@ namespace CrossBoa
             if (health <= 0)
             {
                 isAlive = EnemyState.Dead;
-
+                position = new Vector2(-1000, -1000);
             }
+            hurtFlashTime = 0.1f;
         }
 
         /// <summary>
@@ -149,9 +154,24 @@ namespace CrossBoa
         public override void Draw(SpriteBatch sb)
         {
             if (isAlive == EnemyState.Alive)
-                sb.Draw(sprite,
-                Rectangle,
-                currentColor);
+                switch (animationState)
+                {
+                    case SlimeAnimState.Resting:
+                        sb.Draw(sprite, Rectangle, new Rectangle(0, 0, 16, 16), color);
+                        break;
+
+                    case SlimeAnimState.Jumping:
+                        sb.Draw(sprite, Rectangle, new Rectangle(16, 0, 16, 16), color);
+                        break;
+
+                    case SlimeAnimState.Falling:
+                        sb.Draw(sprite, Rectangle, new Rectangle(32, 0, 16, 16), color);
+                        break;
+
+                    case SlimeAnimState.Squished:
+                        sb.Draw(sprite, Rectangle, new Rectangle(48, 0, 16, 16), color);
+                        break;
+                }
         }
 
         public override void Update(GameTime gameTime)
@@ -173,6 +193,34 @@ namespace CrossBoa
                 }
                 ApplyFriction(gameTime);
                 UpdatePhysics(gameTime);
+                UpdateAnimations(gameTime);
+            }
+        }
+
+        public void UpdateAnimations(GameTime gameTime)
+        {
+            // Movement animation state
+            if (timeSinceMove < 0.25f)
+                animationState = SlimeAnimState.Jumping;
+            if (timeSinceMove >= 0.25f && timeSinceMove < 0.4f)
+                animationState = SlimeAnimState.Falling;
+            if (timeSinceMove >= 0.4f && timeSinceMove < 0.5f)
+                animationState = SlimeAnimState.Squished;
+            if (timeSinceMove >= 0.5f && timeSinceMove < timeBetweenJumps - 0.2f)
+                animationState = SlimeAnimState.Resting;
+            if (timeSinceMove >= timeBetweenJumps - 0.2f)
+                animationState = SlimeAnimState.Squished;
+
+            // Hurt time
+            if (hurtFlashTime > 0)
+            {
+                color = Color.Red;
+                hurtFlashTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            else
+            {
+                hurtFlashTime = 0;
+                color = Color.White;
             }
         }
     }
