@@ -34,6 +34,8 @@ namespace CrossBoa
 
         // Assets
         private Texture2D whiteSquareSprite;
+        private Texture2D slimeSprite;
+        private Texture2D snakeSprite;
         private Texture2D tempCbSprite;
         private Texture2D hitBox;
         private Texture2D arrowHitBox;
@@ -88,6 +90,8 @@ namespace CrossBoa
 
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
+            slimeSprite = Content.Load<Texture2D>("slime");
+            snakeSprite = Content.Load<Texture2D>("snake");
             arial32 = Content.Load<SpriteFont>("Arial32");
             tempCbSprite = Content.Load<Texture2D>("Crossbow_Pull_0");
             hitBox = Content.Load<Texture2D>("Hitbox");
@@ -95,7 +99,7 @@ namespace CrossBoa
 
             // Load objects
             player = new Player(
-                whiteSquareSprite,
+                snakeSprite,
                 new Rectangle(250, 250, 48, 48),
                 DefaultPlayerMovementForce,
                 DefaultPlayerMaxSpeed,
@@ -123,7 +127,7 @@ namespace CrossBoa
 
             testSlime = new Slime(
                 3,
-                whiteSquareSprite,
+                slimeSprite,
                 new Rectangle(400, 400, 64, 64),
                 39000f,
                 1900f,
@@ -289,6 +293,7 @@ namespace CrossBoa
             switch (gameState)
             {
                 case GameState.MainMenu:
+                    GraphicsDevice.Clear(new Color(174, 222, 203));
 
                     _spriteBatch.DrawString(arial32, "Main Menu",
                         new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
@@ -298,7 +303,7 @@ namespace CrossBoa
                     break;
 
                 case GameState.Game:
-
+                    GraphicsDevice.Clear(Color.Black);
                     DrawGame();
 
                     break;
@@ -403,13 +408,21 @@ namespace CrossBoa
         {
             Slime newSlime = new Slime(
                 3,
-                whiteSquareSprite,
+                slimeSprite,
                 new Rectangle(position, new Point(64, 64)),
                 39000f,
                 1900f,
                 player);
             CollisionManager.AddEnemy(newSlime);
             gameObjectList.Add(newSlime);
+        }
+
+        /// <summary>
+        /// Animates the main menu with parallax
+        /// </summary>
+        void AnimateMainMenu()
+        {
+
         }
     }
 
