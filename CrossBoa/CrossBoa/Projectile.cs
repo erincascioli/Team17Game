@@ -63,7 +63,10 @@ namespace CrossBoa
         {
             get
             {
-                return new Rectangle(position.ToPoint(), Point.Zero);
+                if (IsInAir)
+                    return new Rectangle(position.ToPoint(), Point.Zero);
+                else
+                    return new Rectangle(position.ToPoint(), new Point(10, 10));
             }
         }
 
@@ -248,12 +251,12 @@ namespace CrossBoa
             {
                 spriteBatch.Draw(
                     sprite,
-                    position,
+                    position - (MathHelper.GetNormalVector(direction) * size.X) + (MathHelper.GetNormalVector(direction - (MathF.PI * 0.5f)) * size.Y),
                     null,
                     color,
                     direction,
                     new Vector2(1, 0.5f),
-                    size.ToVector2(),
+                    new Vector2(size.X / (float)sprite.Width, size.Y / (float)sprite.Height),
                     SpriteEffects.None,
                     0.5f);
             }

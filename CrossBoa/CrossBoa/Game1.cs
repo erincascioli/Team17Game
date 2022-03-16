@@ -131,7 +131,7 @@ namespace CrossBoa
             }
 
             playerArrow = new Projectile(
-                whiteSquareSprite,
+                playerArrowSprite,
                 new Vector2(-100, -100),
                 new Point(50, 15),
                 0f,
