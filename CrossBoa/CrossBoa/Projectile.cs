@@ -20,6 +20,9 @@ namespace CrossBoa
         private bool isInAir;
         private bool isPlayerArrow;
         private float timeUntilDespawn;
+        private bool flashFrames;
+
+        private const float PlayerArrowDespawn = 15f;
 
         /// <summary>
         /// The direction vector of the arrow
@@ -60,7 +63,10 @@ namespace CrossBoa
         {
             get
             {
-                return new Rectangle(position.ToPoint(), Point.Zero);
+                if (IsInAir)
+                    return new Rectangle(position.ToPoint(), Point.Zero);
+                else
+                    return new Rectangle(position.ToPoint(), new Point(10, 10));
             }
         }
 
@@ -170,9 +176,20 @@ namespace CrossBoa
                 {
                     timeUntilDespawn -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                     
-                    // If there's no time left on the despawn timer, give it back to the player
-                    if (timeUntilDespawn <= 0)
+                    // Begin flashing when arrow is about to despawn
+                    if (timeUntilDespawn <= 2.5f && timeUntilDespawn > 0)
                     {
+                        flashFrames = !flashFrames;
+                        if (flashFrames)
+                            color = new Color(Color.Black, 60);
+                        else
+                            color = Color.White;
+                    }
+
+                    // If there's no time left on the despawn timer, give it back to the player
+                    else if (timeUntilDespawn <= 0)
+                    {
+                        color = Color.White;
                         Disable();
                         crossbowReference.PickUpArrow();
                     }
@@ -184,6 +201,7 @@ namespace CrossBoa
 
         public void ChangeVelocity(Vector2 position, float direction, float magnitude)
         {
+            color = Color.White;
             isActive = true;
             isInAir = true;
             this.position = position;
@@ -213,7 +231,7 @@ namespace CrossBoa
                 velocity *= -1;
                 friction = 1000;
                 isInAir = false;
-                timeUntilDespawn = 10f;
+                timeUntilDespawn = PlayerArrowDespawn;
             }
             else
             {
@@ -233,12 +251,12 @@ namespace CrossBoa
             {
                 spriteBatch.Draw(
                     sprite,
-                    position,
+                    position - (MathHelper.GetNormalVector(direction) * size.X) + (MathHelper.GetNormalVector(direction - (MathF.PI * 0.5f)) * size.Y / 2),
                     null,
-                    Color.White,
+                    color,
                     direction,
                     new Vector2(1, 0.5f),
-                    size.ToVector2(),
+                    new Vector2(size.X / (float)sprite.Width, size.Y / (float)sprite.Height),
                     SpriteEffects.None,
                     0.5f);
             }

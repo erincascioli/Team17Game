@@ -27,8 +27,6 @@ namespace CrossBoa
         /// </summary>
         private float shotCoolDown;
 
-        private Color tint;
-
         /// <summary>
         /// Whether or not the crossbow has an arrow
         /// in it and is ready to fire.
@@ -128,7 +126,7 @@ namespace CrossBoa
             player = playerReference;
             isLoaded = true;
             timeSinceShot = 0f;
-            tint = Color.White;
+            color = Color.White;
         }
 
         // ~~~ METHODS ~~~
@@ -149,6 +147,9 @@ namespace CrossBoa
 
                 // Makes the projectile appear from the bow instead of behind the player.
                 projectile.Position += (projectile.Velocity / projectile.Velocity.Length()) * 10;
+
+                // Shake the screen
+                Camera.ShakeScreen(12);
             }
         }
            
@@ -187,9 +188,9 @@ namespace CrossBoa
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (isLoaded && !IsOnCooldown)
-                tint = Color.PaleTurquoise;
+                color = Color.PaleTurquoise;
             else
-                tint = Color.White;
+                color = Color.White;
 
             float rotation = Direction;
 
@@ -200,7 +201,7 @@ namespace CrossBoa
                                  sprite.Width/2,                                  // Rectangle width
                                  sprite.Height/2),                                // Rectangle height
                              null,                                                // Nullable rectangle
-                             tint,                                                // Color
+                             color,                                                // Color
                              rotation,                                            // Rotation
                              new Vector2(                                         // Origin
                                  sprite.Width / 2,                                // Origin X

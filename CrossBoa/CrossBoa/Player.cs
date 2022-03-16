@@ -27,6 +27,9 @@ namespace CrossBoa
         private float timeUntilDodge;
         private float timeLeftInvincible;
         private bool canMove;
+        private bool flashFrames;
+
+        private bool isFacingRight;
 
         /// <summary>
         /// Checks if the player is dead
@@ -50,6 +53,16 @@ namespace CrossBoa
         public int CurrentHealth
         {
             get { return currentHealth; }
+            set { currentHealth = value; }
+        }
+
+        /// <summary>
+        /// The maximum health the player can have
+        /// </summary>
+        public int MaxHealth
+        {
+            get { return maxHealth; }
+            set { maxHealth = value; }
         }
 
         /// <summary>
@@ -88,11 +101,13 @@ namespace CrossBoa
         {
             this.movementForce = movementForce;
             this.maxHealth = maxHealth;
+            currentHealth = maxHealth;
             this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
             this.dodgeLength = dodgeLength;
             this.dodgeSpeed = dodgeSpeed;
             this.canMove = true;
+            color = Color.White;
         }
 
         /// <summary>
@@ -108,7 +123,20 @@ namespace CrossBoa
             timeUntilDodge -= totalSeconds;
             timeLeftInvincible -= totalSeconds;
 
-            if(canMove)
+            // Flash player if damaged
+            if (IsInvincible && flashFrames)
+            {
+                color = new Color(Color.Black, 60);
+            }
+                
+            else
+            {
+                color = Color.White;
+            }
+
+            flashFrames = !flashFrames;
+
+            if (canMove)
             {
                 // Check the player's input
                 Vector2 movementVector = CheckMovementInput(kbState);
@@ -118,7 +146,22 @@ namespace CrossBoa
                 ApplyFriction(gameTime);
 
                 UpdatePhysics(gameTime);
+
+                if (kbState.IsKeyDown(Keys.A))
+                    isFacingRight = false;
+                if (kbState.IsKeyDown(Keys.D))
+                    isFacingRight = true;
             }
+        }
+
+        public override void Draw(SpriteBatch sb)
+        {
+            
+
+            if(isFacingRight)
+                sb.Draw(sprite, Rectangle, null, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+            else
+                sb.Draw(sprite, Rectangle, color);
         }
 
         /// <summary>

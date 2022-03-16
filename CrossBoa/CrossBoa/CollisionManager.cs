@@ -51,7 +51,7 @@ namespace CrossBoa
         /// Purpose: Checks for collisions between all things in the level
         /// Restrictions: Level collidables must be parsed in beforehand
         /// </summary>
-        public static void CheckCollision()
+        public static void CheckCollision(bool isInvincibilityActive)
         {
             // enemy Projectiles
             foreach (Projectile i in enemyProjectiles)
@@ -59,7 +59,10 @@ namespace CrossBoa
                 // First checks for player projectile collisions
                 if (i.Hitbox.Intersects(player.Hitbox))
                 {
-                    i.HitSomething();
+                    if (!isInvincibilityActive)
+                    {
+                        i.HitSomething();
+                    }
                 }
                 else
                 {
@@ -78,13 +81,9 @@ namespace CrossBoa
             foreach (IEnemy i in enemies)
             {
                 // with player
-                if (player.Hitbox.Intersects(i.Rectangle))
+                if (!isInvincibilityActive && player.Hitbox.Intersects(i.Rectangle))
                 {
                     i.DealContactDamage(player);
-                }
-                else
-                {
-                    i.CurrentColor = Color.White;
                 }
 
                 // with player arrow
@@ -94,9 +93,6 @@ namespace CrossBoa
                     // Health value not decided on yet
                     i.TakeDamage(1);
                     playerArrow.HitSomething();
-
-                    // Change enemy color
-                    i.CurrentColor = Color.Red;
                 }
 
             }
@@ -157,7 +153,7 @@ namespace CrossBoa
             {
 
                 if (i.Health > 0)
-                    sb.Draw(hitBox, i.Rectangle, Color.White);
+                    sb.Draw(hitBox, i.Hitbox, Color.White);
             }
 
             foreach (Tile i in levelObstacles)
