@@ -53,6 +53,7 @@ namespace CrossBoa
         public int CurrentHealth
         {
             get { return currentHealth; }
+            set { currentHealth = value; }
         }
 
         /// <summary>
@@ -124,10 +125,15 @@ namespace CrossBoa
 
             // Flash player if damaged
             if (IsInvincible && flashFrames)
+            {
                 color = new Color(Color.Black, 60);
+            }
+                
             else
+            {
                 color = Color.White;
-            
+            }
+
             flashFrames = !flashFrames;
 
             if (canMove)
