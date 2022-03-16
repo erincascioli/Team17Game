@@ -157,7 +157,7 @@ namespace CrossBoa
             {
 
                 if (i.Health > 0)
-                    sb.Draw(hitBox, i.Rectangle, Color.White);
+                    sb.Draw(hitBox, i.Hitbox, Color.White);
             }
 
             foreach (Tile i in levelObstacles)
