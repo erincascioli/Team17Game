@@ -333,6 +333,11 @@ namespace CrossBoa
                     if (gameOverButton.HasBeenPressed())
                     {
                         gameState = GameState.MainMenu;
+                        
+                        foreach (GameObject i in playerHealthBar)
+                        {
+                            i.Sprite = fullHeart;
+                        }
                     }
 
                     break;
