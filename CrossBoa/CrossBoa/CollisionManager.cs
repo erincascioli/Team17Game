@@ -84,7 +84,7 @@ namespace CrossBoa
                 }
                 else
                 {
-                    i.CurrentColor = Color.Green;
+                    i.CurrentColor = Color.White;
                 }
 
                 // with player arrow
