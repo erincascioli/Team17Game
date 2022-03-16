@@ -55,11 +55,6 @@ namespace CrossBoa
         /// </summary>
         private float timeSinceMove;
 
-        /// <summary>
-        /// The color of the slime.
-        /// </summary>
-        private Color currentColor;
-
         private float hurtFlashTime;
             
         private EnemyState isAlive;
@@ -91,8 +86,8 @@ namespace CrossBoa
         /// </summary>
         Color IEnemy.CurrentColor
         {
-            get { return currentColor; }
-            set { currentColor = value; }
+            get { return color; }
+            set { color = value; }
         }
 
         // ~~~ CONSTRUCTORS ~~~
@@ -102,7 +97,7 @@ namespace CrossBoa
             player = playerReference;
             this.health = health;
             timeSinceMove = 0.25f;
-            currentColor = Color.White;
+            color = Color.White;
             isAlive = EnemyState.Alive;
             animationState = SlimeAnimState.Resting;
         }
@@ -138,7 +133,7 @@ namespace CrossBoa
         /// <param name="player">The player to damage.</param>
         public void DealContactDamage(Player player)
         {
-            player.TakeDamage(0);
+            player.TakeDamage(1);
         }
 
         public void TakeDamage(int damage)
@@ -147,6 +142,7 @@ namespace CrossBoa
             if (health <= 0)
             {
                 isAlive = EnemyState.Dead;
+                position = new Vector2(-1000, -1000);
             }
             hurtFlashTime = 0.1f;
         }
@@ -161,19 +157,19 @@ namespace CrossBoa
                 switch (animationState)
                 {
                     case SlimeAnimState.Resting:
-                        sb.Draw(sprite, Rectangle, new Rectangle(0, 0, 16, 16), currentColor);
+                        sb.Draw(sprite, Rectangle, new Rectangle(0, 0, 16, 16), color);
                         break;
 
                     case SlimeAnimState.Jumping:
-                        sb.Draw(sprite, Rectangle, new Rectangle(16, 0, 16, 16), currentColor);
+                        sb.Draw(sprite, Rectangle, new Rectangle(16, 0, 16, 16), color);
                         break;
 
                     case SlimeAnimState.Falling:
-                        sb.Draw(sprite, Rectangle, new Rectangle(32, 0, 16, 16), currentColor);
+                        sb.Draw(sprite, Rectangle, new Rectangle(32, 0, 16, 16), color);
                         break;
 
                     case SlimeAnimState.Squished:
-                        sb.Draw(sprite, Rectangle, new Rectangle(48, 0, 16, 16), currentColor);
+                        sb.Draw(sprite, Rectangle, new Rectangle(48, 0, 16, 16), color);
                         break;
                 }
         }
@@ -218,13 +214,13 @@ namespace CrossBoa
             // Hurt time
             if (hurtFlashTime > 0)
             {
-                currentColor = Color.Red;
+                color = Color.Red;
                 hurtFlashTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             else
             {
                 hurtFlashTime = 0;
-                currentColor = Color.White;
+                color = Color.White;
             }
         }
     }

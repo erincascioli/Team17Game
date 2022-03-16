@@ -20,6 +20,7 @@ namespace CrossBoa
         protected Texture2D sprite;
         protected Vector2 position;
         protected Point size;
+        protected Color color;
 
         private Rectangle rectCache;
 
@@ -79,6 +80,15 @@ namespace CrossBoa
             get { return size.Y; }
         }
 
+        /// <summary>
+        /// The color this GameObject's sprite should be tinted
+        /// </summary>
+        public Color Color
+        {
+            get { return color; }
+            set { color = value; }
+        }
+
         // ------------
         // Constructors
         // ------------
@@ -93,6 +103,7 @@ namespace CrossBoa
             this.position = rectangle.Location.ToVector2();
             this.size = rectangle.Size;
             this.rectCache = Rectangle.Empty;
+            this.color = Color.White;
         }
 
         /// <summary>
@@ -127,7 +138,7 @@ namespace CrossBoa
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite, Rectangle, Color.White);
+            spriteBatch.Draw(sprite, Rectangle, color);
         }
     }
 }

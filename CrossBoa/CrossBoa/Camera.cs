@@ -12,7 +12,7 @@ namespace CrossBoa
     /// </summary>
     public static class Camera
     {
-        private static Matrix matrix = Matrix.CreateTranslation(0, 0, 0);
+        private static Matrix matrix = Matrix.CreateTranslation(0, 4, 0);
         private static int cameraX;
         private static int cameraY;
         private static int prevCameraX;
@@ -81,7 +81,7 @@ namespace CrossBoa
             // Reset screen position after shaking is finished
             else if (screenShakeFramesLeft == 0)
             {
-                matrix = Matrix.CreateTranslation(0, 0, 0);
+                matrix = Matrix.CreateTranslation(0, 4, 0);
                 screenShakeFramesLeft--;
             }
         }
