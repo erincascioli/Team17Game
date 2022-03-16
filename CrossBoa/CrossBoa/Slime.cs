@@ -78,7 +78,7 @@ namespace CrossBoa
 
         public Rectangle Hitbox
         {
-            get { return new Rectangle(Rectangle.X, Rectangle.Y + 8, 64, 50); }
+            get { return new Rectangle(Rectangle.X, Rectangle.Y + 12, 64, 56); }
         }
 
         /// <summary>

@@ -40,12 +40,6 @@ namespace CrossBoa
 
         public static void Update(KeyboardState kbState)
         {
-            // Shake the screen if the player presses space
-            if (kbState.IsKeyDown(Keys.Space))
-            {
-                ShakeScreen(20);
-            }
-
             // Only update the camera if it's different from the previous frame
             UpdateScreenShake();
             

@@ -18,7 +18,7 @@ namespace CrossBoa
         private const int DefaultPlayerMovementForce = 5000;
         private const int DefaultPlayerMaxSpeed = 300;
         private const int DefaultPlayerFriction = 2500;
-        private const int DefaultPlayerHealth = 3;
+        private const int DefaultPlayerHealth = 5;
         private const float DefaultPlayerInvulnerabilityFrames = 3f;
         private const float DefaultPlayerDodgeCooldown = 10;
         private const float DefaultPlayerDodgeLength = 0.35f;
@@ -244,11 +244,18 @@ namespace CrossBoa
                         SpawnSlime(mState.Position);
                     }
 
+                    // Shake the screen if the player presses space while debug is active
+                    if (isDebugActive && kbState.IsKeyDown(Keys.Space))
+                    {
+                        Camera.ShakeScreen(20);
+                    }
+
                     // Fires the bow on click.
                     if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
                         && !pauseButton.IsMouseOver())
                     {
                         crossbow.Shoot(playerArrow);
+                        Camera.ShakeScreen(12);
                     }
 
                     if (CollisionManager.PlayerArrow != null)
