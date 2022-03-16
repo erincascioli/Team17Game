@@ -332,8 +332,8 @@ namespace CrossBoa
                         background.Draw(_spriteBatch);
                     }
 
-                    _spriteBatch.DrawString(arial32, "Main Menu",
-                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
+                    _spriteBatch.DrawString(arial32, "Crossboa",
+                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 94,
                             GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
                     playButton.Draw(_spriteBatch);
 
@@ -364,7 +364,7 @@ namespace CrossBoa
                     _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(screenWidth, screenHeight)), new Color(Color.Black, 160));
 
                     _spriteBatch.DrawString(arial32, "Pause",
-                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
+                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 63,
                             GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
                     playButton.Draw(_spriteBatch);
 
