@@ -244,7 +244,8 @@ namespace CrossBoa
                     }
 
                     // Fires the bow on click.
-                    if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
+                    if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
+                        && !pauseButton.IsMouseOver())
                     {
                         crossbow.Shoot(arrow);
                     }
@@ -258,6 +259,7 @@ namespace CrossBoa
                     if (pauseButton.HasBeenPressed() ||
                         (kbState.IsKeyDown(Keys.Escape) && previousKBState.IsKeyUp(Keys.Escape)))
                         gameState = GameState.Pause;
+
 
                     break;
 
