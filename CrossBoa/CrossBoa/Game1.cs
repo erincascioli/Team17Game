@@ -64,6 +64,7 @@ namespace CrossBoa
         private Button playButton;
         private Button pauseButton;
         private Button debugButton;
+        private Button gameOverButton;
 
         private List<GameObject> gameObjectList;
 
@@ -194,6 +195,11 @@ namespace CrossBoa
                 new Rectangle(screenWidth - 100, screenHeight - 100, settingsHoverSprite.Width,
                     settingsHoverSprite.Height));
 
+            // Game Over Button
+            gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
+                new Rectangle(screenWidth / 2 - playHoverSprite.Width * 3 / 4,
+                    screenHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
+
             // PASS-IN REFERENCES
             playerArrow.CrossbowReference = crossbow;
 
@@ -311,15 +317,12 @@ namespace CrossBoa
 
                     AnimateMainMenuBG();
 
-                    /*
-                    playButton.Update(gameTime);
+                    gameOverButton.Update(gameTime);
 
-                    if (playButton.HasBeenPressed())
+                    if (gameOverButton.HasBeenPressed())
                     {
-                        gameState = GameState.Game;
+                        gameState = GameState.MainMenu;
                     }
-
-                    */
 
                     break;
 
@@ -438,11 +441,8 @@ namespace CrossBoa
 
                     _spriteBatch.Draw(gameOverText, new Vector2(0, 0), Color.White);
 
-                    /*
-                    _spriteBatch.DrawString(arial32, "Game Over",
-                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 175,
-                            GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
-                    */
+                    gameOverButton.Draw(_spriteBatch);
+                    
 
 
                     _spriteBatch.End();
