@@ -51,7 +51,7 @@ namespace CrossBoa
         /// Purpose: Checks for collisions between all things in the level
         /// Restrictions: Level collidables must be parsed in beforehand
         /// </summary>
-        public static void CheckCollision()
+        public static void CheckCollision(bool isInvincibilityActive)
         {
             // enemy Projectiles
             foreach (Projectile i in enemyProjectiles)
@@ -59,7 +59,10 @@ namespace CrossBoa
                 // First checks for player projectile collisions
                 if (i.Hitbox.Intersects(player.Hitbox))
                 {
-                    i.HitSomething();
+                    if (!isInvincibilityActive)
+                    {
+                        i.HitSomething();
+                    }
                 }
                 else
                 {
@@ -78,7 +81,7 @@ namespace CrossBoa
             foreach (IEnemy i in enemies)
             {
                 // with player
-                if (player.Hitbox.Intersects(i.Rectangle))
+                if (!isInvincibilityActive && player.Hitbox.Intersects(i.Rectangle))
                 {
                     i.DealContactDamage(player);
                 }
