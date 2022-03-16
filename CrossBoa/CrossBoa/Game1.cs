@@ -28,6 +28,7 @@ namespace CrossBoa
         private const int screenHeight = 900;
 
         private bool isDebugActive;
+        private bool isInvincibilityActive = false; // Default
 
         private KeyboardState previousKBState;
         private MouseState previousMState;
@@ -245,7 +246,7 @@ namespace CrossBoa
                         if (gameObject is CrossBow)
                         {
                             // CollisionManager checks for collisions
-                            CollisionManager.CheckCollision();
+                            CollisionManager.CheckCollision(isInvincibilityActive);
                         }
 
                         gameObject.Update(gameTime);
@@ -267,6 +268,16 @@ namespace CrossBoa
                     if (isDebugActive && kbState.IsKeyDown(Keys.Space))
                     {
                         Camera.ShakeScreen(20);
+                    }
+
+                    if (isDebugActive && kbState.IsKeyDown(Keys.F) && !previousKBState.IsKeyDown(Keys.F))
+                    {
+                            isInvincibilityActive = !isInvincibilityActive;
+                    }
+
+                    if (!isDebugActive)
+                    {
+                        isInvincibilityActive = false;
                     }
 
                     // Fires the bow on click.
