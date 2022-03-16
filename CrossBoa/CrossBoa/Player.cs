@@ -28,6 +28,8 @@ namespace CrossBoa
         private float timeLeftInvincible;
         private bool canMove;
 
+        private bool isFacingRight = false;
+
         /// <summary>
         /// Checks if the player is dead
         /// </summary>
@@ -118,7 +120,20 @@ namespace CrossBoa
                 ApplyFriction(gameTime);
 
                 UpdatePhysics(gameTime);
+
+                if (kbState.IsKeyDown(Keys.A))
+                    isFacingRight = false;
+                if (kbState.IsKeyDown(Keys.D))
+                    isFacingRight = true;
             }
+        }
+
+        public override void Draw(SpriteBatch sb)
+        {
+            if(isFacingRight)
+                sb.Draw(sprite, Rectangle, null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+            else
+                sb.Draw(sprite, Rectangle, Color.White);
         }
 
         /// <summary>

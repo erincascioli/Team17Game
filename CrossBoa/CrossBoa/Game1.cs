@@ -34,7 +34,7 @@ namespace CrossBoa
 
         // Assets
         private Texture2D whiteSquareSprite;
-        private Texture2D slimeSprite;
+        private Texture2D slimeSpritesheet;
         private Texture2D snakeSprite;
         private Texture2D tempCbSprite;
         private Texture2D hitBox;
@@ -52,7 +52,6 @@ namespace CrossBoa
         private Button testButton;
         private CrossBow crossbow;
         private Player player;
-        private Slime testSlime;
         private Projectile arrow;
 
         // Buttons
@@ -93,7 +92,7 @@ namespace CrossBoa
 
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
-            slimeSprite = Content.Load<Texture2D>("slime");
+            slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
             snakeSprite = Content.Load<Texture2D>("snake");
             arial32 = Content.Load<SpriteFont>("Arial32");
             tempCbSprite = Content.Load<Texture2D>("Crossbow_Pull_0");
@@ -133,13 +132,7 @@ namespace CrossBoa
                 0.3f,
                 player);
 
-            testSlime = new Slime(
-                3,
-                slimeSprite,
-                new Rectangle(400, 400, 64, 64),
-                39000f,
-                1900f,
-                player);
+            SpawnSlime(new Point(400, 400));
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -187,11 +180,8 @@ namespace CrossBoa
             arrow.CrossbowReference = crossbow;
 
             // Add all GameObjects to GameObject list
-            gameObjectList.Add(testSlime);
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow);
-
-            CollisionManager.AddEnemy(testSlime);
 
             LevelManager.LContent = Content;
             LevelManager.LoadLevel("TestingFile");
@@ -335,7 +325,7 @@ namespace CrossBoa
 
                 // Game State
                 case GameState.Game:
-                    _spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Camera.Matrix);
+                    _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Camera.Matrix);
                     GraphicsDevice.Clear(Color.Black);
                     DrawGame();
 
@@ -349,7 +339,7 @@ namespace CrossBoa
                 // Pause Menu
                 case GameState.Pause:
 
-                    _spriteBatch.Begin();
+                    _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
                     // Draws the game with a darkened overlay
                     DrawGame();
@@ -489,10 +479,8 @@ namespace CrossBoa
         {
             Slime newSlime = new Slime(
                 3,
-                slimeSprite,
+                slimeSpritesheet,
                 new Rectangle(position, new Point(64, 64)),
-                39000f,
-                1900f,
                 player);
             CollisionManager.AddEnemy(newSlime);
             gameObjectList.Add(newSlime);
