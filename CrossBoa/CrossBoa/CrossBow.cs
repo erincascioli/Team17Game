@@ -147,6 +147,9 @@ namespace CrossBoa
 
                 // Makes the projectile appear from the bow instead of behind the player.
                 projectile.Position += (projectile.Velocity / projectile.Velocity.Length()) * 10;
+
+                // Shake the screen
+                Camera.ShakeScreen(12);
             }
         }
            
