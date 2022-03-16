@@ -51,7 +51,7 @@ namespace CrossBoa
             get { return MathF.Atan2(velocity.Y, velocity.X); }
 
             // Creates a new normal vector based on the angle, then multiplies it by the old vector's speed.
-            set { velocity = (new Vector2(MathF.Cos(value), MathF.Sin(value))) * Speed; }
+            set { velocity = (MathHelper.GetNormalVector(value)) * Speed; }
         }
 
         /// <summary>
