@@ -251,7 +251,7 @@ namespace CrossBoa
             {
                 spriteBatch.Draw(
                     sprite,
-                    position - (MathHelper.GetNormalVector(direction) * size.X) + (MathHelper.GetNormalVector(direction - (MathF.PI * 0.5f)) * size.Y),
+                    position - (MathHelper.GetNormalVector(direction) * size.X) + (MathHelper.GetNormalVector(direction - (MathF.PI * 0.5f)) * size.Y / 2),
                     null,
                     color,
                     direction,
