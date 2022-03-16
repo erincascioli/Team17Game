@@ -86,9 +86,34 @@ namespace CrossBoa
         /// </summary>
         public float Direction
         {
-            get { return FollowCursor(); }
+            get
+            { 
+                // Formula used for calculations: 
+              // Cos(A) = (b^2 + c^2 - a^2) / 2bc
+              // A = arccos the formula above
+                double horizDist = Mouse.GetState().X - position.X;
+                double vertDist = Mouse.GetState().Y - position.Y;
+                float totalDist = (float)Math.Sqrt(Math.Pow(vertDist, 2) +
+                    Math.Pow(horizDist, 2));
+                double cosA = (Math.Pow(totalDist, 2) + Math.Pow(horizDist, 2) - Math.Pow(vertDist, 2))
+                    / (2 * horizDist * totalDist);
+                if (double.IsNaN(cosA))
+                    cosA = 0;
+                if (Mouse.GetState().Y < position.Y)
+                    return (float)Math.Acos(cosA) * -1;
+                return (float)Math.Acos(cosA);
+            }
         }
 
+        public Vector2 DrawnPosition
+        {
+            get
+            {
+                float rotation = Direction;
+                return new Vector2((int)(position.X + 60 * Math.Cos(rotation)),      // Vector X
+                                 (int)(position.Y + 60 * Math.Sin(rotation)));       // Vector Y
+            }
+        }
         // ~~~ CONSTRUCTOR ~~~
         /// <summary>
         /// Creates a CrossBow.
@@ -118,12 +143,12 @@ namespace CrossBoa
                 timeSinceShot = 0f;
                 isLoaded = false;
                 projectile.ChangeVelocity(
-                    position,
+                    DrawnPosition,
                     Direction,
                     360f);
 
                 // Makes the projectile appear from the bow instead of behind the player.
-                projectile.Position += (projectile.Velocity / projectile.Velocity.Length()) * 30;
+                projectile.Position += (projectile.Velocity / projectile.Velocity.Length()) * 10;
             }
         }
            
@@ -166,20 +191,22 @@ namespace CrossBoa
             else
                 tint = Color.White;
 
-            spriteBatch.Draw(sprite,                    // Texture2D
-                             new Rectangle(             // Rectangle
-                                 (int)position.X,       // Rectangle X
-                                 (int)position.Y,       // Rectangle Y
-                                 sprite.Width,          // Rectangle width
-                                 sprite.Height),        // Rectangle height
-                             null,                      // Nullable rectangle
-                             tint,                      // Color
-                             FollowCursor(),            // Rotation
-                             new Vector2(               // Origin
-                                 sprite.Width / 2,      // Origin X
-                                 sprite.Height / 2),    // Origin Y
-                             SpriteEffects.None,        // SpriteEffects
-                             1f);                       // Layer depth
+            float rotation = Direction;
+
+            spriteBatch.Draw(sprite,                                              // Texture2D
+                             new Rectangle(                                       // Rectangle
+                                 (int)(position.X + 60*Math.Cos(rotation)),       // Rectangle X
+                                 (int)(position.Y + 60*Math.Sin(rotation)),       // Rectangle Y
+                                 sprite.Width/2,                                  // Rectangle width
+                                 sprite.Height/2),                                // Rectangle height
+                             null,                                                // Nullable rectangle
+                             tint,                                                // Color
+                             rotation,                                            // Rotation
+                             new Vector2(                                         // Origin
+                                 sprite.Width / 2,                                // Origin X
+                                 sprite.Height / 2),                              // Origin Y
+                             SpriteEffects.None,                                  // SpriteEffects
+                             1f);                                                 // Layer depth
         }
 
         /// <summary>
