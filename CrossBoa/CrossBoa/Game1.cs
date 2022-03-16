@@ -152,6 +152,7 @@ namespace CrossBoa
 
             SpawnSlime(new Point(400, 400));
             SpawnSlime(new Point(1280, 448));
+            SpawnSlime(new Point(64 * 12, 64 * 9));
 
 
             // Load menu background layers
