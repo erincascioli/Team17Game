@@ -96,7 +96,7 @@ namespace CrossBoa
         {
             player = playerReference;
             this.health = health;
-            timeSinceMove = 0.25f;
+            timeSinceMove = (float)Program.RNG.NextDouble() * 1.25f + 0.25f;
             color = Color.White;
             isAlive = EnemyState.Alive;
             animationState = SlimeAnimState.Resting;
