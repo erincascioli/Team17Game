@@ -24,19 +24,16 @@ namespace CrossBoa
         // Every field requires a reference
         public static Player Player
         {
-            get { return player; }
             set { player = value; }
         }
 
         public static CrossBow Crossbow
         {
-            get { return crossbow; }
             set { crossbow = value; }
         }
 
         public static Projectile PlayerArrow
         {
-            get { return playerArrow; }
             set { playerArrow = value; }
         }
 
@@ -139,9 +136,18 @@ namespace CrossBoa
         {
             sb.Draw(hitBox, player.Hitbox, Color.White);
 
+            
             if (playerArrow != null)
             {
-                sb.Draw(arrowPoint, new Rectangle(playerArrow.Hitbox.X - 2, PlayerArrow.Hitbox.Y - 2, 5, 5), Color.Red);
+                // Make drawn hitbox size larger if hitbox is a point
+                if (playerArrow.Hitbox.Size == Point.Zero)
+                    sb.Draw(arrowPoint,
+                    new Rectangle(playerArrow.Hitbox.X - (playerArrow.Hitbox.Width / 2) - 2,
+                        playerArrow.Hitbox.Y - (playerArrow.Hitbox.Height / 2) - 2, playerArrow.Hitbox.Width + 4,
+                        playerArrow.Hitbox.Height + 4), Color.Red);
+                // Else draw hitbox normally
+                else
+                    sb.Draw(arrowPoint, playerArrow.Hitbox, Color.Red);
             }
 
             foreach (Projectile i in enemyProjectiles)

@@ -149,7 +149,7 @@ namespace CrossBoa
             crossbow = new CrossBow(
                 tempCbSprite,
                 tempCbSprite.Bounds,
-                0.3f,
+                0.45f,
                 player);
 
             SpawnSlime(new Point(400, 400));
@@ -201,8 +201,9 @@ namespace CrossBoa
                 new Rectangle(screenWidth / 2 - playHoverSprite.Width * 3 / 4,
                     screenHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
 
-            // PASS-IN REFERENCES
+            // Pass-in References
             playerArrow.CrossbowReference = crossbow;
+            playerArrow.PlayerReference = player;
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
@@ -287,8 +288,8 @@ namespace CrossBoa
                         crossbow.Shoot(playerArrow);
                     }
 
-                    if (CollisionManager.PlayerArrow != null)
-                        CollisionManager.PlayerArrow.Update(gameTime);
+                    if (playerArrow != null)
+                        playerArrow.Update(gameTime);
 
                     pauseButton.Update(gameTime);
 
@@ -544,7 +545,7 @@ namespace CrossBoa
                 CollisionManager.Draw(_spriteBatch, hitBox, arrowHitBox);
 
                 // TEST CODE TO DRAW ARROW RECTANGLE
-                _spriteBatch.Draw(whiteSquareSprite, playerArrow.Rectangle, Color.Tan);
+                // _spriteBatch.Draw(whiteSquareSprite, playerArrow.Rectangle, Color.Tan);
 
                 // ~~~ Draws the crossbow's timeSinceShot timer
                 _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(10, screenHeight - 50), Color.White);
