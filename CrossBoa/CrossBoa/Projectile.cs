@@ -209,13 +209,13 @@ namespace CrossBoa
 
                     }
 
-                    else if (timeUntilDespawn <= 0 && timeUntilDespawn > -0.7f)
+                    else if (timeUntilDespawn <= 0 && timeUntilDespawn > -0.6f)
                     {
                         GetSuckedIntoPlayer(8000, 13000);
                     }
 
                     // If there's no time left on the despawn timer, give it back to the player
-                    else if (timeUntilDespawn <= -0.7f)
+                    else if (timeUntilDespawn <= -0.6f)
                     {
                         color = Color.White;
                         Disable();
