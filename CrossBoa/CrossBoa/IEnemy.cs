@@ -42,5 +42,12 @@ namespace CrossBoa
         /// destroy them.
         /// </summary>
         void TakeDamage(int damage);
+
+        /// <summary>
+        /// Handles knockback when this enemy gets hit
+        /// </summary>
+        /// <param name="other">The object causing this enemy to be knocked back</param>
+        /// <param name="force">How much force to knock this enemy back by</param>
+        void GetKnockedBack(ICollidable other, float force);
     }
 }
