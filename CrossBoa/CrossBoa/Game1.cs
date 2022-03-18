@@ -19,7 +19,7 @@ namespace CrossBoa
         private const int DefaultPlayerMaxSpeed = 300;
         private const int DefaultPlayerFriction = 2500;
         private const int DefaultPlayerHealth = 5;
-        private const float DefaultPlayerInvulnerabilityFrames = 1f;
+        private const float DefaultPlayerInvulnerabilityFrames = 3.5f;
         private const float DefaultPlayerDodgeCooldown = 10;
         private const float DefaultPlayerDodgeLength = 0.35f;
         private const float DefaultPlayerDodgeSpeed = 500;
@@ -105,14 +105,15 @@ namespace CrossBoa
             emptyHeart = Content.Load<Texture2D>("Empty Heart");
             fullHeart = Content.Load<Texture2D>("Full Heart");
             snakeSprite = Content.Load<Texture2D>("snake");
+            crossbowSprite = Content.Load<Texture2D>("Crossbow");
             arial32 = Content.Load<SpriteFont>("Arial32");
-            crossbowSprite = Content.Load<Texture2D>("bow");
             hitBox = Content.Load<Texture2D>("Hitbox");
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
             playerArrowSprite = Content.Load<Texture2D>("arrow2");
             titleText = Content.Load<Texture2D>("TitleText");
             pauseText = Content.Load<Texture2D>("PauseText");
             gameOverText = Content.Load<Texture2D>("GameOverText");
+
 
             for (int i = 0; i < 5; i++)
             {
@@ -149,7 +150,6 @@ namespace CrossBoa
             crossbow = new CrossBow(
                 crossbowSprite,
                 crossbowSprite.Bounds,
-                0.45f,
                 player);
 
             SpawnSlime(new Point(400, 400));
@@ -549,6 +549,10 @@ namespace CrossBoa
 
                 // ~~~ Draws the crossbow's timeSinceShot timer
                 _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(10, screenHeight - 50), Color.White);
+
+                // Draws the crossbow's rotation
+                _spriteBatch.DrawString(arial32, "" + crossbow.Direction, new Vector2(10, screenHeight - 100), Color.White);
+
             }
         }
 

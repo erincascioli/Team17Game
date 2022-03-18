@@ -174,25 +174,8 @@ namespace CrossBoa
         /// <param name="sb">The active SpriteBatch.</param>
         public override void Draw(SpriteBatch sb)
         {
-            if (isAlive == EnemyState.Alive)
-                switch (animationState)
-                {
-                    case SlimeAnimState.Resting:
-                        sb.Draw(sprite, Rectangle, new Rectangle(0, 0, 16, 16), color);
-                        break;
-
-                    case SlimeAnimState.Jumping:
-                        sb.Draw(sprite, Rectangle, new Rectangle(16, 0, 16, 16), color);
-                        break;
-
-                    case SlimeAnimState.Falling:
-                        sb.Draw(sprite, Rectangle, new Rectangle(32, 0, 16, 16), color);
-                        break;
-
-                    case SlimeAnimState.Squished:
-                        sb.Draw(sprite, Rectangle, new Rectangle(48, 0, 16, 16), color);
-                        break;
-                }
+            // Draws from the spritesheet based on the animation state
+            sb.Draw(sprite, Rectangle, new Rectangle(16 * (int)animationState, 0, 16, 16), color);
         }
 
         public override void Update(GameTime gameTime)

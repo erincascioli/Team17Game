@@ -7,6 +7,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
+    enum CBAnimState
+    {
+        Loaded,
+        Transition,
+        Empty
+    }
+
     /// <summary>
     /// A crossbow, which points towards the mouse and can fire
     /// an arrow. Inherits from GameObject.
@@ -18,16 +25,12 @@ namespace CrossBoa
         private Player player;
         private SpriteEffects spriteEffects;
         private float direction;
-
-        /// <summary>
-        /// The time since the bow was last shot.
-        /// </summary>
+        private CBAnimState animationState;
         private float timeSinceShot;
+        private float timeSincePickup;
 
-        /// <summary>
-        /// The cooldown per shot.
-        /// </summary>
-        private float shotCoolDown;
+        private const float arrowShotSpeed = 360f;
+        private const float shotCoolDown = 0.2f;
 
         /// <summary>
         /// Whether or not the crossbow has an arrow
@@ -78,7 +81,7 @@ namespace CrossBoa
         {
             get
             {
-                return timeSinceShot < shotCoolDown;
+                return timeSincePickup < shotCoolDown;
             }
         }
         /// <summary>
@@ -106,14 +109,14 @@ namespace CrossBoa
         /// <param name="rectangle">The rectangle that represents the crossbow's hitbox.</param>
         /// <param name="shotCoolDown">The cooldown per shot.</param>
         /// <param name="playerReference">A reference to the player object</param>
-        public CrossBow(Texture2D sprite, Rectangle rectangle, float shotCoolDown, Player playerReference) : base(sprite, rectangle)
+        public CrossBow(Texture2D sprite, Rectangle rectangle, Player playerReference) : base(sprite, rectangle)
         {
-            this.shotCoolDown = shotCoolDown;
             player = playerReference;
             isLoaded = true;
             timeSinceShot = 0f;
             color = Color.White;
             spriteEffects = SpriteEffects.None;
+            animationState = CBAnimState.Loaded;
         }
 
         // ~~~ METHODS ~~~
@@ -123,14 +126,14 @@ namespace CrossBoa
         /// </summary>
         public void Shoot(Projectile projectile)
         {
-            if (timeSinceShot >= shotCoolDown && isLoaded)
+            if (!IsOnCooldown && isLoaded)
             {
                 timeSinceShot = 0f;
                 isLoaded = false;
                 projectile.ChangeVelocity(
                     DrawnPosition,
                     Direction,
-                    360f);
+                    arrowShotSpeed);
 
                 // Makes the projectile appear from the bow instead of behind the player.
                 projectile.Position += (projectile.Velocity / projectile.Velocity.Length()) * 10;
@@ -142,30 +145,8 @@ namespace CrossBoa
            
         public void PickUpArrow()
         {
+            timeSincePickup = 0f;
             isLoaded = true;
-        }
-
-        /// <summary>
-        /// Calculates the angle between the crossbow and the mouse cursor,
-        /// and returns that in degrees.
-        /// </summary>
-        /// <returns>The angle between the crossbow and the mouse cursor, in degrees.</returns>
-        public float FollowCursor()
-        {
-            // Formula used for calculations: 
-            // Cos(A) = (b^2 + c^2 - a^2) / 2bc
-            // A = arccos the formula above
-            double horizDist = Mouse.GetState().X - position.X;
-            double vertDist = Mouse.GetState().Y - position.Y;
-            float totalDist = (float)Math.Sqrt(Math.Pow(vertDist, 2) +
-                Math.Pow(horizDist, 2));
-            double cosA = (Math.Pow(totalDist, 2) + Math.Pow(horizDist, 2) - Math.Pow(vertDist, 2))
-                / (2 * horizDist * totalDist);
-            if (double.IsNaN(cosA))
-                cosA = 0;
-            if (Mouse.GetState().Y < position.Y)
-                return (float)Math.Acos(cosA) * -1;
-            return (float)Math.Acos(cosA);
         }
 
         /// <summary>
@@ -174,10 +155,13 @@ namespace CrossBoa
         /// <param name="spriteBatch">The active SpriteBatch.</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
+            /*
+            // Changes color if crossbow is loaded 
             if (isLoaded && !IsOnCooldown)
                 color = Color.PaleTurquoise;
             else
                 color = Color.White;
+            */
 
             float rotation = Direction;
 
@@ -185,13 +169,13 @@ namespace CrossBoa
                              new Rectangle(                                       // Rectangle
                                  (int)(position.X + 60*Math.Cos(rotation)),       // Rectangle X
                                  (int)(position.Y + 60*Math.Sin(rotation)),       // Rectangle Y
-                                 sprite.Width/2,                                  // Rectangle width
-                                 sprite.Height/2),                                // Rectangle height
-                             null,                                                // Nullable rectangle
+                                 60,                                  // Rectangle width
+                                 60),                                // Rectangle height
+                             new Rectangle(8 * (int)animationState, 0, 8, 8),                                                // Source rectangle
                              color,                                                // Color
                              rotation,                                            // Rotation
                              new Vector2(                                         // Origin
-                                 sprite.Width / 2,                                // Origin X
+                                 sprite.Width / 8,                                // Origin X
                                  sprite.Height / 2),                              // Origin Y
                              spriteEffects,                                       // SpriteEffects
                              1f);                                                 // Layer depth
@@ -211,17 +195,35 @@ namespace CrossBoa
 
             // Update timer
             timeSinceShot += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            timeSincePickup += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Turn sprite around when crossbow faces other way
             //     Has small amount of leeway so sprite doesn't jitter
             if (spriteEffects == SpriteEffects.None && 
-                direction > Math.PI * 0.51 && 
-                direction < Math.PI * 1.49)
+                direction > Math.PI * 0.51 || 
+                direction < Math.PI * -0.51)
                 spriteEffects = SpriteEffects.FlipVertically;
             if (spriteEffects == SpriteEffects.FlipVertically &&
-                     direction < Math.PI * 0.49 || 
-                     direction > Math.PI * 1.51)
+                     direction < Math.PI * 0.49 && 
+                     direction > Math.PI * -0.49)
                 spriteEffects = SpriteEffects.None;
+            
+            UpdateAnimations(gameTime);
+        }
+
+        public void UpdateAnimations(GameTime gameTime)
+        {
+            // Shot animation
+            if (timeSinceShot < 0.075f)
+                animationState = CBAnimState.Transition;
+            if (timeSinceShot >= 0.075f && timeSinceShot < 0.13f)
+                animationState = CBAnimState.Empty;
+
+            // Reload animation
+            if (isLoaded && timeSincePickup < shotCoolDown)
+                animationState = CBAnimState.Transition;
+            if (isLoaded && timeSincePickup > shotCoolDown)
+                animationState = CBAnimState.Loaded;
         }
     }
 }
