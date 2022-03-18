@@ -209,12 +209,13 @@ namespace CrossBoa
 
                     }
 
+                    // If there's no time left on the despawn timer, give it back to the player
                     else if (timeUntilDespawn <= 0 && timeUntilDespawn > -0.6f)
                     {
-                        GetSuckedIntoPlayer(8000, 13000);
+                        GetSuckedIntoPlayer(8000, 10000);
                     }
 
-                    // If there's no time left on the despawn timer, give it back to the player
+                    // If the arrow somehow misses, give it back automatically
                     else if (timeUntilDespawn <= -0.6f)
                     {
                         color = Color.White;
@@ -281,6 +282,10 @@ namespace CrossBoa
 
             if (MathHelper.DistanceSquared(playerCenter, arrowCenter) < MathF.Pow(distance, 2))
             {
+                // Update the velocity to point towards the player
+                VelocityAngle = MathHelper.DirectionBetween(arrowCenter, playerCenter);
+
+                // Apply more velocity
                 ApplyForce(MathHelper.DirectionBetween(arrowCenter, playerCenter), force);
             }
         }

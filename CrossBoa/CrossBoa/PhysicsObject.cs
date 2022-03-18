@@ -45,7 +45,7 @@ namespace CrossBoa
         /// The angle the object is currently moving towards.
         /// <para>Represented between 0 and 2π radians going clockwise from pointing up.</para>
         /// </summary>
-        public float Angle
+        public float VelocityAngle
         {
             // CREDIT TO https://stackoverflow.com/questions/2276855/xna-2d-vector-angles-whats-the-correct-way-to-calculate
             get { return MathF.Atan2(velocity.Y, velocity.X); }
