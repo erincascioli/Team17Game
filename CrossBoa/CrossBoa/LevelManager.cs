@@ -29,6 +29,7 @@ namespace CrossBoa
         private static int stage;
         private static int levelWidth;
         private static int levelHeight;
+        private static ExitLocation exitLocation;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
@@ -170,7 +171,7 @@ namespace CrossBoa
                 // Places the Exit door in the first level
                 if (stage == 1)
                 {
-                    switch (Program.RNG.Next(2, 3))
+                    switch (Program.RNG.Next(0, 4))
                     {
                         // Top
                         case 0:
@@ -183,12 +184,17 @@ namespace CrossBoa
                             levelTiles[(int)Math.Round(levelWidth / 2.0)] = new Tile(Content.Load<Texture2D>("Shadow"), // Asset
                                 levelTiles[(int)Math.Round(levelWidth / 2.0)].Rectangle,                                              // Location
                                 false);                                                                                     // Hitbox
+
+                            exitLocation = ExitLocation.Top;
                             break;
 
                         // Right
                         case 1:
-                            exit.Position = new Vector2(levelTiles[174].Rectangle.X, levelTiles[174].Rectangle.Y);
-                            levelTiles[174] = exit;
+                            exit.Position = new Vector2(levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.X, 
+                                levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.Y);
+                            levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1] = exit; // Replacement
+
+                            exitLocation = ExitLocation.Right;
                             break;
 
                         // Bottom
@@ -201,13 +207,18 @@ namespace CrossBoa
                             // Intro to Hallway; Tile is replaced to be something without interactions
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1] = new Tile(Content.Load<Texture2D>("Shadow"), // Asset
                                 levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1].Rectangle,                                              // Location
-                                false);                                                                                                                         // Hitbox
+                                false);                                                                                                                          // Hitbox
+
+                            exitLocation = ExitLocation.Bottom;
                             break;
 
                         // Left
                         case 3:
-                            exit.Position = new Vector2(levelTiles[150].Rectangle.X, levelTiles[150].Rectangle.Y);
-                            levelTiles[150] = exit;
+                            exit.Position = new Vector2(levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.X,
+                                levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.Y);
+                            levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth] = exit; // Replacement
+
+                            exitLocation = ExitLocation.Left;
                             break;
                     }
                 }
@@ -267,6 +278,14 @@ namespace CrossBoa
             }
 
             return collidables;
+        }
+
+        public enum ExitLocation
+        {
+            Top, 
+            Right,
+            Bottom,
+            Left
         }
     }
 }
