@@ -170,16 +170,19 @@ namespace CrossBoa
                 // Places the Exit door in the first level
                 if (stage == 1)
                 {
-                    switch (Program.RNG.Next(0, 1))
+                    switch (Program.RNG.Next(2, 3))
                     {
                         // Top
                         case 0:
                             // Door
-                            exit.Position = new Vector2(levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X, levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.Y);
-                            levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1] = exit;
+                            exit.Position = new Vector2(levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X, 
+                                levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.Y);
+                            levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1] = exit; // Replacement
 
                             // Intro to Hallway; Tile is replaced to be something without interactions
-                            levelTiles[(int)Math.Round(levelWidth / 2.0)] = new Tile(Content.Load<Texture2D>("Shadow"), levelTiles[(int)Math.Round(levelWidth / 2.0)].Rectangle, false);
+                            levelTiles[(int)Math.Round(levelWidth / 2.0)] = new Tile(Content.Load<Texture2D>("Shadow"), // Asset
+                                levelTiles[(int)Math.Round(levelWidth / 2.0)].Rectangle,                                              // Location
+                                false);                                                                                     // Hitbox
                             break;
 
                         // Right
@@ -190,9 +193,15 @@ namespace CrossBoa
 
                         // Bottom
                         case 2:
-                            exit.Position = new Vector2(levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X, levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.Y);
-                            levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1] = exit;
-                            levelTiles[(int)Math.Round(levelWidth / 2.0)].Sprite = Content.Load<Texture2D>("Shadow");
+                            // Door
+                            exit.Position = new Vector2(levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
+                                levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.Y);
+                            levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)] = exit; // Replacement
+
+                            // Intro to Hallway; Tile is replaced to be something without interactions
+                            levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1] = new Tile(Content.Load<Texture2D>("Shadow"), // Asset
+                                levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1].Rectangle,                                              // Location
+                                false);                                                                                                                         // Hitbox
                             break;
 
                         // Left

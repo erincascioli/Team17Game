@@ -13,7 +13,7 @@ namespace CrossBoa
         private int health;
         private Color currentColor;
         private float timeSinceShot;
-        private bool isDead;
+        private bool isAlive;
         private Projectile projectile;
 
         private const float cooldownTimer = 1f;
@@ -32,6 +32,11 @@ namespace CrossBoa
             {
                 health = value;
             }
+        }
+
+        public bool IsAlive
+        {
+            get { return isAlive; }
         }
 
         /// <summary>
@@ -100,7 +105,7 @@ namespace CrossBoa
         /// <param name="player">The player to deal damage to.</param>
         public void DealContactDamage(Player player)
         {
-            if (!isDead)
+            if (!isAlive)
                 player.TakeDamage(1);
         }
 
@@ -115,7 +120,7 @@ namespace CrossBoa
             if (health <= 0)
             {
                 // Placeholder to kill the object immediately until its defeated animation is available
-                isDead = true;
+                isAlive = false;
             }
         }
 
@@ -132,7 +137,7 @@ namespace CrossBoa
         /// <param name="spriteBatch"></param>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (!isDead)
+            if (isAlive)
                 base.Draw(spriteBatch);
         }
 

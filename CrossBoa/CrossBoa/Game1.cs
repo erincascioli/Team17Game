@@ -260,11 +260,16 @@ namespace CrossBoa
                         // Delete enemies from lists after they die
                         IEnemy enemy;
                         if ((enemy = gameObjectList[i] as IEnemy) != null && !enemy.IsAlive)
+                        {
                             gameObjectList.RemoveAt(i);
-
-                        gameObjectList[i].Update(gameTime);
+                            i--;
+                        }
+                        else
+                        {
+                            gameObjectList[i].Update(gameTime);
+                        }
                     }
-                    
+
                     if (player.CurrentHealth <= 0)
                     {
                         gameState = GameState.GameOver;
