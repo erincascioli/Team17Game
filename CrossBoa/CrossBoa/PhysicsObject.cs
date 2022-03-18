@@ -45,7 +45,7 @@ namespace CrossBoa
         /// The angle the object is currently moving towards.
         /// <para>Represented between 0 and 2π radians going clockwise from pointing up.</para>
         /// </summary>
-        public float Angle
+        public float VelocityAngle
         {
             // CREDIT TO https://stackoverflow.com/questions/2276855/xna-2d-vector-angles-whats-the-correct-way-to-calculate
             get { return MathF.Atan2(velocity.Y, velocity.X); }
@@ -117,8 +117,6 @@ namespace CrossBoa
 
             if (frictionVector != Vector2.Zero)
                 frictionVector.Normalize();
-
-            // TODO: program might crash if both velocity and friction are zero
             frictionVector *= friction;
 
             Vector2 frictionApplied = velocity + (frictionVector * (float)gameTime.ElapsedGameTime.TotalSeconds);

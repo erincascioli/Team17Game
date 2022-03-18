@@ -128,18 +128,6 @@
 /processorParam:TextureFormat=Color
 /build:Block.png
 
-#begin bow.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:bow.png
-
 #begin CornerWall.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -188,7 +176,7 @@
 /processorParam:TextureFormat=Color
 /build:CrackedWall2.png
 
-#begin Crossbow_Pull_0.png
+#begin Crossbow.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -198,7 +186,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Crossbow_Pull_0.png
+/build:Crossbow.png
 
 #begin DirtTest.PNG
 /importer:TextureImporter
@@ -307,18 +295,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Hitbox.png
-
-#begin largebow.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:largebow.png
 
 #begin Minecraft Arrow.png
 /importer:TextureImporter

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -23,11 +24,13 @@ namespace CrossBoa
         private const int blockWidth = 64;
         private const int blockHeight = 64;
         private static Microsoft.Xna.Framework.Content.ContentManager Content;
+        private static Door enterance;
+        private static Door exit;
+        private static int stage;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
         {
-            get { return Content; }
             set { Content = value; }
         }
 
@@ -35,6 +38,7 @@ namespace CrossBoa
         {
             levelTiles = new List<Tile>();
             tileList = new List<string[]>();
+            stage = 0; // No levels yet
 
             // tileList is immediatly filled as it's data is needed
             // before any other method can be made
@@ -77,6 +81,25 @@ namespace CrossBoa
         /// <param name="i"></param>
         public static void LoadLevel(string fileName)
         {
+            if (enterance == null)
+            {
+                // This is done here because the load method can't be passed in before 
+                // this class's constructor is established
+                // Doors are created and will be constantly used
+                enterance = new Door(Content.Load<Texture2D>("Hitbox"), // Open Sprite
+                    Content.Load<Texture2D>("GrassTest"), // Closed Sprite
+                    new Rectangle(-100, -100, 64, 64), // Location and size
+                    true);
+
+                exit = new Door(Content.Load<Texture2D>("Hitbox"), // Open Sprite
+                    Content.Load<Texture2D>("GrassTest"), // Closed Sprite
+                    new Rectangle(-100, -100, 64, 64), // Location and size
+                    true); // Has hitbox
+            }
+
+            // Stage number is updated
+            stage++;
+
             // Level is cleared so that the next may be loaded
             levelTiles.Clear();
 
@@ -134,6 +157,33 @@ namespace CrossBoa
 
                         // Moves on to next tile
                         stringIndex++;
+                    }
+                }
+
+                // Places the Exit door in the first level
+                if (stage == 1)
+                {
+                    switch (Program.RNG.Next(0, 1))
+                    {
+                        // Top
+                        case 0:
+                            exit.Position = new Vector2(levelTiles[37].Rectangle.X, levelTiles[37].Rectangle.Y);
+                            levelTiles[37] = exit;
+                            levelTiles[12].Sprite = Content.Load<Texture2D>("Shadow");
+                            break;
+
+                        // Right
+                        case 1:
+
+                            break;
+
+                        // Bottom
+                        case 2:
+                            break;
+
+                        // Left
+                        case 3:
+                            break;
                     }
                 }
 

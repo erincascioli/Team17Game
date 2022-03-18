@@ -14,6 +14,7 @@ namespace CrossBoa
     public class Projectile : PhysicsObject, ICollidable
     {
         private CrossBow crossbowReference;
+        private Player playerReference;
 
         private float direction;
         private bool isActive;
@@ -22,7 +23,8 @@ namespace CrossBoa
         private float timeUntilDespawn;
         private bool flashFrames;
 
-        private const float PlayerArrowDespawn = 15f;
+        private const float PlayerArrowDespawn = 10f;
+        private const float TimeBeforePickup = 0.5f;
 
         /// <summary>
         /// The direction vector of the arrow
@@ -63,10 +65,13 @@ namespace CrossBoa
         {
             get
             {
+                // Places hitbox at the tip of the arrow
                 if (IsInAir)
                     return new Rectangle(position.ToPoint(), Point.Zero);
+                
+                // Repositions hitbox to center of arrow
                 else
-                    return new Rectangle(position.ToPoint(), new Point(10, 10));
+                    return new Rectangle((position - (MathHelper.GetNormalVector(direction) * size.X / 2)).ToPoint(), Point.Zero);
             }
         }
 
@@ -79,6 +84,20 @@ namespace CrossBoa
             {
                 if (isPlayerArrow)
                     crossbowReference = value;
+                else
+                    throw new Exception("Enemy arrows should not collect a reference to the crossbow.");
+            }
+        }
+
+        /// <summary>
+        /// A reference to the player for the player arrow
+        /// </summary>
+        public Player PlayerReference
+        {
+            set
+            {
+                if (isPlayerArrow)
+                    playerReference = value;
                 else
                     throw new Exception("Enemy arrows should not collect a reference to the crossbow.");
             }
@@ -176,6 +195,10 @@ namespace CrossBoa
                 {
                     timeUntilDespawn -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                     
+                    // Move to player if arrow is nearby and arrow is on ground
+                    if(timeUntilDespawn < PlayerArrowDespawn - TimeBeforePickup)
+                        GetSuckedIntoPlayer(80, 5000);
+                    
                     // Begin flashing when arrow is about to despawn
                     if (timeUntilDespawn <= 2.5f && timeUntilDespawn > 0)
                     {
@@ -184,10 +207,17 @@ namespace CrossBoa
                             color = new Color(Color.Black, 60);
                         else
                             color = Color.White;
+
                     }
 
                     // If there's no time left on the despawn timer, give it back to the player
-                    else if (timeUntilDespawn <= 0)
+                    else if (timeUntilDespawn <= 0 && timeUntilDespawn > -0.6f)
+                    {
+                        GetSuckedIntoPlayer(8000, 10000);
+                    }
+
+                    // If the arrow somehow misses, give it back automatically
+                    else if (timeUntilDespawn <= -0.6f)
                     {
                         color = Color.White;
                         Disable();
@@ -242,6 +272,26 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Moves the arrow toward the player if they are near it
+        /// </summary>
+        /// <param name="distance">The distance to go toward the player from</param>
+        /// <param name="force">How much force the arrow should return to the player with</param>
+        public void GetSuckedIntoPlayer(int distance, float force)
+        {
+            Point playerCenter = playerReference.Hitbox.Center;
+            Point arrowCenter = this.Hitbox.Center;
+
+            if (MathHelper.DistanceSquared(playerCenter, arrowCenter) < MathF.Pow(distance, 2))
+            {
+                // Update the velocity to point towards the player
+                VelocityAngle = MathHelper.DirectionBetween(arrowCenter, playerCenter);
+
+                // Apply more velocity
+                ApplyForce(MathHelper.DirectionBetween(arrowCenter, playerCenter), force);
+            }
+        }
+
+        /// <summary>
         /// Draws this GameObject to the screen
         /// </summary>
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
@@ -251,6 +301,8 @@ namespace CrossBoa
             {
                 spriteBatch.Draw(
                     sprite,
+
+                    // Repositions arrow draw call so the tip is on the hitbox
                     position - (MathHelper.GetNormalVector(direction) * size.X) + (MathHelper.GetNormalVector(direction - (MathF.PI * 0.5f)) * size.Y / 2),
                     null,
                     color,
