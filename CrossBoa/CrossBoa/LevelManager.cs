@@ -7,15 +7,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-/// <summary>
-/// Author: Donovan Scullion
-/// Purpose: handles the generation of levels
-/// Restrictions: levels must be made manually, 
-///               and this class will need to be updated each
-///               time to contain them
-/// </summary>
 namespace CrossBoa
 {
+    /// <summary>
+    /// Author: Donovan Scullion
+    /// Purpose: handles the generation of levels
+    /// Restrictions: levels must be made manually, 
+    ///               and this class will need to be updated each
+    ///               time to contain them
+    /// </summary>
     public static class LevelManager
     {
         private static List<string[]> tileList;
@@ -24,7 +24,7 @@ namespace CrossBoa
         private const int blockWidth = 64;
         private const int blockHeight = 64;
         private static Microsoft.Xna.Framework.Content.ContentManager Content;
-        private static Door enterance;
+        private static Door entrance;
         private static Door exit;
         private static int stage;
 
@@ -40,7 +40,7 @@ namespace CrossBoa
             tileList = new List<string[]>();
             stage = 0; // No levels yet
 
-            // tileList is immediatly filled as it's data is needed
+            // tileList is immediately filled as it's data is needed
             // before any other method can be made
             try
             {
@@ -78,15 +78,15 @@ namespace CrossBoa
         /// Restrictions: Given file must exist and be accurate
         ///               16 x 16 is the only accepted file size at the moment
         /// </summary>
-        /// <param name="i"></param>
+        /// <param name="fileName"></param>
         public static void LoadLevel(string fileName)
         {
-            if (enterance == null)
+            if (entrance == null)
             {
                 // This is done here because the load method can't be passed in before 
                 // this class's constructor is established
                 // Doors are created and will be constantly used
-                enterance = new Door(Content.Load<Texture2D>("Hitbox"), // Open Sprite
+                entrance = new Door(Content.Load<Texture2D>("Hitbox"), // Open Sprite
                     Content.Load<Texture2D>("GrassTest"), // Closed Sprite
                     new Rectangle(-100, -100, 64, 64), // Location and size
                     true);
@@ -147,11 +147,11 @@ namespace CrossBoa
                             if (int.Parse(i[2]) == int.Parse(allTiles[stringIndex]))
                             {
                                 levelTiles.Add(new Tile(             
-                                    Content.Load<Texture2D>(i[0]),        // Asset
-                                    new Rectangle(xIterator * blockWidth, // X position
-                                    yIterator * blockHeight,              // Y position
-                                    blockWidth, blockHeight),             // Constant dimensions
-                                    bool.Parse(i[1])));                   // IsInteractable   
+                                    Content.Load<Texture2D>(i[0]),      // Asset
+                                    new Rectangle(xIterator * blockWidth,  // X position
+                                    yIterator * blockHeight,               // Y position
+                                    blockWidth, blockHeight),                // Constant dimensions
+                                    bool.Parse(i[1])));           // IsInteractable   
                             }
                         }
 
