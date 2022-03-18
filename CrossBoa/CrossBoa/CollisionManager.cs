@@ -24,19 +24,16 @@ namespace CrossBoa
         // Every field requires a reference
         public static Player Player
         {
-            get { return player; }
             set { player = value; }
         }
 
         public static CrossBow Crossbow
         {
-            get { return crossbow; }
             set { crossbow = value; }
         }
 
         public static Projectile PlayerArrow
         {
-            get { return playerArrow; }
             set { playerArrow = value; }
         }
 
@@ -51,7 +48,7 @@ namespace CrossBoa
         /// Purpose: Checks for collisions between all things in the level
         /// Restrictions: Level collidables must be parsed in beforehand
         /// </summary>
-        public static void CheckCollision()
+        public static void CheckCollision(bool isInvincibilityActive)
         {
             // enemy Projectiles
             foreach (Projectile i in enemyProjectiles)
@@ -59,7 +56,10 @@ namespace CrossBoa
                 // First checks for player projectile collisions
                 if (i.Hitbox.Intersects(player.Hitbox))
                 {
-                    i.HitSomething();
+                    if (!isInvincibilityActive)
+                    {
+                        i.HitSomething();
+                    }
                 }
                 else
                 {
@@ -78,7 +78,7 @@ namespace CrossBoa
             foreach (IEnemy i in enemies)
             {
                 // with player
-                if (player.Hitbox.Intersects(i.Rectangle))
+                if (!isInvincibilityActive && player.Hitbox.Intersects(i.Rectangle))
                 {
                     i.DealContactDamage(player);
                 }
@@ -90,6 +90,9 @@ namespace CrossBoa
                     // Health value not decided on yet
                     i.TakeDamage(1);
                     playerArrow.HitSomething();
+
+                    // Knock the enemy back
+                    i.GetKnockedBack(playerArrow, 35000);
                 }
 
             }
@@ -136,9 +139,18 @@ namespace CrossBoa
         {
             sb.Draw(hitBox, player.Hitbox, Color.White);
 
+            
             if (playerArrow != null)
             {
-                sb.Draw(arrowPoint, new Rectangle(playerArrow.Hitbox.X - 2, PlayerArrow.Hitbox.Y - 2, 5, 5), Color.Red);
+                // Make drawn hitbox size larger if hitbox is a point
+                if (playerArrow.Hitbox.Size == Point.Zero)
+                    sb.Draw(arrowPoint,
+                    new Rectangle(playerArrow.Hitbox.X - (playerArrow.Hitbox.Width / 2) - 2,
+                        playerArrow.Hitbox.Y - (playerArrow.Hitbox.Height / 2) - 2, playerArrow.Hitbox.Width + 4,
+                        playerArrow.Hitbox.Height + 4), Color.Red);
+                // Else draw hitbox normally
+                else
+                    sb.Draw(arrowPoint, playerArrow.Hitbox, Color.Red);
             }
 
             foreach (Projectile i in enemyProjectiles)
