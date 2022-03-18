@@ -123,7 +123,7 @@ namespace CrossBoa
             // Load objects
             player = new Player(
                 snakeSprite,
-                new Rectangle(250, 250, 50, 50),
+                new Rectangle(250, 250, 48, 48),
                 DefaultPlayerMovementForce,
                 DefaultPlayerMaxSpeed,
                 DefaultPlayerFriction,
