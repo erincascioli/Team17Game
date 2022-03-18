@@ -13,7 +13,7 @@ namespace CrossBoa
     public interface IEnemy : ICollidable
     {
         /// <summary>
-        /// Property to get the current health of the enemy.
+        /// Property to get and set the current health of the enemy.
         /// </summary>
         int Health { get; set; }
         
