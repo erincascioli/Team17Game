@@ -22,6 +22,11 @@ namespace CrossBoa
         /// </summary>
         Rectangle Rectangle { get; }
 
+        /// <summary>
+        /// Whether this enemy is alive or not
+        /// </summary>
+        bool IsAlive { get; }
+
         // Test code
         Color CurrentColor { get; set; }
 
