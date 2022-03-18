@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -96,6 +97,8 @@ namespace CrossBoa
                     true); // Has hitbox
             }
 
+            // Stage number is updated
+            stage++;
 
             // Level is cleared so that the next may be loaded
             levelTiles.Clear();
@@ -154,6 +157,33 @@ namespace CrossBoa
 
                         // Moves on to next tile
                         stringIndex++;
+                    }
+                }
+
+                // Places the Exit door in the first level
+                if (stage == 1)
+                {
+                    switch (Program.RNG.Next(0, 1))
+                    {
+                        // Top
+                        case 0:
+                            exit.Position = new Vector2(levelTiles[37].Rectangle.X, levelTiles[37].Rectangle.Y);
+                            levelTiles[37] = exit;
+                            levelTiles[12].Sprite = Content.Load<Texture2D>("Shadow");
+                            break;
+
+                        // Right
+                        case 1:
+
+                            break;
+
+                        // Bottom
+                        case 2:
+                            break;
+
+                        // Left
+                        case 3:
+                            break;
                     }
                 }
 
