@@ -24,6 +24,7 @@ namespace CrossBoa
         // Every field requires a reference
         public static Player Player
         {
+            get { return player;}
             set { player = value; }
         }
 
