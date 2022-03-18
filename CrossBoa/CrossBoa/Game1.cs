@@ -630,6 +630,6 @@ namespace CrossBoa
         Credits,
         Pause,
         GameOver,
-        GameWin,
+        GameWin
     }
 }
