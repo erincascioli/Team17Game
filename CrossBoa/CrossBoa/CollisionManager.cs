@@ -90,6 +90,9 @@ namespace CrossBoa
                     // Health value not decided on yet
                     i.TakeDamage(1);
                     playerArrow.HitSomething();
+
+                    // Knock the enemy back
+                    i.GetKnockedBack(playerArrow, 35000);
                 }
 
             }

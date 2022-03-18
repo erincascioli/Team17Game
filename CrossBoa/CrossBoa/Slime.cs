@@ -148,6 +148,27 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Handles knockback when this enemy gets hit
+        /// </summary>
+        /// <param name="other">The object causing this enemy to be knocked back</param>
+        /// <param name="force">How much force to knock this enemy back by</param>
+        public void GetKnockedBack(ICollidable other, float force)
+        {
+            // Knock this slime backwards
+            velocity = Vector2.Zero;
+            ApplyForce(MathHelper.DirectionBetween(other.Hitbox.Center, this.Rectangle.Center), force);
+
+            // If the slime is in the air, move it to the ground
+            if (timeSinceMove < 0.5f)
+                timeSinceMove = 0.5f;
+
+            // Otherwise, if the slime hasn't moved for a while, stun it.
+            else if (timeSinceMove >= 0.7f)
+                timeSinceMove = 0.7f;
+        }
+
+
+        /// <summary>
         /// Draws the slime.
         /// </summary>
         /// <param name="sb">The active SpriteBatch.</param>
