@@ -27,11 +27,18 @@ namespace CrossBoa
         private static Door enterance;
         private static Door exit;
         private static int stage;
+        private static int levelWidth;
+        private static int levelHeight;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
         {
             set { Content = value; }
+        }
+
+        public static Door Exit
+        {
+            get { return exit; }
         }
 
         static LevelManager()
@@ -86,12 +93,12 @@ namespace CrossBoa
                 // This is done here because the load method can't be passed in before 
                 // this class's constructor is established
                 // Doors are created and will be constantly used
-                enterance = new Door(Content.Load<Texture2D>("Hitbox"), // Open Sprite
+                enterance = new Door(Content.Load<Texture2D>("FloorShadow"), // Open Sprite
                     Content.Load<Texture2D>("GrassTest"), // Closed Sprite
                     new Rectangle(-100, -100, 64, 64), // Location and size
                     true);
 
-                exit = new Door(Content.Load<Texture2D>("Hitbox"), // Open Sprite
+                exit = new Door(Content.Load<Texture2D>("FloorShadow"), // Open Sprite
                     Content.Load<Texture2D>("GrassTest"), // Closed Sprite
                     new Rectangle(-100, -100, 64, 64), // Location and size
                     true); // Has hitbox
@@ -110,8 +117,8 @@ namespace CrossBoa
 
                 // Data for table size is stored
                 string[] tableInfo = reader.ReadLine().Split(',');
-                int.TryParse(tableInfo[0], out int numColumns);
-                int.TryParse(tableInfo[1], out int numRows);
+                int.TryParse(tableInfo[0], out levelWidth);
+                int.TryParse(tableInfo[1], out levelHeight);
                 
 
                 List<string> tableState = new List<string>();
@@ -138,9 +145,9 @@ namespace CrossBoa
                 int stringIndex = 0;
 
                 // All levelObjects are put into a single list
-                for(int yIterator = 0; yIterator < numRows; yIterator++)
+                for(int yIterator = 0; yIterator < levelHeight; yIterator++)
                 {
-                    for (int xIterator = 0; xIterator < numColumns; xIterator++)
+                    for (int xIterator = 0; xIterator < levelWidth; xIterator++)
                     {
                         foreach (string[] i in tileList)
                         {
@@ -167,22 +174,31 @@ namespace CrossBoa
                     {
                         // Top
                         case 0:
-                            exit.Position = new Vector2(levelTiles[37].Rectangle.X, levelTiles[37].Rectangle.Y);
-                            levelTiles[37] = exit;
-                            levelTiles[12].Sprite = Content.Load<Texture2D>("Shadow");
+                            // Door
+                            exit.Position = new Vector2(levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X, levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.Y);
+                            levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1] = exit;
+
+                            // Intro to Hallway; Tile is replaced to be something without interactions
+                            levelTiles[(int)Math.Round(levelWidth / 2.0)] = new Tile(Content.Load<Texture2D>("Shadow"), levelTiles[(int)Math.Round(levelWidth / 2.0)].Rectangle, false);
                             break;
 
                         // Right
                         case 1:
-
+                            exit.Position = new Vector2(levelTiles[174].Rectangle.X, levelTiles[174].Rectangle.Y);
+                            levelTiles[174] = exit;
                             break;
 
                         // Bottom
                         case 2:
+                            exit.Position = new Vector2(levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X, levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.Y);
+                            levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1] = exit;
+                            levelTiles[(int)Math.Round(levelWidth / 2.0)].Sprite = Content.Load<Texture2D>("Shadow");
                             break;
 
                         // Left
                         case 3:
+                            exit.Position = new Vector2(levelTiles[150].Rectangle.X, levelTiles[150].Rectangle.Y);
+                            levelTiles[150] = exit;
                             break;
                     }
                 }
