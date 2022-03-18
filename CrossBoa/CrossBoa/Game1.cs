@@ -156,6 +156,12 @@ namespace CrossBoa
             SpawnSlime(new Point(1280, 448));
             SpawnSlime(new Point(64 * 12, 64 * 9));
 
+            Totem testTotem = new Totem(whiteSquareSprite,
+                new Rectangle(1300,
+                300,
+                50,
+                100));
+
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -211,6 +217,9 @@ namespace CrossBoa
 
             LevelManager.LContent = Content;
             LevelManager.LoadLevel("TestingFile");
+
+            CollisionManager.AddEnemy(testTotem);
+            gameObjectList.Add(testTotem);
         }
 
         protected override void Update(GameTime gameTime)
