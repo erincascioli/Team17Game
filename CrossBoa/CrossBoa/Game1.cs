@@ -38,7 +38,7 @@ namespace CrossBoa
         private Texture2D playerArrowSprite;
         private Texture2D slimeSpritesheet;
         private Texture2D snakeSprite;
-        private Texture2D tempCbSprite;
+        private Texture2D crossbowSprite;
         private Texture2D hitBox;
         private Texture2D arrowHitBox;
         private Texture2D playHoverSprite;
@@ -106,7 +106,7 @@ namespace CrossBoa
             fullHeart = Content.Load<Texture2D>("Full Heart");
             snakeSprite = Content.Load<Texture2D>("snake");
             arial32 = Content.Load<SpriteFont>("Arial32");
-            tempCbSprite = Content.Load<Texture2D>("bow");
+            crossbowSprite = Content.Load<Texture2D>("bow");
             hitBox = Content.Load<Texture2D>("Hitbox");
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
             playerArrowSprite = Content.Load<Texture2D>("arrow2");
@@ -147,8 +147,8 @@ namespace CrossBoa
                 true);
 
             crossbow = new CrossBow(
-                tempCbSprite,
-                tempCbSprite.Bounds,
+                crossbowSprite,
+                crossbowSprite.Bounds,
                 0.45f,
                 player);
 

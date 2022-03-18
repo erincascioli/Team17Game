@@ -195,7 +195,7 @@ namespace CrossBoa
                     timeUntilDespawn -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                     
                     // Move to player if arrow is nearby and arrow is on ground
-                    if(!crossbowReference.IsOnCooldown)
+                    if(timeUntilDespawn < PlayerArrowDespawn - 0.75f)
                         GetSuckedIntoPlayer(80, 5000);
                     
                     // Begin flashing when arrow is about to despawn
