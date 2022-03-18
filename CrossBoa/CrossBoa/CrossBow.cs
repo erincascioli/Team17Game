@@ -175,8 +175,8 @@ namespace CrossBoa
                              color,                                                // Color
                              rotation,                                            // Rotation
                              new Vector2(                                         // Origin
-                                 sprite.Width / 8,                                // Origin X
-                                 sprite.Height / 2),                              // Origin Y
+                                 sprite.Width * 0.21f,                                // Origin X
+                                 sprite.Height * 0.5f),                              // Origin Y
                              spriteEffects,                                       // SpriteEffects
                              1f);                                                 // Layer depth
         }

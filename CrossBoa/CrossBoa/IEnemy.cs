@@ -13,7 +13,7 @@ namespace CrossBoa
     public interface IEnemy : ICollidable
     {
         /// <summary>
-        /// Property to get the current health of the enemy.
+        /// Property to get and set the current health of the enemy.
         /// </summary>
         int Health { get; set; }
         
@@ -21,6 +21,11 @@ namespace CrossBoa
         /// Property to get the current location of the enemy
         /// </summary>
         Rectangle Rectangle { get; }
+
+        /// <summary>
+        /// Whether this enemy is alive or not
+        /// </summary>
+        bool IsAlive { get; }
 
         // Test code
         Color CurrentColor { get; set; }
