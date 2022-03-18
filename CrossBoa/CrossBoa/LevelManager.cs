@@ -23,11 +23,13 @@ namespace CrossBoa
         private const int blockWidth = 64;
         private const int blockHeight = 64;
         private static Microsoft.Xna.Framework.Content.ContentManager Content;
+        private static Door enterance;
+        private static Door exit;
+        private static int stage;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
         {
-            get { return Content; }
             set { Content = value; }
         }
 
@@ -35,6 +37,7 @@ namespace CrossBoa
         {
             levelTiles = new List<Tile>();
             tileList = new List<string[]>();
+            stage = 0; // No levels yet
 
             // tileList is immediatly filled as it's data is needed
             // before any other method can be made
@@ -77,6 +80,23 @@ namespace CrossBoa
         /// <param name="i"></param>
         public static void LoadLevel(string fileName)
         {
+            if (enterance == null)
+            {
+                // This is done here because the load method can't be passed in before 
+                // this class's constructor is established
+                // Doors are created and will be constantly used
+                enterance = new Door(Content.Load<Texture2D>("Hitbox"), // Open Sprite
+                    Content.Load<Texture2D>("GrassTest"), // Closed Sprite
+                    new Rectangle(-100, -100, 64, 64), // Location and size
+                    true);
+
+                exit = new Door(Content.Load<Texture2D>("Hitbox"), // Open Sprite
+                    Content.Load<Texture2D>("GrassTest"), // Closed Sprite
+                    new Rectangle(-100, -100, 64, 64), // Location and size
+                    true); // Has hitbox
+            }
+
+
             // Level is cleared so that the next may be loaded
             levelTiles.Clear();
 
