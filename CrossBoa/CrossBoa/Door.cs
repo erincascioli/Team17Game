@@ -12,7 +12,7 @@ namespace CrossBoa
     /// Purpose: Keeps track of door states
     /// Restrictions: none
     /// </summary>
-    class Door : Tile
+    public class Door : Tile
     {
         private bool isOpen;
         private Texture2D openSprite;

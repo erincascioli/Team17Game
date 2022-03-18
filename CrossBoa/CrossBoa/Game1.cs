@@ -86,6 +86,7 @@ namespace CrossBoa
             menuBGLayers = new GameObject[10];
             playerHealthBar = new List<GameObject>();
 
+
             _graphics.PreferredBackBufferWidth = screenWidth;
             _graphics.PreferredBackBufferHeight = screenHeight;
             _graphics.ApplyChanges();
@@ -156,6 +157,12 @@ namespace CrossBoa
             SpawnSlime(new Point(1280, 448));
             SpawnSlime(new Point(64 * 12, 64 * 9));
 
+            Totem testTotem = new Totem(whiteSquareSprite,
+                new Rectangle(1300,
+                300,
+                50,
+                100));
+
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -211,6 +218,9 @@ namespace CrossBoa
 
             LevelManager.LContent = Content;
             LevelManager.LoadLevel("TestingFile");
+
+            CollisionManager.AddEnemy(testTotem);
+            gameObjectList.Add(testTotem);
         }
 
         protected override void Update(GameTime gameTime)
@@ -235,22 +245,24 @@ namespace CrossBoa
                     break;
 
                 case GameState.Game:
-
-                    CollisionManager.UpdateLevel();
-
                     // Update all GameObjects
                     Camera.Update(kbState);
 
-                    foreach (GameObject gameObject in gameObjectList)
+                    for (int i = 0; i < gameObjectList.Count; i++)
                     {
                         // Fixes crossbow moving off of player character
-                        if (gameObject is CrossBow)
+                        if (gameObjectList[i] is CrossBow)
                         {
                             // CollisionManager checks for collisions
                             CollisionManager.CheckCollision(isInvincibilityActive);
                         }
 
-                        gameObject.Update(gameTime);
+                        // Delete enemies from lists after they die
+                        IEnemy enemy;
+                        if ((enemy = gameObjectList[i] as IEnemy) != null && !enemy.IsAlive)
+                            gameObjectList.RemoveAt(i);
+
+                        gameObjectList[i].Update(gameTime);
                     }
                     
                     if (player.CurrentHealth <= 0)
@@ -259,16 +271,20 @@ namespace CrossBoa
                         player.CurrentHealth = DefaultPlayerHealth;
                     }
 
-                    // Spawn slime when pressing E while debug is active
-                    if (isDebugActive && kbState.IsKeyDown(Keys.E) && !previousKBState.IsKeyDown(Keys.E))
+                    // DEBUG
+                    if (isDebugActive)
                     {
-                        SpawnSlime(mState.Position);
-                    }
+                        // Spawn slimes when pressing E
+                        if (kbState.IsKeyDown(Keys.E) && !previousKBState.IsKeyDown(Keys.E))
+                        {
+                            SpawnSlime(mState.Position);
+                        }
 
-                    // Shake the screen if the player presses space while debug is active
-                    if (isDebugActive && kbState.IsKeyDown(Keys.Space))
-                    {
-                        Camera.ShakeScreen(20);
+                        /*// Shake the screen if the player presses space while debug is active
+                        if (kbState.IsKeyDown(Keys.Space))
+                        {
+                            Camera.ShakeScreen(20);
+                        }*/
                     }
 
                     if (isDebugActive && kbState.IsKeyDown(Keys.F) && !previousKBState.IsKeyDown(Keys.F))
@@ -297,6 +313,8 @@ namespace CrossBoa
                     if (pauseButton.HasBeenPressed() ||
                         (kbState.IsKeyDown(Keys.Escape) && previousKBState.IsKeyUp(Keys.Escape)))
                         gameState = GameState.Pause;
+
+
 
 
                     break;

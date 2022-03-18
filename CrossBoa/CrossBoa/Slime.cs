@@ -7,11 +7,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
-    enum EnemyState
-    {
-        Alive,
-        Dead
-    }
 
     enum SlimeAnimState
     {
@@ -57,7 +52,7 @@ namespace CrossBoa
 
         private float hurtFlashTime;
             
-        private EnemyState isAlive;
+        private bool isAlive;
         private SlimeAnimState animationState;
 
         // ~~~ PROPERTIES ~~~
@@ -74,6 +69,14 @@ namespace CrossBoa
             {
                 health = value;
             }
+        }
+
+        /// <summary>
+        /// Whether or not this slime is alive
+        /// </summary>
+        public bool IsAlive
+        {
+            get { return isAlive; }
         }
 
         public Rectangle Hitbox
@@ -98,7 +101,7 @@ namespace CrossBoa
             this.health = health;
             timeSinceMove = (float)Program.RNG.NextDouble() * 1.25f + 0.25f;
             color = Color.White;
-            isAlive = EnemyState.Alive;
+            isAlive = true;
             animationState = SlimeAnimState.Resting;
         }
 
@@ -141,7 +144,7 @@ namespace CrossBoa
             health -= damage;
             if (health <= 0)
             {
-                isAlive = EnemyState.Dead;
+                isAlive = false;
                 position = new Vector2(-1000, -1000);
             }
             hurtFlashTime = 0.1f;
@@ -180,7 +183,7 @@ namespace CrossBoa
 
         public override void Update(GameTime gameTime)
         {
-            if (isAlive == EnemyState.Alive)
+            if (isAlive)
             {
                 // Update the timer
                 float totalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
