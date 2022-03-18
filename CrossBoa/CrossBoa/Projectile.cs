@@ -24,6 +24,7 @@ namespace CrossBoa
         private bool flashFrames;
 
         private const float PlayerArrowDespawn = 10f;
+        private const float TimeBeforePickup = 0.5f;
 
         /// <summary>
         /// The direction vector of the arrow
@@ -195,7 +196,7 @@ namespace CrossBoa
                     timeUntilDespawn -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                     
                     // Move to player if arrow is nearby and arrow is on ground
-                    if(timeUntilDespawn < PlayerArrowDespawn - 0.75f)
+                    if(timeUntilDespawn < PlayerArrowDespawn - TimeBeforePickup)
                         GetSuckedIntoPlayer(80, 5000);
                     
                     // Begin flashing when arrow is about to despawn
