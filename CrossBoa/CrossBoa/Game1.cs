@@ -236,9 +236,6 @@ namespace CrossBoa
                     break;
 
                 case GameState.Game:
-
-                    CollisionManager.UpdateLevel();
-
                     // Update all GameObjects
                     Camera.Update(kbState);
 

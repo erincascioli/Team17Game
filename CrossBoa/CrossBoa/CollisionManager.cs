@@ -74,6 +74,9 @@ namespace CrossBoa
                 }
             }
 
+            // Temp data tracking
+            List<IEnemy> survivors = new List<IEnemy>();
+
             // Enemies
             foreach (IEnemy i in enemies)
             {
@@ -95,11 +98,26 @@ namespace CrossBoa
                     i.GetKnockedBack(playerArrow, 35000);
                 }
 
+                // Tracks Living Enemies
+                if (i.IsAlive)
+                {
+                    survivors.Add(i);
+                }
             }
+
+            // Enemy List is updated to only use living enemies
+            enemies = survivors;
+
 
             // Collidable tiles
             foreach (Tile i in levelObstacles)
             {
+                if (i == LevelManager.Exit && enemies.Count == 0 && !LevelManager.Exit.IsOpen)
+                {
+                    LevelManager.Exit.ChangeDoorState();
+                }
+
+
                 if (playerArrow != null && playerArrow.IsActive
                     && playerArrow.IsInAir && playerArrow.Hitbox.Intersects(i.Rectangle))
                 {
@@ -126,6 +144,12 @@ namespace CrossBoa
             {
                 crossbow.PickUpArrow();
                 playerArrow.Disable();
+            }
+
+            // Removes open doors from collision
+            if (LevelManager.Exit.IsOpen)
+            {
+                levelObstacles.Remove(LevelManager.Exit);
             }
         }
 
