@@ -16,6 +16,8 @@ namespace CrossBoa
     {
         // ~~~ FIELDS ~~~
         private Player player;
+        private SpriteEffects spriteEffects;
+        private float direction;
 
         /// <summary>
         /// The time since the bow was last shot.
@@ -84,23 +86,7 @@ namespace CrossBoa
         /// </summary>
         public float Direction
         {
-            get
-            { 
-                // Formula used for calculations: 
-              // Cos(A) = (b^2 + c^2 - a^2) / 2bc
-              // A = arccos the formula above
-                double horizDist = Mouse.GetState().X - position.X;
-                double vertDist = Mouse.GetState().Y - position.Y;
-                float totalDist = (float)Math.Sqrt(Math.Pow(vertDist, 2) +
-                    Math.Pow(horizDist, 2));
-                double cosA = (Math.Pow(totalDist, 2) + Math.Pow(horizDist, 2) - Math.Pow(vertDist, 2))
-                    / (2 * horizDist * totalDist);
-                if (double.IsNaN(cosA))
-                    cosA = 0;
-                if (Mouse.GetState().Y < position.Y)
-                    return (float)Math.Acos(cosA) * -1;
-                return (float)Math.Acos(cosA);
-            }
+            get { return direction; }
         }
 
         public Vector2 DrawnPosition
@@ -127,6 +113,7 @@ namespace CrossBoa
             isLoaded = true;
             timeSinceShot = 0f;
             color = Color.White;
+            spriteEffects = SpriteEffects.None;
         }
 
         // ~~~ METHODS ~~~
@@ -206,7 +193,7 @@ namespace CrossBoa
                              new Vector2(                                         // Origin
                                  sprite.Width / 2,                                // Origin X
                                  sprite.Height / 2),                              // Origin Y
-                             SpriteEffects.None,                                  // SpriteEffects
+                             spriteEffects,                                       // SpriteEffects
                              1f);                                                 // Layer depth
         }
 
@@ -216,8 +203,25 @@ namespace CrossBoa
         /// </summary>
         public override void Update(GameTime gameTime)
         {
+            // Update direction
+            direction = MathHelper.DirectionBetween(position.ToPoint(), Mouse.GetState().Position);
+
+            // Update position
             this.position = player.Position + player.Size.ToVector2() / 2;
+
+            // Update timer
             timeSinceShot += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            // Turn sprite around when crossbow faces other way
+            //     Has small amount of leeway so sprite doesn't jitter
+            if (spriteEffects == SpriteEffects.None && 
+                direction > Math.PI * 0.51 && 
+                direction < Math.PI * 1.49)
+                spriteEffects = SpriteEffects.FlipVertically;
+            if (spriteEffects == SpriteEffects.FlipVertically &&
+                     direction < Math.PI * 0.49 || 
+                     direction > Math.PI * 1.51)
+                spriteEffects = SpriteEffects.None;
         }
     }
 }
