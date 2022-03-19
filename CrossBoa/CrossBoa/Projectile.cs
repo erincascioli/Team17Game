@@ -213,15 +213,15 @@ namespace CrossBoa
                     // If there's no time left on the despawn timer, give it back to the player
                     else if (timeUntilDespawn <= 0 && timeUntilDespawn > -0.6f)
                     {
-                        GetSuckedIntoPlayer(8000, 10000);
+                        GetSuckedIntoPlayer(8000, 7500);
                     }
 
                     // If the arrow somehow misses, give it back automatically
                     else if (timeUntilDespawn <= -0.6f)
                     {
+                        crossbowReference.PickUpArrow();
                         color = Color.White;
                         Disable();
-                        crossbowReference.PickUpArrow();
                     }
                 }
             }
