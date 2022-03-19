@@ -15,7 +15,7 @@ namespace CrossBoa
     /// </summary>
     public class Tile : GameObject
     {
-        private bool isInteractable;
+        protected bool isInteractable;
 
         public bool IsInteractable
         {

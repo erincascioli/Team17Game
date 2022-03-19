@@ -152,6 +152,9 @@ namespace CrossBoa
             {
                 levelObstacles.Remove(LevelManager.Exit);
             }
+
+            // Closes entrance behind the player
+            //if (LevelManager.)
         }
 
         /// <summary>

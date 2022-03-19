@@ -30,6 +30,7 @@ namespace CrossBoa
         private static int levelWidth;
         private static int levelHeight;
         private static ExitLocation exitLocation;
+        private static ExitLocation previousExit;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
@@ -40,6 +41,11 @@ namespace CrossBoa
         public static Door Exit
         {
             get { return exit; }
+        }
+
+        public static Door Entrance
+        {
+            get { return entrance; }
         }
 
         static LevelManager()
@@ -89,6 +95,9 @@ namespace CrossBoa
         /// <param name="fileName"></param>
         public static void LoadLevel(string fileName)
         {
+            // Level is cleared so that the next may be loaded
+            levelTiles.Clear();
+
             if (entrance == null)
             {
                 // This is done here because the load method can't be passed in before 
@@ -105,11 +114,20 @@ namespace CrossBoa
                     true); // Has hitbox
             }
 
+            // Exit must default to closed
+            if (exit.IsOpen)
+            {
+                exit.ChangeDoorState();
+            }
+
+            // Entrance must default to open
+            if (!entrance.IsOpen)
+            {
+                entrance.ChangeDoorState();
+            }
+
             // Stage number is updated
             stage++;
-
-            // Level is cleared so that the next may be loaded
-            levelTiles.Clear();
 
             try
             {
@@ -255,6 +273,84 @@ namespace CrossBoa
             return collidables;
         }
 
+        /// <summary>
+        /// Purpose: Helper method for deciding whether doors need to be opened or closed
+        /// Restrictions: none
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="screenWidth"></param>
+        /// <param name="screenHeight"></param>
+        /// <returns></returns>
+        public static bool Update(Player player, int screenWidth, int screenHeight)
+        {
+            bool spawnEnemies = false; // Default
+
+            if (exit.IsOpen)
+            {
+                // Next Part of the level is created : Checks if player has left the screen
+                if (player.Rectangle.Bottom < 0 || player.Rectangle.Left > screenWidth ||
+                    player.Rectangle.Top > screenHeight || player.Rectangle.Right < 0)
+                {
+                    Exit.ChangeDoorState();
+                    spawnEnemies = true;
+                }
+            }
+
+            // Will close off the entrance after a player fully enters a stage
+            if (entrance.IsOpen)
+            {
+                switch (previousExit)
+                {
+                    // Entering from the bottom
+                    case ExitLocation.Top:
+                        if (player.Rectangle.Bottom < entrance.Rectangle.Top)
+                        {
+                            entrance.ChangeDoorState();
+
+                            // Adds door to collisionManager
+                            CollisionManager.UpdateLevel();
+                        }
+                        break;
+
+                    // Entering from the top
+                    case ExitLocation.Bottom:
+                        if (player.Rectangle.Top > entrance.Rectangle.Bottom)
+                        {
+                            entrance.ChangeDoorState();
+
+                            // Adds door to collisionManager
+                            CollisionManager.UpdateLevel();
+                        }
+                        break;
+
+                    // Entering from the left
+                    case ExitLocation.Right:
+                        if (player.Rectangle.Left > entrance.Rectangle.Right)
+                        {
+                            entrance.ChangeDoorState();
+
+                            // Adds door to collisionManager
+                            CollisionManager.UpdateLevel();
+                        }
+
+                        break;
+
+                    // Entering from the right
+                    case ExitLocation.Left:
+                        if (player.Rectangle.Right < entrance.Rectangle.Left)
+                        {
+                            entrance.ChangeDoorState();
+
+                            // Adds door to collisionManager
+                            CollisionManager.UpdateLevel();
+                        }
+                        break;
+                }
+            }
+
+            return spawnEnemies;
+        }
+
         // Determines the placement of the doors in the level
         public static void PlaceDoors()
         {
@@ -282,9 +378,9 @@ namespace CrossBoa
 
                     case ExitLocation.Right:
                         entrance.Position = new Vector2(
-                            levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.X,
-                            levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.Y);
-                        levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1] =
+                            levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.X,
+                            levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.Y);
+                        levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth] =
                             entrance; // Replacement
                         break;
 
@@ -312,16 +408,21 @@ namespace CrossBoa
                 }
             }
 
+            // Saves enum before it changes
+            previousExit = exitLocation;
+
             // Exit location placement
             switch (Program.RNG.Next(0, 4))
             {
             // Top
             case 0:
-                /*if (stage > 1 && exitLocation == ExitLocation.Bottom)
+                if (stage > 1 && exitLocation == ExitLocation.Bottom)
                 {
                     // Invalid location for the exit. New attempt is made
+                    PlaceDoors();
+                    break;
+                }
 
-                }*/
                 // Door
                 exit.Position = new Vector2(
                     levelTiles[(int) Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X,
@@ -339,6 +440,13 @@ namespace CrossBoa
 
             // Right
             case 1:
+                if (stage > 1 && exitLocation == ExitLocation.Left)
+                {
+                    // Invalid location for the exit. New attempt is made
+                    PlaceDoors();
+                    break;
+                } 
+                
                 exit.Position = new Vector2(
                     levelTiles[(int) Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.X,
                     levelTiles[(int) Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.Y);
@@ -350,8 +458,15 @@ namespace CrossBoa
 
             // Bottom
             case 2:
-                // Door
-                exit.Position = new Vector2(
+                if (stage > 1 && exitLocation == ExitLocation.Top)
+                {
+                    // Invalid location for the exit. New attempt is made
+                    PlaceDoors();
+                    break;
+                }
+
+                    // Door
+                    exit.Position = new Vector2(
                     levelTiles[(int) Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
                     levelTiles[(int) Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle
                         .Y);
@@ -370,6 +485,13 @@ namespace CrossBoa
 
             // Left
             case 3:
+                if (stage > 1 && exitLocation == ExitLocation.Right)
+                {
+                    // Invalid location for the exit. New attempt is made
+                    PlaceDoors();
+                    break;
+                }
+
                 exit.Position = new Vector2(
                     levelTiles[(int) Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.X,
                     levelTiles[(int) Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.Y);

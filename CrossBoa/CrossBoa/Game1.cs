@@ -319,8 +319,11 @@ namespace CrossBoa
                         (kbState.IsKeyDown(Keys.Escape) && previousKBState.IsKeyUp(Keys.Escape)))
                         gameState = GameState.Pause;
 
-
-
+                    if (LevelManager.Update(player, screenWidth, screenHeight))
+                    {
+                        SpawnSlime(new Point(500, 400));
+                        LevelManager.LoadLevel("TestingFile");
+                    }
 
                     break;
 
@@ -505,8 +508,6 @@ namespace CrossBoa
             
 
             base.Draw(gameTime);
-
-
         }
 
         // Helper Methods
