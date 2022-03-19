@@ -45,6 +45,7 @@ namespace CrossBoa
                 // The door opens
                 base.sprite = openSprite;
                 isOpen = true;
+                isInteractable = false;
 
                 return; // ends method
             }
@@ -52,6 +53,7 @@ namespace CrossBoa
             // The door closes
             base.sprite = closedSprite;
             isOpen = false;
+            isInteractable = true;
         }
     }
 }
