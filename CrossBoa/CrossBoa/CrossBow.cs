@@ -169,14 +169,14 @@ namespace CrossBoa
                              new Rectangle(                                       // Rectangle
                                  (int)(position.X + 60*Math.Cos(rotation)),       // Rectangle X
                                  (int)(position.Y + 60*Math.Sin(rotation)),       // Rectangle Y
-                                 60,                                  // Rectangle width
-                                 60),                                // Rectangle height
-                             new Rectangle(8 * (int)animationState, 0, 8, 8),                                                // Source rectangle
-                             color,                                                // Color
+                                 60,                                              // Rectangle width
+                                 60),                                             // Rectangle height
+                             new Rectangle(8 * (int)animationState, 0, 8, 8),     // Source rectangle
+                             color,                                               // Color
                              rotation,                                            // Rotation
                              new Vector2(                                         // Origin
-                                 sprite.Width * 0.21f,                                // Origin X
-                                 sprite.Height * 0.5f),                              // Origin Y
+                                 sprite.Width * 0.21f,                            // Origin X
+                                 sprite.Height * 0.5f),                           // Origin Y
                              spriteEffects,                                       // SpriteEffects
                              1f);                                                 // Layer depth
         }
