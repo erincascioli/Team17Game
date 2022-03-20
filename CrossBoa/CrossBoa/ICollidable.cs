@@ -8,7 +8,7 @@ namespace CrossBoa
     /// <summary>
     /// Interface that gives classes a hitbox property, allowing for easier collision checking
     /// </summary>
-    public interface ICollidable
+    public interface ICollidable 
     {
         /// <summary>
         /// The hitbox for this object

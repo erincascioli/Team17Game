@@ -78,8 +78,14 @@ namespace CrossBoa
         /// The hitbox for this object
         /// </summary>
         public Rectangle Hitbox
-        { 
-            get { return Rectangle; }
+        {
+            get
+            {
+                return new Rectangle(Rectangle.X, // x position 
+                    Rectangle.Y + 10, // y position
+                    Rectangle.Width, // width
+                    Rectangle.Height - 10); // height
+            }
         }
 
         /// <summary>
@@ -156,8 +162,6 @@ namespace CrossBoa
 
         public override void Draw(SpriteBatch sb)
         {
-            
-
             if(isFacingRight)
                 sb.Draw(sprite, Rectangle, null, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
             else
@@ -199,7 +203,6 @@ namespace CrossBoa
 
             return movementVector;
         }
-
 
         /*
         // UNFINISHED FEATURE - STRETCH GOAL

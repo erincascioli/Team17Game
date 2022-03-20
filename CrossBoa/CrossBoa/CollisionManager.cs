@@ -20,6 +20,7 @@ namespace CrossBoa
         private static List<IEnemy> enemies;
         private static List<Projectile> enemyProjectiles;
         private static List<Tile> levelObstacles;
+        private static int alternate;
 
         // Every field requires a reference
         public static Player Player
@@ -43,6 +44,7 @@ namespace CrossBoa
             // Lists are created
             enemies = new List<IEnemy>();
             enemyProjectiles = new List<Projectile>();
+            alternate = 0;
         }
 
         /// <summary>
@@ -230,38 +232,48 @@ namespace CrossBoa
 
         /// <summary>
         /// Purpose: Handles all colisions with tiles
-        /// Restrictions: only objects with a hitbox may use it
+        /// Restrictions: only game objects with a hitbox may use it
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <param name="tile"></param>
-        public static void EntityEnvironmentCollide<T>(T entity, Tile tile) where T : ICollidable 
+        public static void EntityEnvironmentCollide<T>(T entity, Tile tile) where T : ICollidable
         {
             // Rectangle that holds the intersection area
             Rectangle overlap = Rectangle.Intersect(entity.Hitbox, tile.Rectangle);
 
 
             // Is the overlapping rectangle taller than it is wide
-            if (overlap.Width >= overlap.Height)
+            if (overlap.Width > overlap.Height || overlap.Width == overlap.Height && alternate == 0)
             {
                 // Y value must be changed
 
                 // Is the entity below the tile
                 if (entity.Hitbox.Y >= overlap.Y)
                 {
-                    entity.Position = new Vector2(entity.Position.X, entity.Position.Y + overlap.Height);
+                    entity.Position =
+                        new Vector2(entity.Position.X,
+                            entity.Position.Y + overlap.Height); 
                 }
                 else
                 {
-                    entity.Position = new Vector2(entity.Position.X, entity.Position.Y - overlap.Height);
+                    entity.Position =
+                        new Vector2(entity.Position.X,
+                            entity.Position.Y - overlap.Height);
+                }
 
+                if (overlap.Width == overlap.Height)
+                {
+                    // Prevents stuttering glitch caused by
+                    // width >= height
+                    alternate = 1;
                 }
             }
             else
             {
                 // X value must be changed
 
-                // Is the entity below the rectangle
+                // Is the to the right of the tile
                 if (entity.Hitbox.X >= overlap.X)
                 {
                     entity.Position = new Vector2(entity.Position.X + overlap.Width, entity.Position.Y);
@@ -269,6 +281,13 @@ namespace CrossBoa
                 else
                 {
                     entity.Position = new Vector2(entity.Position.X - overlap.Width, entity.Position.Y);
+                }
+
+                if (overlap.Width == overlap.Height)
+                {
+                    // Prevents stuttering glitch caused by
+                    // width >= height
+                    alternate = 0;
                 }
             }
         }
