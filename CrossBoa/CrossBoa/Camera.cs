@@ -21,6 +21,7 @@ namespace CrossBoa
         private static int shakeY;
         private static int screenShakeFramesLeft;
         private static float screenShakeMagnitude = 0.5f;
+        private static PhysicsObject cameraCrew;
 
         /// <summary>
         /// A Matrix representation of the camera location
@@ -39,8 +40,12 @@ namespace CrossBoa
             set { screenShakeMagnitude = value; }
         }
 
+        static Camera()
+        {
+            cameraCrew = new PhysicsObject(null, new Rectangle(0, 0, Game1.screenWidth, Game1.screenHeight), null, 20000);
+        }
 
-        public static void Update(KeyboardState kbState)
+        public static void Update(KeyboardState kbState, GameTime gameTime)
         {
             UpdateScreenShake();
 
@@ -49,6 +54,8 @@ namespace CrossBoa
             {
                 matrix = Matrix.CreateTranslation(cameraX + shakeX, cameraY + shakeY, 0);
             }
+
+            cameraCrew.Update(gameTime);
         }
 
         /// <summary>
@@ -97,8 +104,9 @@ namespace CrossBoa
         {
             if (LevelManager.Exitlocation == LevelManager.ExitLocation.Left || LevelManager.Exitlocation == LevelManager.ExitLocation.Right)
             {
-                cameraX = -(int)player.Position.X + Game1.screenWidth / 2;
+                cameraCrew.ApplyForce(MathHelper.DirectionBetween(new Point(cameraCrew.Rectangle.Center.X, 0), new Point((int)player.Position.X, 0)), MathHelper.DistanceSquared(new Point(cameraCrew.Rectangle.Center.X, 0), new Point((int)player.Position.X, 0)) / 1000);
                 cameraY = 0;
+                cameraX = -(int)cameraCrew.Rectangle.X;
             }
             else
             {

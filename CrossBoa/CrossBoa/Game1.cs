@@ -246,7 +246,7 @@ namespace CrossBoa
 
                 case GameState.Game:
                     // Update all GameObjects
-                    Camera.Update(kbState);
+                    Camera.Update(kbState, gameTime);
 
                     for (int i = 0; i < gameObjectList.Count; i++)
                     {
@@ -325,14 +325,14 @@ namespace CrossBoa
                         LevelManager.LoadLevel("TestingFile");
                     }
 
-                    if (LevelManager.Exit.IsOpen)
+                    /*if (LevelManager.Exit.IsOpen)
                     {
                         Camera.FollowPlayer(player);
                     }
                     else
                     {
                         Camera.Center();
-                    }
+                    }*/
 
                     break;
 
