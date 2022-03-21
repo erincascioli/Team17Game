@@ -146,7 +146,7 @@ namespace CrossBoa
             if (!playerArrow.IsInAir && !crossbow.IsOnCooldown && player.Hitbox.Intersects(playerArrow.Hitbox))
             {
                 crossbow.PickUpArrow();
-                playerArrow.Disable();
+                playerArrow.GetPickedUp();
             }
 
             // Removes open doors from collision
