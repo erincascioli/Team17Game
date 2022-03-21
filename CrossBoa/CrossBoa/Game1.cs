@@ -24,8 +24,8 @@ namespace CrossBoa
         private const float DefaultPlayerDodgeLength = 0.35f;
         private const float DefaultPlayerDodgeSpeed = 500;
 
-        private const int screenWidth = 1600;
-        private const int screenHeight = 900;
+        public const int screenWidth = 1600;
+        public const int screenHeight = 900;
 
         private bool isDebugActive;
         private bool isInvincibilityActive = false; // Default
@@ -325,6 +325,11 @@ namespace CrossBoa
                         LevelManager.LoadLevel("TestingFile");
                     }
 
+                    if (LevelManager.Exit.IsOpen)
+                    {
+                        Camera.FollowPlayer(player);
+                    }
+
                     break;
 
                 case GameState.Settings:
@@ -602,6 +607,7 @@ namespace CrossBoa
                 }
             }
         }
+
 
         /// <summary>
         /// Spawns a slime enemy
