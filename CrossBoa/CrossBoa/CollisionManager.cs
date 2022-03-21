@@ -244,7 +244,7 @@ namespace CrossBoa
 
 
             // Is the overlapping rectangle taller than it is wide
-            if (overlap.Width > overlap.Height || overlap.Width == overlap.Height && alternate == 0)
+            if (overlap.Width > overlap.Height || (overlap.Width == overlap.Height && alternate == 0))
             {
                 // Y value must be changed
 

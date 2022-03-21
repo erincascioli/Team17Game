@@ -82,9 +82,9 @@ namespace CrossBoa
             get
             {
                 return new Rectangle(Rectangle.X, // x position 
-                    Rectangle.Y + 10, // y position
+                    Rectangle.Y + 16, // y position
                     Rectangle.Width, // width
-                    Rectangle.Height - 10); // height
+                    Rectangle.Height - 16); // height
             }
         }
 
