@@ -83,6 +83,15 @@ namespace CrossBoa
             }
         }
 
+        /// <summary>
+        /// Purpose: Returns the camera to the center of the screen
+        /// Restrictions: none
+        /// </summary>
+        public static void Center()
+        {
+            cameraX = 0;
+            cameraY = 4;
+        }
 
         public static void FollowPlayer(Player player)
         {

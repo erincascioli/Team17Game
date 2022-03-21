@@ -329,6 +329,10 @@ namespace CrossBoa
                     {
                         Camera.FollowPlayer(player);
                     }
+                    else
+                    {
+                        Camera.Center();
+                    }
 
                     break;
 
