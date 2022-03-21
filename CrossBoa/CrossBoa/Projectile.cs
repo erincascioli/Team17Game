@@ -191,7 +191,7 @@ namespace CrossBoa
                 ApplyFriction(gameTime);
 
                 // If it's on the ground, tick down the despawn time
-                if (!isInAir)
+                if (!isInAir && isActive)
                 {
                     timeUntilDespawn -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                     
@@ -211,17 +211,24 @@ namespace CrossBoa
                     }
 
                     // If there's no time left on the despawn timer, give it back to the player
-                    else if (timeUntilDespawn <= 0 && timeUntilDespawn > -0.6f)
+                    else if (timeUntilDespawn <= 0 && timeUntilDespawn > -1f)
                     {
                         GetSuckedIntoPlayer(8000, 7500);
+
+                        if (MathHelper.DistanceSquared(this.Hitbox.Center, playerReference.Hitbox.Center) < 10000)
+                        {
+                            color = Color.White;
+                            crossbowReference.PickUpArrow();
+                            GetPickedUp();
+                        }
                     }
 
                     // If the arrow somehow misses, give it back automatically
-                    else if (timeUntilDespawn <= -0.6f)
+                    else if (timeUntilDespawn <= -1f)
                     {
-                        crossbowReference.PickUpArrow();
                         color = Color.White;
-                        Disable();
+                        crossbowReference.PickUpArrow();
+                        GetPickedUp();
                     }
                 }
             }
@@ -244,8 +251,9 @@ namespace CrossBoa
         /// <summary>
         /// Disables this arrow and moves it offscreen for later reuse
         /// </summary>
-        public void Disable()
+        public void GetPickedUp()
         {
+            timeUntilDespawn = 0;
             isActive = false;
             position = new Vector2(-1000, -1000);
         }
