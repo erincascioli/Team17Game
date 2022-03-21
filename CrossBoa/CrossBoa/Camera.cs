@@ -17,6 +17,8 @@ namespace CrossBoa
         private static int cameraY;
         private static int prevCameraX;
         private static int prevCameraY;
+        private static int shakeX;
+        private static int shakeY;
         private static int screenShakeFramesLeft;
         private static float screenShakeMagnitude = 0.5f;
 
@@ -40,12 +42,12 @@ namespace CrossBoa
 
         public static void Update(KeyboardState kbState)
         {
-            // Only update the camera if it's different from the previous frame
             UpdateScreenShake();
-            
-            if (cameraX != prevCameraX || cameraY != prevCameraY)
+
+            // Only update the camera if it's different from the previous frame
+            if (cameraX != prevCameraX || cameraY != prevCameraY || screenShakeFramesLeft > 0)
             {
-                matrix = Matrix.CreateTranslation(cameraX, cameraY, 0);
+                matrix = Matrix.CreateTranslation(cameraX + shakeX, cameraY + shakeY, 0);
             }
         }
 
@@ -68,16 +70,24 @@ namespace CrossBoa
             {
                 screenShakeFramesLeft--;
 
-                cameraX = (int)Math.Round((2 * Program.RNG.NextDouble() - 1) * ScreenShakeMagnitude * screenShakeFramesLeft);
-                cameraY = (int)Math.Round((2 * Program.RNG.NextDouble() - 1) * ScreenShakeMagnitude * screenShakeFramesLeft);
+                shakeX = (int)Math.Round((2 * Program.RNG.NextDouble() - 1) * ScreenShakeMagnitude * screenShakeFramesLeft);
+                shakeY = (int)Math.Round((2 * Program.RNG.NextDouble() - 1) * ScreenShakeMagnitude * screenShakeFramesLeft);
             }
 
             // Reset screen position after shaking is finished
             else if (screenShakeFramesLeft == 0)
             {
-                matrix = Matrix.CreateTranslation(0, 4, 0);
+                shakeX = 0;
+                shakeY = 0;
                 screenShakeFramesLeft--;
             }
+        }
+
+
+        public static void FollowPlayer(Player player)
+        {
+            cameraX = -(int)player.Position.X + Game1.screenWidth / 2;
+            cameraY = -(int)player.Position.Y + Game1.screenHeight / 2;
         }
     }
 }
