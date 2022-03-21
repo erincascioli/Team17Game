@@ -430,12 +430,14 @@ namespace CrossBoa
                 case GameState.Game:
                     _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Camera.Matrix);
                     GraphicsDevice.Clear(Color.Black);
+                    
                     DrawGame();
-
-
+                    
                     _spriteBatch.End();
                     _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+                    
                     DrawGameUI();
+                    
                     _spriteBatch.End();
                     break;
 
@@ -447,22 +449,12 @@ namespace CrossBoa
 
                     // Draws the game with a darkened overlay
                     DrawGame();
-                    _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(screenWidth, screenHeight)), new Color(Color.Black, 160));
 
-                    _spriteBatch.Draw(pauseText, new Vector2(0, 0), Color.White);
-                    /*
-                    _spriteBatch.DrawString(arial32, "Pause",
-                        new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 63,
-                            GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
-                    */
-
-                    playButton.Draw(_spriteBatch);
-
-                    // Debug button
-                    _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:",
-                        new Vector2(screenWidth - 400, screenHeight - 100), isDebugActive ? Color.Red : Color.Green);
-                    debugButton.Draw(_spriteBatch);
-
+                    _spriteBatch.End();
+                    _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+                     
+                    DrawPauseUI();
+                    
                     _spriteBatch.End();
                     break;
 
@@ -612,6 +604,28 @@ namespace CrossBoa
             }
         }
 
+        /// <summary>
+        /// Includes all of the Draw code for the GameState.Pause UI
+        /// </summary>
+        void DrawPauseUI()
+        {
+            _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(screenWidth, screenHeight)), new Color(Color.Black, 160));
+
+            _spriteBatch.Draw(pauseText, new Vector2(0, 0), Color.White);
+
+            /*
+            _spriteBatch.DrawString(arial32, "Pause",
+                new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth - 63,
+                    GraphicsDeviceManager.DefaultBackBufferHeight / 2), Color.White);
+            */
+
+            playButton.Draw(_spriteBatch);
+
+            // Debug button
+            _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:",
+                new Vector2(screenWidth - 400, screenHeight - 100), isDebugActive ? Color.Red : Color.Green);
+            debugButton.Draw(_spriteBatch);
+        }
 
         /// <summary>
         /// Spawns a slime enemy
