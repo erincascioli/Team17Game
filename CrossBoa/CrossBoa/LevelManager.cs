@@ -48,6 +48,12 @@ namespace CrossBoa
             get { return entrance; }
         }
 
+        public static ExitLocation Exitlocation
+        {
+            get { return exitLocation; }
+        }
+           
+
         static LevelManager()
         {
             levelTiles = new List<Tile>();

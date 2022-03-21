@@ -95,8 +95,16 @@ namespace CrossBoa
 
         public static void FollowPlayer(Player player)
         {
-            cameraX = -(int)player.Position.X + Game1.screenWidth / 2;
-            cameraY = -(int)player.Position.Y + Game1.screenHeight / 2;
+            if (LevelManager.Exitlocation == LevelManager.ExitLocation.Left || LevelManager.Exitlocation == LevelManager.ExitLocation.Right)
+            {
+                cameraX = -(int)player.Position.X + Game1.screenWidth / 2;
+                cameraY = 0;
+            }
+            else
+            {
+                cameraY = -(int)player.Position.Y + Game1.screenHeight / 2;
+                cameraX = 0;
+            }
         }
     }
 }
