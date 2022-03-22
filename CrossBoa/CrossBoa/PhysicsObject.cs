@@ -82,27 +82,13 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Constructs a PhysicsObject
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="position">The GameObject's position</param>
-        /// <param name="size">The GameObject's size in pixels</param>
-        /// <param name="friction">How fast this object will stop moving.</param>
-        /// <param name="maxSpeed">The maximum speed this object can reach</param>
-        public PhysicsObject(Texture2D sprite, Vector2 position, Point size, float? maxSpeed, float friction) :
-            base(sprite, position, size)
-        {
-            this.friction = friction;
-            this.maxSpeed = maxSpeed;
-            velocity = Vector2.Zero;
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if(friction > 0)
+                ApplyFriction(gameTime);
             UpdatePhysics(gameTime);
         }
 
