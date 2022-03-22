@@ -159,11 +159,7 @@ namespace CrossBoa
             SpawnSlime(new Point(1280, 448));
             SpawnSlime(new Point(64 * 12, 64 * 9));
 
-            Totem testTotem = new Totem(whiteSquareSprite,
-                new Rectangle(1300,
-                300,
-                50,
-                100));
+
 
 
             // Load menu background layers
@@ -644,7 +640,19 @@ namespace CrossBoa
             gameObjectList.Add(newSlime);
         }
 
-        
+        /// <summary>
+        /// Spawns a totem enemy
+        /// </summary>
+        /// <param name="position">The position to spawn the totem at</param>
+        void SpawnTotem(Point position)
+        {
+            Totem testTotem = new Totem(whiteSquareSprite,
+                new Rectangle(
+                    new Point(1300, 300),
+                    position));
+            CollisionManager.AddEnemy(testTotem);
+            gameObjectList.Add(testTotem);
+        }
 
         #endregion
     }
