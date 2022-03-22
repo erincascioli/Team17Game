@@ -129,49 +129,12 @@ namespace CrossBoa
         /// Constructs a Projectile
         /// </summary>
         /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="position">The GameObject's position</param>
-        /// <param name="size">The GameObject's size in pixels</param>
-        /// <param name="velocity">The direction that the projectile will move in</param>
-        /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public Projectile(Texture2D sprite, Vector2 position, Point size, Vector2 velocity, bool isPlayerArrow) :
-            base(sprite, position, size, null, 0)
-        {
-            this.velocity = velocity;
-            this.isPlayerArrow = isPlayerArrow;
-            direction = MathF.Atan2(velocity.Y, velocity.X);
-            this.isActive = true;
-            this.isInAir = true;
-        }
-
-        /// <summary>
-        /// Constructs a Projectile
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
         /// <param name="rectangle">a Rectangle containing this GameObject's position and size</param>
         /// <param name="direction">The direction that the projectile will move in</param>
         /// <param name="magnitude">How quickly the projectile will move in that direction</param>
         /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
         public Projectile(Texture2D sprite, Rectangle rectangle, float direction, float magnitude, bool isPlayerArrow) :
             base(sprite, rectangle, null, 0)
-        {
-            this.direction = direction;
-            this.isPlayerArrow = isPlayerArrow;
-            this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
-            this.isActive = true;
-            this.isInAir = true;
-        }
-
-        /// <summary>
-        /// Constructs a Projectile
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="position">The GameObject's position</param>
-        /// <param name="size">The GameObject's size in pixels</param>
-        /// <param name="direction">The direction that the projectile will move in</param>
-        /// <param name="magnitude">How quickly the projectile will move in that direction</param>
-        /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public Projectile(Texture2D sprite, Vector2 position, Point size, float direction, float magnitude, bool isPlayerArrow) :
-            base(sprite, position, size, null, 0)
         {
             this.direction = direction;
             this.isPlayerArrow = isPlayerArrow;
@@ -188,8 +151,6 @@ namespace CrossBoa
         {
             if (isPlayerArrow)
             {
-                ApplyFriction(gameTime);
-
                 // If it's on the ground, tick down the despawn time
                 if (!isInAir && isActive)
                 {

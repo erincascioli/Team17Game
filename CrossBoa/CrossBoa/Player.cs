@@ -149,15 +149,14 @@ namespace CrossBoa
 
                 // Apply the movement
                 ApplyForce(movementVector * movementForce);
-                ApplyFriction(gameTime);
-
-                UpdatePhysics(gameTime);
 
                 if (kbState.IsKeyDown(Keys.A))
                     isFacingRight = false;
                 if (kbState.IsKeyDown(Keys.D))
                     isFacingRight = true;
             }
+
+            base.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch sb)
