@@ -4,8 +4,6 @@ namespace CrossBoa
 {
     public static class Program
     {
-        public static Random RNG = new Random();
-
         [STAThread]
         static void Main()
         {

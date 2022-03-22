@@ -15,6 +15,8 @@ namespace CrossBoa
         private SpriteBatch _spriteBatch;
 
         // Fields
+        public static Random RNG = new Random();
+
         private const int DefaultPlayerMovementForce = 5000;
         private const int DefaultPlayerMaxSpeed = 300;
         private const int DefaultPlayerFriction = 2500;

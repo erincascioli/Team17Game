@@ -418,7 +418,7 @@ namespace CrossBoa
             previousExit = exitLocation;
 
             // Exit location placement
-            switch (Program.RNG.Next(0, 4))
+            switch (Game1.RNG.Next(0, 4))
             {
             // Top
             case 0:
