@@ -24,7 +24,6 @@ namespace CrossBoa
     public class Slime : PhysicsObject, IEnemy, ICollidable
     {
         // ~~~ FIELDS ~~~
-        private const float timeBetweenJumps = 2.5f;
         private const float movementForce = 45000f;
         private const float frictionForce = 2000f;
 
@@ -48,9 +47,14 @@ namespace CrossBoa
         /// <summary>
         /// The last time the slime made a push towards the player.
         /// </summary>
-        private float timeSinceMove;
+        private double timeUntilMove;
+
+        private double totalTimeBeforeNextJump;
+        private bool hasMovedYet;
+
 
         private float hurtFlashTime;
+
             
         private bool isAlive;
         private SlimeAnimState animationState;
@@ -99,7 +103,7 @@ namespace CrossBoa
         {
             player = playerReference;
             this.health = health;
-            timeSinceMove = (float)Program.RNG.NextDouble() * 1.25f + 0.25f;
+            timeUntilMove = TimeUntilNextJump();
             color = Color.White;
             isAlive = true;
             animationState = SlimeAnimState.Resting;
@@ -162,12 +166,12 @@ namespace CrossBoa
             ApplyForce(MathHelper.DirectionBetween(other.Hitbox.Center, this.Rectangle.Center), force);
 
             // If the slime is in the air, move it to the ground
-            if (timeSinceMove < 0.5f)
-                timeSinceMove = 0.5f;
+            if (animationState != SlimeAnimState.Resting)
+                timeUntilMove = 2f;
 
             // Otherwise, if the slime hasn't moved for a while, stun it.
-            else if (timeSinceMove >= 0.7f)
-                timeSinceMove = 0.7f;
+            else if (timeUntilMove <= 1.2f)
+                timeUntilMove = 1.2f;
         }
 
 
@@ -186,17 +190,23 @@ namespace CrossBoa
             if (isAlive)
             {
                 // Update the timer
-                float totalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                timeSinceMove += totalSeconds;
+                double totalSeconds = gameTime.ElapsedGameTime.TotalSeconds;
+                timeUntilMove -= totalSeconds;
 
-                // If it's been at least 1 second since the last slime movement,
+                // If the slime is ready to jump, push the slime towards the player
                 // push the slime towards the player.
-                if (timeSinceMove >= timeBetweenJumps)
+                if (timeUntilMove <= 0.5 && !hasMovedYet)
                 {
                     targetX = (int)player.Position.X;
                     targetY = (int)player.Position.Y;
-                    timeSinceMove -= timeBetweenJumps;
                     Move();
+                    hasMovedYet = true;
+                }
+
+                if (timeUntilMove <= 0)
+                {
+                    timeUntilMove = TimeUntilNextJump();
+                    hasMovedYet = false;
                 }
                 ApplyFriction(gameTime);
                 UpdatePhysics(gameTime);
@@ -207,15 +217,16 @@ namespace CrossBoa
         public void UpdateAnimations(GameTime gameTime)
         {
             // Movement animation state
-            if (timeSinceMove < 0.25f)
-                animationState = SlimeAnimState.Jumping;
-            if (timeSinceMove >= 0.25f && timeSinceMove < 0.4f)
-                animationState = SlimeAnimState.Falling;
-            if (timeSinceMove >= 0.4f && timeSinceMove < 0.5f)
+
+            animationState = SlimeAnimState.Resting;            // Rest if not doing anything else
+            
+            if (timeUntilMove < 0.7 && timeUntilMove >= 0.5)    // Anticipate for 0.2 seconds
                 animationState = SlimeAnimState.Squished;
-            if (timeSinceMove >= 0.5f && timeSinceMove < timeBetweenJumps - 0.2f)
-                animationState = SlimeAnimState.Resting;
-            if (timeSinceMove >= timeBetweenJumps - 0.2f)
+            if (timeUntilMove < 0.5 && timeUntilMove >= 0.25)   // Jump for 0.25 seconds
+                animationState = SlimeAnimState.Jumping;
+            if (timeUntilMove < 0.25 && timeUntilMove >= 0.1)   // Fall for 0.15 seconds
+                animationState = SlimeAnimState.Falling;
+            if (timeUntilMove < 0.1)                            // Land for 0.1 seconds
                 animationState = SlimeAnimState.Squished;
 
             // Hurt time
@@ -229,6 +240,17 @@ namespace CrossBoa
                 hurtFlashTime = 0;
                 color = Color.White;
             }
+        }
+
+        /// <summary>
+        /// Generates a random time for the slime to wait until it jumps again
+        /// </summary>
+        /// <returns>A double</returns>
+        private double TimeUntilNextJump()
+        {
+            // Random number between 2 and 3.75
+            totalTimeBeforeNextJump = Game1.RNG.NextDouble() * 1.75 + 2;
+            return totalTimeBeforeNextJump;
         }
     }
 }

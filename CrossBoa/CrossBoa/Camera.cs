@@ -77,8 +77,8 @@ namespace CrossBoa
             {
                 screenShakeFramesLeft--;
 
-                shakeX = (int)Math.Round((2 * Program.RNG.NextDouble() - 1) * ScreenShakeMagnitude * screenShakeFramesLeft);
-                shakeY = (int)Math.Round((2 * Program.RNG.NextDouble() - 1) * ScreenShakeMagnitude * screenShakeFramesLeft);
+                shakeX = (int)Math.Round((2 * Game1.RNG.NextDouble() - 1) * ScreenShakeMagnitude * screenShakeFramesLeft);
+                shakeY = (int)Math.Round((2 * Game1.RNG.NextDouble() - 1) * ScreenShakeMagnitude * screenShakeFramesLeft);
             }
 
             // Reset screen position after shaking is finished
