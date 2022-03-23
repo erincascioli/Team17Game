@@ -273,7 +273,7 @@ namespace CrossBoa
                 // Game Over
                 case GameState.GameOver:
 
-                    UpdateGameOver(gameTime);
+                    //UpdateGameOver(gameTime);
 
                     break;
             }
@@ -505,6 +505,7 @@ namespace CrossBoa
                 gameObject.Draw(_spriteBatch);
             }
 
+            
             playerArrow.Draw(_spriteBatch);
 
             // DEBUG
