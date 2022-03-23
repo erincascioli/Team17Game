@@ -316,15 +316,16 @@ namespace CrossBoa
                     if (LevelManager.Update(player, ScreenWidth, ScreenHeight))
                     {
                         SpawnSlime(new Point(500, 400));
-                        LevelManager.LoadLevel("TestingFile");
+                        //LevelManager.LoadLevel("TestingFile");
                     }
 
-                    if (LevelManager.Exit.IsOpen)
+                    if (LevelManager.Exit.IsOpen || !player.CanMove)
                     {
                         //Camera.FollowPlayer(player);
-                        if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle))
+                        if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle) || !player.CanMove)
                         {
-                            LevelManager.LevelTransition();
+                            LevelManager.LevelTransition(player, crossbow, gameTime);
+                            player.CanMove = false; // Prevents premature end
                         }
                     }
                     else

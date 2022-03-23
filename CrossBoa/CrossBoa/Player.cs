@@ -74,6 +74,12 @@ namespace CrossBoa
             set { dodgeCooldown = value; }
         }
 
+        public bool CanMove
+        {
+            get { return canMove; }
+            set { canMove = value; }
+        }
+
         /// <summary>
         /// The hitbox for this object
         /// </summary>
@@ -202,6 +208,21 @@ namespace CrossBoa
                 movementVector.Normalize();
 
             return movementVector;
+        }
+
+        public void ForceMove(int x, int y, GameTime gameTime)
+        {
+            Vector2 movementVector = new Vector2(x, y);
+
+            // Normalize the vector so the player doesn't move faster diagonally
+            if (movementVector != Vector2.Zero)
+                movementVector.Normalize();
+
+            // Apply the movement
+            ApplyForce(movementVector * movementForce);
+            //ApplyFriction(gameTime);
+
+            UpdatePhysics(gameTime);
         }
 
         /*

@@ -31,6 +31,8 @@ namespace CrossBoa
         private static int levelHeight;
         private static ExitLocation exitLocation;
         private static ExitLocation previousExit;
+        private static int forcedX;
+        private static int forcedY;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
@@ -197,10 +199,10 @@ namespace CrossBoa
                     // ToDo: Temporary switch block: Teleports the player
                     switch (exitLocation)
                     {
-                        case ExitLocation.Top:
+                        /*case ExitLocation.Top:
                             CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
                                 CollisionManager.Player.Position.Y + 1000);
-                            break;
+                            break;*/
 
                         case ExitLocation.Bottom:
                             CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
@@ -513,11 +515,70 @@ namespace CrossBoa
         /// Purpose: Helps facilitate the transition between levels: Will be more effective if a camera is used
         /// Restrictions: ?
         /// </summary>
-        public static void LevelTransition()
+        public static void LevelTransition(Player player, CrossBow crossbow, GameTime gameTime)
         {
             if (exitLocation == ExitLocation.Top)
+            {   
+
+                if (player.Rectangle.Intersects(exit.Rectangle))
+                {
+                    // Player Movement is locked for the transition
+                    player.CanMove = false;
+
+                    // Vectors for player movement
+                    forcedX = 0;
+                    forcedY = -1;
+                }
+
+                if (Camera.CameraY >= 1100)
+                {
+                    // Player and Camera go to the bottom of the level
+                    Camera.MoveCamera(0, -Game1.ScreenHeight - 1700);
+                    CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
+                                CollisionManager.Player.Position.Y + 1300);
+
+                    
+
+
+                    LoadLevel("TestingFile");
+                    exit.ChangeDoorState();
+                }
+
+                if (player.Position.Y < -100)
+                {
+                    Camera.MoveCamera(0, 90);
+
+                    // player is made invisible
+                    player.Color = Color.Black;
+                    crossbow.Color = Color.Black;
+                }
+            }
+
+            
+            // Overrides player movement
+            if (!player.CanMove)
             {
-                Camera.MoveCamera(0, 30);
+                player.ForceMove(forcedX, forcedY, gameTime);
+
+                // Makes sure consecutive blocks of code can't happen
+                if (player.Position.Y > 0)
+                {
+                    if (previousExit == ExitLocation.Top)
+                    {
+                            Camera.MoveCamera(0, 90);
+
+
+                        if (!(Camera.CameraY < 0))
+                        {
+                            // Camera is locked to the center of the screen
+                            Camera.Center();
+
+                            // The player is made visible again
+                            player.Color = Color.White;
+                            crossbow.Color = Color.White;
+                        }
+                    }
+                }
             }
         }
 

@@ -31,6 +31,16 @@ namespace CrossBoa
             get { return matrix; }
         }
 
+        public static int CameraX
+        {
+            get { return cameraX; }
+        }
+
+        public static int CameraY
+        {
+            get { return cameraY; }
+        }
+
         /// <summary>
         /// How violently the screen should shake
         /// </summary>
