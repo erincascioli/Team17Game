@@ -19,6 +19,7 @@ namespace CrossBoa
         private static Projectile playerArrow;
         private static List<IEnemy> enemies;
         private static List<Projectile> enemyProjectiles;
+        private static List<Collectible> collectibles;
         private static List<Tile> levelObstacles;
         private static int alternate;
 
@@ -44,6 +45,7 @@ namespace CrossBoa
             // Lists are created
             enemies = new List<IEnemy>();
             enemyProjectiles = new List<Projectile>();
+            collectibles = new List<Collectible>();
             alternate = 0;
         }
 
@@ -120,7 +122,6 @@ namespace CrossBoa
                     LevelManager.Exit.ChangeDoorState();
                 }
 
-
                 if (playerArrow != null && playerArrow.IsActive
                     && playerArrow.IsInAir && playerArrow.Hitbox.Intersects(i.Rectangle))
                 {
@@ -153,6 +154,14 @@ namespace CrossBoa
             if (LevelManager.Exit.IsOpen)
             {
                 levelObstacles.Remove(LevelManager.Exit);
+            }
+
+            foreach (Collectible c in collectibles)
+            {
+                if (player.Hitbox.Intersects(c.Hitbox))
+                {
+                    c.IsCollected = true;
+                }
             }
 
             // Closes entrance behind the player
@@ -219,6 +228,11 @@ namespace CrossBoa
         public static void AddProjectile(Projectile projectile)
         {
             enemyProjectiles.Add(projectile);
+        }
+
+        public static void AddCollectible(Collectible collectible)
+        {
+            collectibles.Add(collectible);
         }
 
         /// <summary>

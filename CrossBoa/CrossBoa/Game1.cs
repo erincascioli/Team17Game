@@ -53,6 +53,7 @@ namespace CrossBoa
         private Texture2D titleText;
         private Texture2D pauseText;
         private Texture2D gameOverText;
+        private Texture2D collectibleSprite;
 
         private SpriteFont arial32;
 
@@ -116,6 +117,7 @@ namespace CrossBoa
             titleText = Content.Load<Texture2D>("TitleText");
             pauseText = Content.Load<Texture2D>("PauseText");
             gameOverText = Content.Load<Texture2D>("GameOverText");
+            collectibleSprite = Content.Load<Texture2D>("LifePot");
 
 
             for (int i = 0; i < 5; i++)
@@ -158,7 +160,7 @@ namespace CrossBoa
             SpawnSlime(new Point(400, 400));
             SpawnSlime(new Point(1280, 448));
             SpawnSlime(new Point(64 * 12, 64 * 9));
-
+            CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
             SpawnTotem(new Point(50, 100));
 
             // Load menu background layers
