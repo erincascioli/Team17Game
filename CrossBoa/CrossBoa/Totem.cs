@@ -16,7 +16,7 @@ namespace CrossBoa
         private bool isAlive;
         private Projectile projectile;
 
-        private const float cooldownTimer = 1f;
+        private const float cooldownTimer = 2f;
 
         // ~~~ PROPERTIES ~~~
         /// <summary>
@@ -55,7 +55,7 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// The hitbox of the totem.
+        /// The hitbox of the totem. Get-only property.
         /// </summary>
         public Rectangle Hitbox
         {
@@ -65,19 +65,30 @@ namespace CrossBoa
             }
         }
 
+        /// <summary>
+        /// The projectile fired by the totem. Get-only property.
+        /// </summary>
+        public Projectile TotemProjectile
+        {
+            get
+            {
+                return projectile;
+            }
+        }
         // ~~~ CONSTRUCTOR ~~~
-        public Totem(Texture2D sprite, Rectangle rectangle) :
+        public Totem(Texture2D sprite, Rectangle rectangle, Texture2D projectileSprite) :
             base(sprite, rectangle)
         {
             timeSinceShot = 0f;
             health = 3;
-            projectile = new Projectile(sprite, 
+            projectile = new Projectile(projectileSprite, 
                 new Rectangle(-100,
                               -100,
                               30,
                               30),
                 new Vector2(0,0),
                 false);
+            isAlive = true;
         }
 
         // ~~~ METHODS ~~~
@@ -105,7 +116,7 @@ namespace CrossBoa
         /// <param name="player">The player to deal damage to.</param>
         public void DealContactDamage(Player player)
         {
-            if (!isAlive)
+            if (isAlive)
                 player.TakeDamage(1);
         }
 
@@ -128,7 +139,9 @@ namespace CrossBoa
         {
             timeSinceShot = 0f;
             projectile.ChangeVelocity(
-                position, 0, 500);
+                new Vector2(Rectangle.X + Width/2,
+                            Rectangle.Y + Height/2),
+                (float)(Math.PI/2), 500);
         }
 
         /// <summary>
