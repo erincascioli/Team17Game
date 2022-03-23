@@ -17,7 +17,7 @@ namespace CrossBoa
         private static Player player;
         private static CrossBow crossbow;
         private static Projectile playerArrow;
-        private static List<IEnemy> enemies;
+        private static List<Enemy> enemies;
         private static List<Projectile> enemyProjectiles;
         private static List<Collectible> collectibles;
         private static List<Tile> levelObstacles;
@@ -43,7 +43,7 @@ namespace CrossBoa
         static CollisionManager()
         {
             // Lists are created
-            enemies = new List<IEnemy>();
+            enemies = new List<Enemy>();
             enemyProjectiles = new List<Projectile>();
             collectibles = new List<Collectible>();
             alternate = 0;
@@ -80,33 +80,33 @@ namespace CrossBoa
             }
 
             // Temp data tracking
-            List<IEnemy> survivors = new List<IEnemy>();
+            List<Enemy> survivors = new List<Enemy>();
 
             // Enemies
-            foreach (IEnemy i in enemies)
+            foreach (Enemy enemy in enemies)
             {
                 // with player
-                if (!isInvincibilityActive && player.Hitbox.Intersects(i.Rectangle))
+                if (!isInvincibilityActive && player.Hitbox.Intersects(enemy.Rectangle))
                 {
-                    i.DealContactDamage(player);
+                    enemy.DealContactDamage(player);
                 }
 
                 // with player arrow
                 if (playerArrow != null && playerArrow.IsInAir &&
-                    playerArrow.Hitbox.Intersects(i.Hitbox) && i.Health > 0)
+                    playerArrow.Hitbox.Intersects(enemy.Hitbox) && enemy.Health > 0)
                 {
                     // Health value not decided on yet
-                    i.TakeDamage(1);
+                    enemy.TakeDamage(1);
                     playerArrow.HitSomething();
 
                     // Knock the enemy back
-                    i.GetKnockedBack(playerArrow, 35000);
+                    enemy.GetKnockedBack(playerArrow, 35000);
                 }
 
                 // Tracks Living Enemies
-                if (i.IsAlive)
+                if (enemy.IsAlive)
                 {
-                    survivors.Add(i);
+                    survivors.Add(enemy);
                 }
             }
 
@@ -115,30 +115,30 @@ namespace CrossBoa
 
 
             // Collidable tiles
-            foreach (Tile i in levelObstacles)
+            foreach (Tile tile in levelObstacles)
             {
-                if (i == LevelManager.Exit && enemies.Count == 0 && !LevelManager.Exit.IsOpen)
+                if (tile == LevelManager.Exit && enemies.Count == 0 && !LevelManager.Exit.IsOpen)
                 {
                     LevelManager.Exit.ChangeDoorState();
                 }
 
                 if (playerArrow != null && playerArrow.IsActive
-                    && playerArrow.IsInAir && playerArrow.Hitbox.Intersects(i.Rectangle))
+                    && playerArrow.IsInAir && playerArrow.Hitbox.Intersects(tile.Rectangle))
                 {
                     playerArrow.HitSomething();
                 }
 
-                if (player.Hitbox.Intersects(i.Rectangle))
+                if (player.Hitbox.Intersects(tile.Rectangle))
                 {
-                    EntityEnvironmentCollide<Player>(player, i);
+                    EntityEnvironmentCollide<Player>(player, tile);
                 }
 
                 // Enemies with tile
-                foreach (IEnemy j in enemies)
+                foreach (Enemy enemy in enemies)
                 {
-                    if (j.Hitbox.Intersects(i.Rectangle))
+                    if (enemy.Hitbox.Intersects(tile.Rectangle))
                     {
-                        EntityEnvironmentCollide<IEnemy>(j, i);
+                        EntityEnvironmentCollide<Enemy>(enemy, tile);
                     }
                 }
             }
@@ -197,11 +197,11 @@ namespace CrossBoa
                 sb.Draw(arrowPoint, new Rectangle(i.Hitbox.X - 2, i.Hitbox.Y - 2, 5, 5), Color.Red);
             }
 
-            foreach (IEnemy i in enemies)
+            foreach (Enemy enemy in enemies)
             {
 
-                if (i.Health > 0)
-                    sb.Draw(hitBox, i.Hitbox, Color.White);
+                if (enemy.Health > 0)
+                    sb.Draw(hitBox, enemy.Hitbox, Color.White);
             }
 
             foreach (Tile i in levelObstacles)
@@ -220,7 +220,7 @@ namespace CrossBoa
         /// Restrictions: none
         /// </summary>
         /// <param name="enemy"></param>
-        public static void AddEnemy(IEnemy enemy)
+        public static void AddEnemy(Enemy enemy)
         {
             enemies.Add(enemy);
         }

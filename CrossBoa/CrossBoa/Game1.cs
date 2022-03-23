@@ -63,7 +63,7 @@ namespace CrossBoa
         private GameObject[] menuBGLayers;
         private List<GameObject> playerHealthBar;
         private CrossBow crossbow;
-        private Player player;
+        private static Player player;
         private Projectile playerArrow;
 
         // Buttons
@@ -75,6 +75,14 @@ namespace CrossBoa
         private List<GameObject> gameObjectList;
 
         private GameState gameState;
+
+        /// <summary>
+        /// A reference to the player object
+        /// </summary>
+        public static Player Player
+        {
+            get { return player; }
+        }
 
         public Game1()
         {
@@ -148,8 +156,7 @@ namespace CrossBoa
 
             playerArrow = new Projectile(
                 playerArrowSprite,
-                new Vector2(-100, -100),
-                new Point(60, 60),
+                new Rectangle(-100, -100, 60, 60),
                 0f,
                 0,
                 true);
@@ -162,6 +169,7 @@ namespace CrossBoa
             SpawnSlime(new Point(400, 400));
             SpawnSlime(new Point(1280, 448));
             SpawnSlime(new Point(64 * 12, 64 * 9));
+
             CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
             SpawnTotem(new Point(50, 100));
 
@@ -403,6 +411,10 @@ namespace CrossBoa
         }
 
         // Game
+        /// <summary>
+        /// Updates the game
+        /// </summary>
+        /// <param name="gameTime">A reference to the GameTime</param>
         private void UpdateGame(GameTime gameTime)
         {
             // Update all GameObjects
@@ -418,7 +430,7 @@ namespace CrossBoa
                 }
 
                 // Delete enemies from lists after they die
-                IEnemy enemy;
+                Enemy enemy;
                 if ((enemy = gameObjectList[i] as IEnemy) != null && !enemy.IsAlive)
                 {
                     gameObjectList.RemoveAt(i);
@@ -661,10 +673,9 @@ namespace CrossBoa
         void SpawnSlime(Point position)
         {
             Slime newSlime = new Slime(
-                3,
                 slimeSpritesheet,
-                new Rectangle(position, new Point(64, 64)),
-                player);
+                3,
+                new Rectangle(position, new Point(64, 64)));
             CollisionManager.AddEnemy(newSlime);
             gameObjectList.Add(newSlime);
         }

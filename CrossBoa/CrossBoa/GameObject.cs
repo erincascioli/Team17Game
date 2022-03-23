@@ -105,20 +105,6 @@ namespace CrossBoa
             this.color = Color.White;
         }
 
-        /// <summary>
-        /// Constructs a GameObject
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="position">The GameObject's position</param>
-        /// <param name="size">The GameObject's size in pixels</param>
-        public GameObject(Texture2D sprite, Vector2 position, Point size)
-        {
-            this.sprite = sprite;
-            this.position = position;
-            this.size = size;
-            this.rectCache = Rectangle.Empty;
-        }
-
         // -----------
         //   Methods
         // -----------
