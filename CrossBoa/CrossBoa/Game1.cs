@@ -659,9 +659,12 @@ namespace CrossBoa
             Totem testTotem = new Totem(whiteSquareSprite,
                 new Rectangle(
                     new Point(1300, 300),
-                    position));
+                    position),
+                    playerArrowSprite);
             CollisionManager.AddEnemy(testTotem);
             gameObjectList.Add(testTotem);
+            CollisionManager.AddProjectile(testTotem.TotemProjectile);
+            gameObjectList.Add(testTotem.TotemProjectile);
         }
 
         /// <summary>
