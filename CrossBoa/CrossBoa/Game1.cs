@@ -214,6 +214,7 @@ namespace CrossBoa
             gameObjectList.Add(crossbow);
 
             LevelManager.LContent = Content;
+            LevelManager.GameReference = this;
             LevelManager.LoadLevel("TestingFile");
         }
 
@@ -313,19 +314,13 @@ namespace CrossBoa
                         (kbState.IsKeyDown(Keys.Escape) && previousKBState.IsKeyUp(Keys.Escape)))
                         gameState = GameState.Pause;
 
-                    if (LevelManager.Update(player, ScreenWidth, ScreenHeight))
-                    {
-                        SpawnSlime(new Point(500, 400));
-                        //LevelManager.LoadLevel("TestingFile");
-                    }
-
                     if (LevelManager.Exit.IsOpen || !player.CanMove)
                     {
                         //Camera.FollowPlayer(player);
                         if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle) || !player.CanMove)
                         {
                             LevelManager.LevelTransition(player, crossbow, gameTime);
-                            player.CanMove = false; // Prevents premature end
+                            //player.CanMove = false; // Prevents premature end
                         }
                     }
                     else
@@ -651,7 +646,7 @@ namespace CrossBoa
         /// Spawns a slime enemy
         /// </summary>
         /// <param name="position">The position to spawn the slime at</param>
-        void SpawnSlime(Point position)
+        public void SpawnSlime(Point position)
         {
             Slime newSlime = new Slime(
                 3,
