@@ -159,8 +159,7 @@ namespace CrossBoa
                     if (!IsInAir)
                     {
                         // Move to player if arrow is nearby and arrow is on ground
-                        if (timeUntilDespawn < PlayerArrowDespawn - TimeBeforePickup)
-                            GetSuckedIntoPlayer(80, 5000);
+                        GetSuckedIntoPlayer(80, 5000);
                     }
 
                     // Begin flashing when arrow is about to despawn
