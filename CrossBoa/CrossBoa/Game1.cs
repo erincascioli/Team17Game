@@ -598,8 +598,23 @@ namespace CrossBoa
                 isDebugActive = !isDebugActive;
         }
 
+        // Game Over
+        private void UpdateGameOver(GameTime gameTime)
+        {
+            AnimateMainMenuBG();
 
+            gameOverButton.Update(gameTime);
 
+            if (gameOverButton.HasBeenPressed())
+            {
+                gameState = GameState.MainMenu;
+
+                foreach (GameObject i in playerHealthBar)
+                {
+                    i.Sprite = fullHeart;
+                }
+            }
+        }
 
         /// <summary>
         /// Draw the game over screen
@@ -621,6 +636,7 @@ namespace CrossBoa
             _spriteBatch.End();
         }
 
+        // Credits
         /// <summary>
         /// Draws the credits screen
         /// </summary>
