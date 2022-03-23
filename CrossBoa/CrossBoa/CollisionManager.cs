@@ -115,7 +115,7 @@ namespace CrossBoa
             // Collidable tiles
             foreach (Tile i in levelObstacles)
             {
-                if (i == LevelManager.Exit && enemies.Count == 0 && !LevelManager.Exit.IsOpen)
+                if (i == LevelManager.Exit && enemies.Count == 0 && !LevelManager.Exit.IsOpen && player.CanMove)
                 {
                     LevelManager.Exit.ChangeDoorState();
                 }
