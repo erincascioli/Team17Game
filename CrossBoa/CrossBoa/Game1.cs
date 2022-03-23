@@ -431,7 +431,7 @@ namespace CrossBoa
 
                 // Delete enemies from lists after they die
                 Enemy enemy;
-                if ((enemy = gameObjectList[i] as IEnemy) != null && !enemy.IsAlive)
+                if ((enemy = gameObjectList[i] as Enemy) != null && !enemy.IsAlive)
                 {
                     gameObjectList.RemoveAt(i);
                     i--;
@@ -687,12 +687,13 @@ namespace CrossBoa
         void SpawnTotem(Point position)
         {
             Totem testTotem = new Totem(whiteSquareSprite,
-                new Rectangle(
-                    new Point(1300, 300),
-                    position),
-                    playerArrowSprite);
+                new Rectangle(new Point(1300, 300), position),
+                3,
+                playerArrowSprite);
+            
             CollisionManager.AddEnemy(testTotem);
             gameObjectList.Add(testTotem);
+
             CollisionManager.AddProjectile(testTotem.TotemProjectile);
             gameObjectList.Add(testTotem.TotemProjectile);
         }
