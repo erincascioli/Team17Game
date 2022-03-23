@@ -33,6 +33,7 @@ namespace CrossBoa
         private static ExitLocation previousExit;
         private static int forcedX;
         private static int forcedY;
+        private static Game1 gameReference;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
@@ -53,6 +54,11 @@ namespace CrossBoa
         public static ExitLocation Exitlocation
         {
             get { return exitLocation; }
+        }
+
+        public static Game1 GameReference
+        {
+            set { gameReference = value; }
         }
            
 
@@ -244,6 +250,8 @@ namespace CrossBoa
                     // This block is required for the try block
                 }
             }
+
+            gameReference.SpawnSlime(new Point(100, 200));
         }
 
         /// <summary>
@@ -289,21 +297,8 @@ namespace CrossBoa
         /// <param name="screenWidth"></param>
         /// <param name="screenHeight"></param>
         /// <returns></returns>
-        public static bool Update(Player player, int screenWidth, int screenHeight)
+        public static void Update(Player player)
         {
-            bool spawnEnemies = false; // Default
-
-            if (exit.IsOpen)
-            {
-                // Next Part of the level is created : Checks if player has left the screen
-                if (player.Rectangle.Bottom < 0 || player.Rectangle.Left > screenWidth ||
-                    player.Rectangle.Top > screenHeight || player.Rectangle.Right < 0)
-                {
-                    Exit.ChangeDoorState();
-                    spawnEnemies = true;
-                }
-            }
-
             // Will close off the entrance after a player fully enters a stage
             if (entrance.IsOpen)
             {
@@ -314,6 +309,9 @@ namespace CrossBoa
                         if (player.Rectangle.Bottom < entrance.Rectangle.Top)
                         {
                             entrance.ChangeDoorState();
+                            player.CanMove = true;
+                            forcedX = 0;
+                            forcedY = 0;
 
                             // Adds door to collisionManager
                             CollisionManager.UpdateLevel();
@@ -355,8 +353,6 @@ namespace CrossBoa
                         break;
                 }
             }
-
-            return spawnEnemies;
         }
 
         // Determines the placement of the doors in the level
@@ -541,7 +537,7 @@ namespace CrossBoa
 
 
                     LoadLevel("TestingFile");
-                    exit.ChangeDoorState();
+                    //exit.ChangeDoorState();
                 }
 
                 if (player.Position.Y < -100)
@@ -576,6 +572,8 @@ namespace CrossBoa
                             // The player is made visible again
                             player.Color = Color.White;
                             crossbow.Color = Color.White;
+
+                            Update(player);
                         }
                     }
                 }
