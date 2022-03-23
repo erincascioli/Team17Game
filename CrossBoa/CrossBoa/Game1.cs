@@ -319,14 +319,18 @@ namespace CrossBoa
                         LevelManager.LoadLevel("TestingFile");
                     }
 
-                    /*if (LevelManager.Exit.IsOpen)
+                    if (LevelManager.Exit.IsOpen)
                     {
-                        Camera.FollowPlayer(player);
+                        //Camera.FollowPlayer(player);
+                        if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle))
+                        {
+                            LevelManager.LevelTransition();
+                        }
                     }
                     else
                     {
                         Camera.Center();
-                    }*/
+                    }
 
                     break;
 

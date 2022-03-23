@@ -114,5 +114,12 @@ namespace CrossBoa
                 cameraX = 0;
             }
         }
+
+        public static void MoveCamera(int moveX, int moveY)
+        {
+            cameraX += moveX;
+            cameraY += moveY;
+
+        }
     }
 }

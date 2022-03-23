@@ -418,7 +418,7 @@ namespace CrossBoa
             previousExit = exitLocation;
 
             // Exit location placement
-            switch (Game1.RNG.Next(0, 4))
+            switch (Game1.RNG.Next(0, 1))
             {
             // Top
             case 0:
@@ -515,7 +515,10 @@ namespace CrossBoa
         /// </summary>
         public static void LevelTransition()
         {
-
+            if (exitLocation == ExitLocation.Top)
+            {
+                Camera.MoveCamera(0, 30);
+            }
         }
 
         public enum ExitLocation
