@@ -32,7 +32,9 @@ namespace CrossBoa
         private bool isDebugActive;
         private bool isInvincibilityActive = false; // Default
 
+        private KeyboardState kbState;
         private KeyboardState previousKBState;
+        private MouseState mState;
         private MouseState previousMState;
 
         // Assets
@@ -220,11 +222,12 @@ namespace CrossBoa
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-            KeyboardState kbState = Keyboard.GetState();
-            MouseState mState = Mouse.GetState();
+            kbState = Keyboard.GetState();
+            mState = Mouse.GetState();
 
             switch (gameState)
             {
+                // Main Menu
                 case GameState.MainMenu:
 
                     // Update
@@ -232,158 +235,49 @@ namespace CrossBoa
 
                     // Check state changes
                     if (playButton.HasBeenPressed())
-                    {
                         gameState = GameState.Game;
-                    }
 
                     break;
 
+                // Game
                 case GameState.Game:
-                    // Update all GameObjects
-                    Camera.Update(kbState, gameTime);
 
-                    for (int i = 0; i < gameObjectList.Count; i++)
-                    {
-                        // Fixes crossbow moving off of player character
-                        if (gameObjectList[i] is CrossBow)
-                        {
-                            // CollisionManager checks for collisions
-                            CollisionManager.CheckCollision(isInvincibilityActive);
-                        }
+                    // Update
+                    UpdateGame(gameTime);
 
-                        // Delete enemies from lists after they die
-                        IEnemy enemy;
-                        if ((enemy = gameObjectList[i] as IEnemy) != null && !enemy.IsAlive)
-                        {
-                            gameObjectList.RemoveAt(i);
-                            i--;
-                        }
-                        else
-                        {
-                            gameObjectList[i].Update(gameTime);
-                        }
-                    }
-
+                    // Check state changes
                     if (player.CurrentHealth <= 0)
-                    {
-                        gameState = GameState.GameOver;
-                        player.CurrentHealth = DefaultPlayerHealth;
-                    }
-
-                    // DEBUG
-                    if (isDebugActive)
-                    {
-                        // Spawn slimes when pressing E
-                        if (kbState.IsKeyDown(Keys.E) && !previousKBState.IsKeyDown(Keys.E))
-                        {
-                            SpawnSlime(mState.Position);
-                        }
-
-                        /*// Shake the screen if the player presses space while debug is active
-                        if (kbState.IsKeyDown(Keys.Space))
-                        {
-                            Camera.ShakeScreen(20);
-                        }*/
-                    }
-
-                    if (isDebugActive && kbState.IsKeyDown(Keys.F) && !previousKBState.IsKeyDown(Keys.F))
-                    {
-                            isInvincibilityActive = !isInvincibilityActive;
-                    }
-
-                    if (!isDebugActive)
-                    {
-                        isInvincibilityActive = false;
-                    }
-
-                    // Fires the bow on click.
-                    if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
-                        && !pauseButton.IsMouseOver())
-                    {
-                        crossbow.Shoot(playerArrow);
-                    }
-
-                    if (playerArrow != null)
-                        playerArrow.Update(gameTime);
-
-                    pauseButton.Update(gameTime);
-
-                    // Pause if player presses pause key or escape
-                    if (pauseButton.HasBeenPressed() ||
-                        (kbState.IsKeyDown(Keys.Escape) && previousKBState.IsKeyUp(Keys.Escape)))
-                        gameState = GameState.Pause;
-
-                    if (LevelManager.Update(player, ScreenWidth, ScreenHeight))
-                    {
-                        SpawnSlime(new Point(500, 400));
-                        LevelManager.LoadLevel("TestingFile");
-                    }
-
-                    /*if (LevelManager.Exit.IsOpen)
-                    {
-                        Camera.FollowPlayer(player);
-                    }
-                    else
-                    {
-                        Camera.Center();
-                    }*/
+                        GameOver();
 
                     break;
 
+                // Settings - NOT YET IMPLEMENTED
                 case GameState.Settings:
 
                     break;
 
+                // Credits - NOT YET IMPLEMENTED
                 case GameState.Credits:
 
                     break;
 
+                // Pause
                 case GameState.Pause:
 
-                    playButton.Update(gameTime);
-                    debugButton.Update(gameTime);
-
-                    // Resume if player presses pause key or escape
-                    if (playButton.HasBeenPressed() ||
-                        (kbState.IsKeyDown(Keys.Escape) && previousKBState.IsKeyUp(Keys.Escape)))
-                        gameState = GameState.Game;
-
-                    // Enables debug if player presses debug button
-                    if (debugButton.HasBeenPressed())
-                        isDebugActive = !isDebugActive;
+                    UpdatePauseMenu(gameTime);
 
                     break;
 
+                // Game Over
                 case GameState.GameOver:
 
-                    AnimateMainMenuBG();
-
-                    gameOverButton.Update(gameTime);
-
-                    if (gameOverButton.HasBeenPressed())
-                    {
-                        gameState = GameState.MainMenu;
-                        
-                        foreach (GameObject i in playerHealthBar)
-                        {
-                            i.Sprite = fullHeart;
-                        }
-                    }
+                    UpdateGameOver(gameTime);
 
                     break;
-
-                case GameState.GameWin:
-
-                    break;
-
             }
-
-            // TEST CODE THAT MAKES THE PROJECTILE FOLLOW THE MOUSE
-            // if (testProjectile != null) testProjectile.Position = mState.Position.ToVector2();
 
             previousKBState = kbState;
             previousMState = mState;
-
 
             base.Update(gameTime);
         }
@@ -433,8 +327,6 @@ namespace CrossBoa
                     DrawGameOver();
                     break;
             }
-
-            
 
             base.Draw(gameTime);
         }
@@ -509,6 +401,89 @@ namespace CrossBoa
         }
 
         // Game
+        private void UpdateGame(GameTime gameTime)
+        {
+            // Update all GameObjects
+            Camera.Update(kbState, gameTime);
+
+            for (int i = 0; i < gameObjectList.Count; i++)
+            {
+                // Fixes crossbow moving off of player character
+                if (gameObjectList[i] is CrossBow)
+                {
+                    // CollisionManager checks for collisions
+                    CollisionManager.CheckCollision(isInvincibilityActive);
+                }
+
+                // Delete enemies from lists after they die
+                IEnemy enemy;
+                if ((enemy = gameObjectList[i] as IEnemy) != null && !enemy.IsAlive)
+                {
+                    gameObjectList.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    gameObjectList[i].Update(gameTime);
+                }
+            }
+
+            // Fires the bow on click.
+            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
+                && !pauseButton.IsMouseOver())
+            {
+                crossbow.Shoot(playerArrow);
+            }
+
+            // Update the player arrow
+            if (playerArrow != null)
+                playerArrow.Update(gameTime);
+
+            // Pause if player presses pause key or escape
+            pauseButton.Update(gameTime);
+            if (pauseButton.HasBeenPressed() ||
+                WasKeyPressed(Keys.Escape))
+                gameState = GameState.Pause;
+
+            // Update the level manager
+            if (LevelManager.Update(player, ScreenWidth, ScreenHeight))
+            {
+                SpawnSlime(new Point(500, 400));
+                LevelManager.LoadLevel("TestingFile");
+            }
+
+            /*if (LevelManager.Exit.IsOpen)
+            {
+                Camera.FollowPlayer(player);
+            }
+            else
+            {
+                Camera.Center();
+            }*/
+
+            // DEBUG
+            if (isDebugActive)
+            {
+                // Spawn slimes when pressing E
+                if (WasKeyPressed(Keys.E))
+                {
+                    SpawnSlime(mState.Position);
+                }
+
+                // Shake the screen if the player presses space while debug is active
+                if (kbState.IsKeyDown(Keys.Space))
+                {
+                    Camera.ShakeScreen(20);
+                }
+            }
+
+            if (isDebugActive && WasKeyPressed(Keys.F))
+                isInvincibilityActive = !isInvincibilityActive;
+            if (!isDebugActive)
+                isInvincibilityActive = false;
+
+        }
+
         /// <summary>
         /// Includes all of the Draw code for Game GameState
         /// </summary>
@@ -605,6 +580,24 @@ namespace CrossBoa
             _spriteBatch.End();
         }
 
+        private void UpdatePauseMenu(GameTime gameTime)
+        {
+            playButton.Update(gameTime);
+            debugButton.Update(gameTime);
+
+            // Resume if player presses pause key or escape
+            if (playButton.HasBeenPressed() ||
+                WasKeyPressed(Keys.Escape))
+                gameState = GameState.Game;
+
+            // Enables debug if player presses debug button
+            if (debugButton.HasBeenPressed())
+                isDebugActive = !isDebugActive;
+        }
+
+
+
+
         /// <summary>
         /// Draw the game over screen
         /// </summary>
@@ -671,6 +664,25 @@ namespace CrossBoa
             gameObjectList.Add(testTotem);
         }
 
+        /// <summary>
+        /// Run this when the game should end
+        /// </summary>
+        public void GameOver()
+        {
+            gameState = GameState.GameOver;
+            player.CurrentHealth = DefaultPlayerHealth;
+        }
+
+        /// <summary>
+        /// Checks if this was the first frame a key was pressed
+        /// </summary>
+        /// <param name="key">The key to check</param>
+        /// <returns>True if the key was pressed this frame but not pressed last frame; false otherwise</returns>
+        public bool WasKeyPressed(Keys key)
+        {
+            return kbState.IsKeyDown(key) && previousKBState.IsKeyUp(key);
+        }
+
         #endregion
     }
 
@@ -682,6 +694,5 @@ namespace CrossBoa
         Credits,
         Pause,
         GameOver,
-        GameWin
     }
 }
