@@ -158,6 +158,17 @@ namespace CrossBoa
                 if (kbState.IsKeyDown(Keys.D))
                     isFacingRight = true;
             }
+
+            // ~ Dodging code ~
+            // Activate a dodge on space press if the player is past the dodge cooldown.
+            //Dodge(kbState);
+
+            // If the player is past the invincibility frames and is
+            // in the dodge (can't move), give control back to the player.
+            /*if (!IsInvincible && !canMove)
+            {
+                canMove = true;
+            }*/
         }
 
         public override void Draw(SpriteBatch sb)
@@ -204,7 +215,7 @@ namespace CrossBoa
             return movementVector;
         }
 
-        /*
+        
         // UNFINISHED FEATURE - STRETCH GOAL
 
         /// <summary>
@@ -215,11 +226,13 @@ namespace CrossBoa
             // If the player presses space and can dodge
             if (kbState.IsKeyDown(Keys.Space) && timeUntilDodge < 0)
             {
-                // Dodge
-
+                timeUntilDodge = dodgeCooldown;
+                ApplyForce(CheckMovementInput(kbState) * 50);
+                canMove = false;
+                timeLeftInvincible = dodgeLength;
             }
         }
-        */
+        
 
     }
 }
