@@ -208,6 +208,11 @@ namespace CrossBoa
             {
                 sb.Draw(hitBox, i.Rectangle, Color.White);
             }
+
+            foreach (Collectible c in collectibles)
+            {
+                c.Draw(sb);
+            }
         }
 
         /// <summary>
