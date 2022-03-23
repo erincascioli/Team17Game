@@ -41,6 +41,7 @@ namespace CrossBoa
         private Texture2D whiteSquareSprite;
         private Texture2D playerArrowSprite;
         private Texture2D slimeSpritesheet;
+        private Texture2D slimeDeathSpritesheet;
         private Texture2D snakeSprite;
         private Texture2D crossbowSprite;
         private Texture2D hitBox;
@@ -116,6 +117,7 @@ namespace CrossBoa
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
             slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
+            slimeDeathSpritesheet = Content.Load<Texture2D>("FacelessSlimeDeathSpritesheet");
             emptyHeart = Content.Load<Texture2D>("Empty Heart");
             fullHeart = Content.Load<Texture2D>("Full Heart");
             snakeSprite = Content.Load<Texture2D>("snake");
@@ -674,6 +676,7 @@ namespace CrossBoa
         {
             Slime newSlime = new Slime(
                 slimeSpritesheet,
+                slimeDeathSpritesheet,
                 3,
                 new Rectangle(position, new Point(64, 64)));
             CollisionManager.AddEnemy(newSlime);

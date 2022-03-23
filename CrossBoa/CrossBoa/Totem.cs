@@ -39,6 +39,7 @@ namespace CrossBoa
                 new Vector2(0,0),
                 false);
             isAlive = true;
+            color = Color.White;
         }
 
         // ~~~ METHODS ~~~
