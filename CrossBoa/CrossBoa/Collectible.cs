@@ -36,10 +36,6 @@ namespace CrossBoa
         {
             if (!IsCollected)
             {
-                base.Draw(spriteBatch);
-            }
-            else
-            {
                 spriteBatch.Draw(Sprite, hitbox, Color.White);
             }
         }
