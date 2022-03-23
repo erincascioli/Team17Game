@@ -13,7 +13,8 @@ namespace CrossBoa
         Resting,
         Jumping,
         Falling,
-        Squished
+        Squished,
+        Dying
     }
 
     /// <summary>
@@ -24,8 +25,8 @@ namespace CrossBoa
     public class Slime : Enemy, ICollidable
     {
         // ~~~ FIELDS ~~~
-        private const float movementForce = 45000f;
-        private const float frictionForce = 2000f;
+        private const float MovementForce = 45000f;
+        private const float FrictionForce = 2000f;
 
         // Movement fields
         private int targetX;
@@ -35,8 +36,9 @@ namespace CrossBoa
         private bool hasMovedYet;
 
         // Animation fields
+        private double timeSinceDeath;
+        private Texture2D deathSpritesheet;
         private SlimeAnimState animationState;
-        private float hurtFlashTime;
 
         // ~~~ PROPERTIES ~~~
         public override Rectangle Hitbox
@@ -45,11 +47,14 @@ namespace CrossBoa
         }
 
         // ~~~ CONSTRUCTORS ~~~
-        public Slime(Texture2D spriteSheet, int health, Rectangle rectangle) :
-            base(spriteSheet, rectangle, health, null, frictionForce)
+        public Slime(Texture2D spriteSheet, Texture2D deathSheet, int health, Rectangle rectangle) :
+            base(spriteSheet, rectangle, health, null, FrictionForce)
         {
+            deathSpritesheet = deathSheet;
+
             this.health = health;
             timeUntilMove = TimeUntilNextJump();
+            timeSinceDeath = 0;
             color = Color.White;
             isAlive = true;
             animationState = SlimeAnimState.Resting;
@@ -75,7 +80,7 @@ namespace CrossBoa
             direction = (float)Math.Acos(cosA);
             if (targetY < position.Y)
                 direction *= -1;
-            ApplyForce(direction, movementForce);
+            ApplyForce(direction, MovementForce);
 
         }
 
@@ -86,15 +91,18 @@ namespace CrossBoa
         /// <param name="force">How much force to knock this enemy back by</param>
         public override void GetKnockedBack(ICollidable other, float force)
         {
-            // If the slime is in the air, move it to the ground
-            if (animationState != SlimeAnimState.Resting)
-                timeUntilMove = 2f;
+            if (animationState != SlimeAnimState.Dying)
+            {
+                // If the slime is in the air, move it to the ground
+                if (animationState != SlimeAnimState.Resting)
+                    timeUntilMove = 2f;
 
-            // Otherwise, if the slime hasn't moved for a while, stun it.
-            else if (timeUntilMove <= 1.2f)
-                timeUntilMove = 1.2f;
+                // Otherwise, if the slime hasn't moved for a while, stun it.
+                else if (timeUntilMove <= 1.2f)
+                    timeUntilMove = 1.2f;
 
-            base.GetKnockedBack(other, force);
+                base.GetKnockedBack(other, force);
+            }
         }
 
 
@@ -105,8 +113,30 @@ namespace CrossBoa
         public override void Draw(SpriteBatch sb)
         {
             // Draws from the spritesheet based on the animation state
-            if (isAlive)
+            if (isAlive && animationState != SlimeAnimState.Dying)
                 sb.Draw(sprite, Rectangle, new Rectangle(16 * (int)animationState, 0, 16, 16), color);
+
+            // If the slime is dying, play death animation
+            else
+            {
+                Vector2 deathFrameScale = new Vector2(4, 2.5f);
+
+                // Time per frame is 0.08s
+                int currentFrame = (int)Math.Floor(timeSinceDeath / 0.065);
+
+                // Width of sprites in sheet is 64, Height is 40
+                // Slime in first frame is positioned at 25, 28
+                sb.Draw(deathSpritesheet, 
+                    new Rectangle((position - (new Vector2(25, 40) * deathFrameScale)).ToPoint(), (size.ToVector2() * deathFrameScale).ToPoint()), 
+                    new Rectangle(currentFrame * 64, 0, 64, 40), 
+                    Color.White);
+
+                // Delete this slime once the death animation finishes
+                if (currentFrame >= 12)
+                {
+                    Destroy();
+                }
+            }
         }
 
         /// <summary>
@@ -115,7 +145,7 @@ namespace CrossBoa
         /// <param name="gameTime">A reference to the GameTime</param>
         public override void Update(GameTime gameTime)
         {
-            if (isAlive)
+            if (isAlive && animationState != SlimeAnimState.Dying)
             {
                 // Update the timer
                 timeUntilMove -= gameTime.ElapsedGameTime.TotalSeconds;
@@ -135,9 +165,12 @@ namespace CrossBoa
                     timeUntilMove = TimeUntilNextJump();
                     hasMovedYet = false;
                 }
-
-                UpdateAnimations(gameTime);
             }
+
+            UpdateAnimations(gameTime);
+
+            if (animationState == SlimeAnimState.Dying)
+                timeSinceDeath += gameTime.ElapsedGameTime.TotalSeconds;
 
             base.Update(gameTime);
         }
@@ -149,16 +182,19 @@ namespace CrossBoa
         public void UpdateAnimations(GameTime gameTime)
         {
             // Movement animation state
-            animationState = SlimeAnimState.Resting;            // Rest if not doing anything else
-            
-            if (timeUntilMove < 0.7 && timeUntilMove >= 0.5)    // Anticipate for 0.2 seconds
-                animationState = SlimeAnimState.Squished;
-            if (timeUntilMove < 0.5 && timeUntilMove >= 0.25)   // Jump for 0.25 seconds
-                animationState = SlimeAnimState.Jumping;
-            if (timeUntilMove < 0.25 && timeUntilMove >= 0.1)   // Fall for 0.15 seconds
-                animationState = SlimeAnimState.Falling;
-            if (timeUntilMove < 0.1)                            // Land for 0.1 seconds
-                animationState = SlimeAnimState.Squished;
+            if (isAlive && animationState != SlimeAnimState.Dying)
+            {
+                animationState = SlimeAnimState.Resting;                // Rest if not doing anything else
+
+                if (timeUntilMove < 0.7 && timeUntilMove >= 0.5)        // Anticipate for 0.2 seconds
+                    animationState = SlimeAnimState.Squished;
+                if (timeUntilMove < 0.5 && timeUntilMove >= 0.25)       // Jump for 0.25 seconds
+                    animationState = SlimeAnimState.Jumping;
+                if (timeUntilMove < 0.25 && timeUntilMove >= 0.1)       // Fall for 0.15 seconds
+                    animationState = SlimeAnimState.Falling;
+                if (timeUntilMove < 0.1)                                // Land for 0.1 seconds
+                    animationState = SlimeAnimState.Squished;
+            }
         }
 
         /// <summary>
@@ -170,6 +206,25 @@ namespace CrossBoa
             // Random number between 2 and 3.75
             totalTimeBeforeNextJump = Game1.RNG.NextDouble() * 1.75 + 2;
             return totalTimeBeforeNextJump;
+        }
+
+        /// <summary>
+        /// Plays the death animation and then kills this enemy
+        /// </summary>
+        public override void Die()
+        {
+            animationState = SlimeAnimState.Dying;
+        }
+
+        /// <summary>
+        /// Deletes this slime after the death animation finishes
+        /// </summary>
+        public void Destroy()
+        {
+            // Delete this slime
+            animationState = SlimeAnimState.Resting;
+            position = new Vector2(-1000, -1000);
+            timeSinceDeath = 0;
         }
     }
 }
