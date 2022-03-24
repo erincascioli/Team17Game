@@ -263,7 +263,7 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Purpose: Helper method for deciding whether doors need to be opened or closed
+        /// Purpose: Helper method for letting the player resume the game after a transition
         /// Restrictions: none
         /// </summary>
         /// <param name="player"></param>
@@ -289,7 +289,10 @@ namespace CrossBoa
             }
         }
 
-        // Determines the placement of the doors in the level
+        /// <summary>
+        /// Purpose: Determines how doors will be placed once a new level is loaded in
+        /// Restrictions: none
+        /// </summary>
         public static void PlaceDoors()
         {
             // Entrance location placement; always opposite of the previous exit
@@ -443,8 +446,10 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Purpose: Helps facilitate the transition between levels: Will be more effective if a camera is used
-        /// Restrictions: ?
+        /// Purpose: Helps facilitate the transition between levels
+        ///          First part will execute before a new level is loaded
+        ///          Second level executes after a level is loaded
+        /// Restrictions: God I sure hope there isn't any
         /// </summary>
         public static void LevelTransition(Player player, CrossBow crossbow, GameTime gameTime)
         {
