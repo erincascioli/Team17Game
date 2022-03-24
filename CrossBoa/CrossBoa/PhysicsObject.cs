@@ -82,7 +82,7 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// 
+        /// Updates this object's physics and friction
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
