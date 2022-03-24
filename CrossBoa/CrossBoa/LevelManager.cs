@@ -278,6 +278,7 @@ namespace CrossBoa
                 forcedX = 0;
                 forcedY = 0;
 
+                // Arrow is returned to the placer during a level transition
                 if (CollisionManager.PlayerArrow.IsInAir)
                 {
                     CollisionManager.Crossbow.PickUpArrow();
@@ -350,7 +351,7 @@ namespace CrossBoa
             
 
             // Exit location placement
-            switch (Game1.RNG.Next(0, 3))
+            switch (Game1.RNG.Next(0, 4))
             {
             // Top
             case 0:
@@ -531,7 +532,7 @@ namespace CrossBoa
                 {
                     // Player and Camera go to the bottom of the level
                     Camera.MoveCamera(Game1.ScreenWidth + 1700, 0);
-                    CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X - 2100,
+                    CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X - 2000,
                         CollisionManager.Player.Position.Y);
 
                     // Prompts the next level to load in
@@ -541,6 +542,39 @@ namespace CrossBoa
                 if (player.Position.X > Game1.ScreenWidth + 100)
                 {
                     Camera.MoveCamera(-90, 0);
+
+                    // player is made invisible
+                    player.Color = Color.Black;
+                    crossbow.Color = Color.Black;
+                }
+            }
+            if (exitLocation == ExitLocation.Left)
+            {
+                // Prevents player from getting trapped on the wall
+                if (player.Rectangle.Intersects(new Rectangle((int)exit.Position.X, (int)exit.Position.Y, exit.Width / 2, exit.Height)))
+                {
+                    // Player Movement is locked for the transition
+                    player.CanMove = false;
+
+                    // Vectors for player movement
+                    forcedX = -1;
+                    forcedY = 0;
+                }
+
+                if (Camera.CameraX >= Game1.ScreenWidth + 1100)
+                {
+                    // Player and Camera go to the bottom of the level
+                    Camera.MoveCamera(-Game1.ScreenWidth - 1700, 0);
+                    CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X + 2000,
+                        CollisionManager.Player.Position.Y);
+
+                    // Prompts the next level to load in
+                    LoadLevel("TestingFile");
+                }
+
+                if (player.Position.X < -100)
+                {
+                    Camera.MoveCamera(90, 0);
 
                     // player is made invisible
                     player.Color = Color.Black;
@@ -617,6 +651,34 @@ namespace CrossBoa
                             Update(player);
                         }
                     }
+                }
+                if (previousExit == ExitLocation.Left && player.Position.X > 0 && !(player.Position.Y > Game1.ScreenHeight) && !(player.Position.Y < 0))
+                {
+                    Camera.MoveCamera(90, 0);
+
+
+                    if (!(Camera.CameraX < 0))
+                    {
+                        // Camera is locked to the center of the screen
+                        Camera.Center();
+
+                        // The player is made visible again
+                        player.Color = Color.White;
+                        crossbow.Color = Color.White;
+
+                        // Conditions to give player control again
+                        if (player.Position.X < entrance.Position.X - player.Width - 10)
+                        {
+                            Update(player);
+                        }
+                    }
+                }
+
+                // Arrow will return to the player if still on screen
+                if (CollisionManager.PlayerArrow.IsActive && !CollisionManager.PlayerArrow.IsInAir)
+                {
+                    CollisionManager.PlayerArrow.GetSuckedIntoPlayer((int)MathHelper.DistanceSquared(
+                        new Point((int)player.Position.X, (int)player.Position.Y), CollisionManager.PlayerArrow.Size), 9000);
                 }
             }
         }
