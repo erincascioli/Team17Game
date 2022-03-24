@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CrossBoa
+﻿namespace CrossBoa.Interfaces
 {
     /// <summary>
     /// Written by Leo Schindler-Gerendasi
