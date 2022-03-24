@@ -53,7 +53,7 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Ticks this object every frame
+        /// Updates this object's physics and friction, and turns this enemy red when hit
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)

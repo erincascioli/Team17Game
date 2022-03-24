@@ -114,15 +114,15 @@ namespace CrossBoa
         {
             // Draws from the spritesheet based on the animation state
             if (isAlive && animationState != SlimeAnimState.Dying)
-                sb.Draw(sprite, Rectangle, new Rectangle(16 * (int)animationState, 0, 16, 16), color);
+                sb.Draw(sprite, Rectangle, new Rectangle(16 * (int)animationState, 0, 16, 15), color);
 
             // If the slime is dying, play death animation
             else
             {
                 Vector2 deathFrameScale = new Vector2(4, 2.5f);
 
-                // Time per frame is 0.08s
-                int currentFrame = (int)Math.Floor(timeSinceDeath / 0.065);
+                // Time per frame is 0.054s
+                int currentFrame = (int)Math.Floor(timeSinceDeath / 0.054);
 
                 // Width of sprites in sheet is 64, Height is 40
                 // Slime in first frame is positioned at 25, 28
@@ -132,7 +132,7 @@ namespace CrossBoa
                     Color.White);
 
                 // Delete this slime once the death animation finishes
-                if (currentFrame >= 12)
+                if (currentFrame * 64 >= deathSpritesheet.Width)
                 {
                     Destroy();
                 }
@@ -165,14 +165,14 @@ namespace CrossBoa
                     timeUntilMove = TimeUntilNextJump();
                     hasMovedYet = false;
                 }
+
+                base.Update(gameTime);
             }
 
             UpdateAnimations(gameTime);
 
             if (animationState == SlimeAnimState.Dying)
                 timeSinceDeath += gameTime.ElapsedGameTime.TotalSeconds;
-
-            base.Update(gameTime);
         }
 
         /// <summary>
@@ -225,6 +225,15 @@ namespace CrossBoa
             animationState = SlimeAnimState.Resting;
             position = new Vector2(-1000, -1000);
             timeSinceDeath = 0;
+        }
+
+        /// <summary>
+        /// Deals damage on contact with the player.
+        /// </summary>
+        public override void DealContactDamage(Player player)
+        {
+            if(animationState != SlimeAnimState.Dying)
+                base.DealContactDamage(player);
         }
     }
 }

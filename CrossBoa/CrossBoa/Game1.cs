@@ -117,7 +117,7 @@ namespace CrossBoa
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
             slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
-            slimeDeathSpritesheet = Content.Load<Texture2D>("FacelessSlimeDeathSpritesheet");
+            slimeDeathSpritesheet = Content.Load<Texture2D>("FacelessSlimeDeathSpritesheet-sheet");
             emptyHeart = Content.Load<Texture2D>("Empty Heart");
             fullHeart = Content.Load<Texture2D>("Full Heart");
             snakeSprite = Content.Load<Texture2D>("snake");
