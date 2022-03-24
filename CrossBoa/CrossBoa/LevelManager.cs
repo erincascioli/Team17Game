@@ -208,12 +208,12 @@ namespace CrossBoa
                         /*case ExitLocation.Top:
                             CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
                                 CollisionManager.Player.Position.Y + 1000);
-                            break;*/
+                            break;
 
                         case ExitLocation.Bottom:
                             CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
                                 CollisionManager.Player.Position.Y - 1000);
-                            break;
+                            break;*/
 
                         case ExitLocation.Right:
                             CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X - 1700,
@@ -294,64 +294,19 @@ namespace CrossBoa
         /// Restrictions: none
         /// </summary>
         /// <param name="player"></param>
-        /// <param name="screenWidth"></param>
-        /// <param name="screenHeight"></param>
         /// <returns></returns>
         public static void Update(Player player)
         {
             // Will close off the entrance after a player fully enters a stage
             if (entrance.IsOpen)
             {
-                switch (previousExit)
-                {
-                    // Entering from the bottom
-                    case ExitLocation.Top:
-                        if (player.Rectangle.Bottom < entrance.Rectangle.Top)
-                        {
-                            entrance.ChangeDoorState();
-                            player.CanMove = true;
-                            forcedX = 0;
-                            forcedY = 0;
+                entrance.ChangeDoorState();
+                player.CanMove = true;
+                forcedX = 0;
+                forcedY = 0;
 
-                            // Adds door to collisionManager
-                            CollisionManager.UpdateLevel();
-                        }
-                        break;
-
-                    // Entering from the top
-                    case ExitLocation.Bottom:
-                        if (player.Rectangle.Top > entrance.Rectangle.Bottom)
-                        {
-                            entrance.ChangeDoorState();
-
-                            // Adds door to collisionManager
-                            CollisionManager.UpdateLevel();
-                        }
-                        break;
-
-                    // Entering from the left
-                    case ExitLocation.Right:
-                        if (player.Rectangle.Left > entrance.Rectangle.Right)
-                        {
-                            entrance.ChangeDoorState();
-
-                            // Adds door to collisionManager
-                            CollisionManager.UpdateLevel();
-                        }
-
-                        break;
-
-                    // Entering from the right
-                    case ExitLocation.Left:
-                        if (player.Rectangle.Right < entrance.Rectangle.Left)
-                        {
-                            entrance.ChangeDoorState();
-
-                            // Adds door to collisionManager
-                            CollisionManager.UpdateLevel();
-                        }
-                        break;
-                }
+                // Adds door to collisionManager
+                CollisionManager.UpdateLevel();
             }
         }
 
@@ -416,7 +371,7 @@ namespace CrossBoa
             previousExit = exitLocation;
 
             // Exit location placement
-            switch (Game1.RNG.Next(0, 1))
+            switch (Game1.RNG.Next(2, 3))
             {
             // Top
             case 0:
@@ -533,11 +488,8 @@ namespace CrossBoa
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
                                 CollisionManager.Player.Position.Y + 1300);
 
-                    
-
-
+                    // Prompts the next level to load in
                     LoadLevel("TestingFile");
-                    //exit.ChangeDoorState();
                 }
 
                 if (player.Position.Y < -100)
@@ -549,30 +501,80 @@ namespace CrossBoa
                     crossbow.Color = Color.Black;
                 }
             }
+            if (exitLocation == ExitLocation.Bottom)
+            {
 
-            
+                if (player.Rectangle.Intersects(exit.Rectangle))
+                {
+                    // Player Movement is locked for the transition
+                    player.CanMove = false;
+
+                    // Vectors for player movement
+                    forcedX = 0;
+                    forcedY = 1;
+                }
+
+                if (Camera.CameraY <= -Game1.ScreenHeight - 1100)
+                {
+                    // Player and Camera go to the bottom of the level
+                    Camera.MoveCamera(0, Game1.ScreenHeight + 1700);
+                    CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
+                        CollisionManager.Player.Position.Y - 1300);
+
+                    // Prompts the next level to load in
+                    LoadLevel("TestingFile");
+                }
+
+                if (player.Position.Y > Game1.ScreenHeight + 100)
+                {
+                    Camera.MoveCamera(0, -90);
+
+                    // player is made invisible
+                    player.Color = Color.Black;
+                    crossbow.Color = Color.Black;
+                }
+            }
+
+
             // Overrides player movement
             if (!player.CanMove)
             {
                 player.ForceMove(forcedX, forcedY, gameTime);
 
                 // Makes sure consecutive blocks of code can't happen
-                if (player.Position.Y > 0)
+                if (previousExit == ExitLocation.Top && player.Position.Y > 0)
                 {
-                    if (previousExit == ExitLocation.Top)
+                    Camera.MoveCamera(0, 90);
+
+
+                    if (!(Camera.CameraY < 0))
                     {
-                            Camera.MoveCamera(0, 90);
+                        // Camera is locked to the center of the screen
+                        Camera.Center();
+
+                        // The player is made visible again
+                        player.Color = Color.White;
+                        crossbow.Color = Color.White;
+
+                        Update(player);
+                    }
+                }
+                if (previousExit == ExitLocation.Bottom && player.Position.Y < Game1.ScreenHeight)
+                {
+                    Camera.MoveCamera(0, -90);
 
 
-                        if (!(Camera.CameraY < 0))
+                    if (!(Camera.CameraY > 0))
+                    {
+                        // Camera is locked to the center of the screen
+                        Camera.Center();
+
+                        // The player is made visible again
+                        player.Color = Color.White;
+                        crossbow.Color = Color.White;
+
+                        if (player.Position.Y - player.Height - 10 > entrance.Position.Y)
                         {
-                            // Camera is locked to the center of the screen
-                            Camera.Center();
-
-                            // The player is made visible again
-                            player.Color = Color.White;
-                            crossbow.Color = Color.White;
-
                             Update(player);
                         }
                     }
@@ -582,6 +584,7 @@ namespace CrossBoa
 
         public enum ExitLocation
         {
+            Null, // So doors don't mess up
             Top, 
             Right,
             Bottom,
