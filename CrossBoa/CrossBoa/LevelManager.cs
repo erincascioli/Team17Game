@@ -470,8 +470,8 @@ namespace CrossBoa
         {
             if (exitLocation == ExitLocation.Top)
             {   
-
-                if (player.Rectangle.Intersects(exit.Rectangle))
+                // Prevents player from getting trapped on the wall
+                if (player.Rectangle.Intersects(new Rectangle((int)exit.Position.X, (int)exit.Position.Y, exit.Width, exit.Height / 2)))
                 {
                     // Player Movement is locked for the transition
                     player.CanMove = false;
@@ -503,8 +503,8 @@ namespace CrossBoa
             }
             if (exitLocation == ExitLocation.Bottom)
             {
-
-                if (player.Rectangle.Intersects(exit.Rectangle))
+                // Prevents player from getting trapped on the wall
+                if (player.Rectangle.Intersects(new Rectangle((int)exit.Position.X, (int)exit.Position.Y + exit.Height / 2, exit.Width, exit.Height / 2)))
                 {
                     // Player Movement is locked for the transition
                     player.CanMove = false;
@@ -535,7 +535,7 @@ namespace CrossBoa
                 }
             }
 
-
+            // Part 2
             // Overrides player movement
             if (!player.CanMove)
             {
@@ -556,7 +556,11 @@ namespace CrossBoa
                         player.Color = Color.White;
                         crossbow.Color = Color.White;
 
-                        Update(player);
+                        // Conditions to give player control again
+                        if (player.Position.Y + player.Height + 10 < entrance.Position.Y)
+                        {
+                            Update(player);
+                        }
                     }
                 }
                 if (previousExit == ExitLocation.Bottom && player.Position.Y < Game1.ScreenHeight)
@@ -573,6 +577,7 @@ namespace CrossBoa
                         player.Color = Color.White;
                         crossbow.Color = Color.White;
 
+                        // Conditions to give player control again
                         if (player.Position.Y - player.Height - 10 > entrance.Position.Y)
                         {
                             Update(player);
