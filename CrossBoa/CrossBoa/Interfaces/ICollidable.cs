@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
-namespace CrossBoa
+namespace CrossBoa.Interfaces
 {
     /// <summary>
     /// Interface that gives classes a hitbox property, allowing for easier collision checking
