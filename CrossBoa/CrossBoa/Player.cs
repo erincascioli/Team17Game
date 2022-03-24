@@ -19,8 +19,9 @@ namespace CrossBoa
         private float invulnerabilityTime;
         private float dodgeCooldown;
         private float dodgeLength;
-        private float dodgeSpeed;
         private float movementForce;
+        private float dodgeInvulnerabilityTime;
+        private float dodgeSpeedBoost;
 
         // Player status tracking
         private int currentHealth;
@@ -28,8 +29,10 @@ namespace CrossBoa
         private float timeLeftInvincible;
         private bool canMove;
         private bool flashFrames;
+        private bool inDodge;
 
         private bool isFacingRight;
+        private Vector2 dodgeVector;
 
         /// <summary>
         /// Checks if the player is dead
@@ -44,7 +47,7 @@ namespace CrossBoa
         /// </summary>
         public bool IsInvincible
         {
-            get { return timeLeftInvincible > 0; }
+            get { return timeLeftInvincible > 0 || dodgeInvulnerabilityTime > 0; }
         }
 
         /// <summary>
@@ -111,7 +114,7 @@ namespace CrossBoa
             this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
             this.dodgeLength = dodgeLength;
-            this.dodgeSpeed = dodgeSpeed;
+            dodgeSpeedBoost = dodgeSpeed;
             this.canMove = true;
             color = Color.White;
         }
@@ -155,17 +158,24 @@ namespace CrossBoa
                 if (kbState.IsKeyDown(Keys.D))
                     isFacingRight = true;
             }
+            else if (inDodge)
+            {
+                dodgeInvulnerabilityTime -= totalSeconds;
+                ApplyForce(dodgeVector * movementForce * 2);
+            }
 
             // ~ Dodging code ~
             // Activate a dodge on space press if the player is past the dodge cooldown.
-            //Dodge(kbState);
+            Dodge(kbState);
 
-            // If the player is past the invincibility frames and is
-            // in the dodge (can't move), give control back to the player.
-            /*if (!IsInvincible && !canMove)
+            // If the player is in a dodge and their invincibility
+            // frames run out, give control back to the player.
+            if (inDodge && dodgeInvulnerabilityTime < 0)
             {
                 canMove = true;
-            }*/
+                maxSpeed /= dodgeSpeedBoost;
+                inDodge = false;
+            }
 
             base.Update(gameTime);
         }
@@ -223,12 +233,16 @@ namespace CrossBoa
         public void Dodge(KeyboardState kbState)
         {
             // If the player presses space and can dodge
-            if (kbState.IsKeyDown(Keys.Space) && timeUntilDodge < 0)
+            if ((kbState.IsKeyDown(Keys.Space) && timeUntilDodge < 0) &&
+                (kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) ||
+                kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.D)))
             {
                 timeUntilDodge = dodgeCooldown;
-                ApplyForce(CheckMovementInput(kbState) * 50);
+                dodgeVector = CheckMovementInput(kbState);
                 canMove = false;
-                timeLeftInvincible = dodgeLength;
+                dodgeInvulnerabilityTime = dodgeLength;
+                inDodge = true;
+                maxSpeed *= dodgeSpeedBoost;
             }
         }
         
