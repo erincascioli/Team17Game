@@ -22,9 +22,9 @@ namespace CrossBoa
         private const int DefaultPlayerFriction = 2500;
         private const int DefaultPlayerHealth = 5;
         private const float DefaultPlayerInvulnerabilityFrames = 3.5f;
-        private const float DefaultPlayerDodgeCooldown = 10;
-        private const float DefaultPlayerDodgeLength = 0.35f;
-        private const float DefaultPlayerDodgeSpeed = 500;
+        private const float DefaultPlayerDodgeCooldown = 2;
+        private const float DefaultPlayerDodgeLength = 0.25f;
+        private const float DefaultPlayerDodgeSpeed = 2f;
 
         public const int ScreenWidth = 1600;
         public const int ScreenHeight = 900;
