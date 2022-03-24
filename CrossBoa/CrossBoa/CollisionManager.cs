@@ -31,11 +31,13 @@ namespace CrossBoa
 
         public static CrossBow Crossbow
         {
+            get { return crossbow;}
             set { crossbow = value; }
         }
 
         public static Projectile PlayerArrow
         {
+            get { return playerArrow;} 
             set { playerArrow = value; }
         }
 
