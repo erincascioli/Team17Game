@@ -278,7 +278,10 @@ namespace CrossBoa
                 forcedX = 0;
                 forcedY = 0;
 
-                
+                if (CollisionManager.PlayerArrow.IsInAir)
+                {
+                    CollisionManager.Crossbow.PickUpArrow();
+                }
 
                 // Adds door to collisionManager
                 CollisionManager.UpdateLevel();
