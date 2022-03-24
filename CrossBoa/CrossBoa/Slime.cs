@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Transactions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -120,16 +121,23 @@ namespace CrossBoa
             else
             {
                 Vector2 deathFrameScale = new Vector2(4, 2.5f);
+                int currentFrame;
 
-                // Time per frame is 0.054s
-                int currentFrame = (int)Math.Floor(timeSinceDeath / 0.054);
+                // Play first 2 frames faster
+                if (timeSinceDeath <= 0.035)
+                    currentFrame = 0;
+                else if (timeSinceDeath <= 0.07)
+                    currentFrame = 1;
+                else
+                    // Time per frame is 0.0475s
+                    currentFrame = (int)Math.Floor((timeSinceDeath - 0.07) / 0.07) + 2;
 
                 // Width of sprites in sheet is 64, Height is 40
                 // Slime in first frame is positioned at 25, 28
                 sb.Draw(deathSpritesheet, 
-                    new Rectangle((position - (new Vector2(25, 40) * deathFrameScale)).ToPoint(), (size.ToVector2() * deathFrameScale).ToPoint()), 
-                    new Rectangle(currentFrame * 64, 0, 64, 40), 
-                    Color.White);
+                new Rectangle((position - (new Vector2(25, 40) * deathFrameScale)).ToPoint(), (size.ToVector2() * deathFrameScale).ToPoint()), 
+                new Rectangle(currentFrame * 64, 0, 64, 40), 
+                Color.White);
 
                 // Delete this slime once the death animation finishes
                 if (currentFrame * 64 >= deathSpritesheet.Width)
