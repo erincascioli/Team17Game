@@ -32,9 +32,8 @@ namespace CrossBoa
         // Movement fields
         private int targetX;
         private int targetY;
-        private double timeUntilMove;
+        private double timeSinceMove;
         private double totalTimeBeforeNextJump;
-        private bool hasMovedYet;
 
         // Animation fields
         private double timeSinceDeath;
@@ -54,7 +53,8 @@ namespace CrossBoa
             deathSpritesheet = deathSheet;
 
             this.health = health;
-            timeUntilMove = TimeUntilNextJump();
+            timeSinceMove = 0.5;
+            totalTimeBeforeNextJump = TimeUntilNextJump();
             timeSinceDeath = 0;
             color = Color.White;
             isAlive = true;
@@ -83,6 +83,9 @@ namespace CrossBoa
                 direction *= -1;
             ApplyForce(direction, MovementForce);
 
+            // Calculate time until next move
+            totalTimeBeforeNextJump = TimeUntilNextJump();
+            timeSinceMove = 0;
         }
 
         /// <summary>
@@ -96,16 +99,15 @@ namespace CrossBoa
             {
                 // If the slime is in the air, move it to the ground
                 if (animationState != SlimeAnimState.Resting)
-                    timeUntilMove = 2f;
+                    timeSinceMove = 1.2f;
 
                 // Otherwise, if the slime hasn't moved for a while, stun it.
-                else if (timeUntilMove <= 1.2f)
-                    timeUntilMove = 1.2f;
+                else if (timeSinceMove >= 1.2f)
+                    timeSinceMove = 1.2f;
 
                 base.GetKnockedBack(other, force);
             }
         }
-
 
         /// <summary>
         /// Draws the slime.
@@ -128,9 +130,10 @@ namespace CrossBoa
                     currentFrame = 0;
                 else if (timeSinceDeath <= 0.07)
                     currentFrame = 1;
+                // Play rest of frames
                 else
-                    // Time per frame is 0.0475s
-                    currentFrame = (int)Math.Floor((timeSinceDeath - 0.07) / 0.07) + 2;
+                    // Time per frame is 0.07s
+                    currentFrame = (int)Math.Floor((timeSinceDeath - 0.07) / 0.065) + 2;
 
                 // Width of sprites in sheet is 64, Height is 40
                 // Slime in first frame is positioned at 25, 28
@@ -153,34 +156,26 @@ namespace CrossBoa
         /// <param name="gameTime">A reference to the GameTime</param>
         public override void Update(GameTime gameTime)
         {
+            // Update the timers
+            timeSinceMove += gameTime.ElapsedGameTime.TotalSeconds;
+            if (animationState == SlimeAnimState.Dying)
+                timeSinceDeath += gameTime.ElapsedGameTime.TotalSeconds;
+
             if (isAlive && animationState != SlimeAnimState.Dying)
             {
-                // Update the timer
-                timeUntilMove -= gameTime.ElapsedGameTime.TotalSeconds;
-
                 // If the slime is ready to jump, push the slime towards the player
                 // push the slime towards the player.
-                if (timeUntilMove <= 0.5 && !hasMovedYet)
+                if (timeSinceMove >= totalTimeBeforeNextJump)
                 {
                     targetX = (int)Game1.Player.Position.X;
                     targetY = (int)Game1.Player.Position.Y;
                     Move();
-                    hasMovedYet = true;
-                }
-
-                if (timeUntilMove <= 0)
-                {
-                    timeUntilMove = TimeUntilNextJump();
-                    hasMovedYet = false;
                 }
 
                 base.Update(gameTime);
             }
 
             UpdateAnimations(gameTime);
-
-            if (animationState == SlimeAnimState.Dying)
-                timeSinceDeath += gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         /// <summary>
@@ -192,16 +187,18 @@ namespace CrossBoa
             // Movement animation state
             if (isAlive && animationState != SlimeAnimState.Dying)
             {
-                animationState = SlimeAnimState.Resting;                // Rest if not doing anything else
+                
 
-                if (timeUntilMove < 0.7 && timeUntilMove >= 0.5)        // Anticipate for 0.2 seconds
+                if (timeSinceMove >= totalTimeBeforeNextJump - 0.2)     // Anticipate for 0.2 seconds
                     animationState = SlimeAnimState.Squished;
-                if (timeUntilMove < 0.5 && timeUntilMove >= 0.25)       // Jump for 0.25 seconds
+                else if (timeSinceMove < 0.25)                          // Jump for 0.25 seconds
                     animationState = SlimeAnimState.Jumping;
-                if (timeUntilMove < 0.25 && timeUntilMove >= 0.1)       // Fall for 0.15 seconds
+                else if (timeSinceMove < 0.4)                           // Fall for 0.15 seconds
                     animationState = SlimeAnimState.Falling;
-                if (timeUntilMove < 0.1)                                // Land for 0.1 seconds
+                else if (timeSinceMove < 0.5)                           // Land for 0.1 seconds
                     animationState = SlimeAnimState.Squished;
+                else                                                    // Rest if not doing anything else
+                    animationState = SlimeAnimState.Resting;
             }
         }
 
