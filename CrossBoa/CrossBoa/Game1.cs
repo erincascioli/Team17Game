@@ -441,7 +441,7 @@ namespace CrossBoa
                     gameObjectList.RemoveAt(i);
                     i--;
                 }
-                else
+                else if (!(gameObjectList[i] == player && !player.CanMove))
                 {
                     gameObjectList[i].Update(gameTime);
                 }

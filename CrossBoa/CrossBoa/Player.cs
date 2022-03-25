@@ -241,7 +241,7 @@ namespace CrossBoa
 
             // Apply the movement
             ApplyForce(movementVector * movementForce);
-            ApplyFriction(gameTime);
+            //ApplyFriction(gameTime);
 
             UpdatePhysics(gameTime);
         }
