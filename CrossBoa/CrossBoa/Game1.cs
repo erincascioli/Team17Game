@@ -464,22 +464,6 @@ namespace CrossBoa
                 WasKeyPressed(Keys.Escape))
                 gameState = GameState.Pause;
 
-            // Update the level manager
-            if (LevelManager.Update(player, ScreenWidth, ScreenHeight))
-            {
-                SpawnSlime(new Point(500, 400));
-                LevelManager.LoadLevel("TestingFile");
-            }
-
-            /*if (LevelManager.Exit.IsOpen)
-            {
-                Camera.FollowPlayer(player);
-            }
-            else
-            {
-                Camera.Center();
-            }*/
-
             // DEBUG
             if (isDebugActive)
             {
@@ -501,6 +485,19 @@ namespace CrossBoa
             if (!isDebugActive)
                 isInvincibilityActive = false;
 
+            if (LevelManager.Exit.IsOpen || !player.CanMove)
+            {
+                //Camera.FollowPlayer(player);
+                if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle) || !player.CanMove)
+                {
+                    LevelManager.LevelTransition(player, crossbow, gameTime);
+                    //player.CanMove = false; // Prevents premature end
+                }
+            }
+            else
+            {
+                Camera.Center();
+            }
         }
 
         /// <summary>
