@@ -30,11 +30,13 @@ namespace CrossBoa.Managers
 
         public static CrossBow Crossbow
         {
+            get { return crossbow;}
             set { crossbow = value; }
         }
 
         public static Projectile PlayerArrow
         {
+            get { return playerArrow;} 
             set { playerArrow = value; }
         }
 
@@ -115,7 +117,7 @@ namespace CrossBoa.Managers
             // Collidable tiles
             foreach (Tile tile in levelObstacles)
             {
-                if (tile == LevelManager.Exit && enemies.Count == 0 && !LevelManager.Exit.IsOpen)
+                if (tile == LevelManager.Exit && enemies.Count == 0 && !LevelManager.Exit.IsOpen && player.CanMove)
                 {
                     LevelManager.Exit.ChangeDoorState();
                 }
