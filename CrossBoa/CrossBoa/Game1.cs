@@ -230,6 +230,7 @@ namespace CrossBoa
             gameObjectList.Add(crossbow);
 
             LevelManager.LContent = Content;
+            LevelManager.GameReference = this;
             LevelManager.LoadLevel("TestingFile");
         }
 
@@ -674,7 +675,7 @@ namespace CrossBoa
         /// Spawns a slime enemy
         /// </summary>
         /// <param name="position">The position to spawn the slime at</param>
-        void SpawnSlime(Point position)
+        public void SpawnSlime(Point position)
         {
             Slime newSlime = new Slime(
                 slimeSpritesheet,
