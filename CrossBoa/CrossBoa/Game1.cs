@@ -158,13 +158,6 @@ namespace CrossBoa
                 playerHealthBar.Add(new GameObject(fullHeart, new Rectangle(5 + (i * 80), 0, 80, 80)));
             }
 
-            playerArrow = new Projectile(
-                playerArrowSprite,
-                new Rectangle(-100, -100, 60, 60),
-                0f,
-                0,
-                true);
-
             crossbow = new CrossBow(
                 crossbowSprite,
                 crossbowSprite.Bounds,
@@ -221,9 +214,6 @@ namespace CrossBoa
                 new Rectangle(ScreenWidth / 2 - playHoverSprite.Width * 3 / 4,
                     ScreenHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
 
-            // Pass-in References
-            playerArrow.CrossbowReference = crossbow;
-            playerArrow.PlayerReference = player;
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
@@ -286,7 +276,7 @@ namespace CrossBoa
                 // Game Over
                 case GameState.GameOver:
 
-                    //UpdateGameOver(gameTime);
+                    UpdateGameOver(gameTime);
 
                     break;
             }
@@ -451,6 +441,22 @@ namespace CrossBoa
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
                 && !pauseButton.IsMouseOver())
             {
+                // Prevents arrow from zooming onto the screen if 
+                // the player doesn't shoot within the first 30 seconds of starting
+                if (playerArrow == null)
+                {
+                    playerArrow = new Projectile(
+                playerArrowSprite,
+                new Rectangle(-100, -100, 60, 60),
+                0f,
+                0,
+                true);
+
+                    // Pass-in References
+                    playerArrow.CrossbowReference = crossbow;
+                    playerArrow.PlayerReference = player;
+                    CollisionManager.PlayerArrow = playerArrow;
+                }
                 crossbow.Shoot(playerArrow);
             }
 
@@ -519,7 +525,7 @@ namespace CrossBoa
                 gameObject.Draw(_spriteBatch);
             }
 
-            
+            if (playerArrow != null)
             playerArrow.Draw(_spriteBatch);
 
             // DEBUG
