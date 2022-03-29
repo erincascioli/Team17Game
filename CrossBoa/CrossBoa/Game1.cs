@@ -32,7 +32,7 @@ namespace CrossBoa
         public const int ScreenHeight = 900;
 
         private bool isDebugActive;
-        private bool isDebugInvincibilityActive = false; // Default
+        private bool isGodModeActive = false; // Default
 
         private KeyboardState kbState;
         private KeyboardState previousKBState;
@@ -420,7 +420,7 @@ namespace CrossBoa
                 if (gameObjectList[i] is CrossBow)
                 {
                     // CollisionManager checks for collisions
-                    CollisionManager.CheckCollision(isDebugInvincibilityActive);
+                    CollisionManager.CheckCollision(isGodModeActive);
                 }
 
                 // Delete enemies from lists after they die
@@ -484,9 +484,9 @@ namespace CrossBoa
             }
 
             if (isDebugActive && WasKeyPressed(Keys.F))
-                isDebugInvincibilityActive = !isDebugInvincibilityActive;
+                isGodModeActive = !isGodModeActive;
             if (!isDebugActive)
-                isDebugInvincibilityActive = false;
+                isGodModeActive = false;
 
             if (LevelManager.Exit.IsOpen || !player.CanMove)
             {
