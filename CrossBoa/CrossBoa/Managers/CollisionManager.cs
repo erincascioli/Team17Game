@@ -14,9 +14,9 @@ namespace CrossBoa.Managers
     {
         private static Player player;
         private static CrossBow crossbow;
-        private static Projectile playerArrow;
+        private static PlayerArrow playerArrow;
         private static List<Enemy> enemies;
-        private static List<Projectile> enemyProjectiles;
+        private static List<Arrow> enemyProjectiles;
         private static List<Collectible> collectibles;
         private static List<Tile> levelObstacles;
         private static int alternate;
@@ -34,7 +34,7 @@ namespace CrossBoa.Managers
             set { crossbow = value; }
         }
 
-        public static Projectile PlayerArrow
+        public static PlayerArrow PlayerArrow
         {
             get { return playerArrow;} 
             set { playerArrow = value; }
@@ -44,7 +44,7 @@ namespace CrossBoa.Managers
         {
             // Lists are created
             enemies = new List<Enemy>();
-            enemyProjectiles = new List<Projectile>();
+            enemyProjectiles = new List<Arrow>();
             collectibles = new List<Collectible>();
             alternate = 0;
         }
@@ -56,7 +56,7 @@ namespace CrossBoa.Managers
         public static void CheckCollision(bool isInvincibilityActive)
         {
             // enemy Projectiles
-            foreach (Projectile i in enemyProjectiles)
+            foreach (Arrow i in enemyProjectiles)
             {
                 // First checks for player projectile collisions
                 if (i.Hitbox.Intersects(player.Hitbox))
@@ -192,7 +192,7 @@ namespace CrossBoa.Managers
                     sb.Draw(arrowPoint, playerArrow.Hitbox, Color.Red);
             }
 
-            foreach (Projectile i in enemyProjectiles)
+            foreach (PlayerArrow i in enemyProjectiles)
             {
                 sb.Draw(arrowPoint, new Rectangle(i.Hitbox.X - 2, i.Hitbox.Y - 2, 5, 5), Color.Red);
             }
@@ -230,7 +230,7 @@ namespace CrossBoa.Managers
         /// Restrictions: none
         /// </summary>
         /// <param name="projectile"></param>
-        public static void AddProjectile(Projectile projectile)
+        public static void AddProjectile(Arrow projectile)
         {
             enemyProjectiles.Add(projectile);
         }

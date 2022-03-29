@@ -9,14 +9,14 @@ namespace CrossBoa.Enemies
     {
         // ~~~ FIELDS ~~~
         private double timeSinceShot;
-        private Projectile projectile;
+        private Arrow projectile;
 
         private const double TimePerShot = 1f;
 
         /// <summary>
         /// The projectile fired by the totem. Get-only property.
         /// </summary>
-        public Projectile TotemProjectile
+        public Arrow TotemProjectile
         {
             get
             {
@@ -29,13 +29,12 @@ namespace CrossBoa.Enemies
             base(sprite, rectangle, health, null, 0)
         {
             timeSinceShot = 0f;
-            projectile = new Projectile(projectileSprite, 
+            projectile = new Arrow(projectileSprite, 
                 new Rectangle(-100,
                               -100,
                               30,
                               30),
-                new Vector2(0,0),
-                false);
+                new Vector2(0,0));
             isAlive = true;
             color = Color.White;
         }
@@ -51,10 +50,10 @@ namespace CrossBoa.Enemies
             // This enemy does not get knocked back, therefore this override does not call base
         }
 
-        public void Shoot(Projectile projectile)
+        public void Shoot(Arrow projectile)
         {
             timeSinceShot = 0f;
-            projectile.ChangeVelocity(
+            projectile.GetShot(
                 new Vector2(Rectangle.X + Width/2,
                             Rectangle.Y + Height/2),
                 (float)(Math.PI/2), 500);

@@ -9,6 +9,6 @@
         /// Shoots the projectile.
         /// </summary>
         /// <param name="projectile">The projectile to shoot.</param>
-        void Shoot(Projectile projectile);
+        void Shoot(Arrow projectile);
     }
 }
