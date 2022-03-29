@@ -20,7 +20,7 @@ namespace CrossBoa
         // A render target will make the game render to a much smaller, virtual screen
         //     before scaling it up to the proper window size
         public static RenderTarget2D gameRenderTarget;
-        public static Rectangle gameRectangle;
+        public static Rectangle gameTargetRect;
 
         // Fields
         public static Random RNG = new Random();
@@ -34,13 +34,13 @@ namespace CrossBoa
         private const float DefaultPlayerDodgeLength = 0.25f;
         private const float DefaultPlayerDodgeSpeed = 2f;
 
-        public static int screenWidth;
-        public static int screenHeight;
-        public static Rectangle screenRect;
+        public static int windowWidth;
+        public static int windowHeight;
+        public static Rectangle windowRect;
         private float outputAspectRatio;
         private float preferredAspectRatio;
 
-        private bool isDebugActive;
+        private bool isDebugActive = false;
         private bool isGodModeActive = false; // Default
 
         private KeyboardState kbState;
@@ -114,17 +114,16 @@ namespace CrossBoa
             playerHealthBar = new List<GameObject>();
 
             // --- Prepare game rendering ---
-            screenWidth = 2100;
-            screenHeight = 1100;
-            screenRect = new Rectangle(0, 0, screenWidth, screenHeight);
+            windowWidth = 2500;
+            windowHeight = 1200;
+            windowRect = new Rectangle(0, 0, windowWidth, windowHeight);
 
             // Create a render target that can be much more easily rescaled
             gameRenderTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
-            gameRectangle = gameRenderTarget.Bounds;
 
             // Set default screen size
-            _graphics.PreferredBackBufferWidth = screenWidth;
-            _graphics.PreferredBackBufferHeight = screenHeight;
+            _graphics.PreferredBackBufferWidth = windowWidth;
+            _graphics.PreferredBackBufferHeight = windowHeight;
             _graphics.ApplyChanges();
 
             // Save aspect ratios
@@ -166,7 +165,7 @@ namespace CrossBoa
             // Load objects
             player = new Player(
                 snakeSprite,
-                new Rectangle(gameRectangle.Center, new Point(48)),
+                new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)),
                 DefaultPlayerMovementForce,
                 DefaultPlayerMaxSpeed,
                 DefaultPlayerFriction,
@@ -198,11 +197,11 @@ namespace CrossBoa
             {
                 if (i % 2 == 0)
                 {
-                    menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(0, 0, screenWidth + 10, screenHeight));
+                    menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(0, 0, windowWidth + 10, windowHeight));
                 }
                 else
                 {
-                    menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(-(screenWidth + 10), 0, screenWidth + 10, screenHeight));
+                    menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(-(windowWidth + 10), 0, windowWidth + 10, windowHeight));
                 }
 
             }
@@ -219,23 +218,23 @@ namespace CrossBoa
 
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
-                new Rectangle(screenWidth / 2 - playHoverSprite.Width * 3 / 4,
-                    screenHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
+                new Rectangle(windowWidth / 2 - playHoverSprite.Width * 3 / 4,
+                    windowHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
 
             // Pause Button
             pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Rectangle(screenWidth - settingsPressedSprite.Width - 5, 5, settingsHoverSprite.Width,
+                new Rectangle(windowWidth - settingsPressedSprite.Width - 5, 5, settingsHoverSprite.Width,
                     settingsHoverSprite.Height));
 
             // Debug Button
             debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Rectangle(screenWidth - 100, screenHeight - 100, settingsHoverSprite.Width,
+                new Rectangle(windowWidth - 100, windowHeight - 100, settingsHoverSprite.Width,
                     settingsHoverSprite.Height));
 
             // Game Over Button
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
-                new Rectangle(screenWidth / 2 - playHoverSprite.Width * 3 / 4,
-                    screenHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
+                new Rectangle(windowWidth / 2 - playHoverSprite.Width * 3 / 4,
+                    windowHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
@@ -339,7 +338,7 @@ namespace CrossBoa
                 // Settings Menu - NOT IMPLEMENTED YET
                 case GameState.Settings:
 
-                    _spriteBatch.DrawString(arial32, "Settings", new Vector2(screenWidth - 175, screenHeight / 2f),
+                    _spriteBatch.DrawString(arial32, "Settings", new Vector2(windowWidth - 175, windowHeight / 2f),
                         Color.White);
 
                     break;
@@ -365,7 +364,7 @@ namespace CrossBoa
         /// Updates the main menu
         /// </summary>
         /// <param name="gameTime">A reference to the GameTime</param>
-        void UpdateMainMenu(GameTime gameTime)
+        private void UpdateMainMenu(GameTime gameTime)
         {
             AnimateMainMenuBG();
 
@@ -375,7 +374,7 @@ namespace CrossBoa
         /// <summary>
         /// Animates the main menu with parallax
         /// </summary>
-        void AnimateMainMenuBG()
+        private void AnimateMainMenuBG()
         {
             // Layer 1 is a blank image
 
@@ -398,7 +397,7 @@ namespace CrossBoa
             // Wrap image around the screen after it goes off the edge
             foreach (GameObject layer in menuBGLayers)
             {
-                if (layer.Position.X > screenWidth)
+                if (layer.Position.X > windowWidth)
                 {
                     layer.Position -= new Vector2(menuBGLayers[0].Width * 2, 0);
                 }
@@ -408,7 +407,7 @@ namespace CrossBoa
         /// <summary>
         /// Draws the main menu
         /// </summary>
-        void DrawMainMenu()
+        private void DrawMainMenu()
         {
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
@@ -528,7 +527,7 @@ namespace CrossBoa
         /// <summary>
         /// Includes all of the Draw code for Game GameState
         /// </summary>
-        void DrawGame()
+        private void DrawGame()
         {
             // Make the graphics device render to the smaller target
             GraphicsDevice.SetRenderTarget(gameRenderTarget);
@@ -568,31 +567,30 @@ namespace CrossBoa
 
             // Add Letterboxing
             // CODE TAKEN FROM: http://www.infinitespace-studios.co.uk/general/monogame-scaling-your-game-using-rendertargets-and-touchpanel/
-            Rectangle destinationRect;
             if (outputAspectRatio <= preferredAspectRatio)
             {
                 // output is taller than it is wider, bars on top/bottom
                 int presentHeight = (int)((Window.ClientBounds.Width / preferredAspectRatio) + 0.5f);
                 int barHeight = (Window.ClientBounds.Height - presentHeight) / 2;
-                destinationRect = new Rectangle(0, barHeight, Window.ClientBounds.Width, presentHeight);
+                gameTargetRect = new Rectangle(0, barHeight, Window.ClientBounds.Width, presentHeight);
             }
             else
             {
                 // output is wider than it is tall, bars left/right
                 int presentWidth = (int)((Window.ClientBounds.Height * preferredAspectRatio) + 0.5f);
                 int barWidth = (Window.ClientBounds.Width - presentWidth) / 2;
-                destinationRect = new Rectangle(barWidth, 0, presentWidth, Window.ClientBounds.Height);
+                gameTargetRect = new Rectangle(barWidth, 0, presentWidth, Window.ClientBounds.Height);
             }
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _spriteBatch.Draw(gameRenderTarget, destinationRect, Color.White);
+            _spriteBatch.Draw(gameRenderTarget, gameTargetRect, Color.White);
             _spriteBatch.End();
         }
 
         /// <summary>
         /// Includes all of the Draw code for the GameState.Game UI
         /// </summary>
-        void DrawGameUI()
+        private void DrawGameUI()
         {
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
@@ -617,10 +615,10 @@ namespace CrossBoa
             if (isDebugActive)
             {
                 // ~~~ Draws the crossbow's timeSinceShot timer
-                _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(10, screenHeight - 50), Color.White);
+                _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(10, windowHeight - 50), Color.White);
 
                 // Draws the crossbow's rotation
-                _spriteBatch.DrawString(arial32, "" + crossbow.Direction, new Vector2(10, screenHeight - 100), Color.White);
+                _spriteBatch.DrawString(arial32, "" + crossbow.Direction, new Vector2(10, windowHeight - 100), Color.White);
             }
 
             _spriteBatch.End();
@@ -630,12 +628,12 @@ namespace CrossBoa
         /// <summary>
         /// Includes all of the Draw code for the GameState.Pause UI
         /// </summary>
-        void DrawPauseUI()
+        private void DrawPauseUI()
         {
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             // Draw dark overlay over the game
-            _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(screenWidth, screenHeight)), new Color(Color.Black, 160));
+            _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(windowWidth, windowHeight)), new Color(Color.Black, 160));
             
             // Draw PAUSED text
             _spriteBatch.Draw(pauseText, new Vector2(0, 0), Color.White);
@@ -645,7 +643,7 @@ namespace CrossBoa
 
             // Draw debug button
             _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:",
-                new Vector2(screenWidth - 400, screenHeight - 100), isDebugActive ? Color.Red : Color.Green);
+                new Vector2(windowWidth - 400, windowHeight - 100), isDebugActive ? Color.Red : Color.Green);
             debugButton.Draw(_spriteBatch);
 
             _spriteBatch.End();
@@ -713,13 +711,39 @@ namespace CrossBoa
             _spriteBatch.Begin();
 
             _spriteBatch.DrawString(arial32, "Credits",
-                new Vector2(screenWidth - 175,
-                    screenHeight / 2f), Color.White);
+                new Vector2(windowWidth - 175,
+                    windowHeight / 2f), Color.White);
 
             _spriteBatch.End();
         }
 
         // Helper Methods
+        /// <summary>
+        /// Gets the coordinates of the mouse position in the game world
+        /// </summary>
+        public static Vector2 MousePositionInGame()
+        {
+            // Capture mouse position
+            (double, double) output = (Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
+
+            // Offset mouse position by the black borders
+            output.Item1 -= gameTargetRect.Location.X;
+            output.Item2 -= gameTargetRect.Location.Y;
+
+            // Scale mouse position by RenderTarget difference
+            //     *uses tuples to avoid float division inaccuracy
+            double scale = gameRenderTarget.Bounds.Size.X / (double)gameTargetRect.Size.X;
+            output = (output.Item1 * scale, output.Item2 * scale);
+
+            // Convert tuple back to vector
+            Vector2 outputVector = new Vector2((float) output.Item1, (float) output.Item2);
+
+            // Offset mouse position by camera
+            outputVector = Vector2.Transform(outputVector, Matrix.Invert(Camera.Matrix));
+
+            return outputVector;
+        }
+
         /// <summary>
         /// Spawns a slime enemy
         /// </summary>
@@ -739,7 +763,7 @@ namespace CrossBoa
         /// Spawns a totem enemy
         /// </summary>
         /// <param name="position">The position to spawn the totem at</param>
-        void SpawnTotem(Point position)
+        public void SpawnTotem(Point position)
         {
             Totem testTotem = new Totem(whiteSquareSprite,
                 new Rectangle(new Point(1300, 300), position),

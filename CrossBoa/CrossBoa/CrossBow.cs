@@ -187,7 +187,7 @@ namespace CrossBoa
         public override void Update(GameTime gameTime)
         {
             // Update direction
-            direction = MathHelper.DirectionBetween(position.ToPoint(), Mouse.GetState().Position - new Point((int)Camera.Matrix.Translation.X, (int)Camera.Matrix.Translation.Y));
+            direction = MathHelper.DirectionBetween(position, Game1.MousePositionInGame());
 
             // Update position
             this.position = Game1.Player.Position + Game1.Player.Size.ToVector2() / 2;
