@@ -192,7 +192,7 @@ namespace CrossBoa.Managers
                     sb.Draw(arrowPoint, playerArrow.Hitbox, Color.Red);
             }
 
-            foreach (PlayerArrow i in enemyProjectiles)
+            foreach (Arrow i in enemyProjectiles)
             {
                 sb.Draw(arrowPoint, new Rectangle(i.Hitbox.X - 2, i.Hitbox.Y - 2, 5, 5), Color.Red);
             }
