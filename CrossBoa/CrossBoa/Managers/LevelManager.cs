@@ -275,12 +275,6 @@ namespace CrossBoa.Managers
                 forcedX = 0;
                 forcedY = 0;
 
-                // Arrow is returned to the placer during a level transition
-                if (CollisionManager.PlayerArrow.IsInAir)
-                {
-                    CollisionManager.Crossbow.PickUpArrow();
-                }
-
                 // Adds door to collisionManager
                 CollisionManager.UpdateLevel();
             }
@@ -677,10 +671,20 @@ namespace CrossBoa.Managers
                 }
 
                 // Arrow will return to the player if still on screen
-                if (CollisionManager.PlayerArrow.IsActive && !CollisionManager.PlayerArrow.IsInAir)
+                if (CollisionManager.PlayerArrow.IsActive)
                 {
                     CollisionManager.PlayerArrow.GetSuckedIntoPlayer((int)MathHelper.DistanceSquared(
                         new Point((int)player.Position.X, (int)player.Position.Y), CollisionManager.PlayerArrow.Size), 9000);
+
+                    crossbow.PickUpArrow();
+
+                    // Doesn't let the player arrow zoom onto screen if it is too far out of bounds
+                    if (CollisionManager.PlayerArrow.Position.X < -50 || CollisionManager.PlayerArrow.Position.X > Game1.ScreenWidth + 50 
+                        || CollisionManager.PlayerArrow.Position.Y < -50|| CollisionManager.PlayerArrow.Position.Y > Game1.ScreenHeight + 50)
+                    {
+                        CollisionManager.PlayerArrow.HitSomething();
+                        CollisionManager.PlayerArrow.GetPickedUp();
+                    }
                 }
             }
         }
