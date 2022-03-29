@@ -37,6 +37,30 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Returns the direction between two vectors in radians
+        /// </summary>
+        /// <param name="baseVector">The point to start from</param>
+        /// <param name="vectorToFace">The point to end at</param>
+        /// <returns>A direction in radians</returns>
+        public static float DirectionBetween(Vector2 baseVector, Vector2 vectorToFace)
+        {
+            // Formula used for calculations: 
+            // Cos(A) = (b^2 + c^2 - a^2) / 2bc
+            // A = arccos the formula above
+            float horizDist = vectorToFace.X - baseVector.X;
+            float vertDist = vectorToFace.Y - baseVector.Y;
+            float totalDist = (float)Math.Sqrt(Math.Pow(vertDist, 2) +
+                                               Math.Pow(horizDist, 2));
+            double cosA = (Math.Pow(totalDist, 2) + Math.Pow(horizDist, 2) - Math.Pow(vertDist, 2))
+                          / (2 * horizDist * totalDist);
+            if (double.IsNaN(cosA))
+                cosA = 0;
+            if (vectorToFace.Y < baseVector.Y)
+                return (float)Math.Acos(cosA) * -1;
+            return (float)Math.Acos(cosA);
+        }
+
+        /// <summary>
         /// Creates a normal vector based on a direction
         /// </summary>
         /// <param name="direction">The direction to turn into a vector</param>
