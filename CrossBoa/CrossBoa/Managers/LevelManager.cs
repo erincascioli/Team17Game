@@ -116,12 +116,12 @@ namespace CrossBoa.Managers
                 // Doors are created and will be constantly used
                 entrance = new Door(Content.Load<Texture2D>("FloorShadow"), // Open Sprite
                     Content.Load<Texture2D>("GrassTest"), // Closed Sprite
-                    new Rectangle(-100, -100, 64, 64), // Location and size
+                    new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true);
 
                 exit = new Door(Content.Load<Texture2D>("FloorShadow"), // Open Sprite
                     Content.Load<Texture2D>("GrassTest"), // Closed Sprite
-                    new Rectangle(-100, -100, 64, 64), // Location and size
+                    new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true); // Has hitbox
             }
 
@@ -467,7 +467,7 @@ namespace CrossBoa.Managers
                 if (Camera.CameraY >= 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(0, -Game1.ScreenHeight - 1700);
+                    Camera.MoveCamera(0, -Game1.screenHeight - 1700);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
                                 CollisionManager.Player.Position.Y + 1300);
 
@@ -497,10 +497,10 @@ namespace CrossBoa.Managers
                     forcedY = 1;
                 }
 
-                if (Camera.CameraY <= -Game1.ScreenHeight - 1100)
+                if (Camera.CameraY <= -Game1.screenHeight - 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(0, Game1.ScreenHeight + 1700);
+                    Camera.MoveCamera(0, Game1.screenHeight + 1700);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
                         CollisionManager.Player.Position.Y - 1300);
 
@@ -508,7 +508,7 @@ namespace CrossBoa.Managers
                     LoadLevel("TestingFile");
                 }
 
-                if (player.Position.Y > Game1.ScreenHeight + 100)
+                if (player.Position.Y > Game1.screenHeight + 100)
                 {
                     Camera.MoveCamera(0, -90);
 
@@ -530,10 +530,10 @@ namespace CrossBoa.Managers
                     forcedY = 0;
                 }
 
-                if (Camera.CameraX <= -Game1.ScreenWidth - 1100)
+                if (Camera.CameraX <= -Game1.screenWidth - 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(Game1.ScreenWidth + 1700, 0);
+                    Camera.MoveCamera(Game1.screenWidth + 1700, 0);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X - 2000,
                         CollisionManager.Player.Position.Y);
 
@@ -541,7 +541,7 @@ namespace CrossBoa.Managers
                     LoadLevel("TestingFile");
                 }
 
-                if (player.Position.X > Game1.ScreenWidth + 100)
+                if (player.Position.X > Game1.screenWidth + 100)
                 {
                     Camera.MoveCamera(-90, 0);
 
@@ -563,10 +563,10 @@ namespace CrossBoa.Managers
                     forcedY = 0;
                 }
 
-                if (Camera.CameraX >= Game1.ScreenWidth + 1100)
+                if (Camera.CameraX >= Game1.screenWidth + 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(-Game1.ScreenWidth - 1700, 0);
+                    Camera.MoveCamera(-Game1.screenWidth - 1700, 0);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X + 2000,
                         CollisionManager.Player.Position.Y);
 
@@ -591,7 +591,7 @@ namespace CrossBoa.Managers
                 player.ForceMove(forcedX, forcedY, gameTime);
 
                 // Makes sure consecutive blocks of code can't happen
-                if (previousExit == ExitLocation.Top && player.Position.Y > 0 && !(player.Position.X > Game1.ScreenWidth) && !(player.Position.X < 0))
+                if (previousExit == ExitLocation.Top && player.Position.Y > 0 && !(player.Position.X > Game1.screenWidth) && !(player.Position.X < 0))
                 {
                     Camera.MoveCamera(0, 90);
 
@@ -612,7 +612,7 @@ namespace CrossBoa.Managers
                         }
                     }
                 }
-                if (previousExit == ExitLocation.Bottom && player.Position.Y < Game1.ScreenHeight && !(player.Position.X > Game1.ScreenWidth) && !(player.Position.X < 0))
+                if (previousExit == ExitLocation.Bottom && player.Position.Y < Game1.screenHeight && !(player.Position.X > Game1.screenWidth) && !(player.Position.X < 0))
                 {
                     Camera.MoveCamera(0, -90);
 
@@ -633,7 +633,7 @@ namespace CrossBoa.Managers
                         }
                     }
                 }
-                if (previousExit == ExitLocation.Right && player.Position.X < Game1.ScreenWidth && !(player.Position.Y > Game1.ScreenHeight) && !(player.Position.Y < 0))
+                if (previousExit == ExitLocation.Right && player.Position.X < Game1.screenWidth && !(player.Position.Y > Game1.screenHeight) && !(player.Position.Y < 0))
                 {
                     Camera.MoveCamera(-90, 0);
 
@@ -654,7 +654,7 @@ namespace CrossBoa.Managers
                         }
                     }
                 }
-                if (previousExit == ExitLocation.Left && player.Position.X > 0 && !(player.Position.Y > Game1.ScreenHeight) && !(player.Position.Y < 0))
+                if (previousExit == ExitLocation.Left && player.Position.X > 0 && !(player.Position.Y > Game1.screenHeight) && !(player.Position.Y < 0))
                 {
                     Camera.MoveCamera(90, 0);
 
