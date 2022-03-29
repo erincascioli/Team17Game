@@ -78,6 +78,12 @@ namespace CrossBoa
             set { dodgeCooldown = value; }
         }
 
+        public bool CanMove
+        {
+            get { return canMove; }
+            set { canMove = value; }
+        }
+
         /// <summary>
         /// The hitbox for this object
         /// </summary>
@@ -129,7 +135,7 @@ namespace CrossBoa
             KeyboardState kbState = Keyboard.GetState();
 
             // Update timers
-            float totalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float totalSeconds = (float) gameTime.ElapsedGameTime.TotalSeconds;
             timeUntilDodge -= totalSeconds;
             timeLeftInvincible -= totalSeconds;
 
@@ -138,7 +144,7 @@ namespace CrossBoa
             {
                 color = new Color(Color.Black, 60);
             }
-                
+
             else
             {
                 color = Color.White;
@@ -167,7 +173,7 @@ namespace CrossBoa
 
             // ~ Dodging code ~
             // Activate a dodge on space press if the player is past the dodge cooldown.
-            Dodge(kbState);
+            //Dodge(kbState);
 
             // If the player is in a dodge and their invincibility
             // frames run out, give control back to the player.
@@ -183,7 +189,7 @@ namespace CrossBoa
 
         public override void Draw(SpriteBatch sb)
         {
-            if(isFacingRight)
+            if (isFacingRight)
                 sb.Draw(sprite, Rectangle, null, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
             else
                 sb.Draw(sprite, Rectangle, color);
@@ -225,28 +231,44 @@ namespace CrossBoa
             return movementVector;
         }
 
-        
-        // UNFINISHED FEATURE - STRETCH GOAL
-
-        /// <summary>
-        /// Makes the player dodge
-        /// </summary>
-        public void Dodge(KeyboardState kbState)
+        public void ForceMove(int x, int y, GameTime gameTime)
         {
-            // If the player presses space and can dodge
-            if ((kbState.IsKeyDown(Keys.Space) && timeUntilDodge < 0) &&
-                (kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) ||
-                kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.D)))
-            {
-                timeUntilDodge = dodgeCooldown;
-                dodgeVector = CheckMovementInput(kbState);
-                canMove = false;
-                dodgeInvulnerabilityTime = dodgeLength;
-                inDodge = true;
-                maxSpeed *= dodgeSpeedBoost;
-            }
-        }
-        
+            Vector2 movementVector = new Vector2(x, y);
 
+            // Normalize the vector so the player doesn't move faster diagonally
+            if (movementVector != Vector2.Zero)
+                movementVector.Normalize();
+
+            // Apply the movement
+            ApplyForce(movementVector * movementForce);
+            //ApplyFriction(gameTime);
+
+            UpdatePhysics(gameTime);
+        }
     }
+
+/*
+// UNFINISHED FEATURE - STRETCH GOAL
+
+/// <summary>
+/// Makes the player dodge
+/// </summary>
+public void Dodge(KeyboardState kbState)
+{
+    // If the player presses space and can dodge
+    if ((kbState.IsKeyDown(Keys.Space) && timeUntilDodge < 0) &&
+        (kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) ||
+        kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.D)))
+    {
+        timeUntilDodge = dodgeCooldown;
+        dodgeVector = CheckMovementInput(kbState);
+        canMove = false;
+        dodgeInvulnerabilityTime = dodgeLength;
+        inDodge = true;
+        maxSpeed *= dodgeSpeedBoost;
+    }
+}
+
+
+}*/
 }

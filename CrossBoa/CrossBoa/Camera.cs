@@ -32,6 +32,16 @@ namespace CrossBoa
             get { return matrix; }
         }
 
+        public static int CameraX
+        {
+            get { return cameraX; }
+        }
+
+        public static int CameraY
+        {
+            get { return cameraY; }
+        }
+
         /// <summary>
         /// How violently the screen should shake
         /// </summary>
@@ -114,6 +124,13 @@ namespace CrossBoa
                 cameraY = -(int)player.Position.Y + Game1.ScreenHeight / 2;
                 cameraX = 0;
             }
+        }
+
+        public static void MoveCamera(int moveX, int moveY)
+        {
+            cameraX += moveX;
+            cameraY += moveY;
+
         }
     }
 }

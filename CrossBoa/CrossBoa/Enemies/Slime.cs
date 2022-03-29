@@ -224,8 +224,9 @@ namespace CrossBoa.Enemies
         {
             // Delete this slime
             animationState = SlimeAnimState.Resting;
-            position = new Vector2(-1000, -1000);
+            //position = new Vector2(-1000, -1000);
             timeSinceDeath = 0;
+            isAlive = false;
         }
 
         /// <summary>
