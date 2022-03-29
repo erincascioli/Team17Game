@@ -67,6 +67,9 @@ namespace CrossBoa
             }
 
             cameraCrew.Update(gameTime);
+
+            prevCameraX = cameraX;
+            prevCameraY = cameraY;
         }
 
         /// <summary>

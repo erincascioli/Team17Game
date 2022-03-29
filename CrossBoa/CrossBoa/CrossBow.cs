@@ -23,7 +23,6 @@ namespace CrossBoa
     public class CrossBow : GameObject, IShoot
     {
         // ~~~ FIELDS ~~~
-        private Player player;
         private SpriteEffects spriteEffects;
         private float direction;
         private CBAnimState animationState;
@@ -110,9 +109,8 @@ namespace CrossBoa
         /// <param name="rectangle">The rectangle that represents the crossbow's hitbox.</param>
         /// <param name="shotCoolDown">The cooldown per shot.</param>
         /// <param name="playerReference">A reference to the player object</param>
-        public CrossBow(Texture2D sprite, Rectangle rectangle, Player playerReference) : base(sprite, rectangle)
+        public CrossBow(Texture2D sprite, Rectangle rectangle) : base(sprite, rectangle)
         {
-            player = playerReference;
             isLoaded = true;
             timeSinceShot = 0f;
             color = Color.White;
@@ -123,21 +121,21 @@ namespace CrossBoa
         // ~~~ METHODS ~~~
         /// <summary>
         /// If not on cooldown, shoots the bow, which sends
-        /// a projectile forward and resets the cooldown.
+        /// the player arrow forward and resets the cooldown.
         /// </summary>
-        public void Shoot(Projectile projectile)
+        public void Shoot(Arrow playerArrow)
         {
             if (!IsOnCooldown && isLoaded)
             {
                 timeSinceShot = 0f;
                 isLoaded = false;
-                projectile.ChangeVelocity(
+                playerArrow.GetShot(
                     DrawnPosition,
                     Direction,
                     arrowShotSpeed);
 
-                // Makes the projectile appear from the bow instead of behind the player.
-                projectile.Position += (projectile.Velocity / projectile.Velocity.Length()) * 10;
+                // Makes the playerArrow appear from the bow instead of behind the player.
+                playerArrow.Position += (playerArrow.Velocity / playerArrow.Velocity.Length()) * 10;
 
                 // Shake the screen
                 Camera.ShakeScreen(12);
@@ -192,7 +190,7 @@ namespace CrossBoa
             direction = MathHelper.DirectionBetween(position.ToPoint(), Mouse.GetState().Position - new Point((int)Camera.Matrix.Translation.X, (int)Camera.Matrix.Translation.Y));
 
             // Update position
-            this.position = player.Position + player.Size.ToVector2() / 2;
+            this.position = Game1.Player.Position + Game1.Player.Size.ToVector2() / 2;
 
             // Update timer
             timeSinceShot += (float)gameTime.ElapsedGameTime.TotalSeconds;

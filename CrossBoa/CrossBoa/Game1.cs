@@ -67,7 +67,7 @@ namespace CrossBoa
         private List<GameObject> playerHealthBar;
         private CrossBow crossbow;
         private static Player player;
-        private Projectile playerArrow;
+        private PlayerArrow playerArrow;
 
         // Buttons
         private Button playButton;
@@ -160,8 +160,7 @@ namespace CrossBoa
 
             crossbow = new CrossBow(
                 crossbowSprite,
-                crossbowSprite.Bounds,
-                player);
+                crossbowSprite.Bounds);
 
             SpawnSlime(new Point(400, 400));
             SpawnSlime(new Point(1280, 448));
@@ -445,16 +444,14 @@ namespace CrossBoa
                 // the player doesn't shoot within the first 30 seconds of starting
                 if (playerArrow == null)
                 {
-                    playerArrow = new Projectile(
+                    playerArrow = new PlayerArrow(
                 playerArrowSprite,
                 new Rectangle(-100, -100, 60, 60),
                 0f,
-                0,
-                true);
+                0);
 
                     // Pass-in References
                     playerArrow.CrossbowReference = crossbow;
-                    playerArrow.PlayerReference = player;
                     CollisionManager.PlayerArrow = playerArrow;
                 }
                 crossbow.Shoot(playerArrow);
