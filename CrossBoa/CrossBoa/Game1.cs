@@ -7,6 +7,7 @@ using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace CrossBoa
 {
@@ -36,6 +37,8 @@ namespace CrossBoa
         public static int screenWidth;
         public static int screenHeight;
         public static Rectangle screenRect;
+        private float outputAspectRatio;
+        private float preferredAspectRatio;
 
         private bool isDebugActive;
         private bool isInvincibilityActive = false; // Default
@@ -111,11 +114,11 @@ namespace CrossBoa
             playerHealthBar = new List<GameObject>();
 
             // --- Prepare game rendering ---
-            screenWidth = 1600;
-            screenHeight = 900;
+            screenWidth = 2100;
+            screenHeight = 1100;
             screenRect = new Rectangle(0, 0, screenWidth, screenHeight);
 
-            // Create a render target that is much smaller than the game window
+            // Create a render target that can be much more easily rescaled
             gameRenderTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
             gameRectangle = gameRenderTarget.Bounds;
 
@@ -123,6 +126,10 @@ namespace CrossBoa
             _graphics.PreferredBackBufferWidth = screenWidth;
             _graphics.PreferredBackBufferHeight = screenHeight;
             _graphics.ApplyChanges();
+
+            // Save aspect ratios
+            outputAspectRatio = Window.ClientBounds.Width / (float)Window.ClientBounds.Height;
+            preferredAspectRatio = 16 / 9f;
 
             base.Initialize();
         }
@@ -229,7 +236,6 @@ namespace CrossBoa
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
                 new Rectangle(screenWidth / 2 - playHoverSprite.Width * 3 / 4,
                     screenHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
-
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
@@ -559,8 +565,27 @@ namespace CrossBoa
             // Render the smaller target to the backbuffer
             GraphicsDevice.SetRenderTarget(null);
 
+
+            // Add Letterboxing
+            // CODE TAKEN FROM: http://www.infinitespace-studios.co.uk/general/monogame-scaling-your-game-using-rendertargets-and-touchpanel/
+            Rectangle destinationRect;
+            if (outputAspectRatio <= preferredAspectRatio)
+            {
+                // output is taller than it is wider, bars on top/bottom
+                int presentHeight = (int)((Window.ClientBounds.Width / preferredAspectRatio) + 0.5f);
+                int barHeight = (Window.ClientBounds.Height - presentHeight) / 2;
+                destinationRect = new Rectangle(0, barHeight, Window.ClientBounds.Width, presentHeight);
+            }
+            else
+            {
+                // output is wider than it is tall, bars left/right
+                int presentWidth = (int)((Window.ClientBounds.Height * preferredAspectRatio) + 0.5f);
+                int barWidth = (Window.ClientBounds.Width - presentWidth) / 2;
+                destinationRect = new Rectangle(barWidth, 0, presentWidth, Window.ClientBounds.Height);
+            }
+
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _spriteBatch.Draw(gameRenderTarget, screenRect, Color.White);
+            _spriteBatch.Draw(gameRenderTarget, destinationRect, Color.White);
             _spriteBatch.End();
         }
 
