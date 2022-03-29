@@ -16,6 +16,11 @@ namespace CrossBoa
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        // A render target will make the game render to a much smaller, virtual screen
+        //     before scaling it up to the proper window size
+        public static RenderTarget2D gameRenderTarget;
+        public static Rectangle gameRectangle;
+
         // Fields
         public static Random RNG = new Random();
 
@@ -28,8 +33,9 @@ namespace CrossBoa
         private const float DefaultPlayerDodgeLength = 0.25f;
         private const float DefaultPlayerDodgeSpeed = 2f;
 
-        public const int ScreenWidth = 1600;
-        public const int ScreenHeight = 900;
+        public static int screenWidth;
+        public static int screenHeight;
+        public static Rectangle screenRect;
 
         private bool isDebugActive;
         private bool isInvincibilityActive = false; // Default
@@ -40,6 +46,7 @@ namespace CrossBoa
         private MouseState previousMState;
 
         // Assets
+        #region Asset Field Declarations
         private Texture2D whiteSquareSprite;
         private Texture2D playerArrowSprite;
         private Texture2D slimeSpritesheet;
@@ -61,6 +68,7 @@ namespace CrossBoa
         private Texture2D collectibleSprite;
 
         private SpriteFont arial32;
+        #endregion
 
         // Objects
         private GameObject[] menuBGLayers;
@@ -102,9 +110,18 @@ namespace CrossBoa
             menuBGLayers = new GameObject[10];
             playerHealthBar = new List<GameObject>();
 
+            // --- Prepare game rendering ---
+            screenWidth = 1600;
+            screenHeight = 900;
+            screenRect = new Rectangle(0, 0, screenWidth, screenHeight);
 
-            _graphics.PreferredBackBufferWidth = ScreenWidth;
-            _graphics.PreferredBackBufferHeight = ScreenHeight;
+            // Create a render target that is much smaller than the game window
+            gameRenderTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
+            gameRectangle = gameRenderTarget.Bounds;
+
+            // Set default screen size
+            _graphics.PreferredBackBufferWidth = screenWidth;
+            _graphics.PreferredBackBufferHeight = screenHeight;
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -142,7 +159,7 @@ namespace CrossBoa
             // Load objects
             player = new Player(
                 snakeSprite,
-                new Rectangle(250, 250, 48, 48),
+                new Rectangle(gameRectangle.Center, new Point(48)),
                 DefaultPlayerMovementForce,
                 DefaultPlayerMaxSpeed,
                 DefaultPlayerFriction,
@@ -174,11 +191,11 @@ namespace CrossBoa
             {
                 if (i % 2 == 0)
                 {
-                    menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(0, 0, ScreenWidth + 10, ScreenHeight));
+                    menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(0, 0, screenWidth + 10, screenHeight));
                 }
                 else
                 {
-                    menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(-(ScreenWidth + 10), 0, ScreenWidth + 10, ScreenHeight));
+                    menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(-(screenWidth + 10), 0, screenWidth + 10, screenHeight));
                 }
 
             }
@@ -195,23 +212,23 @@ namespace CrossBoa
 
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
-                new Rectangle(ScreenWidth / 2 - playHoverSprite.Width * 3 / 4,
-                    ScreenHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
+                new Rectangle(screenWidth / 2 - playHoverSprite.Width * 3 / 4,
+                    screenHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
 
             // Pause Button
             pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Rectangle(ScreenWidth - settingsPressedSprite.Width - 5, 5, settingsHoverSprite.Width,
+                new Rectangle(screenWidth - settingsPressedSprite.Width - 5, 5, settingsHoverSprite.Width,
                     settingsHoverSprite.Height));
 
             // Debug Button
             debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Rectangle(ScreenWidth - 100, ScreenHeight - 100, settingsHoverSprite.Width,
+                new Rectangle(screenWidth - 100, screenHeight - 100, settingsHoverSprite.Width,
                     settingsHoverSprite.Height));
 
             // Game Over Button
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
-                new Rectangle(ScreenWidth / 2 - playHoverSprite.Width * 3 / 4,
-                    ScreenHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
+                new Rectangle(screenWidth / 2 - playHoverSprite.Width * 3 / 4,
+                    screenHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
 
 
             // Add all GameObjects to GameObject list
@@ -288,10 +305,10 @@ namespace CrossBoa
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            
+
             switch (gameState)
             {
                 // Main Menu
@@ -316,7 +333,7 @@ namespace CrossBoa
                 // Settings Menu - NOT IMPLEMENTED YET
                 case GameState.Settings:
 
-                    _spriteBatch.DrawString(arial32, "Settings", new Vector2(ScreenWidth - 175, ScreenHeight / 2f),
+                    _spriteBatch.DrawString(arial32, "Settings", new Vector2(screenWidth - 175, screenHeight / 2f),
                         Color.White);
 
                     break;
@@ -336,7 +353,6 @@ namespace CrossBoa
         }
 
         // Update and Draw methods
-        #region Update and Draw Methods
 
         // Main Menu
         /// <summary>
@@ -376,7 +392,7 @@ namespace CrossBoa
             // Wrap image around the screen after it goes off the edge
             foreach (GameObject layer in menuBGLayers)
             {
-                if (layer.Position.X > ScreenWidth)
+                if (layer.Position.X > screenWidth)
                 {
                     layer.Position -= new Vector2(menuBGLayers[0].Width * 2, 0);
                 }
@@ -508,6 +524,9 @@ namespace CrossBoa
         /// </summary>
         void DrawGame()
         {
+            // Make the graphics device render to the smaller target
+            GraphicsDevice.SetRenderTarget(gameRenderTarget);
+
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Camera.Matrix);
 
             // Change background color
@@ -535,6 +554,13 @@ namespace CrossBoa
                 // _spriteBatch.Draw(whiteSquareSprite, playerArrow.Rectangle, Color.Tan);
             }
 
+            _spriteBatch.End();
+
+            // Render the smaller target to the backbuffer
+            GraphicsDevice.SetRenderTarget(null);
+
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _spriteBatch.Draw(gameRenderTarget, screenRect, Color.White);
             _spriteBatch.End();
         }
 
@@ -566,10 +592,10 @@ namespace CrossBoa
             if (isDebugActive)
             {
                 // ~~~ Draws the crossbow's timeSinceShot timer
-                _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(10, ScreenHeight - 50), Color.White);
+                _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(10, screenHeight - 50), Color.White);
 
                 // Draws the crossbow's rotation
-                _spriteBatch.DrawString(arial32, "" + crossbow.Direction, new Vector2(10, ScreenHeight - 100), Color.White);
+                _spriteBatch.DrawString(arial32, "" + crossbow.Direction, new Vector2(10, screenHeight - 100), Color.White);
             }
 
             _spriteBatch.End();
@@ -584,7 +610,7 @@ namespace CrossBoa
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             // Draw dark overlay over the game
-            _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(ScreenWidth, ScreenHeight)), new Color(Color.Black, 160));
+            _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(screenWidth, screenHeight)), new Color(Color.Black, 160));
             
             // Draw PAUSED text
             _spriteBatch.Draw(pauseText, new Vector2(0, 0), Color.White);
@@ -594,7 +620,7 @@ namespace CrossBoa
 
             // Draw debug button
             _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:",
-                new Vector2(ScreenWidth - 400, ScreenHeight - 100), isDebugActive ? Color.Red : Color.Green);
+                new Vector2(screenWidth - 400, screenHeight - 100), isDebugActive ? Color.Red : Color.Green);
             debugButton.Draw(_spriteBatch);
 
             _spriteBatch.End();
@@ -662,15 +688,13 @@ namespace CrossBoa
             _spriteBatch.Begin();
 
             _spriteBatch.DrawString(arial32, "Credits",
-                new Vector2(ScreenWidth - 175,
-                    ScreenHeight / 2f), Color.White);
+                new Vector2(screenWidth - 175,
+                    screenHeight / 2f), Color.White);
 
             _spriteBatch.End();
         }
-        #endregion
 
         // Helper Methods
-        #region Helper Methods
         /// <summary>
         /// Spawns a slime enemy
         /// </summary>
@@ -722,8 +746,6 @@ namespace CrossBoa
         {
             return kbState.IsKeyDown(key) && previousKBState.IsKeyUp(key);
         }
-
-        #endregion
     }
 
     public enum GameState

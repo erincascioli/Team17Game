@@ -53,7 +53,7 @@ namespace CrossBoa
 
         static Camera()
         {
-            cameraCrew = new PhysicsObject(null, new Rectangle(0, 0, Game1.ScreenWidth, Game1.ScreenHeight), null, 20000);
+            cameraCrew = new PhysicsObject(null, new Rectangle(0, 0, Game1.screenWidth, Game1.screenHeight), null, 20000);
         }
 
         public static void Update(KeyboardState kbState, GameTime gameTime)
@@ -124,7 +124,7 @@ namespace CrossBoa
             }
             else
             {
-                cameraY = -(int)player.Position.Y + Game1.ScreenHeight / 2;
+                cameraY = -(int)player.Position.Y + Game1.screenHeight / 2;
                 cameraX = 0;
             }
         }
