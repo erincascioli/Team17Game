@@ -219,25 +219,19 @@ namespace CrossBoa
 
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
-                Point.Zero,
-                playHoverSprite.Bounds.Size * new Point(2) / new Point(5),
-                ScreenAnchor.Center);
+                ScreenAnchor.Center, Point.Zero, playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
             // Pause Button
             pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Point(-16, 14), 
-                settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7),
-                ScreenAnchor.TopRight);
+                ScreenAnchor.TopRight, new Point(-16, 14), settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7));
 
             // Debug Button
             debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Point(-16, -14), settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7),
-                ScreenAnchor.BottomRight);
+                ScreenAnchor.BottomRight, new Point(-16, -14), settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7));
 
             // Game Over Button
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
-                new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5),
-                ScreenAnchor.Center);
+                ScreenAnchor.Center, new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
