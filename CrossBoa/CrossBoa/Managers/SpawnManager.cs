@@ -39,6 +39,11 @@ namespace CrossBoa.Managers
                 Game1.slimeDeathSpritesheet,
                 3,
                 new Rectangle(position, new Point(64, 64)));
+
+            // Tracks wether enemy position should be allowed
+            bool safe = true;
+
+            //foreach
             CollisionManager.AddEnemy(newSlime);
             gameObjectList.Add(newSlime);
         }
@@ -56,5 +61,10 @@ namespace CrossBoa.Managers
             CollisionManager.AddEnemy(testTotem);
             gameObjectList.Add(testTotem);
         }
+
+        //public static void FillLevel
+        //{
+
+        //}
     }
 }
