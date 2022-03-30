@@ -11,11 +11,14 @@ using Microsoft.Xna.Framework.Input;
 namespace CrossBoa.Managers
 {
     /// <summary>
-    /// Manages enemy spawns and contains methods for spawning them
+    /// Author: Donovan Scullion
+    /// Purpose: Manages enemy spawns and contains methods for spawning them
+    /// Restrictions: None so far
     /// </summary>
     public static class SpawnManager
     {
         private static List<GameObject> gameObjectList;
+        private static List<Tile> openSpots;
 
         public static List<GameObject> GameObjectList
         {
@@ -40,10 +43,6 @@ namespace CrossBoa.Managers
                 3,
                 new Rectangle(position, new Point(64, 64)));
 
-            // Tracks wether enemy position should be allowed
-            bool safe = true;
-
-            //foreach
             CollisionManager.AddEnemy(newSlime);
             gameObjectList.Add(newSlime);
         }
@@ -62,9 +61,90 @@ namespace CrossBoa.Managers
             gameObjectList.Add(testTotem);
         }
 
-        //public static void FillLevel
-        //{
+        /// Currently useless due to how we moved forward on enemy placement
+        /*public static void FillLevel()
+        {
+            int maxEnemies;
+            int minEnemies;
+            int maxSlimes;
+            int maxTotems;
 
-        //}
+            // Determines how many enemies may spawn
+            switch (LevelManager.Stage)
+            {
+                case 1:
+                case 2:
+                    maxSlimes = 3;
+                    maxTotems = 1;
+                    maxEnemies = 3;
+                    minEnemies = 2;
+                    break;
+
+                case 3:
+                case 4:
+                case 5:
+                    maxSlimes = 4;
+                    maxTotems = 1;
+                    maxEnemies = 4;
+                    minEnemies = 2;
+                    break;
+
+                case 6:
+                case 7:
+                    maxSlimes = 4;
+                    maxTotems = 2;
+                    maxEnemies = 4;
+                    minEnemies = 3;
+                    break;
+
+                case 8:
+                case 9:
+                case 10:
+                    maxSlimes = 5;
+                    maxTotems = 2;
+                    maxEnemies = 6;
+                    minEnemies = 3;
+                    break;
+
+                // Any subsequent levels
+                default:
+                    maxSlimes = 5;
+                    maxTotems = 3;
+                    maxEnemies = 6;
+                    minEnemies = 4;
+                    break;
+            }
+
+            // Actual values for the level
+            int slimeAmount = 0;
+            int totemAmount = 0;
+            int enemyAmount = Game1.RNG.Next(minEnemies, maxEnemies + 1);
+            int currentEnemyAmount = 0;
+
+            while (currentEnemyAmount != enemyAmount)
+            {
+                switch (Game1.RNG.Next(0, 2))
+                {
+                    case 0:
+                        if (slimeAmount < maxSlimes)
+                        {
+                            int index = Game1.RNG.Next(0, openSpots.Count);
+                            Vector2 position = openSpots[index].Position;
+
+                            SpawnSlime(position.X, position.Y);
+                        }
+                            break;
+                }
+            }
+        }*/
+
+        /// <summary>
+        /// Purpose: Retrieves tiles that enemies are able to spawn on
+        /// Restrictions: none
+        /// </summary>
+        public static void UpdateLevel()
+        {
+            openSpots = LevelManager.GetSafe();
+        }
     }
 }

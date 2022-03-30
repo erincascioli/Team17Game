@@ -52,6 +52,11 @@ namespace CrossBoa.Managers
             get { return exitLocation; }
         }
 
+        public static int Stage
+        {
+            get { return stage; }
+        }
+
         static LevelManager()
         {
             levelTiles = new List<Tile>();
@@ -195,6 +200,7 @@ namespace CrossBoa.Managers
 
                 // passes all active tiles to the collision manager
                 CollisionManager.UpdateLevel();
+                SpawnManager.UpdateLevel();
             }
             catch (Exception e)
             {
@@ -250,6 +256,26 @@ namespace CrossBoa.Managers
             }
 
             return collidables;
+        }
+
+        /// <summary>
+        /// Purpose: Passes a list of tiles that aren't collidable
+        /// Restrictions: none
+        /// </summary>
+        /// <returns></returns>
+        public static List<Tile> GetSafe()
+        {
+            List<Tile> safe = new List<Tile>();
+
+            foreach (Tile i in levelTiles)
+            {
+                if (!i.IsInteractable)
+                {
+                    safe.Add(i);
+                }
+            }
+
+            return safe;
         }
 
         /// <summary>
