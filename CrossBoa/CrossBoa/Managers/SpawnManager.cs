@@ -42,5 +42,23 @@ namespace CrossBoa.Managers
             CollisionManager.AddEnemy(newSlime);
             gameObjectList.Add(newSlime);
         }
+
+        /// <summary>
+        /// Spawns a totem enemy
+        /// </summary>
+        /// <param name="position">The position to spawn the totem at</param>
+        public static void SpawnTotem(Point position)
+        {
+            Totem testTotem = new Totem(Game1.whiteSquareSprite,
+                new Rectangle(new Point(1300, 300), position),
+                3,
+                Game1.playerArrowSprite);
+
+            CollisionManager.AddEnemy(testTotem);
+            gameObjectList.Add(testTotem);
+
+            CollisionManager.AddProjectile(testTotem.TotemProjectile);
+            gameObjectList.Add(testTotem.TotemProjectile);
+        }
     }
 }
