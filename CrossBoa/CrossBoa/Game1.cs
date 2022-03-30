@@ -430,7 +430,7 @@ namespace CrossBoa
                     gameObjectList.RemoveAt(i);
                     i--;
                 }
-                else if (!(gameObjectList[i] == player && !player.CanMove))
+                else if (!(gameObjectList[i] == player && (!player.CanMove && !player.InDodge)))
                 {
                     gameObjectList[i].Update(gameTime);
                 }
@@ -488,11 +488,12 @@ namespace CrossBoa
             if (!isDebugActive)
                 isGodModeActive = false;
 
-            if (LevelManager.Exit.IsOpen || !player.CanMove)
+            if (LevelManager.Exit.IsOpen || (!player.CanMove && !player.InDodge))
             {
                 //Camera.FollowPlayer(player);
-                if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle) || !player.CanMove)
+                if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle) || (!player.CanMove && !player.InDodge))
                 {
+                    player.InDodge = false;
                     LevelManager.LevelTransition(player, crossbow, gameTime);
                     //player.CanMove = false; // Prevents premature end
                 }
