@@ -104,7 +104,7 @@ namespace CrossBoa.Managers
                 }
 
                 // Tracks Living Enemies
-                if (enemy.IsAlive)
+                if (enemy.Health > 0)
                 {
                     survivors.Add(enemy);
                 }
@@ -163,9 +163,6 @@ namespace CrossBoa.Managers
                     c.IsCollected = true;
                 }
             }
-
-            // Closes entrance behind the player
-            //if (LevelManager.)
         }
 
         /// <summary>
