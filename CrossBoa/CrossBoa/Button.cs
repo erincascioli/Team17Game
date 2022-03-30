@@ -45,7 +45,7 @@ namespace CrossBoa
         /// <param name="size">The size of this object is dependent on the UIScale in Game1</param>
         /// <param name="anchor">Which edge of the screen to anchor this object to</param>
         public Button(Texture2D hoverImage, Texture2D offImage, bool isInteractable, Point position, Point size, ScreenAnchor anchor) 
-            : base(offImage, position, size, anchor)
+            : base(offImage, anchor, position, size)
         {
             this.isInteractable = isInteractable;
             this.position = position.ToVector2();
