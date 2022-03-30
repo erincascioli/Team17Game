@@ -185,7 +185,7 @@ namespace CrossBoa
             // Create player health bar
             for (int i = 0; i < DefaultPlayerHealth; i++)
             {
-                playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(11 + i * 20, 10), new Point(20)));
+                playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(12 + i * 20, 10), new Point(20)));
             }
 
             crossbow = new CrossBow(
@@ -224,7 +224,7 @@ namespace CrossBoa
 
             // Pause Button
             pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                ScreenAnchor.TopRight, new Point(-16, 14), settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7));
+                ScreenAnchor.TopRight, new Point(-14, 12), settingsHoverSprite.Bounds.Size / new Point(4));
 
             // Debug Button
             debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
@@ -774,7 +774,9 @@ namespace CrossBoa
                 background.Draw(_spriteBatch);
             }
 
-            _spriteBatch.Draw(gameOverText, new Vector2(0, 0), Color.White);
+            _spriteBatch.Draw(gameOverText, 
+                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), gameOverText.Bounds.Size * new Point(UIScale * 4)), 
+                Color.White);
 
             gameOverButton.Draw(_spriteBatch);
 
