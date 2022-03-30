@@ -41,14 +41,15 @@ namespace CrossBoa
         /// <param name="hoverImage"></param>
         /// <param name="offImage"></param>
         /// <param name="isInteractable"></param>
-        /// <param name="position">The position of this object is dependent on the anchor and the UIScale in Game1</param>
-        /// <param name="size">The size of this object is dependent on the UIScale in Game1</param>
         /// <param name="anchor">Which edge of the screen to anchor this object to</param>
-        public Button(Texture2D hoverImage, Texture2D offImage, bool isInteractable, Point position, Point size, ScreenAnchor anchor) 
-            : base(offImage, position, size, anchor)
+        /// <param name="offset"></param>
+        /// <param name="size">The size of this object is dependent on the UIScale in Game1</param>
+        public Button(Texture2D hoverImage, Texture2D offImage, bool isInteractable, ScreenAnchor anchor, Point offset,
+            Point size) 
+            : base(offImage, anchor, offset, size)
         {
             this.isInteractable = isInteractable;
-            this.position = position.ToVector2();
+            this.position = offset.ToVector2();
             hoverButtonTexture = hoverImage;
             offButtonTexture = offImage;
         }
