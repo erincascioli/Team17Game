@@ -113,7 +113,6 @@ namespace CrossBoa.Managers
             // Enemy List is updated to only use living enemies
             enemies = survivors;
 
-
             // Collidable tiles
             foreach (Tile tile in levelObstacles)
             {
@@ -178,7 +177,11 @@ namespace CrossBoa.Managers
         {
             sb.Draw(hitBox, player.Hitbox, Color.White);
 
-            
+            foreach (Collectible c in collectibles)
+            {
+                c.Draw(sb);
+            }
+
             if (playerArrow != null)
             {
                 // Make drawn hitbox size larger if hitbox is a point
@@ -207,11 +210,6 @@ namespace CrossBoa.Managers
             foreach (Tile i in levelObstacles)
             {
                 sb.Draw(hitBox, i.Rectangle, Color.White);
-            }
-
-            foreach (Collectible c in collectibles)
-            {
-                c.Draw(sb);
             }
         }
 
@@ -260,7 +258,6 @@ namespace CrossBoa.Managers
         {
             // Rectangle that holds the intersection area
             Rectangle overlap = Rectangle.Intersect(entity.Hitbox, tile.Rectangle);
-
 
             // Is the overlapping rectangle taller than it is wide
             if (overlap.Width > overlap.Height || (overlap.Width == overlap.Height && alternate == 0))
