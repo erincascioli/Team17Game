@@ -77,7 +77,7 @@ namespace CrossBoa
 
         // Objects
         private GameObject[] menuBGLayers;
-        private List<GameObject> playerHealthBar;
+        private List<UIElement> playerHealthBar;
         public static List<UIElement> UIElementsList;
         private CrossBow crossbow;
         private static Player player;
@@ -118,7 +118,7 @@ namespace CrossBoa
             gameObjectList = new List<GameObject>();
             menuBGSpriteList = new Texture2D[5];
             menuBGLayers = new GameObject[10];
-            playerHealthBar = new List<GameObject>();
+            playerHealthBar = new List<UIElement>();
             UIElementsList = new List<UIElement>(20);
 
             // --- Prepare game rendering ---
@@ -180,7 +180,7 @@ namespace CrossBoa
 
             for (int i = 0; i < DefaultPlayerHealth; i++)
             {
-                playerHealthBar.Add(new GameObject(fullHeart, new Rectangle(5 + (i * 80), 0, 80, 80)));
+                playerHealthBar.Add(new UIElement(fullHeart, new Point(5 + i * 80, 0), new Point(80), ScreenAnchor.TopLeft));
             }
 
             crossbow = new CrossBow(
@@ -220,23 +220,23 @@ namespace CrossBoa
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
                 Point.Zero,
-                playHoverSprite.Bounds.Size / new Point(2),
+                playHoverSprite.Bounds.Size * new Point(2) / new Point(5),
                 ScreenAnchor.Center);
 
             // Pause Button
             pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Point(-18, 18), 
+                new Point(-16, 14), 
                 settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7),
                 ScreenAnchor.TopRight);
 
             // Debug Button
             debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Point(-18, -18), settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7),
+                new Point(-16, -14), settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7),
                 ScreenAnchor.BottomRight);
 
             // Game Over Button
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
-                new Point(0, 10), playHoverSprite.Bounds.Size / new Point(2),
+                new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5),
                 ScreenAnchor.Center);
 
             // Add all GameObjects to GameObject list
@@ -609,12 +609,22 @@ namespace CrossBoa
             pauseButton.Draw(_spriteBatch);
             for (int i = 0; i < playerHealthBar.Count; i++)
             {
+                // Loop through all the health the player currently has
                 if (i < player.CurrentHealth)
                 {
+                    // Set sprite to full heart if it is not
+                    if (playerHealthBar[i].Sprite != fullHeart)
+                    {
+                        playerHealthBar[i].Sprite = fullHeart;
+                    }
+
                     playerHealthBar[i].Draw(_spriteBatch);
                 }
+
+                // Loop through the remaining empty hearts
                 else
                 {
+                    // Set sprite to empty heart if it is not
                     if (playerHealthBar[i].Sprite != emptyHeart)
                     {
                         playerHealthBar[i].Sprite = emptyHeart;

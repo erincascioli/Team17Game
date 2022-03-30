@@ -43,15 +43,6 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Whether this UI Element will scale with the screen size
-        /// </summary>
-        public bool DoesScaling
-        {
-            get { return doesScaling; }
-            set { doesScaling = value; }
-        }
-
-        /// <summary>
         /// Constructs a UI Element. The position is dependent on the anchor.
         /// </summary>
         /// <param name="sprite">The sprite for this GameObject</param>
@@ -83,8 +74,8 @@ namespace CrossBoa
             // Makes a new rectangle based on the position and the anchor, multiplying them by the UIScale
             rectangle = anchor switch
             {
-                ScreenAnchor.TopLeft => 
-                    new Rectangle(offset.ToPoint(), newSize),
+                ScreenAnchor.TopLeft => MathHelper.MakeRectangleFromCenter(
+                    offset.ToPoint(), newSize),
                 
                 ScreenAnchor.TopCenter => MathHelper.MakeRectangleFromCenter(new Point(
                     (int) (windowCenter.X + offset.X),
