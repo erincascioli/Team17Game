@@ -35,9 +35,11 @@ namespace CrossBoa
         //Needs to be fixed so that the collectible is not drawn if it has been collected
         public override void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Draw(Sprite, hitbox, Color.White);
+
             if (!IsCollected)
             {
-                spriteBatch.Draw(Sprite, hitbox, Color.White);
+                
             }
         }
     }

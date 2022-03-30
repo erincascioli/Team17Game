@@ -52,10 +52,10 @@ namespace CrossBoa
 
         // Assets
         #region Asset Field Declarations
-        private Texture2D whiteSquareSprite;
-        private Texture2D playerArrowSprite;
-        private Texture2D slimeSpritesheet;
-        private Texture2D slimeDeathSpritesheet;
+        public static Texture2D whiteSquareSprite;
+        public static Texture2D playerArrowSprite;
+        public static Texture2D slimeSpritesheet;
+        public static Texture2D slimeDeathSpritesheet;
         private Texture2D snakeSprite;
         private Texture2D crossbowSprite;
         private Texture2D hitBox;
@@ -71,6 +71,7 @@ namespace CrossBoa
         private Texture2D pauseText;
         private Texture2D gameOverText;
         private Texture2D collectibleSprite;
+        private Texture2D crosshairSprite;
 
         private SpriteFont arial32;
         #endregion
@@ -79,6 +80,7 @@ namespace CrossBoa
         private GameObject[] menuBGLayers;
         private List<UIElement> playerHealthBar;
         public static List<UIElement> UIElementsList;
+        private GameObject crosshair;
         private CrossBow crossbow;
         private static Player player;
         private PlayerArrow playerArrow;
@@ -105,11 +107,12 @@ namespace CrossBoa
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
 
             // CREDITS TO: https://community.monogame.net/t/handling-user-controlled-window-resizing/7828
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
+
+            IsMouseVisible = false;
         }
 
         protected override void Initialize()
@@ -156,6 +159,7 @@ namespace CrossBoa
             pauseText = Content.Load<Texture2D>("PauseText");
             gameOverText = Content.Load<Texture2D>("GameOverText");
             collectibleSprite = Content.Load<Texture2D>("LifePot");
+            crosshairSprite = Content.Load<Texture2D>("Crosshair");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
 
@@ -187,12 +191,8 @@ namespace CrossBoa
                 crossbowSprite,
                 crossbowSprite.Bounds);
 
-            SpawnSlime(new Point(400, 400));
-            SpawnSlime(new Point(1280, 448));
-            SpawnSlime(new Point(64 * 12, 64 * 9));
 
             CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
-            SpawnTotem(new Point(50, 100));
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -243,9 +243,15 @@ namespace CrossBoa
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow);
 
+            SpawnManager.GameObjectList = gameObjectList;
             LevelManager.LContent = Content;
-            LevelManager.GameReference = this;
             LevelManager.LoadLevel("TestingFile");
+
+            // Temp enemy spawns for starting level
+            SpawnManager.SpawnSlime(new Point(400, 400));
+            SpawnManager.SpawnSlime(new Point(1280, 448));
+            SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
+            SpawnManager.SpawnTotem(new Point(50, 100));
 
             OnResize(null, null);
         }
@@ -259,6 +265,9 @@ namespace CrossBoa
             // TEST CODE
             if(WasKeyPressed(Keys.F11))
                 ToggleFullscreen();
+
+            //Get the position of the mouse for the crosshair
+            crosshair = new GameObject(crosshairSprite, new Rectangle(mState.X - crosshairSprite.Width, mState.Y - crosshairSprite.Height, crosshairSprite.Width * 2, crosshairSprite.Height * 2));
 
             switch (gameState)
             {
@@ -334,6 +343,7 @@ namespace CrossBoa
                 case GameState.Game:
                     DrawGame();
                     DrawGameUI();
+                    
                     break;
 
                 // Pause Menu
@@ -379,6 +389,7 @@ namespace CrossBoa
             AnimateMainMenuBG();
 
             playButton.Update(gameTime);
+
         }
 
         /// <summary>
@@ -433,7 +444,9 @@ namespace CrossBoa
                 Color.White);
 
             playButton.Draw(_spriteBatch);
-            
+
+            crosshair.Draw(_spriteBatch);
+
             _spriteBatch.End();
         }
 
@@ -456,6 +469,33 @@ namespace CrossBoa
                     CollisionManager.CheckCollision(isGodModeActive);
                 }
 
+                // Fires a totem's arrow if the cooldown time reaches 0.
+                Totem totem;
+                if ((totem = gameObjectList[i] as Totem) != null && totem.IsAlive
+                    && totem.ReadyToFire)
+                {
+                    Arrow newTotemArrow = new Arrow(playerArrowSprite,
+                        new Rectangle(-100,
+                                      -100,
+                                      30,
+                                      30),
+                        new Vector2(0, 0));
+
+                    CollisionManager.AddProjectile(newTotemArrow);
+                    gameObjectList.Add(newTotemArrow);
+
+                    totem.Shoot(newTotemArrow);
+                }
+
+                // Removes all inactive projectiles from play.
+                Arrow arrow;
+                if ((arrow = gameObjectList[i] as Arrow) != null && !arrow.IsActive)
+                {
+                    gameObjectList.RemoveAt(i);
+                    i--;
+                }
+
+                // ~~~~~ DO ALL EXTERNAL    GAMEOBJECT MODIFICATION ABOVE THIS CODE ~~~~~
                 // Delete enemies from lists after they die
                 Enemy enemy;
                 if ((enemy = gameObjectList[i] as Enemy) != null && !enemy.IsAlive)
@@ -463,11 +503,13 @@ namespace CrossBoa
                     gameObjectList.RemoveAt(i);
                     i--;
                 }
-                else if (!(gameObjectList[i] == player && !player.CanMove))
+                else if (!(gameObjectList[i] == player && (!player.CanMove && !player.InDodge)))
                 {
                     gameObjectList[i].Update(gameTime);
                 }
             }
+
+            
 
             // Fires the bow on click.
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
@@ -506,13 +548,25 @@ namespace CrossBoa
                 // Spawn slimes when pressing E
                 if (WasKeyPressed(Keys.E))
                 {
-                    SpawnSlime(mState.Position);
+                    SpawnManager.SpawnSlime(mState.Position);
                 }
 
-                // Shake the screen if the player presses space while debug is active
-                if (kbState.IsKeyDown(Keys.Space))
+                // Shake the screen if the player presses Enter while debug is active
+                if (kbState.IsKeyDown(Keys.Enter))
                 {
                     Camera.ShakeScreen(20);
+                }
+
+                // Kills every enemy if the player presses N while debug is active
+                // NOTE: Will crash if the the player moves to the next room having 
+                // never fired an arrow; for obvious reasons this is a non-issue for now
+                if (WasKeyPressed(Keys.N))
+                {
+                    foreach (GameObject e in gameObjectList)
+                    {
+                        if (e is Enemy)
+                            ((Enemy)e).TakeDamage(1000);
+                    }
                 }
             }
 
@@ -521,11 +575,12 @@ namespace CrossBoa
             if (!isDebugActive)
                 isGodModeActive = false;
 
-            if (LevelManager.Exit.IsOpen || !player.CanMove)
+            if (LevelManager.Exit.IsOpen || (!player.CanMove && !player.InDodge))
             {
                 //Camera.FollowPlayer(player);
-                if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle) || !player.CanMove)
+                if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle) || (!player.CanMove && !player.InDodge))
                 {
+                    player.InDodge = false;
                     LevelManager.LevelTransition(player, crossbow, gameTime);
                     //player.CanMove = false; // Prevents premature end
                 }
@@ -607,6 +662,7 @@ namespace CrossBoa
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             pauseButton.Draw(_spriteBatch);
+
             for (int i = 0; i < playerHealthBar.Count; i++)
             {
                 // Loop through all the health the player currently has
@@ -643,6 +699,8 @@ namespace CrossBoa
                 _spriteBatch.DrawString(arial32, "" + crossbow.Direction, new Vector2(10, windowHeight - 100), Color.White);
             }
 
+            crosshair.Draw(_spriteBatch);
+
             _spriteBatch.End();
         }
 
@@ -669,6 +727,8 @@ namespace CrossBoa
             _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:",
                 new Vector2(windowWidth - 400, windowHeight - 100), isDebugActive ? Color.Red : Color.Green);
             debugButton.Draw(_spriteBatch);
+
+            crosshair.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -723,6 +783,8 @@ namespace CrossBoa
 
             gameOverButton.Draw(_spriteBatch);
 
+            crosshair.Draw(_spriteBatch);
+
             _spriteBatch.End();
         }
 
@@ -738,71 +800,12 @@ namespace CrossBoa
                 new Vector2(windowWidth - 175,
                     windowHeight / 2f), Color.White);
 
+            crosshair.Draw(_spriteBatch);
+
             _spriteBatch.End();
         }
-
+        
         // Helper Methods
-        /// <summary>
-        /// Gets the coordinates of the mouse position in the game world
-        /// </summary>
-        public static Vector2 MousePositionInGame()
-        {
-            // SCREEN SPACE
-            // Capture mouse position
-            (double, double) output = (Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
-
-            // Offset mouse position by the black borders
-            output.Item1 -= gameTargetRect.Location.X;
-            output.Item2 -= gameTargetRect.Location.Y;
-
-            // CAMERA SPACE
-            // Scale mouse position by RenderTarget difference
-            //     *uses tuples to avoid float division inaccuracy
-            double scale = gameRenderTarget.Bounds.Size.X / (double)gameTargetRect.Size.X;
-            output = (output.Item1 * scale, output.Item2 * scale);
-
-            // Convert tuple back to vector
-            Vector2 outputVector = new Vector2((float) output.Item1, (float) output.Item2);
-
-            // Offset mouse position by camera
-            outputVector = Vector2.Transform(outputVector, Matrix.Invert(Camera.Matrix));
-
-            return outputVector;
-        }
-
-        /// <summary>
-        /// Spawns a slime enemy
-        /// </summary>
-        /// <param name="position">The position to spawn the slime at</param>
-        public void SpawnSlime(Point position)
-        {
-            Slime newSlime = new Slime(
-                slimeSpritesheet,
-                slimeDeathSpritesheet,
-                3,
-                new Rectangle(position, new Point(64, 64)));
-            CollisionManager.AddEnemy(newSlime);
-            gameObjectList.Add(newSlime);
-        }
-
-        /// <summary>
-        /// Spawns a totem enemy
-        /// </summary>
-        /// <param name="position">The position to spawn the totem at</param>
-        public void SpawnTotem(Point position)
-        {
-            Totem testTotem = new Totem(whiteSquareSprite,
-                new Rectangle(new Point(1300, 300), position),
-                3,
-                playerArrowSprite);
-            
-            CollisionManager.AddEnemy(testTotem);
-            gameObjectList.Add(testTotem);
-
-            CollisionManager.AddProjectile(testTotem.TotemProjectile);
-            gameObjectList.Add(testTotem.TotemProjectile);
-        }
-
         /// <summary>
         /// Run this when the game should end
         /// </summary>
