@@ -42,8 +42,8 @@ namespace CrossBoa
         // Assets
         private Texture2D whiteSquareSprite;
         private Texture2D playerArrowSprite;
-        private Texture2D slimeSpritesheet;
-        private Texture2D slimeDeathSpritesheet;
+        public static Texture2D slimeSpritesheet;
+        public static Texture2D slimeDeathSpritesheet;
         private Texture2D snakeSprite;
         private Texture2D crossbowSprite;
         private Texture2D hitBox;
@@ -59,12 +59,14 @@ namespace CrossBoa
         private Texture2D pauseText;
         private Texture2D gameOverText;
         private Texture2D collectibleSprite;
+        private Texture2D crosshairSprite;
 
         private SpriteFont arial32;
 
         // Objects
         private GameObject[] menuBGLayers;
         private List<GameObject> playerHealthBar;
+        private GameObject crosshair;
         private CrossBow crossbow;
         private static Player player;
         private PlayerArrow playerArrow;
@@ -91,7 +93,7 @@ namespace CrossBoa
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
         }
 
         protected override void Initialize()
@@ -132,6 +134,7 @@ namespace CrossBoa
             pauseText = Content.Load<Texture2D>("PauseText");
             gameOverText = Content.Load<Texture2D>("GameOverText");
             collectibleSprite = Content.Load<Texture2D>("LifePot");
+            crosshairSprite = Content.Load<Texture2D>("Crosshair");
 
 
             for (int i = 0; i < 5; i++)
@@ -162,9 +165,6 @@ namespace CrossBoa
                 crossbowSprite,
                 crossbowSprite.Bounds);
 
-            SpawnSlime(new Point(400, 400));
-            SpawnSlime(new Point(1280, 448));
-            SpawnSlime(new Point(64 * 12, 64 * 9));
 
             CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
             SpawnTotem(new Point(50, 100));
@@ -218,9 +218,14 @@ namespace CrossBoa
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow);
 
+            SpawnManager.GameObjectList = gameObjectList;
             LevelManager.LContent = Content;
-            LevelManager.GameReference = this;
             LevelManager.LoadLevel("TestingFile");
+
+
+            SpawnManager.SpawnSlime(new Point(400, 400));
+            SpawnManager.SpawnSlime(new Point(1280, 448));
+            SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
         }
 
         protected override void Update(GameTime gameTime)
@@ -228,6 +233,9 @@ namespace CrossBoa
             // TODO: Add your update logic here
             kbState = Keyboard.GetState();
             mState = Mouse.GetState();
+
+            //Get the position of the mouse for the crosshair
+            crosshair = new GameObject(crosshairSprite, new Rectangle(mState.X - crosshairSprite.Width, mState.Y - crosshairSprite.Height, crosshairSprite.Width * 2, crosshairSprite.Height * 2));
 
             switch (gameState)
             {
@@ -291,7 +299,7 @@ namespace CrossBoa
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            
+
             switch (gameState)
             {
                 // Main Menu
@@ -303,6 +311,7 @@ namespace CrossBoa
                 case GameState.Game:
                     DrawGame();
                     DrawGameUI();
+                    
                     break;
 
                 // Pause Menu
@@ -348,6 +357,7 @@ namespace CrossBoa
             AnimateMainMenuBG();
 
             playButton.Update(gameTime);
+
         }
 
         /// <summary>
@@ -400,7 +410,9 @@ namespace CrossBoa
             _spriteBatch.Draw(titleText, new Vector2(0, 0), Color.White);
 
             playButton.Draw(_spriteBatch);
-            
+
+            crosshair.Draw(_spriteBatch);
+
             _spriteBatch.End();
         }
 
@@ -501,7 +513,7 @@ namespace CrossBoa
                 // Spawn slimes when pressing E
                 if (WasKeyPressed(Keys.E))
                 {
-                    SpawnSlime(mState.Position);
+                    SpawnManager.SpawnSlime(mState.Position);
                 }
 
                 // Shake the screen if the player presses Enter while debug is active
@@ -587,6 +599,7 @@ namespace CrossBoa
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             pauseButton.Draw(_spriteBatch);
+
             for (int i = 0; i < playerHealthBar.Count; i++)
             {
                 if (i < player.CurrentHealth)
@@ -613,6 +626,8 @@ namespace CrossBoa
                 _spriteBatch.DrawString(arial32, "" + crossbow.Direction, new Vector2(10, ScreenHeight - 100), Color.White);
             }
 
+            crosshair.Draw(_spriteBatch);
+
             _spriteBatch.End();
         }
 
@@ -637,6 +652,8 @@ namespace CrossBoa
             _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:",
                 new Vector2(ScreenWidth - 400, ScreenHeight - 100), isDebugActive ? Color.Red : Color.Green);
             debugButton.Draw(_spriteBatch);
+
+            crosshair.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -691,6 +708,8 @@ namespace CrossBoa
 
             gameOverButton.Draw(_spriteBatch);
 
+            crosshair.Draw(_spriteBatch);
+
             _spriteBatch.End();
         }
 
@@ -706,27 +725,14 @@ namespace CrossBoa
                 new Vector2(ScreenWidth - 175,
                     ScreenHeight / 2f), Color.White);
 
+            crosshair.Draw(_spriteBatch);
+
             _spriteBatch.End();
         }
         #endregion
 
-        // Helper Methods
         #region Helper Methods
-        /// <summary>
-        /// Spawns a slime enemy
-        /// </summary>
-        /// <param name="position">The position to spawn the slime at</param>
-        public void SpawnSlime(Point position)
-        {
-            Slime newSlime = new Slime(
-                slimeSpritesheet,
-                slimeDeathSpritesheet,
-                3,
-                new Rectangle(position, new Point(64, 64)));
-            CollisionManager.AddEnemy(newSlime);
-            gameObjectList.Add(newSlime);
-        }
-
+        // Helper Methods
         /// <summary>
         /// Spawns a totem enemy
         /// </summary>

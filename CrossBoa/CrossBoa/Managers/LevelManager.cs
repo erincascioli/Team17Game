@@ -30,7 +30,6 @@ namespace CrossBoa.Managers
         private static ExitLocation previousExit;
         private static int forcedX;
         private static int forcedY;
-        private static Game1 gameReference;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
@@ -52,12 +51,6 @@ namespace CrossBoa.Managers
         {
             get { return exitLocation; }
         }
-
-        public static Game1 GameReference
-        {
-            set { gameReference = value; }
-        }
-           
 
         static LevelManager()
         {
@@ -221,7 +214,7 @@ namespace CrossBoa.Managers
                 }
             }
 
-            gameReference.SpawnSlime(new Point(100, 200));
+            SpawnManager.SpawnSlime(new Point(100, 200));
         }
 
         /// <summary>
