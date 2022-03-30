@@ -679,8 +679,8 @@ namespace CrossBoa.Managers
                     crossbow.PickUpArrow();
 
                     // Doesn't let the player arrow zoom onto screen if it is too far out of bounds
-                    if (CollisionManager.PlayerArrow.Position.X < -50 || CollisionManager.PlayerArrow.Position.X > Game1.ScreenWidth + 50 
-                        || CollisionManager.PlayerArrow.Position.Y < -50|| CollisionManager.PlayerArrow.Position.Y > Game1.ScreenHeight + 50)
+                    if (CollisionManager.PlayerArrow.Position.X < -50 || CollisionManager.PlayerArrow.Position.X > Game1.windowWidth + 50 
+                        || CollisionManager.PlayerArrow.Position.Y < -50|| CollisionManager.PlayerArrow.Position.Y > Game1.windowHeight + 50)
                     {
                         CollisionManager.PlayerArrow.HitSomething();
                         CollisionManager.PlayerArrow.GetPickedUp();

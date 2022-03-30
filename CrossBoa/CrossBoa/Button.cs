@@ -18,7 +18,7 @@ namespace CrossBoa
         private MouseState previousState;
         private bool isInteractable;
         private bool hovering;
-        private Rectangle button;
+        private Rectangle rectangle;
         private Texture2D hoverButtonTexture;
         private Texture2D offButtonTexture;
 
@@ -39,7 +39,8 @@ namespace CrossBoa
             : base(offImage,  rectangle)
         {
             this.isInteractable = isInteractable;
-            button = rectangle;
+            this.rectangle = rectangle;
+            position = rectangle.Location.ToVector2();
             hoverButtonTexture = hoverImage;
             offButtonTexture = offImage;
         }
@@ -51,8 +52,8 @@ namespace CrossBoa
         /// <returns></returns>
         public bool IsMouseOver()
         {
-            if (mouseState.X > button.Left && mouseState.X < button.Right &&
-                mouseState.Y > button.Top && mouseState.Y < button.Bottom)
+            if (mouseState.X > rectangle.Left && mouseState.X < rectangle.Right &&
+                mouseState.Y > rectangle.Top && mouseState.Y < rectangle.Bottom)
             {
                 // Mouse is over the button
                 return true;
@@ -92,11 +93,11 @@ namespace CrossBoa
         {
             if (hovering)
             {
-                spriteBatch.Draw(hoverButtonTexture, button, Color.White);
+                spriteBatch.Draw(hoverButtonTexture, rectangle, Color.White);
             }
             else
             {
-                spriteBatch.Draw(offButtonTexture, button, Color.White);
+                spriteBatch.Draw(offButtonTexture, rectangle, Color.White);
             }
         }
 
