@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Xml;
 using CrossBoa.Enemies;
+using CrossBoa.Interfaces;
 using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -77,6 +78,7 @@ namespace CrossBoa
         // Objects
         private GameObject[] menuBGLayers;
         private List<GameObject> playerHealthBar;
+        public static List<UIElement> UIElementsList;
         private CrossBow crossbow;
         private static Player player;
         private PlayerArrow playerArrow;
@@ -117,6 +119,7 @@ namespace CrossBoa
             menuBGSpriteList = new Texture2D[5];
             menuBGLayers = new GameObject[10];
             playerHealthBar = new List<GameObject>();
+            UIElementsList = new List<UIElement>(4);
 
             // --- Prepare game rendering ---
             _graphics.PreferredBackBufferWidth = 3500;
@@ -220,23 +223,25 @@ namespace CrossBoa
 
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
-                new Rectangle(windowWidth / 2 - playHoverSprite.Width * 3 / 4,
-                    windowHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
+                Point.Zero,
+                playHoverSprite.Bounds.Size / new Point(3),
+                ScreenAnchor.Center);
 
             // Pause Button
             pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Rectangle(windowWidth - settingsPressedSprite.Width - 5, 5, settingsHoverSprite.Width,
-                    settingsHoverSprite.Height));
+                new Point(-10, 10), 
+                settingsHoverSprite.Bounds.Size / new Point(3),
+                ScreenAnchor.TopRight);
 
             // Debug Button
             debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Rectangle(windowWidth - 100, windowHeight - 100, settingsHoverSprite.Width,
-                    settingsHoverSprite.Height));
+                new Point(-20), settingsHoverSprite.Bounds.Size / new Point(3),
+                ScreenAnchor.BottomRight);
 
             // Game Over Button
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
-                new Rectangle(windowWidth / 2 - playHoverSprite.Width * 3 / 4,
-                    windowHeight / 2 - playHoverSprite.Height * 3 / 4 + 50, playHoverSprite.Width * 3 / 2, playHoverSprite.Height * 3 / 2));
+                new Point(0, 50), playHoverSprite.Bounds.Size / new Point(3),
+                ScreenAnchor.Center);
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
@@ -363,6 +368,7 @@ namespace CrossBoa
             base.Draw(gameTime);
         }
 
+        // Main Menu
         // Update and Draw methods
 
         // Main Menu
@@ -425,7 +431,7 @@ namespace CrossBoa
             }
 
             _spriteBatch.Draw(titleText, 
-                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 20), titleText.Bounds.Size * new Point(UIScale * 3)), 
+                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 50), titleText.Bounds.Size * new Point(UIScale * 4)), 
                 Color.White);
 
             playButton.Draw(_spriteBatch);
@@ -827,6 +833,12 @@ namespace CrossBoa
 
             if (UIScale < 1)
                 UIScale = 1;
+
+            // Update the sizes and positions of all UI Elements
+            foreach (UIElement element in UIElementsList)
+            {
+                element.OnResize();
+            }
         }
 
         /// <summary>
