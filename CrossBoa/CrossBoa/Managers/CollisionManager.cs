@@ -64,6 +64,7 @@ namespace CrossBoa.Managers
                     if (!isInvincibilityActive)
                     {
                         i.HitSomething();
+                        player.TakeDamage(1);
                     }
                 }
                 else
@@ -161,6 +162,17 @@ namespace CrossBoa.Managers
                 {
                     c.IsCollected = true;
                 }
+            }
+
+            // Removes inactive arrows from collision
+            for (int i = 0; i < enemyProjectiles.Count; i++)
+            {
+                if (!enemyProjectiles[i].IsActive)
+                {
+                    enemyProjectiles.RemoveAt(i);
+                    i--;
+                }
+
             }
         }
 

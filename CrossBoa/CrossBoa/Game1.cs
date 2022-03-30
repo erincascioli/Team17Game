@@ -447,7 +447,35 @@ namespace CrossBoa
                 {
                     gameObjectList[i].Update(gameTime);
                 }
+
+                // Fires a totem's arrow if the cooldown time reaches 0.
+                Totem totem;
+                if ((totem = gameObjectList[i] as Totem) != null && totem.IsAlive
+                    && totem.ReadyToFire)
+                {
+                    Arrow newTotemArrow = new Arrow(playerArrowSprite,
+                        new Rectangle(-100,
+                                      -100,
+                                      30,
+                                      30),
+                        new Vector2(0, 0));
+
+                    CollisionManager.AddProjectile(newTotemArrow);
+                    gameObjectList.Add(newTotemArrow);
+
+                    totem.Shoot(newTotemArrow);
+                }
+
+                // Removes all inactive projectiles from play.
+                Arrow arrow;
+                if ((arrow = gameObjectList[i] as Arrow) != null && !arrow.IsActive)
+                {
+                    gameObjectList.RemoveAt(i);
+                    i--;
+                }
             }
+
+            
 
             // Fires the bow on click.
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
