@@ -34,6 +34,7 @@ namespace CrossBoa
         private const float DefaultPlayerDodgeLength = 0.25f;
         private const float DefaultPlayerDodgeSpeed = 2f;
 
+        public static int UIScale;
         public static int windowWidth;
         public static int windowHeight;
         public static Rectangle windowRect;
@@ -41,7 +42,7 @@ namespace CrossBoa
         private float preferredAspectRatio;
 
         private bool isDebugActive = false;
-        private bool isGodModeActive = false; // Default
+        public static bool isGodModeActive = false; // Default
 
         private KeyboardState kbState;
         private KeyboardState previousKBState;
@@ -103,6 +104,10 @@ namespace CrossBoa
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            // CREDITS TO: https://community.monogame.net/t/handling-user-controlled-window-resizing/7828
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += OnResize;
         }
 
         protected override void Initialize()
@@ -114,20 +119,17 @@ namespace CrossBoa
             playerHealthBar = new List<GameObject>();
 
             // --- Prepare game rendering ---
-            windowWidth = 2500;
-            windowHeight = 1200;
-            windowRect = new Rectangle(0, 0, windowWidth, windowHeight);
+            _graphics.PreferredBackBufferWidth = 3500;
+            _graphics.PreferredBackBufferHeight = 2000;
+            _graphics.ApplyChanges();
+            OnResize(null, null);
 
             // Create a render target that can be much more easily rescaled
             gameRenderTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
 
-            // Set default screen size
-            _graphics.PreferredBackBufferWidth = windowWidth;
-            _graphics.PreferredBackBufferHeight = windowHeight;
-            _graphics.ApplyChanges();
 
-            // Save aspect ratios
-            outputAspectRatio = Window.ClientBounds.Width / (float)Window.ClientBounds.Height;
+
+            // Save aspect ratio
             preferredAspectRatio = 16 / 9f;
 
             base.Initialize();
@@ -147,7 +149,6 @@ namespace CrossBoa
             fullHeart = Content.Load<Texture2D>("Full Heart");
             snakeSprite = Content.Load<Texture2D>("snake");
             crossbowSprite = Content.Load<Texture2D>("Crossbow");
-            arial32 = Content.Load<SpriteFont>("Arial32");
             hitBox = Content.Load<Texture2D>("Hitbox");
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
             playerArrowSprite = Content.Load<Texture2D>("arrow2");
@@ -156,6 +157,7 @@ namespace CrossBoa
             gameOverText = Content.Load<Texture2D>("GameOverText");
             collectibleSprite = Content.Load<Texture2D>("LifePot");
 
+            arial32 = Content.Load<SpriteFont>("Arial32");
 
             for (int i = 0; i < 5; i++)
             {
@@ -250,6 +252,10 @@ namespace CrossBoa
             // TODO: Add your update logic here
             kbState = Keyboard.GetState();
             mState = Mouse.GetState();
+            
+            // TEST CODE
+            if(WasKeyPressed(Keys.F11))
+                ToggleFullscreen();
 
             switch (gameState)
             {
@@ -418,7 +424,9 @@ namespace CrossBoa
                 background.Draw(_spriteBatch);
             }
 
-            _spriteBatch.Draw(titleText, new Vector2(0, 0), Color.White);
+            _spriteBatch.Draw(titleText, 
+                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 20), titleText.Bounds.Size * new Point(UIScale * 3)), 
+                Color.White);
 
             playButton.Draw(_spriteBatch);
             
@@ -532,7 +540,7 @@ namespace CrossBoa
             // Make the graphics device render to the smaller target
             GraphicsDevice.SetRenderTarget(gameRenderTarget);
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Camera.Matrix);
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Camera.Matrix);
 
             // Change background color
             GraphicsDevice.Clear(Color.Black);
@@ -547,7 +555,7 @@ namespace CrossBoa
             }
 
             if (playerArrow != null)
-            playerArrow.Draw(_spriteBatch);
+                playerArrow.Draw(_spriteBatch);
 
             // DEBUG
             if (isDebugActive)
@@ -561,7 +569,7 @@ namespace CrossBoa
 
             _spriteBatch.End();
 
-            // Render the smaller target to the backbuffer
+            // Render the target to the backbuffer
             GraphicsDevice.SetRenderTarget(null);
 
 
@@ -723,6 +731,7 @@ namespace CrossBoa
         /// </summary>
         public static Vector2 MousePositionInGame()
         {
+            // SCREEN SPACE
             // Capture mouse position
             (double, double) output = (Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
 
@@ -730,6 +739,7 @@ namespace CrossBoa
             output.Item1 -= gameTargetRect.Location.X;
             output.Item2 -= gameTargetRect.Location.Y;
 
+            // CAMERA SPACE
             // Scale mouse position by RenderTarget difference
             //     *uses tuples to avoid float division inaccuracy
             double scale = gameRenderTarget.Bounds.Size.X / (double)gameTargetRect.Size.X;
@@ -794,6 +804,53 @@ namespace CrossBoa
         public bool WasKeyPressed(Keys key)
         {
             return kbState.IsKeyDown(key) && previousKBState.IsKeyUp(key);
+        }
+
+        // Event Handlers
+        public void OnResize(Object sender, EventArgs e)
+        {
+            // Update windowWidth and windowHeight
+            windowWidth = Window.ClientBounds.Width;
+            windowHeight = Window.ClientBounds.Height;
+
+            // Update windowRect
+            windowRect = new Rectangle(0, 0, windowWidth, windowHeight);
+
+            // Update Aspect Ratio
+            outputAspectRatio = Window.ClientBounds.Width / (float)Window.ClientBounds.Height;
+
+            // Update UI scale based on shorter side of window 
+            if (outputAspectRatio >= preferredAspectRatio)
+                UIScale = windowWidth / 400;
+            else
+                UIScale = windowHeight / 225;
+
+            if (UIScale < 1)
+                UIScale = 1;
+        }
+
+        /// <summary>
+        /// Toggles fullscreen
+        /// </summary>
+        public void ToggleFullscreen()
+        {
+            // Enable fullscreen and toggle  
+            if (!_graphics.IsFullScreen)
+            {
+                _graphics.IsFullScreen = true;
+                _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+                _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+                _graphics.ApplyChanges();
+            }
+            else
+            {
+                _graphics.IsFullScreen = false;
+                _graphics.PreferredBackBufferWidth = 3000;
+                _graphics.PreferredBackBufferHeight = 2500;
+                _graphics.ApplyChanges();
+            }
+
+            OnResize(null, null);
         }
     }
 

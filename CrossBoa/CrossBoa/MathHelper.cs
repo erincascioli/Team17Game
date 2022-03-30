@@ -39,8 +39,8 @@ namespace CrossBoa
         /// <summary>
         /// Returns the direction between two vectors in radians
         /// </summary>
-        /// <param name="baseVector">The point to start from</param>
-        /// <param name="vectorToFace">The point to end at</param>
+        /// <param name="baseVector">The vector to start from</param>
+        /// <param name="vectorToFace">The vector to end at</param>
         /// <returns>A direction in radians</returns>
         public static float DirectionBetween(Vector2 baseVector, Vector2 vectorToFace)
         {
@@ -83,5 +83,30 @@ namespace CrossBoa
         /// <param name="b">The second point</param>
         /// <returns>The squared distance between the points as a float</returns>
         public static float DistanceSquared(Point a, Point b) => MathF.Pow(a.X - b.X, 2) + MathF.Pow(a.Y - b.Y, 2);
+
+
+        /// <summary>
+        /// Moves this rectangle so the center is at a specific point
+        /// </summary>
+        public static void SetCenter(this Rectangle rectangle, Point destination)
+        {
+            rectangle.Location = destination - new Point(rectangle.Size.X / 2, rectangle.Size.Y / 2);
+        }
+
+        /// <summary>
+        /// Makes a new rectangle using the location as the center
+        /// </summary>
+        public static Rectangle MakeRectangleFromCenter(Point center, Point size)
+        {
+            return new Rectangle(center - size / new Point(2), size);
+        }
+
+        /// <summary>
+        /// Makes a new rectangle using the location as the center
+        /// </summary>
+        public static Rectangle MakeRectangleFromCenter(int x, int y, int width, int height)
+        {
+            return new Rectangle(x - width / 2, y - height / 2, width, height);
+        }
     }
 }
