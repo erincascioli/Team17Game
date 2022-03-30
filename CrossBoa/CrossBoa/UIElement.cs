@@ -28,7 +28,8 @@ namespace CrossBoa
         protected ScreenAnchor anchor;
         protected Rectangle rectangle;
         private Point windowCenter;
-        private bool doesScaling = true;
+        private bool doesPositionScale = true;
+        private bool doesSizeScale = true;
 
         // Rectangle is the actual UI element rectangle in Screen Space.
         //     The position and size are used to calculate it based on the UI Scale and the Anchor
@@ -43,11 +44,42 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// A Vector2 representing this GameObject's position
+        /// </summary>
+        public override Vector2 Position
+        {
+            get { return position; }
+            set
+            {
+                position = value;
+                rectangle = MathHelper.MakeRectangleFromCenter(value.ToPoint(), rectangle.Size);
+            }
+        }
+
+        /// <summary>
         /// The actual position and size of this rectangle relative to the window
         /// </summary>
         public override Rectangle Rectangle
         {
             get { return rectangle; }
+        }
+
+        /// <summary>
+        /// Whether or not the position of this UIElement will scale with the screen
+        /// </summary>
+        public bool DoesPositionScale
+        {
+            get { return doesPositionScale; }
+            set { doesPositionScale = value; }
+        }
+
+        /// <summary>
+        /// Whether or not the size of this UIElement will scale with the screen
+        /// </summary>
+        public bool DoesSizeScale
+        {
+            get { return doesSizeScale; }
+            set { doesSizeScale = value; }
         }
 
         /// <summary>
@@ -76,9 +108,10 @@ namespace CrossBoa
         public void OnResize()
         {
             windowCenter = Game1.windowRect.Center;
-            Vector2 offset = position * Game1.UIScale;
-            Point newSize = size * new Point(Game1.UIScale);
 
+            Vector2 offset = doesPositionScale ? position * Game1.UIScale : position;
+            Point newSize = doesSizeScale ? size * new Point(Game1.UIScale) : size;
+    
             // Makes a new rectangle based on the position and the anchor, multiplying them by the UIScale
             rectangle = anchor switch
             {

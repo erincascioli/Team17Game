@@ -80,7 +80,7 @@ namespace CrossBoa
         private GameObject[] menuBGLayers;
         private List<UIElement> playerHealthBar;
         public static List<UIElement> UIElementsList;
-        private GameObject crosshair;
+        private UIElement crosshair;
         private CrossBow crossbow;
         private static Player player;
         private PlayerArrow playerArrow;
@@ -182,18 +182,22 @@ namespace CrossBoa
                 DefaultPlayerDodgeSpeed
             );
 
-            // Create player health bar
-            for (int i = 0; i < DefaultPlayerHealth; i++)
-            {
-                playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(12 + i * 20, 10), new Point(20)));
-            }
-
             crossbow = new CrossBow(
                 crossbowSprite,
                 crossbowSprite.Bounds);
 
-
             CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
+
+            // CollisionManager is established and receives important permanent references
+            CollisionManager.Player = player;
+            CollisionManager.Crossbow = crossbow;
+            CollisionManager.PlayerArrow = playerArrow;
+
+            // Set up UI Elements
+            playHoverSprite = Content.Load<Texture2D>("PlayPressed");
+            playPressedSprite = Content.Load<Texture2D>("PlayRegular");
+            settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
+            settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -207,16 +211,6 @@ namespace CrossBoa
                     menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(-(windowWidth + 10), 0, windowWidth + 10, windowHeight));
                 }
             }
-
-            // CollisionManager is established and receives important permanent references
-            CollisionManager.Player = player;
-            CollisionManager.Crossbow = crossbow;
-            CollisionManager.PlayerArrow = playerArrow;
-
-            playHoverSprite = Content.Load<Texture2D>("PlayPressed");
-            playPressedSprite = Content.Load<Texture2D>("PlayRegular");
-            settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
-            settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
 
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
@@ -233,6 +227,18 @@ namespace CrossBoa
             // Game Over Button
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
                 ScreenAnchor.Center, new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
+
+            // Create player health bar
+            for (int i = 0; i < DefaultPlayerHealth; i++)
+            {
+                playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(12 + i * 20, 10), new Point(20)));
+            }
+
+            // Create crosshair
+            crosshair = new UIElement(crosshairSprite, ScreenAnchor.TopLeft, Point.Zero, crosshairSprite.Bounds.Size / new Point(2))
+            {
+                DoesPositionScale = false
+            };
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
@@ -255,8 +261,8 @@ namespace CrossBoa
             if(WasKeyPressed(Keys.F11))
                 ToggleFullscreen();
 
-            //Get the position of the mouse for the crosshair
-            crosshair = new GameObject(crosshairSprite, new Rectangle(mState.X - crosshairSprite.Width, mState.Y - crosshairSprite.Height, crosshairSprite.Width * 2, crosshairSprite.Height * 2));
+            // Get the position of the mouse for the crosshair
+            crosshair.Position = mState.Position.ToVector2();
 
             switch (gameState)
             {

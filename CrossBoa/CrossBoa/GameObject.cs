@@ -49,7 +49,7 @@ namespace CrossBoa
         /// <summary>
         /// A Vector2 representing this GameObject's position
         /// </summary>
-        public Vector2 Position
+        public virtual Vector2 Position
         {
             get { return position; }
             set { position = value; }
@@ -58,7 +58,7 @@ namespace CrossBoa
         /// <summary>
         /// A point representing this GameObject's size
         /// </summary>
-        public Point Size
+        public virtual Point Size
         {
             get { return size; }
             set { size = value; }
