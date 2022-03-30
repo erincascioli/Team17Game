@@ -43,6 +43,14 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// The actual position and size of this rectangle relative to the window
+        /// </summary>
+        public override Rectangle Rectangle
+        {
+            get { return rectangle; }
+        }
+
+        /// <summary>
         /// Constructs a UI Element. The position is dependent on the anchor.
         /// </summary>
         /// <param name="sprite">The sprite for this GameObject</param>
