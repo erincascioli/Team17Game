@@ -51,14 +51,10 @@ namespace CrossBoa.Managers
         {
             Totem testTotem = new Totem(Game1.whiteSquareSprite,
                 new Rectangle(new Point(1300, 300), position),
-                3,
-                Game1.playerArrowSprite);
+                3);
 
             CollisionManager.AddEnemy(testTotem);
             gameObjectList.Add(testTotem);
-
-            CollisionManager.AddProjectile(testTotem.TotemProjectile);
-            gameObjectList.Add(testTotem.TotemProjectile);
         }
     }
 }

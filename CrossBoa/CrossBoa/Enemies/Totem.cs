@@ -25,13 +25,13 @@ namespace CrossBoa.Enemies
         }
 
         // ~~~ CONSTRUCTOR ~~~
-        public Totem(Texture2D sprite, Rectangle rectangle, int health, Player target) :
+        public Totem(Texture2D sprite, Rectangle rectangle, int health) :
             base(sprite, rectangle, health, null, 0)
         {
             timeSinceShot = 0f;
             isAlive = true;
             color = Color.White;
-            this.target = target;
+            target = Game1.Player;
         }
 
         // ~~~ METHODS ~~~
