@@ -454,7 +454,7 @@ namespace CrossBoa.Managers
                 if (Camera.CameraY >= 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(0, -Game1.windowHeight - 1700);
+                    Camera.MoveCamera(0, -Game1.gameRenderTarget.Height - 1700);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
                                 CollisionManager.Player.Position.Y + 1300);
 
@@ -484,10 +484,10 @@ namespace CrossBoa.Managers
                     forcedY = 1;
                 }
 
-                if (Camera.CameraY <= -Game1.windowHeight - 1100)
+                if (Camera.CameraY <= -Game1.gameRenderTarget.Height - 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(0, Game1.windowHeight + 1700);
+                    Camera.MoveCamera(0, Game1.gameRenderTarget.Height + 1700);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
                         CollisionManager.Player.Position.Y - 1300);
 
@@ -495,7 +495,7 @@ namespace CrossBoa.Managers
                     LoadLevel("TestingFile");
                 }
 
-                if (player.Position.Y > Game1.windowHeight + 100)
+                if (player.Position.Y > Game1.gameRenderTarget.Height + 100)
                 {
                     Camera.MoveCamera(0, -90);
 
@@ -517,10 +517,10 @@ namespace CrossBoa.Managers
                     forcedY = 0;
                 }
 
-                if (Camera.CameraX <= -Game1.windowWidth - 1100)
+                if (Camera.CameraX <= -Game1.gameRenderTarget.Width - 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(Game1.windowWidth + 1700, 0);
+                    Camera.MoveCamera(Game1.gameRenderTarget.Width + 1700, 0);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X - 2000,
                         CollisionManager.Player.Position.Y);
 
@@ -528,7 +528,7 @@ namespace CrossBoa.Managers
                     LoadLevel("TestingFile");
                 }
 
-                if (player.Position.X > Game1.windowWidth + 100)
+                if (player.Position.X > Game1.gameRenderTarget.Width + 100)
                 {
                     Camera.MoveCamera(-90, 0);
 
@@ -550,10 +550,10 @@ namespace CrossBoa.Managers
                     forcedY = 0;
                 }
 
-                if (Camera.CameraX >= Game1.windowWidth + 1100)
+                if (Camera.CameraX >= Game1.gameRenderTarget.Width + 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(-Game1.windowWidth - 1700, 0);
+                    Camera.MoveCamera(-Game1.gameRenderTarget.Width - 1700, 0);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X + 2000,
                         CollisionManager.Player.Position.Y);
 
@@ -578,7 +578,7 @@ namespace CrossBoa.Managers
                 player.ForceMove(forcedX, forcedY, gameTime);
 
                 // Makes sure consecutive blocks of code can't happen
-                if (previousExit == ExitLocation.Top && player.Position.Y > 0 && !(player.Position.X > Game1.windowWidth) && !(player.Position.X < 0))
+                if (previousExit == ExitLocation.Top && player.Position.Y > 0 && !(player.Position.X > Game1.gameRenderTarget.Width) && !(player.Position.X < 0))
                 {
                     Camera.MoveCamera(0, 90);
 
@@ -599,7 +599,7 @@ namespace CrossBoa.Managers
                         }
                     }
                 }
-                if (previousExit == ExitLocation.Bottom && player.Position.Y < Game1.windowHeight && !(player.Position.X > Game1.windowWidth) && !(player.Position.X < 0))
+                if (previousExit == ExitLocation.Bottom && player.Position.Y < Game1.gameRenderTarget.Height && !(player.Position.X > Game1.gameRenderTarget.Width) && !(player.Position.X < 0))
                 {
                     Camera.MoveCamera(0, -90);
 
@@ -620,7 +620,7 @@ namespace CrossBoa.Managers
                         }
                     }
                 }
-                if (previousExit == ExitLocation.Right && player.Position.X < Game1.windowWidth && !(player.Position.Y > Game1.windowHeight) && !(player.Position.Y < 0))
+                if (previousExit == ExitLocation.Right && player.Position.X < Game1.gameRenderTarget.Width && !(player.Position.Y > Game1.gameRenderTarget.Height) && !(player.Position.Y < 0))
                 {
                     Camera.MoveCamera(-90, 0);
 
@@ -641,7 +641,7 @@ namespace CrossBoa.Managers
                         }
                     }
                 }
-                if (previousExit == ExitLocation.Left && player.Position.X > 0 && !(player.Position.Y > Game1.windowHeight) && !(player.Position.Y < 0))
+                if (previousExit == ExitLocation.Left && player.Position.X > 0 && !(player.Position.Y > Game1.gameRenderTarget.Height) && !(player.Position.Y < 0))
                 {
                     Camera.MoveCamera(90, 0);
 
@@ -672,8 +672,8 @@ namespace CrossBoa.Managers
                     crossbow.PickUpArrow();
 
                     // Doesn't let the player arrow zoom onto screen if it is too far out of bounds
-                    if (CollisionManager.PlayerArrow.Position.X < -50 || CollisionManager.PlayerArrow.Position.X > Game1.windowWidth + 50 
-                        || CollisionManager.PlayerArrow.Position.Y < -50|| CollisionManager.PlayerArrow.Position.Y > Game1.windowHeight + 50)
+                    if (CollisionManager.PlayerArrow.Position.X < -50 || CollisionManager.PlayerArrow.Position.X > Game1.gameRenderTarget.Width + 50 
+                        || CollisionManager.PlayerArrow.Position.Y < -50|| CollisionManager.PlayerArrow.Position.Y > Game1.gameRenderTarget.Height + 50)
                     {
                         CollisionManager.PlayerArrow.HitSomething();
                         CollisionManager.PlayerArrow.GetPickedUp();

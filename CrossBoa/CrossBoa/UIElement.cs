@@ -43,17 +43,25 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// The actual position and size of this rectangle relative to the window
+        /// </summary>
+        public override Rectangle Rectangle
+        {
+            get { return rectangle; }
+        }
+
+        /// <summary>
         /// Constructs a UI Element. The position is dependent on the anchor.
         /// </summary>
         /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="position">The position of this object is dependent on the anchor and the UIScale in Game1</param>
-        /// <param name="size">The size of this object is dependent on the UIScale in Game1</param>
         /// <param name="anchor">The center of this object will be placed at the anchor. The position will offset it from that</param>
-        public UIElement(Texture2D sprite, Point position, Point size, ScreenAnchor anchor) : base(sprite, new Rectangle(position, size))
+        /// <param name="offset">How much to offset this UI Element from the anchor point</param>
+        /// <param name="size">The size of this object is dependent on the UIScale in Game1</param>
+        public UIElement(Texture2D sprite, ScreenAnchor anchor, Point offset, Point size) : base(sprite, new Rectangle(offset, size))
         {
-            this.position = position.ToVector2();
+            this.position = offset.ToVector2();
             this.size = size;
-            this.rectangle = MathHelper.MakeRectangleFromCenter(position, size * new Point(Game1.UIScale));
+            this.rectangle = MathHelper.MakeRectangleFromCenter(offset, size * new Point(Game1.UIScale));
             this.anchor = anchor;
 
             windowCenter = Game1.windowRect.Center;
