@@ -42,8 +42,8 @@ namespace CrossBoa
         // Assets
         private Texture2D whiteSquareSprite;
         private Texture2D playerArrowSprite;
-        private Texture2D slimeSpritesheet;
-        private Texture2D slimeDeathSpritesheet;
+        public static Texture2D slimeSpritesheet;
+        public static Texture2D slimeDeathSpritesheet;
         private Texture2D snakeSprite;
         private Texture2D crossbowSprite;
         private Texture2D hitBox;
@@ -162,9 +162,6 @@ namespace CrossBoa
                 crossbowSprite,
                 crossbowSprite.Bounds);
 
-            SpawnSlime(new Point(400, 400));
-            SpawnSlime(new Point(1280, 448));
-            SpawnSlime(new Point(64 * 12, 64 * 9));
 
             CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
             SpawnTotem(new Point(50, 100));
@@ -218,9 +215,14 @@ namespace CrossBoa
             gameObjectList.Add(player);
             gameObjectList.Add(crossbow);
 
+            SpawnManager.GameObjectList = gameObjectList;
             LevelManager.LContent = Content;
-            LevelManager.GameReference = this;
             LevelManager.LoadLevel("TestingFile");
+
+
+            SpawnManager.SpawnSlime(new Point(400, 400));
+            SpawnManager.SpawnSlime(new Point(1280, 448));
+            SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
         }
 
         protected override void Update(GameTime gameTime)
@@ -473,7 +475,7 @@ namespace CrossBoa
                 // Spawn slimes when pressing E
                 if (WasKeyPressed(Keys.E))
                 {
-                    SpawnSlime(mState.Position);
+                    SpawnManager.SpawnSlime(mState.Position);
                 }
 
                 // Shake the screen if the player presses Enter while debug is active
@@ -682,23 +684,8 @@ namespace CrossBoa
         }
         #endregion
 
-        // Helper Methods
         #region Helper Methods
-        /// <summary>
-        /// Spawns a slime enemy
-        /// </summary>
-        /// <param name="position">The position to spawn the slime at</param>
-        public void SpawnSlime(Point position)
-        {
-            Slime newSlime = new Slime(
-                slimeSpritesheet,
-                slimeDeathSpritesheet,
-                3,
-                new Rectangle(position, new Point(64, 64)));
-            CollisionManager.AddEnemy(newSlime);
-            gameObjectList.Add(newSlime);
-        }
-
+        // Helper Methods
         /// <summary>
         /// Spawns a totem enemy
         /// </summary>
