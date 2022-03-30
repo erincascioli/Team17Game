@@ -61,6 +61,7 @@ namespace CrossBoa
         public Point Size
         {
             get { return size; }
+            set { size = value; }
         }
 
         /// <summary>
