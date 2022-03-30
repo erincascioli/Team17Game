@@ -708,6 +708,18 @@ namespace CrossBoa.Managers
             }
         }
 
+        /// <summary>
+        /// Sets the stage number to 0. Currently broken, don't use yet
+        /// </summary>
+        public static void GameOver()
+        {
+            stage = 0;
+            //exitLocation = ExitLocation.Null;
+            //previousExit = ExitLocation.Null;
+            // Might do more if we want the level manager to do other stuff
+            // upon game over
+        }
+
         public enum ExitLocation
         {
             Null, // So doors don't mess up

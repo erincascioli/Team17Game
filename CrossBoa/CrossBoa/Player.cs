@@ -297,6 +297,13 @@ namespace CrossBoa
             if (!fromUpdate)
                 timeUntilDodge = 0;
         }
+
+        public void ResetPlayer(Rectangle startingPos)
+        {
+            currentHealth = maxHealth;
+            position = new Vector2(startingPos.X, startingPos.Y);
+            timeLeftInvincible = 0;
+        }
     }
 
 
