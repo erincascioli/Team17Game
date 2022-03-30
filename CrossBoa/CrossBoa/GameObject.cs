@@ -38,7 +38,7 @@ namespace CrossBoa
         /// <summary>
         /// A rectangle containing this GameObject's position and size
         /// </summary>
-        public Rectangle Rectangle
+        public virtual Rectangle Rectangle
         {
             get
             {
