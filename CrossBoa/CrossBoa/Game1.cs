@@ -435,18 +435,6 @@ namespace CrossBoa
                     CollisionManager.CheckCollision(isGodModeActive);
                 }
 
-                // Delete enemies from lists after they die
-                Enemy enemy;
-                if ((enemy = gameObjectList[i] as Enemy) != null && !enemy.IsAlive)
-                {
-                    gameObjectList.RemoveAt(i);
-                    i--;
-                }
-                else if (!(gameObjectList[i] == player && (!player.CanMove && !player.InDodge)))
-                {
-                    gameObjectList[i].Update(gameTime);
-                }
-
                 // Fires a totem's arrow if the cooldown time reaches 0.
                 Totem totem;
                 if ((totem = gameObjectList[i] as Totem) != null && totem.IsAlive
@@ -471,6 +459,19 @@ namespace CrossBoa
                 {
                     gameObjectList.RemoveAt(i);
                     i--;
+                }
+
+                // ~~~~~ DO ALL EXTERNAL    GAMEOBJECT MODIFICATION ABOVE THIS CODE ~~~~~
+                // Delete enemies from lists after they die
+                Enemy enemy;
+                if ((enemy = gameObjectList[i] as Enemy) != null && !enemy.IsAlive)
+                {
+                    gameObjectList.RemoveAt(i);
+                    i--;
+                }
+                else if (!(gameObjectList[i] == player && (!player.CanMove && !player.InDodge)))
+                {
+                    gameObjectList[i].Update(gameTime);
                 }
             }
 
