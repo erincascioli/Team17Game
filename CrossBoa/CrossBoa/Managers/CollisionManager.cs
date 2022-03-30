@@ -64,6 +64,7 @@ namespace CrossBoa.Managers
                     if (!isInvincibilityActive)
                     {
                         i.HitSomething();
+                        player.TakeDamage(1);
                     }
                 }
                 else
@@ -104,7 +105,7 @@ namespace CrossBoa.Managers
                 }
 
                 // Tracks Living Enemies
-                if (enemy.IsAlive)
+                if (enemy.Health > 0)
                 {
                     survivors.Add(enemy);
                 }
@@ -112,7 +113,6 @@ namespace CrossBoa.Managers
 
             // Enemy List is updated to only use living enemies
             enemies = survivors;
-
 
             // Collidable tiles
             foreach (Tile tile in levelObstacles)
@@ -164,8 +164,16 @@ namespace CrossBoa.Managers
                 }
             }
 
-            // Closes entrance behind the player
-            //if (LevelManager.)
+            // Removes inactive arrows from collision
+            for (int i = 0; i < enemyProjectiles.Count; i++)
+            {
+                if (!enemyProjectiles[i].IsActive)
+                {
+                    enemyProjectiles.RemoveAt(i);
+                    i--;
+                }
+
+            }
         }
 
         /// <summary>
@@ -178,7 +186,11 @@ namespace CrossBoa.Managers
         {
             sb.Draw(hitBox, player.Hitbox, Color.White);
 
-            
+            foreach (Collectible c in collectibles)
+            {
+                c.Draw(sb);
+            }
+
             if (playerArrow != null)
             {
                 // Make drawn hitbox size larger if hitbox is a point
@@ -207,11 +219,6 @@ namespace CrossBoa.Managers
             foreach (Tile i in levelObstacles)
             {
                 sb.Draw(hitBox, i.Rectangle, Color.White);
-            }
-
-            foreach (Collectible c in collectibles)
-            {
-                c.Draw(sb);
             }
         }
 
@@ -260,7 +267,6 @@ namespace CrossBoa.Managers
         {
             // Rectangle that holds the intersection area
             Rectangle overlap = Rectangle.Intersect(entity.Hitbox, tile.Rectangle);
-
 
             // Is the overlapping rectangle taller than it is wide
             if (overlap.Width > overlap.Height || (overlap.Width == overlap.Height && alternate == 0))

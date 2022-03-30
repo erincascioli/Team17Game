@@ -9,34 +9,29 @@ namespace CrossBoa.Enemies
     {
         // ~~~ FIELDS ~~~
         private double timeSinceShot;
-        private Arrow projectile;
+        private Player target;
+        // No totem sprite yet
+        // private Texture2D totemSprite;
 
         private const double TimePerShot = 1f;
 
-        /// <summary>
-        /// The projectile fired by the totem. Get-only property.
-        /// </summary>
-        public Arrow TotemProjectile
+        // ~~~ PROPERTIES ~~~
+        public bool ReadyToFire
         {
             get
             {
-                return projectile;
+                return timeSinceShot > TimePerShot;
             }
         }
 
         // ~~~ CONSTRUCTOR ~~~
-        public Totem(Texture2D sprite, Rectangle rectangle, int health, Texture2D projectileSprite) :
+        public Totem(Texture2D sprite, Rectangle rectangle, int health) :
             base(sprite, rectangle, health, null, 0)
         {
             timeSinceShot = 0f;
-            projectile = new Arrow(projectileSprite, 
-                new Rectangle(-100,
-                              -100,
-                              30,
-                              30),
-                new Vector2(0,0));
             isAlive = true;
             color = Color.White;
+            target = Game1.Player;
         }
 
         // ~~~ METHODS ~~~
@@ -56,14 +51,13 @@ namespace CrossBoa.Enemies
             projectile.GetShot(
                 new Vector2(Rectangle.X + Width/2,
                             Rectangle.Y + Height/2),
-                (float)(Math.PI/2), 500);
+                MathHelper.DirectionBetween(Rectangle.Location, target.Rectangle.Location),
+                500);
         }
 
         public override void Update(GameTime gameTime)
         {
             timeSinceShot += gameTime.ElapsedGameTime.TotalSeconds;
-            if (timeSinceShot >= TimePerShot)
-                Shoot(projectile);
         }
     }
 }
