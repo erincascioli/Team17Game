@@ -119,18 +119,15 @@ namespace CrossBoa
             menuBGSpriteList = new Texture2D[5];
             menuBGLayers = new GameObject[10];
             playerHealthBar = new List<GameObject>();
-            UIElementsList = new List<UIElement>(4);
+            UIElementsList = new List<UIElement>(20);
 
             // --- Prepare game rendering ---
-            _graphics.PreferredBackBufferWidth = 3500;
-            _graphics.PreferredBackBufferHeight = 2000;
+            _graphics.PreferredBackBufferWidth = 1600;
+            _graphics.PreferredBackBufferHeight = 900;
             _graphics.ApplyChanges();
-            OnResize(null, null);
 
             // Create a render target that can be much more easily rescaled
             gameRenderTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
-
-
 
             // Save aspect ratio
             preferredAspectRatio = 16 / 9f;
@@ -208,7 +205,6 @@ namespace CrossBoa
                 {
                     menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(-(windowWidth + 10), 0, windowWidth + 10, windowHeight));
                 }
-
             }
 
             // CollisionManager is established and receives important permanent references
@@ -224,23 +220,23 @@ namespace CrossBoa
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
                 Point.Zero,
-                playHoverSprite.Bounds.Size / new Point(3),
+                playHoverSprite.Bounds.Size / new Point(2),
                 ScreenAnchor.Center);
 
             // Pause Button
             pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Point(-10, 10), 
-                settingsHoverSprite.Bounds.Size / new Point(3),
+                new Point(-18, 18), 
+                settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7),
                 ScreenAnchor.TopRight);
 
             // Debug Button
             debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Point(-20), settingsHoverSprite.Bounds.Size / new Point(3),
+                new Point(-18, -18), settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7),
                 ScreenAnchor.BottomRight);
 
             // Game Over Button
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
-                new Point(0, 50), playHoverSprite.Bounds.Size / new Point(3),
+                new Point(0, 10), playHoverSprite.Bounds.Size / new Point(2),
                 ScreenAnchor.Center);
 
             // Add all GameObjects to GameObject list
@@ -250,6 +246,8 @@ namespace CrossBoa
             LevelManager.LContent = Content;
             LevelManager.GameReference = this;
             LevelManager.LoadLevel("TestingFile");
+
+            OnResize(null, null);
         }
 
         protected override void Update(GameTime gameTime)
@@ -391,20 +389,20 @@ namespace CrossBoa
             // Layer 1 is a blank image
 
             // Layer 2
-            menuBGLayers[2].Position += new Vector2(0.45f, 0);
-            menuBGLayers[3].Position += new Vector2(0.45f, 0);
+            menuBGLayers[2].Position += new Vector2(0.1f * UIScale, 0);
+            menuBGLayers[3].Position += new Vector2(0.1f * UIScale, 0);
 
             // Layer 3
-            menuBGLayers[4].Position += new Vector2(0.9f, 0);
-            menuBGLayers[5].Position += new Vector2(0.9f, 0);
+            menuBGLayers[4].Position += new Vector2(0.2f * UIScale, 0);
+            menuBGLayers[5].Position += new Vector2(0.2f * UIScale, 0);
 
             // Layer 4
-            menuBGLayers[6].Position += new Vector2(1.3f, 0);
-            menuBGLayers[7].Position += new Vector2(1.3f, 0);
+            menuBGLayers[6].Position += new Vector2(0.3f * UIScale, 0);
+            menuBGLayers[7].Position += new Vector2(0.3f * UIScale, 0);
 
             // Layer 5
-            menuBGLayers[8].Position += new Vector2(1.8f, 0);
-            menuBGLayers[9].Position += new Vector2(1.8f, 0);
+            menuBGLayers[8].Position += new Vector2(0.4f * UIScale, 0);
+            menuBGLayers[9].Position += new Vector2(0.4f * UIScale, 0);
 
             // Wrap image around the screen after it goes off the edge
             foreach (GameObject layer in menuBGLayers)
@@ -648,9 +646,11 @@ namespace CrossBoa
 
             // Draw dark overlay over the game
             _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(windowWidth, windowHeight)), new Color(Color.Black, 160));
-            
+
             // Draw PAUSED text
-            _spriteBatch.Draw(pauseText, new Vector2(0, 0), Color.White);
+            _spriteBatch.Draw(pauseText,
+                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 50), pauseText.Bounds.Size * new Point(UIScale * 4)),
+                Color.White); ;
             
             // Draw play button
             playButton.Draw(_spriteBatch);
@@ -839,6 +839,21 @@ namespace CrossBoa
             {
                 element.OnResize();
             }
+
+            // Update the sizes of all the background layers
+            for (int i = 0; i < 10; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    menuBGLayers[i].Position = Vector2.Zero;
+                    menuBGLayers[i].Size = new Point(windowWidth + 10, windowHeight);
+                }
+                else
+                {
+                    menuBGLayers[i].Position = new Vector2(-(windowWidth + 10), 0);
+                    menuBGLayers[i].Size = new Point(windowWidth + 10, windowHeight);
+                }
+            }
         }
 
         /// <summary>
@@ -857,8 +872,8 @@ namespace CrossBoa
             else
             {
                 _graphics.IsFullScreen = false;
-                _graphics.PreferredBackBufferWidth = 3000;
-                _graphics.PreferredBackBufferHeight = 2500;
+                _graphics.PreferredBackBufferWidth = 1600;
+                _graphics.PreferredBackBufferHeight = 900;
                 _graphics.ApplyChanges();
             }
 

@@ -28,6 +28,7 @@ namespace CrossBoa
         protected ScreenAnchor anchor;
         protected Rectangle rectangle;
         private Point windowCenter;
+        private bool doesScaling = true;
 
         // Rectangle is the actual UI element rectangle in Screen Space.
         //     The position and size are used to calculate it based on the UI Scale and the Anchor
@@ -39,6 +40,15 @@ namespace CrossBoa
         {
             get { return anchor; }
             set { anchor = value; }
+        }
+
+        /// <summary>
+        /// Whether this UI Element will scale with the screen size
+        /// </summary>
+        public bool DoesScaling
+        {
+            get { return doesScaling; }
+            set { doesScaling = value; }
         }
 
         /// <summary>
@@ -66,6 +76,7 @@ namespace CrossBoa
         /// </summary>
         public void OnResize()
         {
+            windowCenter = Game1.windowRect.Center;
             Vector2 offset = position * Game1.UIScale;
             Point newSize = size * new Point(Game1.UIScale);
 
