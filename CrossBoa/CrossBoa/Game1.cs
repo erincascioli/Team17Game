@@ -21,7 +21,7 @@ namespace CrossBoa
         // A render target will make the game render to a much smaller, virtual screen
         //     before scaling it up to the proper window size
         public static RenderTarget2D gameRenderTarget;
-        public static Rectangle gameTargetRect;          // A rectangle representing the whole window inside the black bars
+        public static Rectangle gameTargetRect;                 // A rectangle representing the whole window inside the black bars
 
         // Fields
         public static Random RNG = new Random();
@@ -182,9 +182,10 @@ namespace CrossBoa
                 DefaultPlayerDodgeSpeed
             );
 
+            // Create player health bar
             for (int i = 0; i < DefaultPlayerHealth; i++)
             {
-                playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(5 + i * 80, 0), new Point(80)));
+                playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(11 + i * 20, 10), new Point(20)));
             }
 
             crossbow = new CrossBow(
@@ -900,6 +901,7 @@ namespace CrossBoa
             if (!_graphics.IsFullScreen)
             {
                 _graphics.IsFullScreen = true;
+                _graphics.HardwareModeSwitch = false;
                 _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
                 _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
                 _graphics.ApplyChanges();
@@ -907,6 +909,7 @@ namespace CrossBoa
             else
             {
                 _graphics.IsFullScreen = false;
+                _graphics.HardwareModeSwitch = true;
                 _graphics.PreferredBackBufferWidth = 1600;
                 _graphics.PreferredBackBufferHeight = 900;
                 _graphics.ApplyChanges();
