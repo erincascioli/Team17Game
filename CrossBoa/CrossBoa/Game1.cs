@@ -40,8 +40,8 @@ namespace CrossBoa
         private MouseState previousMState;
 
         // Assets
-        private Texture2D whiteSquareSprite;
-        private Texture2D playerArrowSprite;
+        public static Texture2D whiteSquareSprite;
+        public static Texture2D playerArrowSprite;
         public static Texture2D slimeSpritesheet;
         public static Texture2D slimeDeathSpritesheet;
         private Texture2D snakeSprite;
@@ -167,7 +167,6 @@ namespace CrossBoa
 
 
             CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
-            SpawnTotem(new Point(50, 100));
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -223,9 +222,11 @@ namespace CrossBoa
             LevelManager.LoadLevel("TestingFile");
 
 
+            // Temp enemy spawns for starting level
             SpawnManager.SpawnSlime(new Point(400, 400));
             SpawnManager.SpawnSlime(new Point(1280, 448));
             SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
+            SpawnManager.SpawnTotem(new Point(50, 100));
         }
 
         protected override void Update(GameTime gameTime)
@@ -705,24 +706,6 @@ namespace CrossBoa
 
         #region Helper Methods
         // Helper Methods
-        /// <summary>
-        /// Spawns a totem enemy
-        /// </summary>
-        /// <param name="position">The position to spawn the totem at</param>
-        void SpawnTotem(Point position)
-        {
-            Totem testTotem = new Totem(whiteSquareSprite,
-                new Rectangle(new Point(1300, 300), position),
-                3,
-                playerArrowSprite);
-            
-            CollisionManager.AddEnemy(testTotem);
-            gameObjectList.Add(testTotem);
-
-            CollisionManager.AddProjectile(testTotem.TotemProjectile);
-            gameObjectList.Add(testTotem.TotemProjectile);
-        }
-
         /// <summary>
         /// Run this when the game should end
         /// </summary>
