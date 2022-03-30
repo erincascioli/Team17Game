@@ -476,10 +476,22 @@ namespace CrossBoa
                     SpawnSlime(mState.Position);
                 }
 
-                // Shake the screen if the player presses space while debug is active
-                if (kbState.IsKeyDown(Keys.Space))
+                // Shake the screen if the player presses Enter while debug is active
+                if (kbState.IsKeyDown(Keys.Enter))
                 {
                     Camera.ShakeScreen(20);
+                }
+
+                // Kills every enemy if the player presses N while debug is active
+                // NOTE: Will crash if the the player moves to the next room having 
+                // never fired an arrow; for obvious reasons this is a non-issue for now
+                if (WasKeyPressed(Keys.N))
+                {
+                    foreach (GameObject e in gameObjectList)
+                    {
+                        if (e is Enemy)
+                            ((Enemy)e).TakeDamage(1000);
+                    }
                 }
             }
 
