@@ -59,7 +59,7 @@ namespace CrossBoa.Managers
             foreach (Arrow i in enemyProjectiles)
             {
                 // First checks for player projectile collisions
-                if (i.Hitbox.Intersects(player.Hitbox))
+                if (i.Hitbox.Intersects(player.Hitbox) && !player.IsInvincible)
                 {
                     if (!isInvincibilityActive)
                     {

@@ -246,13 +246,7 @@ namespace CrossBoa
 
             SpawnManager.GameObjectList = gameObjectList;
             LevelManager.LContent = Content;
-            LevelManager.LoadLevel("TestingFile");
-
-            // Temp enemy spawns for starting level
-            SpawnManager.SpawnSlime(new Point(400, 400));
-            SpawnManager.SpawnSlime(new Point(1280, 448));
-            SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
-            SpawnManager.SpawnTotem(new Point(50, 100));
+            
 
             OnResize(null, null);
         }
@@ -280,7 +274,10 @@ namespace CrossBoa
 
                     // Check state changes
                     if (playButton.HasBeenPressed())
+                    {
+                        LoadDefaultLevel();
                         gameState = GameState.Game;
+                    }
 
                     break;
 
@@ -496,7 +493,7 @@ namespace CrossBoa
                     i--;
                 }
 
-                // ~~~~~ DO ALL EXTERNAL    GAMEOBJECT MODIFICATION ABOVE THIS CODE ~~~~~
+                // ~~~~~ DO ALL EXTERNAL GAMEOBJECT MODIFICATION ABOVE THIS CODE ~~~~~
                 // Delete enemies from lists after they die
                 Enemy enemy;
                 if ((enemy = gameObjectList[i] as Enemy) != null && !enemy.IsAlive)
@@ -840,8 +837,23 @@ namespace CrossBoa
         /// </summary>
         public void GameOver()
         {
+            // Sets the game state to Game Over
             gameState = GameState.GameOver;
-            player.CurrentHealth = DefaultPlayerHealth;
+
+            // Resets the player's stats and position, and resets the LevelManager
+            player.ResetPlayer(new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)));
+            //LevelManager.GameOver();  // Doesn't work yet
+
+            // Removes every non-Player and non-Crossbow object from the GameObject list
+            for (int i = 0; i < gameObjectList.Count; i++)
+            {
+                if (!(gameObjectList[i] is Player) && !(gameObjectList[i] is CrossBow))
+                {
+                    gameObjectList.RemoveAt(i);
+                    i--;
+                }
+            }
+
         }
 
         /// <summary>
@@ -920,6 +932,21 @@ namespace CrossBoa
             }
 
             OnResize(null, null);
+        }
+
+        /// <summary>
+        /// Loads the starting level.
+        /// </summary>
+        public void LoadDefaultLevel()
+        {
+            // Level layout
+            LevelManager.LoadLevel("TestingFile");
+
+            // Temp enemy spawns for starting level
+            SpawnManager.SpawnSlime(new Point(400, 400));
+            SpawnManager.SpawnSlime(new Point(1280, 448));
+            SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
+            SpawnManager.SpawnTotem(new Point(50, 100));
         }
     }
 
