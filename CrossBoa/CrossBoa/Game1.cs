@@ -21,7 +21,7 @@ namespace CrossBoa
         // A render target will make the game render to a much smaller, virtual screen
         //     before scaling it up to the proper window size
         public static RenderTarget2D gameRenderTarget;
-        public static Rectangle gameTargetRect;
+        public static Rectangle gameTargetRect;                 // A rectangle representing the whole window inside the black bars
 
         // Fields
         public static Random RNG = new Random();
@@ -112,7 +112,6 @@ namespace CrossBoa
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
 
-
             IsMouseVisible = false;
         }
 
@@ -183,9 +182,10 @@ namespace CrossBoa
                 DefaultPlayerDodgeSpeed
             );
 
+            // Create player health bar
             for (int i = 0; i < DefaultPlayerHealth; i++)
             {
-                playerHealthBar.Add(new UIElement(fullHeart, new Point(5 + i * 80, 0), new Point(80), ScreenAnchor.TopLeft));
+                playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(12 + i * 20, 10), new Point(20)));
             }
 
             crossbow = new CrossBow(
@@ -220,25 +220,19 @@ namespace CrossBoa
 
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
-                Point.Zero,
-                playHoverSprite.Bounds.Size * new Point(2) / new Point(5),
-                ScreenAnchor.Center);
+                ScreenAnchor.Center, Point.Zero, playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
             // Pause Button
             pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Point(-16, 14), 
-                settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7),
-                ScreenAnchor.TopRight);
+                ScreenAnchor.TopRight, new Point(-14, 12), settingsHoverSprite.Bounds.Size / new Point(4));
 
             // Debug Button
             debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                new Point(-16, -14), settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7),
-                ScreenAnchor.BottomRight);
+                ScreenAnchor.BottomRight, new Point(-16, -14), settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7));
 
             // Game Over Button
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
-                new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5),
-                ScreenAnchor.Center);
+                ScreenAnchor.Center, new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
             // Add all GameObjects to GameObject list
             gameObjectList.Add(player);
@@ -438,7 +432,7 @@ namespace CrossBoa
             }
 
             _spriteBatch.Draw(titleText, 
-                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 50), titleText.Bounds.Size * new Point(UIScale * 4)), 
+                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), titleText.Bounds.Size * new Point(UIScale * 4)), 
                 Color.White);
 
             playButton.Draw(_spriteBatch);
@@ -715,7 +709,7 @@ namespace CrossBoa
 
             // Draw PAUSED text
             _spriteBatch.Draw(pauseText,
-                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 50), pauseText.Bounds.Size * new Point(UIScale * 4)),
+                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), pauseText.Bounds.Size * new Point(UIScale * 4)),
                 Color.White); ;
             
             // Draw play button
@@ -777,7 +771,9 @@ namespace CrossBoa
                 background.Draw(_spriteBatch);
             }
 
-            _spriteBatch.Draw(gameOverText, new Vector2(0, 0), Color.White);
+            _spriteBatch.Draw(gameOverText, 
+                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), gameOverText.Bounds.Size * new Point(UIScale * 4)), 
+                Color.White);
 
             gameOverButton.Draw(_spriteBatch);
 
@@ -881,9 +877,9 @@ namespace CrossBoa
 
             // Update UI scale based on shorter side of window 
             if (outputAspectRatio >= preferredAspectRatio)
-                UIScale = windowWidth / 400;
-            else
                 UIScale = windowHeight / 225;
+            else
+                UIScale = windowWidth / 400;
 
             if (UIScale < 1)
                 UIScale = 1;
@@ -919,6 +915,7 @@ namespace CrossBoa
             if (!_graphics.IsFullScreen)
             {
                 _graphics.IsFullScreen = true;
+                _graphics.HardwareModeSwitch = false;
                 _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
                 _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
                 _graphics.ApplyChanges();
@@ -926,6 +923,7 @@ namespace CrossBoa
             else
             {
                 _graphics.IsFullScreen = false;
+                _graphics.HardwareModeSwitch = true;
                 _graphics.PreferredBackBufferWidth = 1600;
                 _graphics.PreferredBackBufferHeight = 900;
                 _graphics.ApplyChanges();
