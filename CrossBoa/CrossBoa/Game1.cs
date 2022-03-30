@@ -440,7 +440,7 @@ namespace CrossBoa
                     gameObjectList.RemoveAt(i);
                     i--;
                 }
-                else if (!(gameObjectList[i] == player && !player.CanMove))
+                else if (!(gameObjectList[i] == player && (!player.CanMove && !player.InDodge)))
                 {
                     gameObjectList[i].Update(gameTime);
                 }
@@ -486,10 +486,22 @@ namespace CrossBoa
                     SpawnSlime(mState.Position);
                 }
 
-                // Shake the screen if the player presses space while debug is active
-                if (kbState.IsKeyDown(Keys.Space))
+                // Shake the screen if the player presses Enter while debug is active
+                if (kbState.IsKeyDown(Keys.Enter))
                 {
                     Camera.ShakeScreen(20);
+                }
+
+                // Kills every enemy if the player presses N while debug is active
+                // NOTE: Will crash if the the player moves to the next room having 
+                // never fired an arrow; for obvious reasons this is a non-issue for now
+                if (WasKeyPressed(Keys.N))
+                {
+                    foreach (GameObject e in gameObjectList)
+                    {
+                        if (e is Enemy)
+                            ((Enemy)e).TakeDamage(1000);
+                    }
                 }
             }
 
@@ -498,11 +510,12 @@ namespace CrossBoa
             if (!isDebugActive)
                 isGodModeActive = false;
 
-            if (LevelManager.Exit.IsOpen || !player.CanMove)
+            if (LevelManager.Exit.IsOpen || (!player.CanMove && !player.InDodge))
             {
                 //Camera.FollowPlayer(player);
-                if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle) || !player.CanMove)
+                if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle) || (!player.CanMove && !player.InDodge))
                 {
+                    player.InDodge = false;
                     LevelManager.LevelTransition(player, crossbow, gameTime);
                     //player.CanMove = false; // Prevents premature end
                 }
