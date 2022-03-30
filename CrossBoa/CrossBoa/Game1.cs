@@ -112,6 +112,7 @@ namespace CrossBoa
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
 
+
             IsMouseVisible = false;
         }
 
@@ -804,8 +805,36 @@ namespace CrossBoa
 
             _spriteBatch.End();
         }
-        
+
         // Helper Methods
+        /// <summary>
+        /// Gets the coordinates of the mouse position in the game world
+        /// </summary>
+        public static Vector2 MousePositionInGame()
+        {
+            // SCREEN SPACE
+            // Capture mouse position
+            (double, double) output = (Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
+
+            // Offset mouse position by the black borders
+            output.Item1 -= gameTargetRect.Location.X;
+            output.Item2 -= gameTargetRect.Location.Y;
+
+            // CAMERA SPACE
+            // Scale mouse position by RenderTarget difference
+            //     *uses tuples to avoid float division inaccuracy
+            double scale = gameRenderTarget.Bounds.Size.X / (double)gameTargetRect.Size.X;
+            output = (output.Item1 * scale, output.Item2 * scale);
+
+            // Convert tuple back to vector
+            Vector2 outputVector = new Vector2((float) output.Item1, (float) output.Item2);
+
+            // Offset mouse position by camera
+            outputVector = Vector2.Transform(outputVector, Matrix.Invert(Camera.Matrix));
+
+            return outputVector;
+        }
+
         /// <summary>
         /// Run this when the game should end
         /// </summary>
