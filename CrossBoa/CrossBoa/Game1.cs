@@ -855,7 +855,8 @@ namespace CrossBoa
 
             // Resets the player's stats and position, and resets the LevelManager
             player.ResetPlayer(new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)));
-            //LevelManager.GameOver();  // Doesn't work yet
+            LevelManager.GameOver();
+            CollisionManager.ClearEnemiesList();
 
             // Removes every non-Player and non-Crossbow object from the GameObject list
             for (int i = 0; i < gameObjectList.Count; i++)
