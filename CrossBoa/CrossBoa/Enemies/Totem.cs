@@ -51,7 +51,7 @@ namespace CrossBoa.Enemies
             projectile.GetShot(
                 new Vector2(Rectangle.X + Width/2,
                             Rectangle.Y + Height/2),
-                MathHelper.DirectionBetween(Rectangle.Location, target.Rectangle.Location),
+                Helper.DirectionBetween(Rectangle.Location, target.Rectangle.Location),
                 500);
         }
 
