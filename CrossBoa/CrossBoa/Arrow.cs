@@ -81,7 +81,7 @@ namespace CrossBoa
                     sprite,
 
                     // Repositions arrow draw call so the tip is on the hitbox
-                    position - (MathHelper.GetNormalVector(direction) * size.X) + (MathHelper.GetNormalVector(direction - (MathF.PI * 0.5f)) * size.Y / 2),
+                    position - (Helper.GetNormalVector(direction) * size.X) + (Helper.GetNormalVector(direction - (MathF.PI * 0.5f)) * size.Y / 2),
                     null,
                     color,
                     direction,

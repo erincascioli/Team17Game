@@ -692,7 +692,7 @@ namespace CrossBoa.Managers
                 // Arrow will return to the player if still on screen
                 if (CollisionManager.PlayerArrow.IsActive)
                 {
-                    CollisionManager.PlayerArrow.GetSuckedIntoPlayer((int)MathHelper.DistanceSquared(
+                    CollisionManager.PlayerArrow.GetSuckedIntoPlayer((int)Helper.DistanceSquared(
                         new Point((int)player.Position.X, (int)player.Position.Y), CollisionManager.PlayerArrow.Size), 9000);
 
                     crossbow.PickUpArrow();

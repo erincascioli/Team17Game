@@ -118,7 +118,7 @@ namespace CrossBoa
         {
             if (LevelManager.Exitlocation == LevelManager.ExitLocation.Left || LevelManager.Exitlocation == LevelManager.ExitLocation.Right)
             {
-                cameraCrew.ApplyForce(MathHelper.DirectionBetween(new Point(cameraCrew.Rectangle.Center.X, 0), new Point((int)player.Position.X, 0)), MathHelper.DistanceSquared(new Point(cameraCrew.Rectangle.Center.X, 0), new Point((int)player.Position.X, 0)) / 1000);
+                cameraCrew.ApplyForce(Helper.DirectionBetween(new Point(cameraCrew.Rectangle.Center.X, 0), new Point((int)player.Position.X, 0)), Helper.DistanceSquared(new Point(cameraCrew.Rectangle.Center.X, 0), new Point((int)player.Position.X, 0)) / 1000);
                 cameraY = 0;
                 cameraX = -(int)cameraCrew.Rectangle.X;
             }
