@@ -32,6 +32,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Arial32.spritefont
 
+#begin Arial32.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Arial32.spritefont
+
 #begin arrow.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -271,6 +278,13 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:FloorShadow.png
+
+#begin Fonts/PressStartK.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/PressStartK.spritefont
 
 #begin Full Heart.png
 /importer:TextureImporter
