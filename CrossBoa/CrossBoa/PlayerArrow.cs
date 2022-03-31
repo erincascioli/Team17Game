@@ -45,7 +45,7 @@ namespace CrossBoa
                 
                 // Repositions hitbox to center of arrow
                 else
-                    return new Rectangle((position - (MathHelper.GetNormalVector(direction) * size.X / 2)).ToPoint(), Point.Zero);
+                    return new Rectangle((position - (Helper.GetNormalVector(direction) * size.X / 2)).ToPoint(), Point.Zero);
             }
         }
 
@@ -125,7 +125,7 @@ namespace CrossBoa
                 {
                     GetSuckedIntoPlayer(8000, 7500);
 
-                    if (MathHelper.DistanceSquared(this.Hitbox.Center, Game1.Player.Hitbox.Center) < 10000)
+                    if (Helper.DistanceSquared(this.Hitbox.Center, Game1.Player.Hitbox.Center) < 10000)
                     {
                         color = Color.White;
                         crossbowReference.PickUpArrow();
@@ -189,13 +189,13 @@ namespace CrossBoa
             Point playerCenter = Game1.Player.Hitbox.Center;
             Point arrowCenter = this.Hitbox.Center;
 
-            if (MathHelper.DistanceSquared(playerCenter, arrowCenter) < MathF.Pow(distance, 2))
+            if (Helper.DistanceSquared(playerCenter, arrowCenter) < MathF.Pow(distance, 2))
             {
                 // Update the velocity to point towards the player
-                VelocityAngle = MathHelper.DirectionBetween(arrowCenter, playerCenter);
+                VelocityAngle = Helper.DirectionBetween(arrowCenter, playerCenter);
 
                 // Apply more velocity
-                ApplyForce(MathHelper.DirectionBetween(arrowCenter, playerCenter), force);
+                ApplyForce(Helper.DirectionBetween(arrowCenter, playerCenter), force);
             }
         }
     }
