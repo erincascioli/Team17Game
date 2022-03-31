@@ -74,6 +74,7 @@ namespace CrossBoa
         private Texture2D crosshairSprite;
 
         private SpriteFont arial32;
+        private SpriteFont pressStart12;
         #endregion
 
         // Objects
@@ -162,6 +163,7 @@ namespace CrossBoa
             crosshairSprite = Content.Load<Texture2D>("Crosshair");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
+            pressStart12 = Content.Load<SpriteFont>("Fonts/PressStartK");
 
             for (int i = 0; i < 5; i++)
             {
@@ -335,13 +337,22 @@ namespace CrossBoa
                 // Main Menu
                 case GameState.MainMenu:
                     DrawMainMenu();
+
+                    _spriteBatch.Begin();
+
+                    // TEST TEXT
+                    string testText = "a quick brown fox jumps over the lazy dog";
+                    Vector2 stringLength = pressStart12.MeasureString(testText);
+                    _spriteBatch.DrawString(pressStart12, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White);
+                    _spriteBatch.End();
+
                     break;
 
                 // Game State
                 case GameState.Game:
                     DrawGame();
                     DrawGameUI();
-                    
+
                     break;
 
                 // Pause Menu
