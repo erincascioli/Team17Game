@@ -52,7 +52,7 @@ namespace CrossBoa
             set
             {
                 position = value;
-                rectangle = MathHelper.MakeRectangleFromCenter(value.ToPoint(), rectangle.Size);
+                rectangle = Helper.MakeRectangleFromCenter(value.ToPoint(), rectangle.Size);
             }
         }
 
@@ -93,7 +93,7 @@ namespace CrossBoa
         {
             this.position = offset.ToVector2();
             this.size = size;
-            this.rectangle = MathHelper.MakeRectangleFromCenter(offset, size * new Point(Game1.UIScale));
+            this.rectangle = Helper.MakeRectangleFromCenter(offset, size * new Point(Game1.UIScale));
             this.anchor = anchor;
 
             windowCenter = Game1.windowRect.Center;
@@ -115,37 +115,37 @@ namespace CrossBoa
             // Makes a new rectangle based on the position and the anchor, multiplying them by the UIScale
             rectangle = anchor switch
             {
-                ScreenAnchor.TopLeft => MathHelper.MakeRectangleFromCenter(
+                ScreenAnchor.TopLeft => Helper.MakeRectangleFromCenter(
                     offset.ToPoint(), newSize),
                 
-                ScreenAnchor.TopCenter => MathHelper.MakeRectangleFromCenter(new Point(
+                ScreenAnchor.TopCenter => Helper.MakeRectangleFromCenter(new Point(
                     (int) (windowCenter.X + offset.X),
                     (int) offset.Y), newSize),
                
-                ScreenAnchor.TopRight => MathHelper.MakeRectangleFromCenter(new Point(
+                ScreenAnchor.TopRight => Helper.MakeRectangleFromCenter(new Point(
                     (int) (Game1.windowWidth + offset.X),
                     (int) offset.Y), newSize),
                 
-                ScreenAnchor.LeftCenter => MathHelper.MakeRectangleFromCenter(new Point(
+                ScreenAnchor.LeftCenter => Helper.MakeRectangleFromCenter(new Point(
                     (int) offset.X,
                     (int) (windowCenter.Y + offset.Y)), newSize),
               
-                ScreenAnchor.Center => MathHelper.MakeRectangleFromCenter(
+                ScreenAnchor.Center => Helper.MakeRectangleFromCenter(
                     windowCenter + offset.ToPoint(), newSize),
              
-                ScreenAnchor.RightCenter => MathHelper.MakeRectangleFromCenter(new Point(
+                ScreenAnchor.RightCenter => Helper.MakeRectangleFromCenter(new Point(
                     (int) (Game1.windowWidth + offset.X),
                     (int) (windowCenter.Y + offset.Y)), newSize),
              
-                ScreenAnchor.BottomLeft => MathHelper.MakeRectangleFromCenter(new Point(
+                ScreenAnchor.BottomLeft => Helper.MakeRectangleFromCenter(new Point(
                     (int) offset.X, 
                     (int) (Game1.windowHeight + offset.Y)), newSize),
              
-                ScreenAnchor.BottomCenter => MathHelper.MakeRectangleFromCenter(new Point(
+                ScreenAnchor.BottomCenter => Helper.MakeRectangleFromCenter(new Point(
                     (int) (windowCenter.X + offset.X),
                     (int) (Game1.windowHeight + offset.Y)), newSize),
              
-                ScreenAnchor.BottomRight => MathHelper.MakeRectangleFromCenter(
+                ScreenAnchor.BottomRight => Helper.MakeRectangleFromCenter(
                     Game1.windowRect.Size + offset.ToPoint(), newSize),
 
                 _ => rectangle

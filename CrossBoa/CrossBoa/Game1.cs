@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Xml;
 using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
@@ -338,12 +339,11 @@ namespace CrossBoa
                 case GameState.MainMenu:
                     DrawMainMenu();
 
-                    _spriteBatch.Begin();
-
                     // TEST TEXT
+                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                     string testText = "a quick brown fox jumps over the lazy dog";
-                    Vector2 stringLength = pressStart12.MeasureString(testText);
-                    _spriteBatch.DrawString(pressStart12, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White);
+                    Vector2 stringLength = pressStart12.MeasureString(testText) * 2;
+                    _spriteBatch.DrawString(pressStart12, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
                     _spriteBatch.End();
 
                     break;
@@ -449,7 +449,7 @@ namespace CrossBoa
             }
 
             _spriteBatch.Draw(titleText, 
-                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), titleText.Bounds.Size * new Point(UIScale * 4)), 
+                Helper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), titleText.Bounds.Size * new Point(UIScale * 4)), 
                 Color.White);
 
             playButton.Draw(_spriteBatch);
@@ -726,7 +726,7 @@ namespace CrossBoa
 
             // Draw PAUSED text
             _spriteBatch.Draw(pauseText,
-                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), pauseText.Bounds.Size * new Point(UIScale * 4)),
+                Helper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), pauseText.Bounds.Size * new Point(UIScale * 4)),
                 Color.White); ;
             
             // Draw play button
@@ -789,7 +789,7 @@ namespace CrossBoa
             }
 
             _spriteBatch.Draw(gameOverText, 
-                MathHelper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), gameOverText.Bounds.Size * new Point(UIScale * 4)), 
+                Helper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), gameOverText.Bounds.Size * new Point(UIScale * 4)), 
                 Color.White);
 
             gameOverButton.Draw(_spriteBatch);
@@ -879,7 +879,6 @@ namespace CrossBoa
             return kbState.IsKeyDown(key) && previousKBState.IsKeyUp(key);
         }
 
-        // Event Handlers
         public void OnResize(Object sender, EventArgs e)
         {
             // Update windowWidth and windowHeight

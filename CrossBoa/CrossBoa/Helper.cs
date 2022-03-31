@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +11,7 @@ namespace CrossBoa
     /// <summary>
     /// A helper class with methods for vector math
     /// </summary>
-    public static class MathHelper
+    public static class Helper
     {
         /// <summary>
         /// Returns the direction between two points in radians
@@ -77,7 +78,7 @@ namespace CrossBoa
         public static float Distance(Point a, Point b) => MathF.Sqrt(MathF.Pow(a.X - b.X, 2) + MathF.Pow(a.Y - b.Y, 2));
 
         /// <summary>
-        /// Finds the squared distance between two points. Is computationally cheaper than MathHelper.Distance()
+        /// Finds the squared distance between two points. Is computationally cheaper than Helper.Distance()
         /// </summary>
         /// <param name="a">The first point</param>
         /// <param name="b">The second point</param>
@@ -107,6 +108,41 @@ namespace CrossBoa
         public static Rectangle MakeRectangleFromCenter(int x, int y, int width, int height)
         {
             return new Rectangle(x - width / 2, y - height / 2, width, height);
+        }
+
+        /// <summary>
+        /// Takes a string and returns a new string with line breaks that fit within the desired width.
+        /// <para>DO NOT RUN EVERY FRAME</para>
+        /// </summary>
+        /// <param name="text">The string to wrap</param>
+        /// <param name="spriteFont">The SpriteFont to draw the text in</param>
+        /// <param name="maxLineWidth">The maximum length that a single line may be</param>
+        /// <returns>A string with newlines inserted where the text would run past the desired length</returns>
+        public static string WrapText(this string text, SpriteFont spriteFont, float maxLineWidth)
+        {
+            string[] words = text.Split(' ');
+            StringBuilder sb = new StringBuilder(text.Length);
+            float lineWidth = 0f;
+            float spaceWidth = spriteFont.MeasureString(" ").X;
+
+            sb.Append(words[0]);
+            for (int i = 1; i < words.Length; i++)
+            {
+                Vector2 size = spriteFont.MeasureString(words[i]);
+
+                if (lineWidth + size.X < maxLineWidth)
+                {
+                    sb.Append(" " + words[i]);
+                    lineWidth += size.X + spaceWidth;
+                }
+                else
+                {
+                    sb.Append("\n" + words[i]);
+                    lineWidth = size.X;
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }
