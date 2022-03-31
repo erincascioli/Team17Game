@@ -714,8 +714,8 @@ namespace CrossBoa.Managers
         public static void GameOver()
         {
             stage = 0;
-            //exitLocation = ExitLocation.Null;
-            //previousExit = ExitLocation.Null;
+            exitLocation = ExitLocation.Null;
+            previousExit = ExitLocation.Null;
             // Might do more if we want the level manager to do other stuff
             // upon game over
         }

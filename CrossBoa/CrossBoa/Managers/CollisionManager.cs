@@ -316,5 +316,10 @@ namespace CrossBoa.Managers
                 }
             }
         }
+
+        public static void ClearEnemiesList()
+        {
+            enemies.Clear();
+        }
     }
 }

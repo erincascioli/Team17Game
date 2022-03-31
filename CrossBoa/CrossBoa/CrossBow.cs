@@ -135,7 +135,7 @@ namespace CrossBoa
                     arrowShotSpeed);
 
                 // Makes the playerArrow appear from the bow instead of behind the player.
-                playerArrow.Position += (playerArrow.Velocity / playerArrow.Velocity.Length()) * 10;
+                playerArrow.Position += (playerArrow.Velocity / playerArrow.Velocity.Length()) * 5;
 
                 // Shake the screen
                 Camera.ShakeScreen(12);
