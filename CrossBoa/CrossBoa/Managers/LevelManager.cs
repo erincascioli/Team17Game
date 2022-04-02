@@ -30,7 +30,6 @@ namespace CrossBoa.Managers
         private static ExitLocation previousExit;
         private static int forcedX;
         private static int forcedY;
-        private static Game1 gameReference;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
@@ -53,11 +52,10 @@ namespace CrossBoa.Managers
             get { return exitLocation; }
         }
 
-        public static Game1 GameReference
+        public static int Stage
         {
-            set { gameReference = value; }
+            get { return stage; }
         }
-           
 
         static LevelManager()
         {
@@ -116,12 +114,12 @@ namespace CrossBoa.Managers
                 // Doors are created and will be constantly used
                 entrance = new Door(Content.Load<Texture2D>("FloorShadow"), // Open Sprite
                     Content.Load<Texture2D>("GrassTest"), // Closed Sprite
-                    new Rectangle(-100, -100, 64, 64), // Location and size
+                    new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true);
 
                 exit = new Door(Content.Load<Texture2D>("FloorShadow"), // Open Sprite
                     Content.Load<Texture2D>("GrassTest"), // Closed Sprite
-                    new Rectangle(-100, -100, 64, 64), // Location and size
+                    new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true); // Has hitbox
             }
 
@@ -202,6 +200,7 @@ namespace CrossBoa.Managers
 
                 // passes all active tiles to the collision manager
                 CollisionManager.UpdateLevel();
+                SpawnManager.UpdateLevel();
             }
             catch (Exception e)
             {
@@ -221,7 +220,7 @@ namespace CrossBoa.Managers
                 }
             }
 
-            gameReference.SpawnSlime(new Point(100, 200));
+            SpawnManager.SpawnSlime(new Point(100, 200));
         }
 
         /// <summary>
@@ -260,6 +259,26 @@ namespace CrossBoa.Managers
         }
 
         /// <summary>
+        /// Purpose: Passes a list of tiles that aren't collidable
+        /// Restrictions: none
+        /// </summary>
+        /// <returns></returns>
+        public static List<Tile> GetSafe()
+        {
+            List<Tile> safe = new List<Tile>();
+
+            foreach (Tile i in levelTiles)
+            {
+                if (!i.IsInteractable)
+                {
+                    safe.Add(i);
+                }
+            }
+
+            return safe;
+        }
+
+        /// <summary>
         /// Purpose: Helper method for letting the player resume the game after a transition
         /// Restrictions: none
         /// </summary>
@@ -274,12 +293,6 @@ namespace CrossBoa.Managers
                 player.CanMove = true;
                 forcedX = 0;
                 forcedY = 0;
-
-                // Arrow is returned to the placer during a level transition
-                if (CollisionManager.PlayerArrow.IsInAir)
-                {
-                    CollisionManager.Crossbow.PickUpArrow();
-                }
 
                 // Adds door to collisionManager
                 CollisionManager.UpdateLevel();
@@ -467,7 +480,7 @@ namespace CrossBoa.Managers
                 if (Camera.CameraY >= 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(0, -Game1.ScreenHeight - 1700);
+                    Camera.MoveCamera(0, -Game1.gameRenderTarget.Height - 1700);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
                                 CollisionManager.Player.Position.Y + 1300);
 
@@ -497,10 +510,10 @@ namespace CrossBoa.Managers
                     forcedY = 1;
                 }
 
-                if (Camera.CameraY <= -Game1.ScreenHeight - 1100)
+                if (Camera.CameraY <= -Game1.gameRenderTarget.Height - 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(0, Game1.ScreenHeight + 1700);
+                    Camera.MoveCamera(0, Game1.gameRenderTarget.Height + 1700);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
                         CollisionManager.Player.Position.Y - 1300);
 
@@ -508,7 +521,7 @@ namespace CrossBoa.Managers
                     LoadLevel("TestingFile");
                 }
 
-                if (player.Position.Y > Game1.ScreenHeight + 100)
+                if (player.Position.Y > Game1.gameRenderTarget.Height + 100)
                 {
                     Camera.MoveCamera(0, -90);
 
@@ -530,10 +543,10 @@ namespace CrossBoa.Managers
                     forcedY = 0;
                 }
 
-                if (Camera.CameraX <= -Game1.ScreenWidth - 1100)
+                if (Camera.CameraX <= -Game1.gameRenderTarget.Width - 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(Game1.ScreenWidth + 1700, 0);
+                    Camera.MoveCamera(Game1.gameRenderTarget.Width + 1700, 0);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X - 2000,
                         CollisionManager.Player.Position.Y);
 
@@ -541,7 +554,7 @@ namespace CrossBoa.Managers
                     LoadLevel("TestingFile");
                 }
 
-                if (player.Position.X > Game1.ScreenWidth + 100)
+                if (player.Position.X > Game1.gameRenderTarget.Width + 100)
                 {
                     Camera.MoveCamera(-90, 0);
 
@@ -563,10 +576,10 @@ namespace CrossBoa.Managers
                     forcedY = 0;
                 }
 
-                if (Camera.CameraX >= Game1.ScreenWidth + 1100)
+                if (Camera.CameraX >= Game1.gameRenderTarget.Width + 1100)
                 {
                     // Player and Camera go to the bottom of the level
-                    Camera.MoveCamera(-Game1.ScreenWidth - 1700, 0);
+                    Camera.MoveCamera(-Game1.gameRenderTarget.Width - 1700, 0);
                     CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X + 2000,
                         CollisionManager.Player.Position.Y);
 
@@ -591,7 +604,7 @@ namespace CrossBoa.Managers
                 player.ForceMove(forcedX, forcedY, gameTime);
 
                 // Makes sure consecutive blocks of code can't happen
-                if (previousExit == ExitLocation.Top && player.Position.Y > 0 && !(player.Position.X > Game1.ScreenWidth) && !(player.Position.X < 0))
+                if (previousExit == ExitLocation.Top && player.Position.Y > 0 && !(player.Position.X > Game1.gameRenderTarget.Width) && !(player.Position.X < 0))
                 {
                     Camera.MoveCamera(0, 90);
 
@@ -612,7 +625,7 @@ namespace CrossBoa.Managers
                         }
                     }
                 }
-                if (previousExit == ExitLocation.Bottom && player.Position.Y < Game1.ScreenHeight && !(player.Position.X > Game1.ScreenWidth) && !(player.Position.X < 0))
+                if (previousExit == ExitLocation.Bottom && player.Position.Y < Game1.gameRenderTarget.Height && !(player.Position.X > Game1.gameRenderTarget.Width) && !(player.Position.X < 0))
                 {
                     Camera.MoveCamera(0, -90);
 
@@ -633,7 +646,7 @@ namespace CrossBoa.Managers
                         }
                     }
                 }
-                if (previousExit == ExitLocation.Right && player.Position.X < Game1.ScreenWidth && !(player.Position.Y > Game1.ScreenHeight) && !(player.Position.Y < 0))
+                if (previousExit == ExitLocation.Right && player.Position.X < Game1.gameRenderTarget.Width && !(player.Position.Y > Game1.gameRenderTarget.Height) && !(player.Position.Y < 0))
                 {
                     Camera.MoveCamera(-90, 0);
 
@@ -654,7 +667,7 @@ namespace CrossBoa.Managers
                         }
                     }
                 }
-                if (previousExit == ExitLocation.Left && player.Position.X > 0 && !(player.Position.Y > Game1.ScreenHeight) && !(player.Position.Y < 0))
+                if (previousExit == ExitLocation.Left && player.Position.X > 0 && !(player.Position.Y > Game1.gameRenderTarget.Height) && !(player.Position.Y < 0))
                 {
                     Camera.MoveCamera(90, 0);
 
@@ -677,12 +690,34 @@ namespace CrossBoa.Managers
                 }
 
                 // Arrow will return to the player if still on screen
-                if (CollisionManager.PlayerArrow.IsActive && !CollisionManager.PlayerArrow.IsInAir)
+                if (CollisionManager.PlayerArrow.IsActive)
                 {
-                    CollisionManager.PlayerArrow.GetSuckedIntoPlayer((int)MathHelper.DistanceSquared(
+                    CollisionManager.PlayerArrow.GetSuckedIntoPlayer((int)Helper.DistanceSquared(
                         new Point((int)player.Position.X, (int)player.Position.Y), CollisionManager.PlayerArrow.Size), 9000);
+
+                    crossbow.PickUpArrow();
+
+                    // Doesn't let the player arrow zoom onto screen if it is too far out of bounds
+                    if (CollisionManager.PlayerArrow.Position.X < -50 || CollisionManager.PlayerArrow.Position.X > Game1.gameRenderTarget.Width + 50 
+                        || CollisionManager.PlayerArrow.Position.Y < -50|| CollisionManager.PlayerArrow.Position.Y > Game1.gameRenderTarget.Height + 50)
+                    {
+                        CollisionManager.PlayerArrow.HitSomething();
+                        CollisionManager.PlayerArrow.GetPickedUp();
+                    }
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets the stage number to 0. Currently broken, don't use yet
+        /// </summary>
+        public static void GameOver()
+        {
+            stage = 0;
+            exitLocation = ExitLocation.Null;
+            previousExit = ExitLocation.Null;
+            // Might do more if we want the level manager to do other stuff
+            // upon game over
         }
 
         public enum ExitLocation

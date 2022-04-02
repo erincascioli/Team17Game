@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CrossBoa.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,13 +13,12 @@ namespace CrossBoa
     /// Purpose: Manages all interactions with buttons
     /// Restrictions: none
     /// </summary>
-    public class Button : GameObject
+    public class Button : UIElement
     {
         private MouseState mouseState;
         private MouseState previousState;
         private bool isInteractable;
         private bool hovering;
-        private Rectangle button;
         private Texture2D hoverButtonTexture;
         private Texture2D offButtonTexture;
 
@@ -28,18 +28,28 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// A rectangle containing this GameObject's position and size
+        /// </summary>
+        public override Rectangle Rectangle
+        {
+            get { return rectangle; }
+        }
+
+        /// <summary>
         /// Used for an already established location
         /// </summary>
         /// <param name="hoverImage"></param>
         /// <param name="offImage"></param>
-        /// <param name="cursor"></param>
-        /// <param name="isInteractible"></param>
-        /// <param name="rectangle"></param>
-        public Button(Texture2D hoverImage, Texture2D offImage, bool isInteractable, Rectangle rectangle) 
-            : base(offImage,  rectangle)
+        /// <param name="isInteractable"></param>
+        /// <param name="anchor">Which edge of the screen to anchor this object to</param>
+        /// <param name="offset"></param>
+        /// <param name="size">The size of this object is dependent on the UIScale in Game1</param>
+        public Button(Texture2D hoverImage, Texture2D offImage, bool isInteractable, ScreenAnchor anchor, Point offset,
+            Point size) 
+            : base(offImage, anchor, offset, size)
         {
             this.isInteractable = isInteractable;
-            button = rectangle;
+            this.position = offset.ToVector2();
             hoverButtonTexture = hoverImage;
             offButtonTexture = offImage;
         }
@@ -51,8 +61,8 @@ namespace CrossBoa
         /// <returns></returns>
         public bool IsMouseOver()
         {
-            if (mouseState.X > button.Left && mouseState.X < button.Right &&
-                mouseState.Y > button.Top && mouseState.Y < button.Bottom)
+            if (mouseState.X > Rectangle.Left && mouseState.X < Rectangle.Right &&
+                mouseState.Y > Rectangle.Top && mouseState.Y < Rectangle.Bottom)
             {
                 // Mouse is over the button
                 return true;
@@ -92,11 +102,11 @@ namespace CrossBoa
         {
             if (hovering)
             {
-                spriteBatch.Draw(hoverButtonTexture, button, Color.White);
+                spriteBatch.Draw(hoverButtonTexture, Rectangle, Color.White);
             }
             else
             {
-                spriteBatch.Draw(offButtonTexture, button, Color.White);
+                spriteBatch.Draw(offButtonTexture, Rectangle, Color.White);
             }
         }
 

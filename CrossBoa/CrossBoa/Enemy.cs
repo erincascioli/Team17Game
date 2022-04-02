@@ -128,7 +128,7 @@ namespace CrossBoa
         {
             // Knock this enemy backwards
             velocity = Vector2.Zero;
-            ApplyForce(MathHelper.DirectionBetween(other.Hitbox.Center, this.Rectangle.Center), force);
+            ApplyForce(Helper.DirectionBetween(other.Hitbox.Center, this.Rectangle.Center), force);
         }
     }
 }

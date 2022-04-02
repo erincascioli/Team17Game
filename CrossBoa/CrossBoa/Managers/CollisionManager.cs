@@ -14,9 +14,9 @@ namespace CrossBoa.Managers
     {
         private static Player player;
         private static CrossBow crossbow;
-        private static Projectile playerArrow;
+        private static PlayerArrow playerArrow;
         private static List<Enemy> enemies;
-        private static List<Projectile> enemyProjectiles;
+        private static List<Arrow> enemyProjectiles;
         private static List<Collectible> collectibles;
         private static List<Tile> levelObstacles;
         private static int alternate;
@@ -34,7 +34,7 @@ namespace CrossBoa.Managers
             set { crossbow = value; }
         }
 
-        public static Projectile PlayerArrow
+        public static PlayerArrow PlayerArrow
         {
             get { return playerArrow;} 
             set { playerArrow = value; }
@@ -44,7 +44,7 @@ namespace CrossBoa.Managers
         {
             // Lists are created
             enemies = new List<Enemy>();
-            enemyProjectiles = new List<Projectile>();
+            enemyProjectiles = new List<Arrow>();
             collectibles = new List<Collectible>();
             alternate = 0;
         }
@@ -56,14 +56,15 @@ namespace CrossBoa.Managers
         public static void CheckCollision(bool isInvincibilityActive)
         {
             // enemy Projectiles
-            foreach (Projectile i in enemyProjectiles)
+            foreach (Arrow i in enemyProjectiles)
             {
                 // First checks for player projectile collisions
-                if (i.Hitbox.Intersects(player.Hitbox))
+                if (i.Hitbox.Intersects(player.Hitbox) && !player.IsInvincible)
                 {
                     if (!isInvincibilityActive)
                     {
                         i.HitSomething();
+                        player.TakeDamage(1);
                     }
                 }
                 else
@@ -104,7 +105,7 @@ namespace CrossBoa.Managers
                 }
 
                 // Tracks Living Enemies
-                if (enemy.IsAlive)
+                if (enemy.Health > 0)
                 {
                     survivors.Add(enemy);
                 }
@@ -112,7 +113,6 @@ namespace CrossBoa.Managers
 
             // Enemy List is updated to only use living enemies
             enemies = survivors;
-
 
             // Collidable tiles
             foreach (Tile tile in levelObstacles)
@@ -164,8 +164,16 @@ namespace CrossBoa.Managers
                 }
             }
 
-            // Closes entrance behind the player
-            //if (LevelManager.)
+            // Removes inactive arrows from collision
+            for (int i = 0; i < enemyProjectiles.Count; i++)
+            {
+                if (!enemyProjectiles[i].IsActive)
+                {
+                    enemyProjectiles.RemoveAt(i);
+                    i--;
+                }
+
+            }
         }
 
         /// <summary>
@@ -178,7 +186,11 @@ namespace CrossBoa.Managers
         {
             sb.Draw(hitBox, player.Hitbox, Color.White);
 
-            
+            foreach (Collectible c in collectibles)
+            {
+                c.Draw(sb);
+            }
+
             if (playerArrow != null)
             {
                 // Make drawn hitbox size larger if hitbox is a point
@@ -192,7 +204,7 @@ namespace CrossBoa.Managers
                     sb.Draw(arrowPoint, playerArrow.Hitbox, Color.Red);
             }
 
-            foreach (Projectile i in enemyProjectiles)
+            foreach (Arrow i in enemyProjectiles)
             {
                 sb.Draw(arrowPoint, new Rectangle(i.Hitbox.X - 2, i.Hitbox.Y - 2, 5, 5), Color.Red);
             }
@@ -207,11 +219,6 @@ namespace CrossBoa.Managers
             foreach (Tile i in levelObstacles)
             {
                 sb.Draw(hitBox, i.Rectangle, Color.White);
-            }
-
-            foreach (Collectible c in collectibles)
-            {
-                c.Draw(sb);
             }
         }
 
@@ -230,7 +237,7 @@ namespace CrossBoa.Managers
         /// Restrictions: none
         /// </summary>
         /// <param name="projectile"></param>
-        public static void AddProjectile(Projectile projectile)
+        public static void AddProjectile(Arrow projectile)
         {
             enemyProjectiles.Add(projectile);
         }
@@ -260,7 +267,6 @@ namespace CrossBoa.Managers
         {
             // Rectangle that holds the intersection area
             Rectangle overlap = Rectangle.Intersect(entity.Hitbox, tile.Rectangle);
-
 
             // Is the overlapping rectangle taller than it is wide
             if (overlap.Width > overlap.Height || (overlap.Width == overlap.Height && alternate == 0))
@@ -309,6 +315,11 @@ namespace CrossBoa.Managers
                     alternate = 0;
                 }
             }
+        }
+
+        public static void ClearEnemiesList()
+        {
+            enemies.Clear();
         }
     }
 }

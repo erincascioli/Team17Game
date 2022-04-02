@@ -53,7 +53,7 @@ namespace CrossBoa
 
         static Camera()
         {
-            cameraCrew = new PhysicsObject(null, new Rectangle(0, 0, Game1.ScreenWidth, Game1.ScreenHeight), null, 20000);
+            cameraCrew = new PhysicsObject(null, new Rectangle(0, 0, Game1.windowWidth, Game1.windowHeight), null, 20000);
         }
 
         public static void Update(KeyboardState kbState, GameTime gameTime)
@@ -67,6 +67,9 @@ namespace CrossBoa
             }
 
             cameraCrew.Update(gameTime);
+
+            prevCameraX = cameraX;
+            prevCameraY = cameraY;
         }
 
         /// <summary>
@@ -115,13 +118,13 @@ namespace CrossBoa
         {
             if (LevelManager.Exitlocation == LevelManager.ExitLocation.Left || LevelManager.Exitlocation == LevelManager.ExitLocation.Right)
             {
-                cameraCrew.ApplyForce(MathHelper.DirectionBetween(new Point(cameraCrew.Rectangle.Center.X, 0), new Point((int)player.Position.X, 0)), MathHelper.DistanceSquared(new Point(cameraCrew.Rectangle.Center.X, 0), new Point((int)player.Position.X, 0)) / 1000);
+                cameraCrew.ApplyForce(Helper.DirectionBetween(new Point(cameraCrew.Rectangle.Center.X, 0), new Point((int)player.Position.X, 0)), Helper.DistanceSquared(new Point(cameraCrew.Rectangle.Center.X, 0), new Point((int)player.Position.X, 0)) / 1000);
                 cameraY = 0;
                 cameraX = -(int)cameraCrew.Rectangle.X;
             }
             else
             {
-                cameraY = -(int)player.Position.Y + Game1.ScreenHeight / 2;
+                cameraY = -(int)player.Position.Y + Game1.windowHeight / 2;
                 cameraX = 0;
             }
         }

@@ -99,6 +99,26 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Get: returns whether or not the player is still in a dodge.<para></para>
+        /// Set: Enables inDodge to be set to false, ending the dodge early. InDodge
+        /// cannot be set to true.
+        /// </summary>
+        public bool InDodge
+        {
+            get
+            {
+                return inDodge;
+            }
+            set
+            {
+                if (!value && inDodge)
+                    EndDodge(false);
+                else if (value)
+                    throw new ArgumentException("InDodge cannot be set to true.");
+            }
+        }
+
+        /// <summary>
         /// Constructs a Player object
         /// </summary>
         /// <param name="sprite">The sprite for this GameObject</param>
@@ -135,7 +155,7 @@ namespace CrossBoa
             KeyboardState kbState = Keyboard.GetState();
 
             // Update timers
-            float totalSeconds = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            float totalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeUntilDodge -= totalSeconds;
             timeLeftInvincible -= totalSeconds;
 
@@ -173,16 +193,12 @@ namespace CrossBoa
 
             // ~ Dodging code ~
             // Activate a dodge on space press if the player is past the dodge cooldown.
-            //Dodge(kbState);
+            Dodge(kbState);
 
             // If the player is in a dodge and their invincibility
             // frames run out, give control back to the player.
             if (inDodge && dodgeInvulnerabilityTime < 0)
-            {
-                canMove = true;
-                maxSpeed /= dodgeSpeedBoost;
-                inDodge = false;
-            }
+                EndDodge(true);
 
             base.Update(gameTime);
         }
@@ -245,30 +261,54 @@ namespace CrossBoa
 
             UpdatePhysics(gameTime);
         }
+
+        /// <summary>
+        /// Makes the player dodge
+        /// </summary>
+        public void Dodge(KeyboardState kbState)
+        {
+            // If the player presses space and can dodge
+            if (kbState.IsKeyDown(Keys.Space) && timeUntilDodge < 0 &&
+                (kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) ||
+                kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.D)))
+            {
+                timeUntilDodge = dodgeCooldown;
+                dodgeVector = CheckMovementInput(kbState);
+                canMove = false;
+                dodgeInvulnerabilityTime = dodgeLength;
+                inDodge = true;
+                maxSpeed *= dodgeSpeedBoost;
+            }
+        }
+
+        /// <summary>
+        /// Takes the player out of the dodge. If this method was not
+        /// called from Update(), the dodge timer is set to 0 in addition to the
+        /// normal functions.
+        /// </summary>
+        /// <param name="fromUpdate">Whether or not this method was called from
+        /// Update(). </param>
+        public void EndDodge(bool fromUpdate)
+        {
+            canMove = true;
+            maxSpeed /= dodgeSpeedBoost;
+            inDodge = false;
+            dodgeInvulnerabilityTime = 0;
+            if (!fromUpdate)
+                timeUntilDodge = 0;
+        }
+
+        public void ResetPlayer(Rectangle startingPos)
+        {
+            currentHealth = maxHealth;
+            position = new Vector2(startingPos.X, startingPos.Y);
+            timeLeftInvincible = 0;
+        }
     }
 
-/*
-// UNFINISHED FEATURE - STRETCH GOAL
 
-/// <summary>
-/// Makes the player dodge
-/// </summary>
-public void Dodge(KeyboardState kbState)
-{
-    // If the player presses space and can dodge
-    if ((kbState.IsKeyDown(Keys.Space) && timeUntilDodge < 0) &&
-        (kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) ||
-        kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.D)))
-    {
-        timeUntilDodge = dodgeCooldown;
-        dodgeVector = CheckMovementInput(kbState);
-        canMove = false;
-        dodgeInvulnerabilityTime = dodgeLength;
-        inDodge = true;
-        maxSpeed *= dodgeSpeedBoost;
-    }
-}
+    
 
 
-}*/
+
 }
