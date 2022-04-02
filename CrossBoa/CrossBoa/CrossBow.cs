@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CrossBoa.Interfaces;
+using CrossBoa.UpgradeTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -31,6 +32,11 @@ namespace CrossBoa
 
         private const float arrowShotSpeed = 360f;
         private const float shotCoolDown = 0.2f;
+
+        /// <summary>
+        /// Invokes upgrades that affect the player's shot
+        /// </summary>
+        public event UpgradeBehavior OnShoot;
 
         /// <summary>
         /// Whether or not the crossbow has an arrow
@@ -125,6 +131,11 @@ namespace CrossBoa
         /// </summary>
         public void Shoot(Arrow playerArrow)
         {
+            // Invoke shot modifiers
+            if (OnShoot != null)
+                OnShoot();
+
+            // Shoot the arrow
             if (!IsOnCooldown && isLoaded)
             {
                 timeSinceShot = 0f;
