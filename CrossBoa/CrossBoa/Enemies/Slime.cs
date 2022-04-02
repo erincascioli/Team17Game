@@ -121,15 +121,23 @@ namespace CrossBoa.Enemies
                 Vector2 deathFrameScale = new Vector2(4, 2.5f);
                 int currentFrame;
 
+                const int hardcodedFrames = 3;
+                const double frame1Time = 0.04;
+                const double frame2Time = 0.08;
+                const double frame3Time = 0.12;
+                const double timePerFrame = 0.055;
+
                 // Play first 2 frames faster
-                if (timeSinceDeath <= 0.035)
+                if (timeSinceDeath <= frame1Time)
                     currentFrame = 0;
-                else if (timeSinceDeath <= 0.07)
+                else if (timeSinceDeath <= frame2Time)
                     currentFrame = 1;
+                else if (timeSinceDeath <= frame3Time)
+                    currentFrame = 2;
                 // Play rest of frames
                 else
-                    // Time per frame is 0.07s
-                    currentFrame = (int)Math.Floor((timeSinceDeath - 0.07) / 0.065) + 2;
+                    // Time per frame is 0.055s
+                    currentFrame = (int)Math.Floor((timeSinceDeath - frame3Time) / timePerFrame) + hardcodedFrames;
 
                 // Width of sprites in sheet is 64, Height is 40
                 // Slime in first frame is positioned at 25, 28
