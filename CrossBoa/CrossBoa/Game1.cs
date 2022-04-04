@@ -44,7 +44,7 @@ namespace CrossBoa
         private float preferredAspectRatio;
 
         private bool isDebugActive = false;
-        public static bool isGodModeActive = false; // Default
+        public static bool isGodModeActive = false;
 
         private KeyboardState kbState;
         private KeyboardState previousKBState;
@@ -85,7 +85,7 @@ namespace CrossBoa
         private UIElement crosshair;
         private CrossBow crossbow;
         private static Player player;
-        private PlayerArrow playerArrow;
+        public static List<PlayerArrow> playerArrowList;
 
         // Buttons
         private Button playButton;
@@ -192,9 +192,8 @@ namespace CrossBoa
             CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
 
             // CollisionManager is established and receives important permanent references
-            CollisionManager.Player = player;
             CollisionManager.Crossbow = crossbow;
-            CollisionManager.PlayerArrow = playerArrow;
+            CollisionManager.PlayerArrow = playerArrowList;
 
             // Set up UI Elements
             playHoverSprite = Content.Load<Texture2D>("PlayPressed");
@@ -526,13 +525,14 @@ namespace CrossBoa
             {
                 // Prevents arrow from zooming onto the screen if 
                 // the player doesn't shoot within the first 30 seconds of starting
-                if (playerArrow == null)
-                {
-                    playerArrow = new PlayerArrow(
+                if (playerArrowList.Count <= 0)
+                { 
+                    playerArrowList = new PlayerArrow(
                 playerArrowSprite,
                 new Rectangle(-100, -100, 60, 60),
                 0f,
-                0);
+                0,
+                true);
 
                     // Pass-in References
                     playerArrow.CrossbowReference = crossbow;

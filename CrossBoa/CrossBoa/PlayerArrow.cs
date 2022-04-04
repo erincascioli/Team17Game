@@ -16,6 +16,9 @@ namespace CrossBoa
     {
         private CrossBow crossbowReference;
 
+        // Flag for upgrades that give additional arrows
+        private bool isCollectable;
+
         private bool isInAir;
         private float timeUntilDespawn;
         private bool flashFrames;
@@ -71,11 +74,12 @@ namespace CrossBoa
         /// <param name="sprite">The sprite for this GameObject</param>
         /// <param name="rectangle">a Rectangle containing this GameObject's position and size</param>
         /// <param name="velocity">The direction that the playerArrow will move in</param>
-        /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public PlayerArrow(Texture2D sprite, Rectangle rectangle, Vector2 velocity) :
+        /// <param name="isCollectable">Set to true if this arrow should be the one the player must recollect</param>
+        public PlayerArrow(Texture2D sprite, Rectangle rectangle, Vector2 velocity, bool isCollectable) :
             base(sprite, rectangle, velocity)
         {
             this.isInAir = true;
+            this.isCollectable = isCollectable;
         }
 
         /// <summary>
@@ -85,11 +89,12 @@ namespace CrossBoa
         /// <param name="rectangle">a Rectangle containing this GameObject's position and size</param>
         /// <param name="direction">The direction that the playerArrow will move in</param>
         /// <param name="magnitude">How quickly the playerArrow will move in that direction</param>
-        /// <param name="isPlayerArrow">Set to true if this is the player's arrow</param>
-        public PlayerArrow(Texture2D sprite, Rectangle rectangle, float direction, float magnitude) :
+        /// <param name="isCollectable">Set to true if this arrow should be the one the player must recollect</param>
+        public PlayerArrow(Texture2D sprite, Rectangle rectangle, float direction, float magnitude, bool isCollectable) :
             base(sprite, rectangle, direction, magnitude)
         {
             this.isInAir = true;
+            this.isCollectable = isCollectable;
         }
 
         /// <summary>
