@@ -43,7 +43,7 @@ namespace CrossBoa
 
         public Arrow(Texture2D sprite, Rectangle rectangle, float direction, float magnitude) : base(sprite, rectangle, null, 0)
         {
-            this.direction = direction;
+            this.direction = MathHelper.WrapAngle(direction);
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
             this.isActive = true;
         }
@@ -63,7 +63,7 @@ namespace CrossBoa
             color = Color.White;
             isActive = true;
             this.position = position;
-            this.direction = direction;
+            this.direction = MathHelper.WrapAngle(direction);
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
             friction = 0;
             maxSpeed = null;

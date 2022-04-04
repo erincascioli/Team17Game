@@ -251,7 +251,7 @@ namespace CrossBoa
             LevelManager.LContent = Content;
             
 
-            OnResize(null, null);
+            OnResize();
         }
 
         protected override void Update(GameTime gameTime)
@@ -879,8 +879,13 @@ namespace CrossBoa
         {
             return kbState.IsKeyDown(key) && previousKBState.IsKeyUp(key);
         }
-
-        public void OnResize(Object sender, EventArgs e)
+        
+        /// <summary>
+        /// Moves and resizes most screen elements when the window is resized
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void OnResize(Object sender = null, EventArgs e = null)
         {
             // Update windowWidth and windowHeight
             windowWidth = Window.ClientBounds.Width;
@@ -946,7 +951,7 @@ namespace CrossBoa
                 _graphics.ApplyChanges();
             }
 
-            OnResize(null, null);
+            OnResize();
         }
 
         /// <summary>

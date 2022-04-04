@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CrossBoa.UpgradeTypes
 {
-    class StatBoostUpgrade : Upgrade
+    public class StatBoostUpgrade : Upgrade
     {
         /// <summary>Initializes a new upgrade type.</summary>
         public StatBoostUpgrade(string name, string description, UpgradeBehavior effect, Texture2D sprite) : 

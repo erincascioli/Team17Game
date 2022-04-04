@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CrossBoa.UpgradeTypes
 {
-    class OnShotUpgrade : Upgrade
+    public class OnShotUpgrade : Upgrade
     {
         /// <summary>
         /// Initializes a new upgrade type.
@@ -17,14 +17,9 @@ namespace CrossBoa.UpgradeTypes
         public OnShotUpgrade(string name, string description, UpgradeBehavior effect, Texture2D sprite) :
             base(name, description, effect, sprite)
         {
-        }
 
-        /// <summary>
-        /// Runs whenever this upgrade should provide an effect
-        /// </summary>
-        public override void Run()
-        {
-            throw new NotImplementedException();
+
+
         }
     }
 }

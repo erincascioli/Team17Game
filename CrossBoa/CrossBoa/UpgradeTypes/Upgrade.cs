@@ -17,7 +17,7 @@ namespace CrossBoa.UpgradeTypes
     /// <summary>
     /// Parent class for all upgrade types
     /// </summary>
-    abstract class Upgrade
+    public abstract class Upgrade
     {
         protected string name;
         protected string description;
@@ -58,6 +58,9 @@ namespace CrossBoa.UpgradeTypes
         /// <summary>
         /// Runs whenever this upgrade should provide an effect
         /// </summary>
-        public abstract void Run();
+        public virtual void Run()
+        {
+            effect();
+        }
     }
 }
