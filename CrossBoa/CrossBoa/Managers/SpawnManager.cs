@@ -53,7 +53,7 @@ namespace CrossBoa.Managers
         /// <param name="position">The position to spawn the totem at</param>
         public static void SpawnTotem(Point position)
         {
-            Totem testTotem = new Totem(Game1.whiteSquareSprite,
+            Totem testTotem = new Totem(Game1.totemSprite,
                 new Rectangle(new Point(1300, 300), position),
                 3);
 

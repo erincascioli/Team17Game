@@ -42,5 +42,15 @@ namespace CrossBoa
                 
             }
         }
+
+        public bool HasCollided(ICollidable target)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnCollision(PhysicsObject target)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
