@@ -61,6 +61,17 @@ namespace CrossBoa.Managers
             gameObjectList.Add(testTotem);
         }
 
+        public static void SpawnSkeleton(Point position)
+        {
+            Skeleton newSkeleton = new Skeleton(
+                Game1.whiteSquareSprite,
+                Game1.slimeDeathSpritesheet,
+                3,
+                new Rectangle(position, new Point(64, 64)));
+            CollisionManager.AddEnemy(newSkeleton);
+            gameObjectList.Add(newSkeleton);
+        }
+
         /// Currently useless due to how we moved forward on enemy placement
         /*public static void FillLevel()
         {
