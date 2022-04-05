@@ -588,6 +588,8 @@ namespace CrossBoa
             if (!isDebugActive)
                 isGodModeActive = false;
 
+            CollisionManager.CheckCollision(isGodModeActive);
+
             if (LevelManager.Exit.IsOpen || (!player.CanMove && !player.InDodge))
             {
                 //Camera.FollowPlayer(player);
