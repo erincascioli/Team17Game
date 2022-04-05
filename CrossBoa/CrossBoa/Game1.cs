@@ -34,7 +34,7 @@ namespace CrossBoa
         private const float DefaultPlayerInvulnerabilityFrames = 3.5f;
         private const float DefaultPlayerDodgeCooldown = 2;
         private const float DefaultPlayerDodgeLength = 0.25f;
-        private const float DefaultPlayerDodgeSpeed = 2f;
+        private const float DefaultPlayerDodgeSpeed = 3f;
 
         public static int UIScale;
         public static int windowWidth;
@@ -958,10 +958,11 @@ namespace CrossBoa
             LevelManager.LoadLevel("TestingFile");
 
             // Temp enemy spawns for starting level
-            SpawnManager.SpawnSlime(new Point(400, 400));
+            /*SpawnManager.SpawnSlime(new Point(400, 400));
             SpawnManager.SpawnSlime(new Point(1280, 448));
             SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
-            SpawnManager.SpawnTotem(new Point(50, 100));
+            SpawnManager.SpawnTotem(new Point(50, 100));*/
+            SpawnManager.SpawnSkeleton(new Point(400, 400));
         }
     }
 
