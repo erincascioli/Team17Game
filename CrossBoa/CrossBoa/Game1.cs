@@ -125,6 +125,7 @@ namespace CrossBoa
             menuBGLayers = new GameObject[10];
             playerHealthBar = new List<UIElement>();
             UIElementsList = new List<UIElement>(20);
+            playerArrowList = new List<PlayerArrow>();
 
             // --- Prepare game rendering ---
             _graphics.PreferredBackBufferWidth = 1600;
@@ -171,7 +172,7 @@ namespace CrossBoa
                 menuBGSpriteList[i] = Content.Load<Texture2D>("bg" + (i + 1));
             }
 
-            // Load objects
+            // Load Player
             player = new Player(
                 snakeSprite,
                 new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)),
@@ -185,15 +186,29 @@ namespace CrossBoa
                 DefaultPlayerDodgeSpeed
             );
 
+            // Load Crossbow
             crossbow = new CrossBow(
                 crossbowSprite,
                 crossbowSprite.Bounds);
+
+            // Generates a new, inactive arrow
+            playerArrowList.Add(
+                new PlayerArrow(
+                    playerArrowSprite,
+                    new Rectangle(-100, -100, 60, 60),
+                    true)
+                {
+                    IsActive = false
+                });
+
+            // Subscribes crossbow and arrow to each others' events
+            crossbow.OnShoot += playerArrowList[0].GetShot;
+            playerArrowList[0].OnPickup += crossbow.PickUpArrow;
 
             CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
 
             // CollisionManager is established and receives important permanent references
             CollisionManager.Crossbow = crossbow;
-            CollisionManager.PlayerArrow = playerArrowList;
 
             // Set up UI Elements
             playHoverSprite = Content.Load<Texture2D>("PlayPressed");
@@ -523,27 +538,14 @@ namespace CrossBoa
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
                 && !pauseButton.IsMouseOver())
             {
-                // Prevents arrow from zooming onto the screen if 
-                // the player doesn't shoot within the first 30 seconds of starting
-                if (playerArrowList.Count <= 0)
-                { 
-                    playerArrowList = new PlayerArrow(
-                playerArrowSprite,
-                new Rectangle(-100, -100, 60, 60),
-                0f,
-                0,
-                true);
-
-                    // Pass-in References
-                    playerArrow.CrossbowReference = crossbow;
-                    CollisionManager.PlayerArrow = playerArrow;
-                }
-                crossbow.Shoot(playerArrow);
+                crossbow.Shoot();
             }
 
-            // Update the player arrow
-            if (playerArrow != null)
+            // Update all player arrows
+            foreach (PlayerArrow playerArrow in playerArrowList)
+            {
                 playerArrow.Update(gameTime);
+            }
 
             // Pause if player presses pause key or escape
             pauseButton.Update(gameTime);
@@ -622,8 +624,11 @@ namespace CrossBoa
                 gameObject.Draw(_spriteBatch);
             }
 
-            if (playerArrow != null)
+            // Draw arrow
+            foreach (PlayerArrow playerArrow in playerArrowList)
+            {
                 playerArrow.Draw(_spriteBatch);
+            }
 
             // DEBUG
             if (isDebugActive)

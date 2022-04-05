@@ -481,8 +481,8 @@ namespace CrossBoa.Managers
                 {
                     // Player and Camera go to the bottom of the level
                     Camera.MoveCamera(0, -Game1.gameRenderTarget.Height - 1700);
-                    CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
-                                CollisionManager.Player.Position.Y + 1300);
+                    Game1.Player.Position = new Vector2(Game1.Player.Position.X,
+                                Game1.Player.Position.Y + 1300);
 
                     // Prompts the next level to load in
                     LoadLevel("TestingFile");
@@ -514,8 +514,8 @@ namespace CrossBoa.Managers
                 {
                     // Player and Camera go to the bottom of the level
                     Camera.MoveCamera(0, Game1.gameRenderTarget.Height + 1700);
-                    CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X,
-                        CollisionManager.Player.Position.Y - 1300);
+                    Game1.Player.Position = new Vector2(Game1.Player.Position.X,
+                        Game1.Player.Position.Y - 1300);
 
                     // Prompts the next level to load in
                     LoadLevel("TestingFile");
@@ -547,8 +547,8 @@ namespace CrossBoa.Managers
                 {
                     // Player and Camera go to the bottom of the level
                     Camera.MoveCamera(Game1.gameRenderTarget.Width + 1700, 0);
-                    CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X - 2000,
-                        CollisionManager.Player.Position.Y);
+                    Game1.Player.Position = new Vector2(Game1.Player.Position.X - 2000,
+                        Game1.Player.Position.Y);
 
                     // Prompts the next level to load in
                     LoadLevel("TestingFile");
@@ -580,8 +580,8 @@ namespace CrossBoa.Managers
                 {
                     // Player and Camera go to the bottom of the level
                     Camera.MoveCamera(-Game1.gameRenderTarget.Width - 1700, 0);
-                    CollisionManager.Player.Position = new Vector2(CollisionManager.Player.Position.X + 2000,
-                        CollisionManager.Player.Position.Y);
+                    Game1.Player.Position = new Vector2(Game1.Player.Position.X + 2000,
+                        Game1.Player.Position.Y);
 
                     // Prompts the next level to load in
                     LoadLevel("TestingFile");
@@ -690,19 +690,18 @@ namespace CrossBoa.Managers
                 }
 
                 // Arrow will return to the player if still on screen
-                if (CollisionManager.PlayerArrow.IsActive)
+                foreach(PlayerArrow playerArrow in Game1.playerArrowList)
+                if (playerArrow.IsActive)
                 {
-                    CollisionManager.PlayerArrow.GetSuckedIntoPlayer((int)Helper.DistanceSquared(
-                        new Point((int)player.Position.X, (int)player.Position.Y), CollisionManager.PlayerArrow.Size), 9000);
-
-                    crossbow.PickUpArrow();
+                    playerArrow.GetSuckedIntoPlayer((int)Helper.DistanceSquared(
+                        new Point((int)player.Position.X, (int)player.Position.Y), playerArrow.Size), 9000);
 
                     // Doesn't let the player arrow zoom onto screen if it is too far out of bounds
-                    if (CollisionManager.PlayerArrow.Position.X < -50 || CollisionManager.PlayerArrow.Position.X > Game1.gameRenderTarget.Width + 50 
-                        || CollisionManager.PlayerArrow.Position.Y < -50|| CollisionManager.PlayerArrow.Position.Y > Game1.gameRenderTarget.Height + 50)
+                    if (playerArrow.Position.X < -50 || playerArrow.Position.X > Game1.gameRenderTarget.Width + 50 
+                        || playerArrow.Position.Y < -50|| playerArrow.Position.Y > Game1.gameRenderTarget.Height + 50)
                     {
-                        CollisionManager.PlayerArrow.HitSomething();
-                        CollisionManager.PlayerArrow.GetPickedUp();
+                        playerArrow.HitSomething();
+                        playerArrow.GetPickedUp();
                     }
                 }
             }

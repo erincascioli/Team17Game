@@ -14,10 +14,7 @@ namespace CrossBoa
     /// </summary>
     public class PlayerArrow : Arrow
     {
-        private CrossBow crossbowReference;
-
-        // Flag for upgrades that give additional arrows
-        private bool isCollectable;
+        public event ReloadCrossbow OnPickup;
 
         private bool isInAir;
         private float timeUntilDespawn;
@@ -26,12 +23,34 @@ namespace CrossBoa
         private const float PlayerArrowDespawn = 30f;
         private const float TimeBeforePickup = 0.5f;
 
+        // Upgrade-related fields
+        private bool isCollectable;
+        private float directionOffset;
+
         /// <summary>
         /// Whether the arrow is currently able to hit anything, or if it is on the ground
         /// </summary>
         public bool IsInAir
         {
             get { return isInAir; }
+        }
+
+        /// <summary>
+        /// Flag for arrows that should not be directly collectible
+        /// </summary>
+        public bool IsCollectable
+        {
+            get { return isCollectable; }
+        }
+
+        /// <summary>
+        /// An offset for the direction of this arrow when it gets shot
+        /// <para>Mainly used for multishot arrows</para>
+        /// </summary>
+        public float DirectionOffset
+        {
+            get { return directionOffset; }
+            set { directionOffset = value; }
         }
 
         /// <summary>
@@ -52,17 +71,6 @@ namespace CrossBoa
             }
         }
 
-        /// <summary>
-        /// A reference to the crossbow for the player arrow
-        /// </summary>
-        public CrossBow CrossbowReference
-        {
-            set
-            {
-                crossbowReference = value;
-            }
-        }
-
         /*public Point PickupHitbox
         {
             get {return position}
@@ -75,23 +83,8 @@ namespace CrossBoa
         /// <param name="rectangle">a Rectangle containing this GameObject's position and size</param>
         /// <param name="velocity">The direction that the playerArrow will move in</param>
         /// <param name="isCollectable">Set to true if this arrow should be the one the player must recollect</param>
-        public PlayerArrow(Texture2D sprite, Rectangle rectangle, Vector2 velocity, bool isCollectable) :
-            base(sprite, rectangle, velocity)
-        {
-            this.isInAir = true;
-            this.isCollectable = isCollectable;
-        }
-
-        /// <summary>
-        /// Constructs a PlayerArrow
-        /// </summary>
-        /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="rectangle">a Rectangle containing this GameObject's position and size</param>
-        /// <param name="direction">The direction that the playerArrow will move in</param>
-        /// <param name="magnitude">How quickly the playerArrow will move in that direction</param>
-        /// <param name="isCollectable">Set to true if this arrow should be the one the player must recollect</param>
-        public PlayerArrow(Texture2D sprite, Rectangle rectangle, float direction, float magnitude, bool isCollectable) :
-            base(sprite, rectangle, direction, magnitude)
+        public PlayerArrow(Texture2D sprite, Rectangle rectangle, bool isCollectable) :
+            base(sprite, rectangle, Vector2.Zero)
         {
             this.isInAir = true;
             this.isCollectable = isCollectable;
@@ -133,7 +126,11 @@ namespace CrossBoa
                     if (Helper.DistanceSquared(this.Hitbox.Center, Game1.Player.Hitbox.Center) < 10000)
                     {
                         color = Color.White;
-                        crossbowReference.PickUpArrow();
+
+                        // Invoke OnPickup event
+                        if (OnPickup != null) 
+                            OnPickup();
+
                         GetPickedUp();
                     }
                 }
@@ -142,7 +139,11 @@ namespace CrossBoa
                 else if (timeUntilDespawn <= -1f)
                 {
                     color = Color.White;
-                    crossbowReference.PickUpArrow();
+
+                    // Invoke OnPickup event
+                    if (OnPickup != null)
+                        OnPickup();
+
                     GetPickedUp();
                 }
             }
@@ -168,10 +169,13 @@ namespace CrossBoa
             isActive = true;
             isInAir = true;
             this.position = position;
-            this.direction = direction;
+            this.direction = direction + directionOffset;
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
             friction = 0;
             maxSpeed = null;
+
+            // Makes the playerArrow appear from the bow instead of behind the player.
+            this.position += (velocity / velocity.Length()) * 5;
         }
 
         /// <summary>

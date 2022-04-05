@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CrossBoa.Enemies
 {
-    class Totem : Enemy, IShoot
+    class Totem : Enemy
     {
         // ~~~ FIELDS ~~~
         private double timeSinceShot;

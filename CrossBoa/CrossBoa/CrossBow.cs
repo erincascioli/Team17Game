@@ -17,11 +17,24 @@ namespace CrossBoa
     }
 
     /// <summary>
+    /// A delegate for reloading the crossbow when the arrow is picked up
+    /// </summary>
+    public delegate void ReloadCrossbow();
+
+    /// <summary>
+    /// A delegate for when this crossbow gets shot
+    /// </summary>
+    /// <param name="position">The position of the crossbow</param>
+    /// <param name="direction">The direction of the crossbow</param>
+    /// <param name="magnitude">The magnitude of the shot</param>
+    public delegate void OnShootUpgradeBehavior(Vector2 position, float direction, float magnitude);
+
+    /// <summary>
     /// A crossbow, which points towards the mouse and can fire
     /// an arrow. Inherits from GameObject.
     /// Written by Leo Schinder-Gerendasi
     /// </summary>
-    public class CrossBow : GameObject, IShoot
+    public class CrossBow : GameObject
     {
         // ~~~ FIELDS ~~~
         private SpriteEffects spriteEffects;
@@ -36,7 +49,7 @@ namespace CrossBoa
         /// <summary>
         /// Invokes upgrades that affect the player's shot
         /// </summary>
-        public event UpgradeBehavior OnShoot;
+        public event OnShootUpgradeBehavior OnShoot;
 
         /// <summary>
         /// Whether or not the crossbow has an arrow
@@ -129,24 +142,23 @@ namespace CrossBoa
         /// If not on cooldown, shoots the bow, which sends
         /// the player arrow forward and resets the cooldown.
         /// </summary>
-        public void Shoot(Arrow playerArrow)
+        public void Shoot()
         {
-            // Invoke shot modifiers
-            if (OnShoot != null)
-                OnShoot();
-
             // Shoot the arrow
             if (!IsOnCooldown && isLoaded)
             {
                 timeSinceShot = 0f;
                 isLoaded = false;
-                playerArrow.GetShot(
-                    DrawnPosition,
-                    Direction,
-                    arrowShotSpeed);
 
-                // Makes the playerArrow appear from the bow instead of behind the player.
-                playerArrow.Position += (playerArrow.Velocity / playerArrow.Velocity.Length()) * 5;
+                // Handled by event now
+                //playerArrow.GetShot(
+                //    DrawnPosition,
+                //    Direction,
+                //    arrowShotSpeed);
+
+                // Invoke shot modifiers
+                if (OnShoot != null)
+                    OnShoot(DrawnPosition, Direction, arrowShotSpeed);
 
                 // Shake the screen
                 Camera.ShakeScreen(12);

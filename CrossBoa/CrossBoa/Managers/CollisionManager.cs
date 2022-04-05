@@ -13,7 +13,6 @@ namespace CrossBoa.Managers
     public static class CollisionManager
     {
         private static CrossBow crossbow;
-        private static PlayerArrow playerArrow;
         private static List<Enemy> enemies;
         private static List<Arrow> enemyProjectiles;
         private static List<Collectible> collectibles;
@@ -26,12 +25,6 @@ namespace CrossBoa.Managers
         {
             get { return crossbow;}
             set { crossbow = value; }
-        }
-
-        public static PlayerArrow PlayerArrow
-        {
-            get { return playerArrow;} 
-            set { playerArrow = value; }
         }
 
         static CollisionManager()
@@ -87,15 +80,19 @@ namespace CrossBoa.Managers
                 }
 
                 // with player arrow
-                if (playerArrow != null && playerArrow.IsInAir &&
-                    playerArrow.Hitbox.Intersects(enemy.Hitbox) && enemy.Health > 0)
+                foreach (PlayerArrow playerArrow in Game1.playerArrowList)
                 {
-                    // Health value not decided on yet
-                    enemy.TakeDamage(1);
-                    playerArrow.HitSomething();
+                    if (playerArrow.IsInAir && 
+                        playerArrow.Hitbox.Intersects(enemy.Hitbox) && 
+                        enemy.Health > 0)
+                    {
+                        // Health value not decided on yet
+                        enemy.TakeDamage(1);
+                        playerArrow.HitSomething();
 
-                    // Knock the enemy back
-                    enemy.GetKnockedBack(playerArrow, 35000);
+                        // Knock the enemy back
+                        enemy.GetKnockedBack(playerArrow, 35000);
+                    }
                 }
 
                 // Tracks Living Enemies
@@ -116,10 +113,14 @@ namespace CrossBoa.Managers
                     LevelManager.Exit.ChangeDoorState();
                 }
 
-                if (playerArrow != null && playerArrow.IsActive
-                    && playerArrow.IsInAir && playerArrow.Hitbox.Intersects(tile.Rectangle))
+                foreach (PlayerArrow playerArrow in Game1.playerArrowList)
                 {
-                    playerArrow.HitSomething();
+                    if (playerArrow.IsActive && 
+                        playerArrow.IsInAir && 
+                        playerArrow.Hitbox.Intersects(tile.Rectangle))
+                    {
+                        playerArrow.HitSomething();
+                    }
                 }
 
                 if (Game1.Player.Hitbox.Intersects(tile.Rectangle))
@@ -138,10 +139,15 @@ namespace CrossBoa.Managers
             }
 
             // Player against an inactive player's arrow
-            if (!(playerArrow == null) && !playerArrow.IsInAir && !crossbow.IsOnCooldown && Game1.Player.Hitbox.Intersects(playerArrow.Hitbox))
+            foreach (PlayerArrow playerArrow in Game1.playerArrowList)
             {
-                crossbow.PickUpArrow();
-                playerArrow.GetPickedUp();
+                if (playerArrow.IsCollectable &&
+                    !playerArrow.IsInAir && 
+                    !crossbow.IsOnCooldown &&
+                    Game1.Player.Hitbox.Intersects(playerArrow.Hitbox))
+                {
+                    playerArrow.GetPickedUp();
+                }
             }
 
             // Removes open doors from collision
@@ -185,7 +191,7 @@ namespace CrossBoa.Managers
                 c.Draw(sb);
             }
 
-            if (playerArrow != null)
+            foreach (PlayerArrow playerArrow in Game1.playerArrowList)
             {
                 // Make drawn hitbox size larger if hitbox is a point
                 if (playerArrow.Hitbox.Size == Point.Zero)

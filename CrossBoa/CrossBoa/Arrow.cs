@@ -24,6 +24,7 @@ namespace CrossBoa
         public bool IsActive
         {
             get { return isActive; }
+            set { isActive = value; }
         }
 
         /// <summary>
