@@ -13,12 +13,12 @@ namespace CrossBoa.Enemies
     class Skeleton : Enemy, ICollidable
     {
         // ~~~ FIELDS ~~~
-        private const float MovementForce = 400f;
-        private const float FrictionForce = 325f;
+        private const float MovementForce = 1000f;
+        private const float FrictionForce = 50f;
 
         // Movement fields
         private Player target;
-        
+        private float knockbackTimer;
 
         // ~~~ PROPERTIES ~~~
         /// <summary>
@@ -48,7 +48,7 @@ namespace CrossBoa.Enemies
             isAlive = true;
             target = Game1.Player;
             maxSpeed = 200f;
-            
+            knockbackTimer = 0.25f;
         }
 
         // ~~~ METHODS ~~~
@@ -61,10 +61,19 @@ namespace CrossBoa.Enemies
                     MovementForce);
         }
 
+        public override void GetKnockedBack(ICollidable other, float force)
+        {
+            knockbackTimer = 0;
+            base.GetKnockedBack(other, force);
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            Move();
+            if (knockbackTimer < 0.25)
+                knockbackTimer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            else
+                Move();
         }
     }
 }
