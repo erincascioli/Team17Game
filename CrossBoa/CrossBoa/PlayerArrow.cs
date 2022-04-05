@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,22 +10,35 @@ using Microsoft.Xna.Framework.Input;
 namespace CrossBoa
 {
     /// <summary>
+    /// A delegate that keeps track of when the main arrow is recollected
+    /// </summary>
+    public delegate void ArrowReturnHandler(float force);
+
+    /// <summary>
     /// Author:  TacNayn
     /// <para>Represents a playerArrow with a rotation and a constant movement speed</para>
     /// </summary>
     public class PlayerArrow : Arrow
     {
-        public event ReloadCrossbow OnPickup;
+        // Events
+        /// <summary>
+        /// Runs every frame while the arrow returns to the player
+        /// </summary>
+        public event ArrowReturnHandler OnReturn;
+
+        /// <summary>
+        /// Runs when the arrow is collected by the player
+        /// </summary>
+        public event ArrowPickupHandler OnPickup;
 
         private bool isInAir;
         private float timeUntilDespawn;
         private bool flashFrames;
 
-        private const float PlayerArrowDespawn = 30f;
-        private const float TimeBeforePickup = 0.5f;
+        //private const float TimeBeforePickup = 0.5f;
 
         // Upgrade-related fields
-        private bool isCollectable;
+        private bool isMainArrow;
         private float directionOffset;
 
         /// <summary>
@@ -36,11 +50,11 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Flag for arrows that should not be directly collectible
+        /// Flag for special arrows that should not be directly collectible
         /// </summary>
-        public bool IsCollectable
+        public bool IsMainArrow
         {
-            get { return isCollectable; }
+            get { return isMainArrow; }
         }
 
         /// <summary>
@@ -71,23 +85,18 @@ namespace CrossBoa
             }
         }
 
-        /*public Point PickupHitbox
-        {
-            get {return position}
-        }*/
-
         /// <summary>
-        /// Constructs a PlayerArrow
+        /// Constructs a PlayerArrow that is disabled by default. Run GetShot to activate it.
         /// </summary>
         /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="rectangle">a Rectangle containing this GameObject's position and size</param>
-        /// <param name="velocity">The direction that the playerArrow will move in</param>
-        /// <param name="isCollectable">Set to true if this arrow should be the one the player must recollect</param>
-        public PlayerArrow(Texture2D sprite, Rectangle rectangle, bool isCollectable) :
-            base(sprite, rectangle, Vector2.Zero)
+        /// <param name="size">The size that this arrow will be rendered as</param>
+        /// <param name="isMainArrow">Set to true if this arrow should be the one the player must recollect</param>
+        public PlayerArrow(Texture2D sprite, Point size, bool isMainArrow) :
+            base(sprite, new Rectangle(new Point(-100), size), Vector2.Zero)
         {
-            this.isInAir = true;
-            this.isCollectable = isCollectable;
+            this.isActive = false;
+            this.isInAir = false;
+            this.isMainArrow = isMainArrow;
         }
 
         /// <summary>
@@ -97,7 +106,7 @@ namespace CrossBoa
         public override void Update(GameTime gameTime)
         {
             // If it's on the ground, tick down the despawn time
-            if (isActive)
+            if (isActive && isMainArrow)
             {
                 timeUntilDespawn -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -105,6 +114,10 @@ namespace CrossBoa
                 {
                     // Move to player if arrow is nearby and arrow is on ground
                     GetSuckedIntoPlayer(80, 5000);
+
+                    // Invoke arrow return event so other arrows return as well
+                    if (OnReturn != null) 
+                        OnReturn(5000);
                 }
 
                 // Begin flashing when arrow is about to despawn
@@ -115,14 +128,18 @@ namespace CrossBoa
                         color = new Color(Color.Black, 60);
                     else
                         color = Color.White;
-
                 }
 
                 // If there's no time left on the despawn timer, give it back to the player
                 else if (timeUntilDespawn <= 0 && timeUntilDespawn > -1f)
                 {
-                    GetSuckedIntoPlayer(8000, 7500);
+                    GetSuckedIntoPlayer(7500);
 
+                    // Invoke arrow return event so other arrows return as well
+                    if (OnReturn != null)
+                        OnReturn(7500);
+
+                    // If this arrow is within 100 meters, collect it (extends pickup range so arrow doesn't overshoot)
                     if (Helper.DistanceSquared(this.Hitbox.Center, Game1.Player.Hitbox.Center) < 10000)
                     {
                         color = Color.White;
@@ -149,12 +166,12 @@ namespace CrossBoa
             velocity *= -1;
             friction = 1000;
             isInAir = false;
-            timeUntilDespawn = PlayerArrow.PlayerArrowDespawn;
+            timeUntilDespawn = PlayerStats.ArrowDespawnTime;
         }
 
         public override void GetShot(Vector2 position, float direction, float magnitude)
         {
-            timeUntilDespawn = PlayerArrowDespawn;
+            timeUntilDespawn = PlayerStats.ArrowDespawnTime;
             color = Color.White;
             isActive = true;
             isInAir = true;
@@ -173,6 +190,10 @@ namespace CrossBoa
         /// </summary>
         public void GetPickedUp()
         {
+            // If this is a temporary arrow, delete it from the list
+            if (!isMainArrow)
+                Game1.playerArrowList.Remove(this);
+
             timeUntilDespawn = 0;
             isActive = false;
             position = new Vector2(-1000, -1000);
@@ -185,13 +206,14 @@ namespace CrossBoa
         /// <summary>
         /// Moves the arrow toward the player if they are near it
         /// </summary>
-        /// <param name="distance">The distance to go toward the player from</param>
+        /// <param name="distance">The radius the player enter must be before the arrow is returned</param>
         /// <param name="force">How much force the arrow should return to the player with</param>
         public void GetSuckedIntoPlayer(int distance, float force)
         {
             Point playerCenter = Game1.Player.Hitbox.Center;
             Point arrowCenter = this.Hitbox.Center;
 
+            // If the player is within the distance, return the arrow
             if (Helper.DistanceSquared(playerCenter, arrowCenter) < MathF.Pow(distance, 2))
             {
                 // Update the velocity to point towards the player
@@ -200,6 +222,22 @@ namespace CrossBoa
                 // Apply more velocity
                 ApplyForce(Helper.DirectionBetween(arrowCenter, playerCenter), force);
             }
+        }
+
+        /// <summary>
+        /// Moves the arrow toward the player
+        /// </summary>
+        /// <param name="force">How much force the arrow should return to the player with</param>
+        public void GetSuckedIntoPlayer(float force)
+        {
+            Point playerCenter = Game1.Player.Hitbox.Center;
+            Point arrowCenter = this.Hitbox.Center;
+
+            // Update the velocity to point towards the player
+            VelocityAngle = Helper.DirectionBetween(arrowCenter, playerCenter);
+
+            // Apply more velocity
+            ApplyForce(Helper.DirectionBetween(arrowCenter, playerCenter), force);
         }
     }
 }

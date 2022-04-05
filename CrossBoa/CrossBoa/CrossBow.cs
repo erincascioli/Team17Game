@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 using CrossBoa.UpgradeTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,15 +20,20 @@ namespace CrossBoa
     /// <summary>
     /// A delegate for reloading the crossbow when the arrow is picked up
     /// </summary>
-    public delegate void ReloadCrossbow();
+    public delegate void ArrowPickupHandler();
 
     /// <summary>
-    /// A delegate for when this crossbow gets shot
+    /// A delegate used for firing arrows
     /// </summary>
     /// <param name="position">The position of the crossbow</param>
     /// <param name="direction">The direction of the crossbow</param>
     /// <param name="magnitude">The magnitude of the shot</param>
-    public delegate void OnShootUpgradeBehavior(Vector2 position, float direction, float magnitude);
+    public delegate void ArrowShotHandler(Vector2 position, float direction, float magnitude);
+
+    /// <summary>
+    /// A delegate for handling upgrades that have an effect on shot
+    /// </summary>
+    public delegate void OnShotUpgradeHandler();
 
     /// <summary>
     /// A crossbow, which points towards the mouse and can fire
@@ -43,13 +49,17 @@ namespace CrossBoa
         private float timeSinceShot;
         private float timeSincePickup;
 
-        private const float arrowShotSpeed = 360f;
         private const float shotCoolDown = 0.2f;
+
+        /// <summary>
+        /// Handles arrow firing when the crossbow is shot
+        /// </summary>
+        public event ArrowShotHandler FireArrows;
 
         /// <summary>
         /// Invokes upgrades that affect the player's shot
         /// </summary>
-        public event OnShootUpgradeBehavior OnShoot;
+        public event OnShotUpgradeHandler OnShot;
 
         /// <summary>
         /// Whether or not the crossbow has an arrow
@@ -126,8 +136,6 @@ namespace CrossBoa
         /// </summary>
         /// <param name="sprite">The sprite that the crossbow uses.</param>
         /// <param name="rectangle">The rectangle that represents the crossbow's hitbox.</param>
-        /// <param name="shotCoolDown">The cooldown per shot.</param>
-        /// <param name="playerReference">A reference to the player object</param>
         public CrossBow(Texture2D sprite, Rectangle rectangle) : base(sprite, rectangle)
         {
             isLoaded = true;
@@ -150,15 +158,19 @@ namespace CrossBoa
                 timeSinceShot = 0f;
                 isLoaded = false;
 
+                // Invoke shot modifiers
+                if (OnShot != null)
+                    OnShot();
+
+                // Fire additional arrows
+                if (FireArrows != null)
+                    FireArrows(DrawnPosition, Direction, PlayerStats.ArrowVelocity);
+
                 // Handled by event now
                 //playerArrow.GetShot(
                 //    DrawnPosition,
                 //    Direction,
                 //    arrowShotSpeed);
-
-                // Invoke shot modifiers
-                if (OnShoot != null)
-                    OnShoot(DrawnPosition, Direction, arrowShotSpeed);
 
                 // Shake the screen
                 Camera.ShakeScreen(12);

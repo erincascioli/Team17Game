@@ -83,7 +83,7 @@ namespace CrossBoa
         private List<UIElement> playerHealthBar;
         public static List<UIElement> UIElementsList;
         private UIElement crosshair;
-        private CrossBow crossbow;
+        private static CrossBow crossbow;
         private static Player player;
         public static List<PlayerArrow> playerArrowList;
 
@@ -103,6 +103,14 @@ namespace CrossBoa
         public static Player Player
         {
             get { return player; }
+        }
+
+        /// <summary>
+        /// A reference to the crossbow object
+        /// </summary>
+        public static CrossBow Crossbow
+        {
+            get { return crossbow; }
         }
 
         public Game1()
@@ -191,18 +199,15 @@ namespace CrossBoa
                 crossbowSprite,
                 crossbowSprite.Bounds);
 
-            // Generates a new, inactive arrow
+            // Load main arrow
             playerArrowList.Add(
                 new PlayerArrow(
                     playerArrowSprite,
-                    new Rectangle(-100, -100, 60, 60),
-                    true)
-                {
-                    IsActive = false
-                });
+                    new Point(60),
+                    true));
 
             // Subscribes crossbow and arrow to each others' events
-            crossbow.OnShoot += playerArrowList[0].GetShot;
+            crossbow.FireArrows += playerArrowList[0].GetShot;
             playerArrowList[0].OnPickup += crossbow.PickUpArrow;
 
             CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));

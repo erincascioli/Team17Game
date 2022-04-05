@@ -2,6 +2,9 @@
 
 namespace CrossBoa.UpgradeTypes
 {
+    /// <summary>
+    /// The quality of this upgrade
+    /// </summary>
     public enum UpgradeQuality
     {
         Bronze,
@@ -43,10 +46,10 @@ namespace CrossBoa.UpgradeTypes
         /// <summary>
         /// Initializes a new upgrade type.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="effect"></param>
-        /// <param name="sprite"></param>
+        /// <param name="name">The name of the upgrade that will be shown in game</param>
+        /// <param name="description">The description of the upgrade that will be shown in game.</param>
+        /// <param name="effect">A delegate from UpgradeManager that this upgrade will run when it is obtained</param>
+        /// <param name="sprite">The sprite that this upgrade will appear as in game</param>
         protected Upgrade(string name, string description, UpgradeBehavior effect, Texture2D sprite)
         {
             this.effect = effect;
