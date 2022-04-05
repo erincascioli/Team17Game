@@ -14,3 +14,4 @@ Floor, false,12,
 CrackedFloor, false,13,
 FloorShadow, false,14,
 Block, true,15
+Door, false, 16
