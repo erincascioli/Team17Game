@@ -126,11 +126,6 @@ namespace CrossBoa
                     if (Helper.DistanceSquared(this.Hitbox.Center, Game1.Player.Hitbox.Center) < 10000)
                     {
                         color = Color.White;
-
-                        // Invoke OnPickup event
-                        if (OnPickup != null) 
-                            OnPickup();
-
                         GetPickedUp();
                     }
                 }
@@ -139,11 +134,6 @@ namespace CrossBoa
                 else if (timeUntilDespawn <= -1f)
                 {
                     color = Color.White;
-
-                    // Invoke OnPickup event
-                    if (OnPickup != null)
-                        OnPickup();
-
                     GetPickedUp();
                 }
             }
@@ -186,6 +176,10 @@ namespace CrossBoa
             timeUntilDespawn = 0;
             isActive = false;
             position = new Vector2(-1000, -1000);
+
+            // Invoke OnPickup event
+            if (OnPickup != null)
+                OnPickup();
         }
 
         /// <summary>
