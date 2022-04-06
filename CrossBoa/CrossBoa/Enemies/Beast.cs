@@ -64,14 +64,14 @@ namespace CrossBoa.Enemies
         public override void GetKnockedBack(ICollidable other, float force)
         {
             knockbackTimer = 0;
-            base.GetKnockedBack(other, force);
+            base.GetKnockedBack(other, force * 3);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (knockbackTimer < 0.25)
-                knockbackTimer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (knockbackTimer < 0.15)
+                knockbackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             else
                 Move();
         }

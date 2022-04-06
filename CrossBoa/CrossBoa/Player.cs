@@ -100,8 +100,8 @@ namespace CrossBoa
 
         /// <summary>
         /// Get: returns whether or not the player is still in a dodge.<para></para>
-        /// Set: Enables inDodge to be set to false, ending the dodge early. InDodge
-        /// cannot be set to true.
+        /// Set: Enables inDodge to be set to false, ending the dodge early. and 
+        /// resetting the dodge cooldown timer. InDodge cannot be set to true.
         /// </summary>
         public bool InDodge
         {
@@ -112,7 +112,10 @@ namespace CrossBoa
             set
             {
                 if (!value && inDodge)
-                    EndDodge(false);
+                {
+                    timeUntilDodge = 0;
+                    EndDodge();
+                }
                 else if (value)
                     throw new ArgumentException("InDodge cannot be set to true.");
             }
@@ -198,7 +201,7 @@ namespace CrossBoa
             // If the player is in a dodge and their invincibility
             // frames run out, give control back to the player.
             if (inDodge && dodgeInvulnerabilityTime < 0)
-                EndDodge(true);
+                EndDodge();
 
             base.Update(gameTime);
         }
@@ -288,14 +291,12 @@ namespace CrossBoa
         /// </summary>
         /// <param name="fromUpdate">Whether or not this method was called from
         /// Update(). </param>
-        public void EndDodge(bool fromUpdate)
+        public void EndDodge()
         {
             canMove = true;
             maxSpeed /= dodgeSpeedBoost;
             inDodge = false;
             dodgeInvulnerabilityTime = 0;
-            if (!fromUpdate)
-                timeUntilDodge = 0;
         }
 
         public void ResetPlayer(Rectangle startingPos)
