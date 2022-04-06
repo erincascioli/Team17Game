@@ -138,14 +138,16 @@ namespace CrossBoa.Managers
                 }
             }
 
-            // Player against an inactive player's arrow
-            foreach (PlayerArrow playerArrow in Game1.playerArrowList)
+            // Player against an inactive player arrow
+            for (int index = 0; index < Game1.playerArrowList.Count; index++)
             {
-                if (playerArrow.IsCollectable &&
-                    !playerArrow.IsInAir && 
-                    !crossbow.IsOnCooldown &&
+                PlayerArrow playerArrow = Game1.playerArrowList[index];
+
+                // If the arrow is on the ground and intersects with the player, give the arrow back
+                if ((playerArrow.IsReturning || playerArrow.IsMainArrow) &&
+                    !playerArrow.IsInAir &&
                     Game1.Player.Hitbox.Intersects(playerArrow.Hitbox))
-                {
+                { 
                     playerArrow.GetPickedUp();
                 }
             }
@@ -177,8 +179,7 @@ namespace CrossBoa.Managers
         }
 
         /// <summary>
-        /// Purpose: draws all hitboxes to screen
-        ///          best for debugging
+        /// Purpose: draws all hitboxes to screen for debugging purposes
         /// Restrictions: none
         /// </summary>
         /// <param name="sb"></param>

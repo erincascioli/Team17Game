@@ -31,11 +31,6 @@ namespace CrossBoa
     public delegate void ArrowShotHandler(Vector2 position, float direction, float magnitude);
 
     /// <summary>
-    /// A delegate for handling upgrades that have an effect on shot
-    /// </summary>
-    public delegate void OnShotUpgradeHandler();
-
-    /// <summary>
     /// A crossbow, which points towards the mouse and can fire
     /// an arrow. Inherits from GameObject.
     /// Written by Leo Schinder-Gerendasi
@@ -59,7 +54,7 @@ namespace CrossBoa
         /// <summary>
         /// Invokes upgrades that affect the player's shot
         /// </summary>
-        public event OnShotUpgradeHandler OnShot;
+        public event UpgradeBehavior OnShot;
 
         /// <summary>
         /// Whether or not the crossbow has an arrow

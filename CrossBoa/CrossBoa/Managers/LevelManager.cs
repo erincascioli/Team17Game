@@ -690,15 +690,16 @@ namespace CrossBoa.Managers
                 }
 
                 // Arrow will return to the player if still on screen
-                foreach(PlayerArrow playerArrow in Game1.playerArrowList)
+                PlayerArrow playerArrow = Game1.playerArrowList[0];
                 if (playerArrow.IsActive)
                 {
-                    playerArrow.GetSuckedIntoPlayer((int)Helper.DistanceSquared(
-                        new Point((int)player.Position.X, (int)player.Position.Y), playerArrow.Size), 9000);
+                    playerArrow.GetSuckedIntoPlayer((int) Helper.DistanceSquared(
+                        new Point((int) player.Position.X, (int) player.Position.Y), playerArrow.Size), 9000);
 
                     // Doesn't let the player arrow zoom onto screen if it is too far out of bounds
-                    if (playerArrow.Position.X < -50 || playerArrow.Position.X > Game1.gameRenderTarget.Width + 50 
-                        || playerArrow.Position.Y < -50|| playerArrow.Position.Y > Game1.gameRenderTarget.Height + 50)
+                    if (playerArrow.Position.X < -50 || playerArrow.Position.X > Game1.gameRenderTarget.Width + 50
+                                                     || playerArrow.Position.Y < -50 || playerArrow.Position.Y >
+                                                     Game1.gameRenderTarget.Height + 50)
                     {
                         playerArrow.HitSomething();
                         playerArrow.GetPickedUp();

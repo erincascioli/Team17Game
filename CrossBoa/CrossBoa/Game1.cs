@@ -203,7 +203,7 @@ namespace CrossBoa
             playerArrowList.Add(
                 new PlayerArrow(
                     playerArrowSprite,
-                    new Point(60),
+                    new Point(64),
                     true));
 
             // Subscribes crossbow and arrow to each others' events
@@ -537,8 +537,6 @@ namespace CrossBoa
                 }
             }
 
-            
-
             // Fires the bow on click.
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
                 && !pauseButton.IsMouseOver())
@@ -584,6 +582,10 @@ namespace CrossBoa
                             ((Enemy)e).TakeDamage(1000);
                     }
                 }
+
+                // TEST CODE TO UNLOCK UPGRADE
+                if (WasKeyPressed(Keys.M))
+                    UpgradeManager.UnlockUpgrade("Multishot");
             }
 
             if (isDebugActive && WasKeyPressed(Keys.F))
