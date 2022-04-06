@@ -735,7 +735,7 @@ namespace CrossBoa.Managers
         /// </summary>
         public static void RandomizeLevel()
         {
-            int level = Game1.RNG.Next(1, 4);
+            int level = Game1.RNG.Next(1, 6);
             switch (level)
             {
                 case 1:
@@ -748,6 +748,14 @@ namespace CrossBoa.Managers
 
                 case 3:
                     currentLevel = "Level3";
+                    break;
+
+                case 4:
+                    currentLevel = "Level4";
+                    break;
+
+                case 5:
+                    currentLevel = "Level5";
                     break;
 
             }
