@@ -20,7 +20,7 @@ namespace CrossBoa
         private float timeUntilDespawn;
         private bool flashFrames;
 
-        private const float PlayerArrowDespawn = 30f;
+        private const float PlayerArrowDespawn = 20f;
         private const float TimeBeforePickup = 0.5f;
 
         /// <summary>

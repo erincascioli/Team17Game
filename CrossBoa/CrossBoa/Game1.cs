@@ -540,7 +540,10 @@ namespace CrossBoa
                 }
                 else if (!(gameObjectList[i] == player && (!player.CanMove && !player.InDodge)))
                 {
-                    gameObjectList[i].Update(gameTime);
+                    if (!(gameObjectList[i] is Enemy) || player.CanMove)
+                    {
+                        gameObjectList[i].Update(gameTime);
+                    }
                 }
             } // End of GameObject Update calls
 
