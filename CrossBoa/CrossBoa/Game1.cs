@@ -522,10 +522,10 @@ namespace CrossBoa
                     CollisionManager.CheckCollision(isGodModeActive);
                 }
 
-                // Fires a totem's arrow if the cooldown time reaches 0.
-                Totem totem;
-                if ((totem = gameObjectList[i] as Totem) != null && totem.IsAlive
-                    && totem.ReadyToFire)
+                // Fires a skull's arrow if the cooldown time reaches 0.
+                Skull skull;
+                if ((skull = gameObjectList[i] as Skull) != null && skull.IsAlive
+                    && skull.ReadyToFire)
                 {
                     Arrow newTotemArrow = new Arrow(totemProjectileSprite,
                         new Rectangle(-100,
@@ -537,7 +537,7 @@ namespace CrossBoa
                     CollisionManager.AddProjectile(newTotemArrow);
                     gameObjectList.Add(newTotemArrow);
 
-                    totem.Shoot(newTotemArrow);
+                    skull.Shoot(newTotemArrow);
                 }
 
                 // Removes all inactive projectiles from play.
