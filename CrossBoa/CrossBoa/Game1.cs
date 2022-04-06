@@ -344,11 +344,11 @@ namespace CrossBoa
                     DrawMainMenu();
 
                     // TEST TEXT
-                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                    string testText = "a quick brown fox jumps over the lazy dog";
-                    Vector2 stringLength = pressStart12.MeasureString(testText) * 2;
-                    _spriteBatch.DrawString(pressStart12, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
-                    _spriteBatch.End();
+                    //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                    //string testText = "a quick brown fox jumps over the lazy dog";
+                    //Vector2 stringLength = pressStart12.MeasureString(testText) * 2;
+                    //_spriteBatch.DrawString(pressStart12, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
+                    //_spriteBatch.End();
 
                     break;
 
