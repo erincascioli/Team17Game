@@ -10,7 +10,7 @@ namespace CrossBoa.Managers
     public static class PlayerStats
     {
         private static float arrowVelocity = 360f;
-        private static float arrowDespawnTime = 30f;
+        private static float arrowDespawnTime = 20f;
 
         /// <summary>
         /// The speed that the player's arrow will fire at
