@@ -10,7 +10,7 @@ namespace CrossBoa
     /// <summary>
     /// Represents a collectible objecct
     /// </summary>
-    public class Collectible : GameObject, ICollidable
+    public class Collectible : PhysicsObject, ICollidable
     {
         private bool isCollected;
         private Rectangle hitbox;
@@ -26,7 +26,7 @@ namespace CrossBoa
             get { return hitbox; }
         }
 
-        public Collectible(Texture2D asset, Rectangle hitbox, bool isCollected) : base(asset, hitbox)
+        public Collectible(Texture2D asset, Rectangle hitbox, bool isCollected) :  base(asset, hitbox)
         {
             this.hitbox = hitbox;
             this.isCollected = isCollected;
