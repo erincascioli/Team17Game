@@ -223,6 +223,14 @@ namespace CrossBoa.Enemies
         public override void Die()
         {
             animationState = SlimeAnimState.Dying;
+
+            // Spawn collectibles
+            foreach (Collectible collectible in expReward)
+            {
+                collectible.Spawn(this);
+                collectible.IsAssigned = false;
+                collectible.IsActive = true;
+            }
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace CrossBoa.Enemies
         // No totem sprite yet
         // private Texture2D totemSprite;
 
-        private const double TimePerShot = 1f;
+        private const double TimePerShot = 2f;
 
         // ~~~ PROPERTIES ~~~
         public bool ReadyToFire
@@ -57,6 +57,7 @@ namespace CrossBoa.Enemies
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
             timeSinceShot += gameTime.ElapsedGameTime.TotalSeconds;
         }
     }

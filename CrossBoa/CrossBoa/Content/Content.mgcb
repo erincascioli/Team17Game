@@ -56,6 +56,18 @@
 /processorParam:TextureFormat=Color
 /build:arrow2.png
 
+#begin BeastSprite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BeastSprite.png
+
 #begin bg1.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -36,6 +36,8 @@ namespace CrossBoa
         private const float DefaultPlayerDodgeLength = 0.25f;
         private const float DefaultPlayerDodgeSpeed = 2f;
 
+        private static int exp;
+
         public static int UIScale;
         public static int windowWidth;
         public static int windowHeight;
@@ -54,6 +56,8 @@ namespace CrossBoa
         // Assets
         #region Asset Field Declarations
         public static Texture2D whiteSquareSprite;
+        public static Texture2D totemSprite;
+        public static Texture2D skeletonSprite;
         public static Texture2D playerArrowSprite;
         public static Texture2D slimeSpritesheet;
         public static Texture2D slimeDeathSpritesheet;
@@ -86,6 +90,7 @@ namespace CrossBoa
         private static CrossBow crossbow;
         private static Player player;
         public static List<PlayerArrow> playerArrowList;
+        private static List<Collectible> collectibles;
 
         // Buttons
         private Button playButton;
@@ -111,6 +116,22 @@ namespace CrossBoa
         public static CrossBow Crossbow
         {
             get { return crossbow; }
+
+        /// <summary>
+        /// A reference to the list of all collectibles
+        /// </summary>
+        public static List<Collectible> Collectibles
+        {
+            get { return collectibles; }
+        }
+
+        /// <summary>
+        /// The current experience points this player has
+        /// </summary>
+        public static int Exp
+        {
+            get { return exp; }
+            set { exp = value; }
         }
 
         public Game1()
@@ -134,6 +155,7 @@ namespace CrossBoa
             playerHealthBar = new List<UIElement>();
             UIElementsList = new List<UIElement>(20);
             playerArrowList = new List<PlayerArrow>();
+            collectibles = new List<Collectible>(100);
 
             // --- Prepare game rendering ---
             _graphics.PreferredBackBufferWidth = 1600;
@@ -157,6 +179,8 @@ namespace CrossBoa
 
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
+            totemSprite = Content.Load<Texture2D>("TotemSprite");
+            skeletonSprite = Content.Load<Texture2D>("BeastSprite");
             slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
             slimeDeathSpritesheet = Content.Load<Texture2D>("FacelessSlimeDeathSpritesheet-sheet");
             emptyHeart = Content.Load<Texture2D>("Empty Heart");
@@ -209,8 +233,6 @@ namespace CrossBoa
             // Subscribes crossbow and arrow to each others' events
             crossbow.FireArrows += playerArrowList[0].GetShot;
             playerArrowList[0].OnPickup += crossbow.PickUpArrow;
-
-            CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
 
             // CollisionManager is established and receives important permanent references
             CollisionManager.Crossbow = crossbow;
@@ -359,11 +381,11 @@ namespace CrossBoa
                     DrawMainMenu();
 
                     // TEST TEXT
-                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                    string testText = "a quick brown fox jumps over the lazy dog";
-                    Vector2 stringLength = pressStart12.MeasureString(testText) * 2;
-                    _spriteBatch.DrawString(pressStart12, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
-                    _spriteBatch.End();
+                    //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                    //string testText = "a quick brown fox jumps over the lazy dog";
+                    //Vector2 stringLength = pressStart12.MeasureString(testText) * 2;
+                    //_spriteBatch.DrawString(pressStart12, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
+                    //_spriteBatch.End();
 
                     break;
 
@@ -535,6 +557,12 @@ namespace CrossBoa
                 {
                     gameObjectList[i].Update(gameTime);
                 }
+            } // End of GameObject Update calls
+
+            // Update collectibles
+            foreach (Collectible collectible in collectibles)
+            {
+                collectible.Update(gameTime);
             }
 
             // Fires the bow on click.
@@ -562,7 +590,7 @@ namespace CrossBoa
                 // Spawn slimes when pressing E
                 if (WasKeyPressed(Keys.E))
                 {
-                    SpawnManager.SpawnSlime(mState.Position);
+                    //SpawnManager.SpawnSlime(mState.Position);
                 }
 
                 // Shake the screen if the player presses Enter while debug is active
@@ -637,6 +665,12 @@ namespace CrossBoa
                 playerArrow.Draw(_spriteBatch);
             }
 
+            // Draw all collectibles
+            foreach (Collectible collectible in collectibles)
+            {
+                collectible.Draw(_spriteBatch);
+            }
+
             // DEBUG
             if (isDebugActive)
             {
@@ -709,6 +743,12 @@ namespace CrossBoa
                     playerHealthBar[i].Draw(_spriteBatch);
                 }
             }
+
+            // Draw score text
+            _spriteBatch.DrawString(pressStart12, "Exp: " + exp, 
+                new Vector2(playerHealthBar[0].Rectangle.Left, playerHealthBar[0].Rectangle.Bottom) + new Vector2(3 * UIScale),
+                Color.White, 0, Vector2.Zero, new Vector2(UIScale / 2), SpriteEffects.None, 1);
+
 
             // DEBUG
             if (isDebugActive)
@@ -972,13 +1012,14 @@ namespace CrossBoa
         public void LoadDefaultLevel()
         {
             // Level layout
-            LevelManager.LoadLevel("TestingFile");
+            LevelManager.RandomizeLevel();
+            LevelManager.LoadLevel();
 
             // Temp enemy spawns for starting level
-            SpawnManager.SpawnSlime(new Point(400, 400));
-            SpawnManager.SpawnSlime(new Point(1280, 448));
-            SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
             SpawnManager.SpawnTotem(new Point(50, 100));
+            //SpawnManager.SpawnTotem(new Point(64, 64));
+            //SpawnManager.SpawnSkeleton(new Point(400, 400));
+            //SpawnManager.SpawnTarget(new Point(64, 64));
         }
     }
 
