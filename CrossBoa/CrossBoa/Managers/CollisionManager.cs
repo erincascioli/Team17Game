@@ -46,6 +46,7 @@ namespace CrossBoa.Managers
             enemies = new List<Enemy>();
             enemyProjectiles = new List<Arrow>();
             collectibles = new List<Collectible>();
+            levelObstacles = new List<Tile>();
             alternate = 0;
         }
 
