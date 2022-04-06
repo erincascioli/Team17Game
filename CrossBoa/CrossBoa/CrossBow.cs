@@ -89,7 +89,12 @@ namespace CrossBoa
         /// </summary>
         public float Direction
         {
-            get { return direction; }
+            get 
+            { 
+                if (direction != float.NaN)
+                    return direction;
+                return 0;
+            }
         }
 
         public Vector2 DrawnPosition

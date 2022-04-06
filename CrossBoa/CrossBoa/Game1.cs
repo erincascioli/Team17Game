@@ -969,8 +969,9 @@ namespace CrossBoa
             SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
             */
 
-            SpawnManager.SpawnTotem(new Point(64, 64));
-            SpawnManager.SpawnSkeleton(new Point(400, 400));
+            /*SpawnManager.SpawnTotem(new Point(64, 64));
+            SpawnManager.SpawnSkeleton(new Point(400, 400));*/
+            SpawnManager.SpawnTarget(new Point(64, 64));
         }
     }
 
