@@ -204,6 +204,7 @@ namespace CrossBoa.Managers
 
                 // passes all active tiles to the collision manager
                 CollisionManager.UpdateLevel();
+                Game1.Collectibles.Clear();
                 SpawnManager.FillLevel();
             }
             catch (Exception e)
