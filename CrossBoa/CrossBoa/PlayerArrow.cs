@@ -42,6 +42,10 @@ namespace CrossBoa
         private bool isReturning;
         private float directionOffset;
 
+        private const float PlayerArrowDespawn = 20f;
+        private const float TimeBeforePickup = 0.5f;
+
+
         /// <summary>
         /// Whether the arrow is currently able to hit anything, or if it is on the ground
         /// </summary>

@@ -558,7 +558,10 @@ namespace CrossBoa
                 }
                 else if (!(gameObjectList[i] == player && (!player.CanMove && !player.InDodge)))
                 {
-                    gameObjectList[i].Update(gameTime);
+                    if (!(gameObjectList[i] is Enemy) || player.CanMove || player.InDodge)
+                    {
+                        gameObjectList[i].Update(gameTime);
+                    }
                 }
             } // End of GameObject Update calls
 
@@ -569,7 +572,7 @@ namespace CrossBoa
             }
 
             // Fires the bow on click.
-            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
+            if (player.CanMove && mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
                 && !pauseButton.IsMouseOver())
             {
                 crossbow.Shoot();
