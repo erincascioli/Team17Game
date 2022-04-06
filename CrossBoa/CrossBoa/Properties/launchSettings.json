@@ -2,7 +2,7 @@
   "profiles": {
     "CrossBoa": {
       "commandName": "Project",
-      "jsWebView2Debugging": true
+      "jsWebView2Debugging": false
     }
   }
 }
