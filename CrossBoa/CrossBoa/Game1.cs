@@ -959,7 +959,7 @@ namespace CrossBoa
         public void LoadDefaultLevel()
         {
             // Level layout
-            LevelManager.LoadLevel("TestingFile");
+            LevelManager.LoadLevel("Level1");
 
             // Temp enemy spawns for starting level
             /*SpawnManager.SpawnSlime(new Point(400, 400));
