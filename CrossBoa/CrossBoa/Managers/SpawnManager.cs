@@ -54,7 +54,7 @@ namespace CrossBoa.Managers
         public static void SpawnTotem(Point position)
         {
             Totem testTotem = new Totem(Game1.totemSprite,
-                new Rectangle(new Point(1300, 300), position),
+                new Rectangle(position, new Point(64, 64)),
                 3);
 
             CollisionManager.AddEnemy(testTotem);
@@ -82,12 +82,13 @@ namespace CrossBoa.Managers
         }
 
         /// Currently useless due to how we moved forward on enemy placement
-        /*public static void FillLevel()
+        public static void FillLevel()
         {
             int maxEnemies;
             int minEnemies;
             int maxSlimes;
             int maxTotems;
+            int maxSkeletons;
 
             // Determines how many enemies may spawn
             switch (LevelManager.Stage)
@@ -95,6 +96,7 @@ namespace CrossBoa.Managers
                 case 1:
                 case 2:
                     maxSlimes = 3;
+                    maxSkeletons = 1;
                     maxTotems = 1;
                     maxEnemies = 3;
                     minEnemies = 2;
@@ -104,6 +106,7 @@ namespace CrossBoa.Managers
                 case 4:
                 case 5:
                     maxSlimes = 4;
+                    maxSkeletons = 2;
                     maxTotems = 1;
                     maxEnemies = 4;
                     minEnemies = 2;
@@ -112,6 +115,7 @@ namespace CrossBoa.Managers
                 case 6:
                 case 7:
                     maxSlimes = 4;
+                    maxSkeletons = 3;
                     maxTotems = 2;
                     maxEnemies = 4;
                     minEnemies = 3;
@@ -121,6 +125,7 @@ namespace CrossBoa.Managers
                 case 9:
                 case 10:
                     maxSlimes = 5;
+                    maxSkeletons = 3;
                     maxTotems = 2;
                     maxEnemies = 6;
                     minEnemies = 3;
@@ -129,6 +134,7 @@ namespace CrossBoa.Managers
                 // Any subsequent levels
                 default:
                     maxSlimes = 5;
+                    maxSkeletons = 3;
                     maxTotems = 3;
                     maxEnemies = 6;
                     minEnemies = 4;
@@ -138,25 +144,55 @@ namespace CrossBoa.Managers
             // Actual values for the level
             int slimeAmount = 0;
             int totemAmount = 0;
+            int skeletonAmount = 0;
             int enemyAmount = Game1.RNG.Next(minEnemies, maxEnemies + 1);
             int currentEnemyAmount = 0;
 
             while (currentEnemyAmount != enemyAmount)
             {
-                switch (Game1.RNG.Next(0, 2))
+                switch (Game1.RNG.Next(0, 3))
                 {
                     case 0:
                         if (slimeAmount < maxSlimes)
                         {
                             int index = Game1.RNG.Next(0, openSpots.Count);
                             Vector2 position = openSpots[index].Position;
+                            openSpots.RemoveAt(index);
 
-                            SpawnSlime(position.X, position.Y);
+                            SpawnSlime(new Point((int)position.X, (int)position.Y));
+                            currentEnemyAmount++;
+                            slimeAmount++;
                         }
-                            break;
+                        break;
+
+                    case 1:
+                        if (totemAmount < maxTotems)
+                        {
+                            int index = Game1.RNG.Next(0, openSpots.Count);
+                            Vector2 position = openSpots[index].Position;
+                            openSpots.RemoveAt(index);
+
+                            SpawnTotem(new Point((int)position.X, (int)position.Y));
+                            currentEnemyAmount++;
+                            totemAmount++;
+                        }
+                        break;
+
+                    case 2:
+                        if (skeletonAmount < maxSkeletons)
+                        {
+                            int index = Game1.RNG.Next(0, openSpots.Count);
+                            Vector2 position = openSpots[index].Position;
+                            openSpots.RemoveAt(index);
+
+                            SpawnSkeleton(new Point((int)position.X, (int)position.Y));
+                            currentEnemyAmount++;
+                            skeletonAmount++;
+                        }
+                        break;
                 }
             }
-        }*/
+        }
 
         /// <summary>
         /// Purpose: Retrieves tiles that enemies are able to spawn on

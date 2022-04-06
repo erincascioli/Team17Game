@@ -586,7 +586,7 @@ namespace CrossBoa
                 // Spawn slimes when pressing E
                 if (WasKeyPressed(Keys.E))
                 {
-                    SpawnManager.SpawnSlime(mState.Position);
+                    //SpawnManager.SpawnSlime(mState.Position);
                 }
 
                 // Shake the screen if the player presses Enter while debug is active
@@ -998,7 +998,8 @@ namespace CrossBoa
         public void LoadDefaultLevel()
         {
             // Level layout
-            LevelManager.LoadLevel("Level1");
+            LevelManager.RandomizeLevel();
+            LevelManager.LoadLevel();
 
             // Temp enemy spawns for starting level
             /*SpawnManager.SpawnSlime(new Point(400, 400));
@@ -1006,8 +1007,8 @@ namespace CrossBoa
             SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
             */
 
-            SpawnManager.SpawnTotem(new Point(64, 64));
-            SpawnManager.SpawnSkeleton(new Point(400, 400));
+            //SpawnManager.SpawnTotem(new Point(64, 64));
+            //SpawnManager.SpawnSkeleton(new Point(400, 400));
             //SpawnManager.SpawnTarget(new Point(64, 64));
         }
     }

@@ -30,6 +30,7 @@ namespace CrossBoa.Managers
         private static ExitLocation previousExit;
         private static int forcedX;
         private static int forcedY;
+        private static string currentLevel;
 
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
@@ -102,7 +103,7 @@ namespace CrossBoa.Managers
         ///               16 x 16 is the only accepted file size at the moment
         /// </summary>
         /// <param name="fileName"></param>
-        public static void LoadLevel(string fileName)
+        public static void LoadLevel()
         {
             // Level is cleared so that the next may be loaded
             levelTiles.Clear();
@@ -141,7 +142,7 @@ namespace CrossBoa.Managers
             try
             {
                 // file is accessed by the reader
-                reader = new StreamReader("../../../" + fileName + ".txt");
+                reader = new StreamReader("../../../" + currentLevel + ".txt");
 
                 // Data for table size is stored
                 string[] tableInfo = reader.ReadLine().Split(',');
@@ -195,12 +196,15 @@ namespace CrossBoa.Managers
                     }
                 }
 
+                // Done before doors so enemies don't spawn in doorways
+                SpawnManager.UpdateLevel();
+
                 // Doors are inserted into the level
                 PlaceDoors();
 
                 // passes all active tiles to the collision manager
                 CollisionManager.UpdateLevel();
-                SpawnManager.UpdateLevel();
+                SpawnManager.FillLevel();
             }
             catch (Exception e)
             {
@@ -220,7 +224,7 @@ namespace CrossBoa.Managers
                 }
             }
 
-            SpawnManager.SpawnSlime(new Point(100, 200));
+            //SpawnManager.SpawnSlime(new Point(100, 200));
         }
 
         /// <summary>
@@ -485,7 +489,8 @@ namespace CrossBoa.Managers
                                 CollisionManager.Player.Position.Y + 1300);
 
                     // Prompts the next level to load in
-                    LoadLevel("Level1");
+                    RandomizeLevel();
+                    LoadLevel();
                 }
 
                 if (player.Position.Y < -100)
@@ -518,7 +523,8 @@ namespace CrossBoa.Managers
                         CollisionManager.Player.Position.Y - 1300);
 
                     // Prompts the next level to load in
-                    LoadLevel("Level1");
+                    RandomizeLevel();
+                    LoadLevel();
                 }
 
                 if (player.Position.Y > Game1.gameRenderTarget.Height + 100)
@@ -551,7 +557,8 @@ namespace CrossBoa.Managers
                         CollisionManager.Player.Position.Y);
 
                     // Prompts the next level to load in
-                    LoadLevel("Level1");
+                    RandomizeLevel();
+                    LoadLevel();
                 }
 
                 if (player.Position.X > Game1.gameRenderTarget.Width + 100)
@@ -584,7 +591,8 @@ namespace CrossBoa.Managers
                         CollisionManager.Player.Position.Y);
 
                     // Prompts the next level to load in
-                    LoadLevel("Level1");
+                    RandomizeLevel();
+                    LoadLevel();
                 }
 
                 if (player.Position.X < -100)
@@ -718,6 +726,26 @@ namespace CrossBoa.Managers
             previousExit = ExitLocation.Null;
             // Might do more if we want the level manager to do other stuff
             // upon game over
+        }
+
+        /// <summary>
+        /// Purpose: Randomizes what levels may load in
+        /// Restrictions: Currently requires hard coding in levels
+        ///               Can use stage number to add further restrictions
+        /// </summary>
+        public static void RandomizeLevel()
+        {
+            int level = Game1.RNG.Next(0, 2);
+            switch (level)
+            {
+                case 0:
+                    currentLevel = "TestingFile";
+                    break;
+
+                case 1:
+                    currentLevel = "Level1";
+                    break;
+            }
         }
 
         public enum ExitLocation
