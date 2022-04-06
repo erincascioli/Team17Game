@@ -61,6 +61,7 @@ namespace CrossBoa.Enemies
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
             timeSinceShot += gameTime.ElapsedGameTime.TotalSeconds;
         }
     }

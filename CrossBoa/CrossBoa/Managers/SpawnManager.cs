@@ -64,7 +64,7 @@ namespace CrossBoa.Managers
         public static void SpawnSkeleton(Point position)
         {
             Skeleton newSkeleton = new Skeleton(
-                Game1.whiteSquareSprite,
+                Game1.skeletonSprite,
                 Game1.slimeDeathSpritesheet,
                 3,
                 new Rectangle(position, new Point(64, 64)));
