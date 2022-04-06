@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using CrossBoa.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace CrossBoa
+namespace CrossBoa.Enemies
 {
     public class Enemy : PhysicsObject, ICollidable
     {
+        protected List<Collectible> expReward;
+
         protected int health;
         protected bool isAlive;
 
@@ -51,6 +51,30 @@ namespace CrossBoa
         {
             this.health = health;
             this.isAlive = true;
+
+            expReward = new List<Collectible>(Game1.RNG.Next(4, 10));
+
+            // Check the collectible list for inactive orbs that are not yet assigned to an enemy
+            foreach (Collectible collectible in Game1.Collectibles)
+            {
+                if (!collectible.IsAssigned && !collectible.IsActive)
+                {
+                    expReward.Add(collectible);
+                    collectible.IsAssigned = true;
+                }
+
+                if (expReward.Count >= expReward.Capacity)
+                    break;
+            }
+
+            // If there are not enough collectibles instantiated, generate more until the list is full
+            while (expReward.Count < expReward.Capacity)
+            {
+                Collectible newCollectible = new Collectible(Game1.whiteSquareSprite, new Point(16));
+
+                Game1.Collectibles.Add(newCollectible);
+                expReward.Add(newCollectible);
+            }
         }
 
         /// <summary>
@@ -115,6 +139,15 @@ namespace CrossBoa
         /// </summary>
         public virtual void Die()
         {
+            // Spawn collectibles
+            foreach (Collectible collectible in expReward)
+            {
+                collectible.Spawn(this);
+                collectible.IsAssigned = false;
+                collectible.IsActive = true;
+            }
+
+            // Disable this enemy
             isAlive = false;
             position = new Vector2(-1000, -1000);
         }
