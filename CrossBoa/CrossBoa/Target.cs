@@ -1,4 +1,5 @@
 ﻿using System;
+using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
