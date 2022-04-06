@@ -116,6 +116,7 @@ namespace CrossBoa
         public static CrossBow Crossbow
         {
             get { return crossbow; }
+        }
 
         /// <summary>
         /// A reference to the list of all collectibles
