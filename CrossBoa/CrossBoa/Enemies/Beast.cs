@@ -10,7 +10,7 @@ namespace CrossBoa.Enemies
     /// be a skeleton will be decided). It charges at the player constantly.
     /// Written by: Leo Schindler-Gerendasi.
     /// </summary>
-    class Skeleton : Enemy, ICollidable
+    class Beast : Enemy, ICollidable
     {
         // ~~~ FIELDS ~~~
         private const float MovementForce = 1000f;
@@ -34,14 +34,14 @@ namespace CrossBoa.Enemies
 
         // ~~~ CONSTRUCTORS ~~~
         /// <summary>
-        /// Creates a new Skeleton.
+        /// Creates a new Beast.
         /// </summary>
         /// <param name="spriteSheet">The sprite sheet of the skeleton.</param>
         /// <param name="deathSheet">The death animation of the skeleton
         /// (no death animation is programmed yet, so just throw anything in there).</param>
         /// <param name="health">The max health of the skeleton.</param>
         /// <param name="rectangle">The rectangular hitbox of the skeleton.</param>
-        public Skeleton(Texture2D spriteSheet, Texture2D deathSheet, int health, Rectangle rectangle) :
+        public Beast(Texture2D spriteSheet, Texture2D deathSheet, int health, Rectangle rectangle) :
             base(spriteSheet, rectangle, health, null, FrictionForce)
         {
             color = Color.White;

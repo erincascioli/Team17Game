@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CrossBoa.Enemies
 {
-    class Totem : Enemy
+    class Skull : Enemy
     {
         // ~~~ FIELDS ~~~
         private double timeSinceShot;
@@ -25,7 +25,7 @@ namespace CrossBoa.Enemies
         }
 
         // ~~~ CONSTRUCTOR ~~~
-        public Totem(Texture2D sprite, Rectangle rectangle, int health) :
+        public Skull(Texture2D sprite, Rectangle rectangle, int health) :
             base(sprite, rectangle, health, null, 0)
         {
             timeSinceShot = 0f;
