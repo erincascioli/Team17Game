@@ -572,8 +572,6 @@ namespace CrossBoa
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
                 && !pauseButton.IsMouseOver())
             {
-                // Prevents arrow from zooming onto the screen if 
-                // the player doesn't shoot within the first 30 seconds of starting
                 crossbow.Shoot();
             }
 
