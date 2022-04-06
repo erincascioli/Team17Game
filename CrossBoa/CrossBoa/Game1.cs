@@ -117,7 +117,6 @@ namespace CrossBoa
         public static List<Collectible> Collectibles
         {
             get { return collectibles; }
-            set { collectibles = value; }
         }
 
         /// <summary>
