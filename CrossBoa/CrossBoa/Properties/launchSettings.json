@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "CrossBoa": {
-      "commandName": "Project",
-      "jsWebView2Debugging": false
-    }
-  }
-}

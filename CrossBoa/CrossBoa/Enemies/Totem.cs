@@ -5,10 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CrossBoa.Enemies
 {
-    /// <summary>
-    /// A totem. It doesn't move, but fires at the player constantly.
-    /// Written by: Leo Schindler-Gerendasi,
-    /// </summary>
     class Totem : Enemy
     {
         // ~~~ FIELDS ~~~
@@ -17,7 +13,7 @@ namespace CrossBoa.Enemies
         // No totem sprite yet
         // private Texture2D totemSprite;
 
-        private const double TimePerShot = 1.5f;
+        private const double TimePerShot = 1f;
 
         // ~~~ PROPERTIES ~~~
         public bool ReadyToFire
