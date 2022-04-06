@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,7 +18,6 @@ namespace CrossBoa.Managers
         private static PlayerArrow playerArrow;
         private static List<Enemy> enemies;
         private static List<Arrow> enemyProjectiles;
-        private static List<Collectible> collectibles;
         private static List<Tile> levelObstacles;
         private static int alternate;
 
@@ -45,7 +45,6 @@ namespace CrossBoa.Managers
             // Lists are created
             enemies = new List<Enemy>();
             enemyProjectiles = new List<Arrow>();
-            collectibles = new List<Collectible>();
             //levelObstacles = new List<Tile>();
             alternate = 0;
         }
@@ -142,6 +141,17 @@ namespace CrossBoa.Managers
                         EntityEnvironmentCollide<Enemy>(enemy, tile);
                     }
                 }
+
+                // Collectibles with tiles
+                foreach (Collectible collectible in Game1.Collectibles)
+                {
+                    // Don't check if collectible is not moving
+                    if (collectible.Velocity != Vector2.Zero && 
+                        collectible.Hitbox.Intersects(tile.Rectangle))
+                    {
+                        EntityEnvironmentCollide(collectible, tile);
+                    }
+                }
             }
 
             // Player against an inactive player's arrow
@@ -157,11 +167,11 @@ namespace CrossBoa.Managers
                 levelObstacles.Remove(LevelManager.Exit);
             }
 
-            foreach (Collectible c in collectibles)
+            foreach (Collectible c in Game1.Collectibles)
             {
                 if (player.Hitbox.Intersects(c.Hitbox))
                 {
-                    c.IsCollected = true;
+                    c.GetCollected();
                 }
             }
 
@@ -187,7 +197,7 @@ namespace CrossBoa.Managers
         {
             sb.Draw(hitBox, player.Hitbox, Color.White);
 
-            foreach (Collectible c in collectibles)
+            foreach (Collectible c in Game1.Collectibles)
             {
                 c.Draw(sb);
             }
@@ -241,11 +251,6 @@ namespace CrossBoa.Managers
         public static void AddProjectile(Arrow projectile)
         {
             enemyProjectiles.Add(projectile);
-        }
-
-        public static void AddCollectible(Collectible collectible)
-        {
-            collectibles.Add(collectible);
         }
 
         /// <summary>
