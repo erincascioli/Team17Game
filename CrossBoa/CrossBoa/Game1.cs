@@ -117,7 +117,6 @@ namespace CrossBoa
         public static List<Collectible> Collectibles
         {
             get { return collectibles; }
-            set { collectibles = value; }
         }
 
         /// <summary>
@@ -540,7 +539,7 @@ namespace CrossBoa
                 }
                 else if (!(gameObjectList[i] == player && (!player.CanMove && !player.InDodge)))
                 {
-                    if (!(gameObjectList[i] is Enemy) || player.CanMove)
+                    if (!(gameObjectList[i] is Enemy) || player.CanMove || player.InDodge)
                     {
                         gameObjectList[i].Update(gameTime);
                     }
@@ -554,7 +553,7 @@ namespace CrossBoa
             }
 
             // Fires the bow on click.
-            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
+            if (player.CanMove && mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
                 && !pauseButton.IsMouseOver())
             {
                 // Prevents arrow from zooming onto the screen if 
