@@ -43,7 +43,7 @@ namespace CrossBoa
 
         /// <summary>
         /// The angle the object is currently moving towards.
-        /// <para>Represented between 0 and 2π radians going clockwise from pointing up.</para>
+        /// <para>Represented between -π and π radians going clockwise from pointing up.</para>
         /// </summary>
         public float VelocityAngle
         {

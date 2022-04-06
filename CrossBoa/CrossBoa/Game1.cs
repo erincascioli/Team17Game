@@ -36,6 +36,8 @@ namespace CrossBoa
         private const float DefaultPlayerDodgeLength = 0.25f;
         private const float DefaultPlayerDodgeSpeed = 3f;
 
+        private static int exp;
+
         public static int UIScale;
         public static int windowWidth;
         public static int windowHeight;
@@ -89,6 +91,7 @@ namespace CrossBoa
         private CrossBow crossbow;
         private static Player player;
         private PlayerArrow playerArrow;
+        private static List<Collectible> collectibles;
 
         // Buttons
         private Button playButton;
@@ -106,6 +109,23 @@ namespace CrossBoa
         public static Player Player
         {
             get { return player; }
+        }
+
+        /// <summary>
+        /// A reference to the list of all collectibles
+        /// </summary>
+        public static List<Collectible> Collectibles
+        {
+            get { return collectibles; }
+        }
+
+        /// <summary>
+        /// The current experience points this player has
+        /// </summary>
+        public static int Exp
+        {
+            get { return exp; }
+            set { exp = value; }
         }
 
         public Game1()
@@ -128,6 +148,7 @@ namespace CrossBoa
             menuBGLayers = new GameObject[10];
             playerHealthBar = new List<UIElement>();
             UIElementsList = new List<UIElement>(20);
+            collectibles = new List<Collectible>(100);
 
             // --- Prepare game rendering ---
             _graphics.PreferredBackBufferWidth = 1600;
@@ -194,8 +215,6 @@ namespace CrossBoa
             crossbow = new CrossBow(
                 crossbowSprite,
                 crossbowSprite.Bounds);
-
-            CollisionManager.AddCollectible(new Collectible(collectibleSprite, collectibleSprite.Bounds, false));
 
             // CollisionManager is established and receives important permanent references
             CollisionManager.Player = player;
@@ -346,11 +365,11 @@ namespace CrossBoa
                     DrawMainMenu();
 
                     // TEST TEXT
-                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                    string testText = "a quick brown fox jumps over the lazy dog";
-                    Vector2 stringLength = pressStart12.MeasureString(testText) * 2;
-                    _spriteBatch.DrawString(pressStart12, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
-                    _spriteBatch.End();
+                    //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                    //string testText = "a quick brown fox jumps over the lazy dog";
+                    //Vector2 stringLength = pressStart12.MeasureString(testText) * 2;
+                    //_spriteBatch.DrawString(pressStart12, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
+                    //_spriteBatch.End();
 
                     break;
 
@@ -522,9 +541,13 @@ namespace CrossBoa
                 {
                     gameObjectList[i].Update(gameTime);
                 }
-            }
+            } // End of GameObject Update calls
 
-            
+            // Update collectibles
+            foreach (Collectible collectible in collectibles)
+            {
+                collectible.Update(gameTime);
+            }
 
             // Fires the bow on click.
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
@@ -633,6 +656,12 @@ namespace CrossBoa
             if (playerArrow != null)
                 playerArrow.Draw(_spriteBatch);
 
+            // Draw all collectibles
+            foreach (Collectible collectible in collectibles)
+            {
+                collectible.Draw(_spriteBatch);
+            }
+
             // DEBUG
             if (isDebugActive)
             {
@@ -705,6 +734,12 @@ namespace CrossBoa
                     playerHealthBar[i].Draw(_spriteBatch);
                 }
             }
+
+            // Draw score text
+            _spriteBatch.DrawString(pressStart12, "Exp: " + exp, 
+                new Vector2(playerHealthBar[0].Rectangle.Left, playerHealthBar[0].Rectangle.Bottom) + new Vector2(3 * UIScale),
+                Color.White, 0, Vector2.Zero, new Vector2(UIScale / 2), SpriteEffects.None, 1);
+
 
             // DEBUG
             if (isDebugActive)
