@@ -31,7 +31,7 @@ namespace CrossBoa
         private const int DefaultPlayerMaxSpeed = 300;
         private const int DefaultPlayerFriction = 2500;
         private const int DefaultPlayerHealth = 5;
-        private const float DefaultPlayerInvulnerabilityFrames = 3.5f;
+        private const float DefaultPlayerInvulnerabilityFrames = 1.5f;
         private const float DefaultPlayerDodgeCooldown = 2;
         private const float DefaultPlayerDodgeLength = 0.25f;
         private const float DefaultPlayerDodgeSpeed = 3f;
@@ -117,6 +117,7 @@ namespace CrossBoa
         public static List<Collectible> Collectibles
         {
             get { return collectibles; }
+            set { collectibles = value; }
         }
 
         /// <summary>
@@ -900,6 +901,13 @@ namespace CrossBoa
             player.ResetPlayer(new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)));
             LevelManager.GameOver();
             CollisionManager.ClearEnemiesList();
+            Collectibles.Clear();
+            if (playerArrow.IsActive)
+            {
+                playerArrow.GetPickedUp();
+                crossbow.PickUpArrow();
+            }
+            exp = 0;
 
             // Removes every non-Player and non-Crossbow object from the GameObject list
             for (int i = 0; i < gameObjectList.Count; i++)
