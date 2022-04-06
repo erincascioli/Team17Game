@@ -912,9 +912,9 @@ namespace CrossBoa
             LevelManager.GameOver();
             CollisionManager.ClearEnemiesList();
             Collectibles.Clear();
-            if (playerArrow.IsActive)
+            if (playerArrowList[0].IsActive)
             {
-                playerArrow.GetPickedUp();
+                playerArrowList[0].GetPickedUp();
                 crossbow.PickUpArrow();
             }
             exp = 0;
