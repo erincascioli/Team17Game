@@ -72,6 +72,15 @@ namespace CrossBoa.Managers
             gameObjectList.Add(newSkeleton);
         }
 
+        public static void SpawnTarget(Point position)
+        {
+            Target newTarget = new Target(
+                Game1.whiteSquareSprite,
+                new Rectangle(position, new Point(64, 64)));
+            CollisionManager.AddEnemy(newTarget);
+            gameObjectList.Add(newTarget);
+        }
+
         /// Currently useless due to how we moved forward on enemy placement
         /*public static void FillLevel()
         {
