@@ -46,7 +46,7 @@ namespace CrossBoa
         private float preferredAspectRatio;
 
         private bool isDebugActive = false;
-        public static bool isGodModeActive = false; // Default
+        public static bool isGodModeActive = false;
 
         private KeyboardState kbState;
         private KeyboardState previousKBState;
@@ -88,9 +88,9 @@ namespace CrossBoa
         private List<UIElement> playerHealthBar;
         public static List<UIElement> UIElementsList;
         private UIElement crosshair;
-        private CrossBow crossbow;
+        private static CrossBow crossbow;
         private static Player player;
-        private PlayerArrow playerArrow;
+        public static List<PlayerArrow> playerArrowList;
         private static List<Collectible> collectibles;
 
         // Buttons
@@ -109,6 +109,14 @@ namespace CrossBoa
         public static Player Player
         {
             get { return player; }
+        }
+
+        /// <summary>
+        /// A reference to the crossbow object
+        /// </summary>
+        public static CrossBow Crossbow
+        {
+            get { return crossbow; }
         }
 
         /// <summary>
@@ -148,6 +156,7 @@ namespace CrossBoa
             menuBGLayers = new GameObject[10];
             playerHealthBar = new List<UIElement>();
             UIElementsList = new List<UIElement>(20);
+            playerArrowList = new List<PlayerArrow>();
             collectibles = new List<Collectible>(100);
 
             // --- Prepare game rendering ---
@@ -198,7 +207,7 @@ namespace CrossBoa
                 menuBGSpriteList[i] = Content.Load<Texture2D>("bg" + (i + 1));
             }
 
-            // Load objects
+            // Load Player
             player = new Player(
                 snakeSprite,
                 new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)),
@@ -212,14 +221,24 @@ namespace CrossBoa
                 DefaultPlayerDodgeSpeed
             );
 
+            // Load Crossbow
             crossbow = new CrossBow(
                 crossbowSprite,
                 crossbowSprite.Bounds);
 
+            // Load main arrow
+            playerArrowList.Add(
+                new PlayerArrow(
+                    playerArrowSprite,
+                    new Point(64),
+                    true));
+
+            // Subscribes crossbow and arrow to each others' events
+            crossbow.FireArrows += playerArrowList[0].GetShot;
+            playerArrowList[0].OnPickup += crossbow.PickUpArrow;
+
             // CollisionManager is established and receives important permanent references
-            CollisionManager.Player = player;
             CollisionManager.Crossbow = crossbow;
-            CollisionManager.PlayerArrow = playerArrow;
 
             // Set up UI Elements
             playHoverSprite = Content.Load<Texture2D>("PlayPressed");
@@ -276,7 +295,7 @@ namespace CrossBoa
             LevelManager.LContent = Content;
             
 
-            OnResize(null, null);
+            OnResize();
         }
 
         protected override void Update(GameTime gameTime)
@@ -555,24 +574,14 @@ namespace CrossBoa
             {
                 // Prevents arrow from zooming onto the screen if 
                 // the player doesn't shoot within the first 30 seconds of starting
-                if (playerArrow == null)
-                {
-                    playerArrow = new PlayerArrow(
-                playerArrowSprite,
-                new Rectangle(-100, -100, 60, 60),
-                0f,
-                0);
-
-                    // Pass-in References
-                    playerArrow.CrossbowReference = crossbow;
-                    CollisionManager.PlayerArrow = playerArrow;
-                }
-                crossbow.Shoot(playerArrow);
+                crossbow.Shoot();
             }
 
-            // Update the player arrow
-            if (playerArrow != null)
+            // Update all player arrows
+            foreach (PlayerArrow playerArrow in playerArrowList)
+            {
                 playerArrow.Update(gameTime);
+            }
 
             // Pause if player presses pause key or escape
             pauseButton.Update(gameTime);
@@ -606,14 +615,16 @@ namespace CrossBoa
                             ((Enemy)e).TakeDamage(1000);
                     }
                 }
+
+                // TEST CODE TO UNLOCK UPGRADE
+                if (WasKeyPressed(Keys.M))
+                    UpgradeManager.UnlockUpgrade("Multishot");
             }
 
             if (isDebugActive && WasKeyPressed(Keys.F))
                 isGodModeActive = !isGodModeActive;
             if (!isDebugActive)
                 isGodModeActive = false;
-
-            CollisionManager.CheckCollision(isGodModeActive);
 
             if (LevelManager.Exit.IsOpen || (!player.CanMove && !player.InDodge))
             {
@@ -653,8 +664,11 @@ namespace CrossBoa
                 gameObject.Draw(_spriteBatch);
             }
 
-            if (playerArrow != null)
+            // Draw arrow
+            foreach (PlayerArrow playerArrow in playerArrowList)
+            {
                 playerArrow.Draw(_spriteBatch);
+            }
 
             // Draw all collectibles
             foreach (Collectible collectible in collectibles)
@@ -901,9 +915,9 @@ namespace CrossBoa
             LevelManager.GameOver();
             CollisionManager.ClearEnemiesList();
             Collectibles.Clear();
-            if (playerArrow.IsActive)
+            if (playerArrowList[0].IsActive)
             {
-                playerArrow.GetPickedUp();
+                playerArrowList[0].GetPickedUp();
                 crossbow.PickUpArrow();
             }
             exp = 0;
@@ -929,8 +943,13 @@ namespace CrossBoa
         {
             return kbState.IsKeyDown(key) && previousKBState.IsKeyUp(key);
         }
-
-        public void OnResize(Object sender, EventArgs e)
+        
+        /// <summary>
+        /// Moves and resizes most screen elements when the window is resized
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void OnResize(Object sender = null, EventArgs e = null)
         {
             // Update windowWidth and windowHeight
             windowWidth = Window.ClientBounds.Width;
@@ -996,7 +1015,7 @@ namespace CrossBoa
                 _graphics.ApplyChanges();
             }
 
-            OnResize(null, null);
+            OnResize();
         }
 
         /// <summary>
@@ -1009,11 +1028,7 @@ namespace CrossBoa
             LevelManager.LoadLevel();
 
             // Temp enemy spawns for starting level
-            /*SpawnManager.SpawnSlime(new Point(400, 400));
-            SpawnManager.SpawnSlime(new Point(1280, 448));
-            SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
-            */
-
+            SpawnManager.SpawnTotem(new Point(50, 100));
             //SpawnManager.SpawnTotem(new Point(64, 64));
             //SpawnManager.SpawnSkeleton(new Point(400, 400));
             //SpawnManager.SpawnTarget(new Point(64, 64));
