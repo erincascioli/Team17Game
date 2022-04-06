@@ -485,7 +485,7 @@ namespace CrossBoa.Managers
                                 Game1.Player.Position.Y + 1300);
 
                     // Prompts the next level to load in
-                    LoadLevel("TestingFile");
+                    LoadLevel("Level1");
                 }
 
                 if (player.Position.Y < -100)
@@ -518,7 +518,7 @@ namespace CrossBoa.Managers
                         Game1.Player.Position.Y - 1300);
 
                     // Prompts the next level to load in
-                    LoadLevel("TestingFile");
+                    LoadLevel("Level1");
                 }
 
                 if (player.Position.Y > Game1.gameRenderTarget.Height + 100)
@@ -551,7 +551,7 @@ namespace CrossBoa.Managers
                         Game1.Player.Position.Y);
 
                     // Prompts the next level to load in
-                    LoadLevel("TestingFile");
+                    LoadLevel("Level1");
                 }
 
                 if (player.Position.X > Game1.gameRenderTarget.Width + 100)
@@ -584,7 +584,7 @@ namespace CrossBoa.Managers
                         Game1.Player.Position.Y);
 
                     // Prompts the next level to load in
-                    LoadLevel("TestingFile");
+                    LoadLevel("Level1");
                 }
 
                 if (player.Position.X < -100)

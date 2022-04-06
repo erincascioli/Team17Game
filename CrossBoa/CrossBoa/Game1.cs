@@ -34,7 +34,7 @@ namespace CrossBoa
         private const float DefaultPlayerInvulnerabilityFrames = 3.5f;
         private const float DefaultPlayerDodgeCooldown = 2;
         private const float DefaultPlayerDodgeLength = 0.25f;
-        private const float DefaultPlayerDodgeSpeed = 2f;
+        private const float DefaultPlayerDodgeSpeed = 3f;
 
         public static int UIScale;
         public static int windowWidth;
@@ -54,7 +54,9 @@ namespace CrossBoa
         // Assets
         #region Asset Field Declarations
         public static Texture2D whiteSquareSprite;
+        public static Texture2D totemSprite;
         public static Texture2D playerArrowSprite;
+        public static Texture2D totemProjectileSprite;
         public static Texture2D slimeSpritesheet;
         public static Texture2D slimeDeathSpritesheet;
         private Texture2D snakeSprite;
@@ -157,6 +159,7 @@ namespace CrossBoa
 
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
+            totemSprite = Content.Load<Texture2D>("TotemSprite");
             slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
             slimeDeathSpritesheet = Content.Load<Texture2D>("FacelessSlimeDeathSpritesheet-sheet");
             emptyHeart = Content.Load<Texture2D>("Empty Heart");
@@ -166,6 +169,7 @@ namespace CrossBoa
             hitBox = Content.Load<Texture2D>("Hitbox");
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
             playerArrowSprite = Content.Load<Texture2D>("arrow2");
+            totemProjectileSprite = Content.Load<Texture2D>("FireballSprite");
             titleText = Content.Load<Texture2D>("TitleText");
             pauseText = Content.Load<Texture2D>("PauseText");
             gameOverText = Content.Load<Texture2D>("GameOverText");
@@ -502,11 +506,11 @@ namespace CrossBoa
                 if ((totem = gameObjectList[i] as Totem) != null && totem.IsAlive
                     && totem.ReadyToFire)
                 {
-                    Arrow newTotemArrow = new Arrow(playerArrowSprite,
+                    Arrow newTotemArrow = new Arrow(totemProjectileSprite,
                         new Rectangle(-100,
                                       -100,
-                                      30,
-                                      30),
+                                      48,
+                                      48),
                         new Vector2(0, 0));
 
                     CollisionManager.AddProjectile(newTotemArrow);
@@ -592,6 +596,8 @@ namespace CrossBoa
                 isGodModeActive = !isGodModeActive;
             if (!isDebugActive)
                 isGodModeActive = false;
+
+            CollisionManager.CheckCollision(isGodModeActive);
 
             if (LevelManager.Exit.IsOpen || (!player.CanMove && !player.InDodge))
             {
@@ -972,13 +978,16 @@ namespace CrossBoa
         public void LoadDefaultLevel()
         {
             // Level layout
-            LevelManager.LoadLevel("TestingFile");
+            LevelManager.LoadLevel("Level1");
 
             // Temp enemy spawns for starting level
-            SpawnManager.SpawnSlime(new Point(400, 400));
+            /*SpawnManager.SpawnSlime(new Point(400, 400));
             SpawnManager.SpawnSlime(new Point(1280, 448));
             SpawnManager.SpawnSlime(new Point(64 * 12, 64 * 9));
-            SpawnManager.SpawnTotem(new Point(50, 100));
+            */
+
+            SpawnManager.SpawnTotem(new Point(64, 64));
+            SpawnManager.SpawnSkeleton(new Point(400, 400));
         }
     }
 

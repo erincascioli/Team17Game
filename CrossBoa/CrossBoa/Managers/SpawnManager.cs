@@ -53,12 +53,23 @@ namespace CrossBoa.Managers
         /// <param name="position">The position to spawn the totem at</param>
         public static void SpawnTotem(Point position)
         {
-            Totem testTotem = new Totem(Game1.whiteSquareSprite,
+            Totem testTotem = new Totem(Game1.totemSprite,
                 new Rectangle(new Point(1300, 300), position),
                 3);
 
             CollisionManager.AddEnemy(testTotem);
             gameObjectList.Add(testTotem);
+        }
+
+        public static void SpawnSkeleton(Point position)
+        {
+            Skeleton newSkeleton = new Skeleton(
+                Game1.whiteSquareSprite,
+                Game1.slimeDeathSpritesheet,
+                3,
+                new Rectangle(position, new Point(64, 64)));
+            CollisionManager.AddEnemy(newSkeleton);
+            gameObjectList.Add(newSkeleton);
         }
 
         /// Currently useless due to how we moved forward on enemy placement
