@@ -113,13 +113,13 @@ namespace CrossBoa.Managers
                 // This is done here because the load method can't be passed in before 
                 // this class's constructor is established
                 // Doors are created and will be constantly used
-                entrance = new Door(Content.Load<Texture2D>("FloorShadow"), // Open Sprite
-                    Content.Load<Texture2D>("GrassTest"), // Closed Sprite
+                entrance = new Door(Content.Load<Texture2D>("Floor"), // Open Sprite
+                    Content.Load<Texture2D>("Wall"), // Closed Sprite
                     new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true);
 
-                exit = new Door(Content.Load<Texture2D>("FloorShadow"), // Open Sprite
-                    Content.Load<Texture2D>("GrassTest"), // Closed Sprite
+                exit = new Door(Content.Load<Texture2D>("Floor"), // Open Sprite
+                    Content.Load<Texture2D>("SideWall"), // Closed Sprite
                     new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true); // Has hitbox
             }
@@ -735,16 +735,21 @@ namespace CrossBoa.Managers
         /// </summary>
         public static void RandomizeLevel()
         {
-            int level = Game1.RNG.Next(0, 2);
+            int level = Game1.RNG.Next(1, 4);
             switch (level)
             {
-                case 0:
-                    currentLevel = "TestingFile";
-                    break;
-
                 case 1:
                     currentLevel = "Level1";
                     break;
+
+                case 2:
+                    currentLevel = "Level2";
+                    break;
+
+                case 3:
+                    currentLevel = "Level3";
+                    break;
+
             }
         }
 
