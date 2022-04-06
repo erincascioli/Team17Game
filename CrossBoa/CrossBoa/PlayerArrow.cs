@@ -35,15 +35,12 @@ namespace CrossBoa
         private float timeUntilDespawn;
         private bool flashFrames;
 
-        //private const float TimeBeforePickup = 0.5f;
-
         // Upgrade-related fields
         private bool isMainArrow;
         private bool isReturning;
         private float directionOffset;
 
-        private const float PlayerArrowDespawn = 20f;
-        private const float TimeBeforePickup = 0.5f;
+        //private const float TimeBeforePickup = 0.5f;
 
 
         /// <summary>
