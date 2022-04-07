@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CrossBoa.UpgradeTypes;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace CrossBoa.Managers
+namespace CrossBoa.Upgrades
 {
     public static class UpgradeManager
     {

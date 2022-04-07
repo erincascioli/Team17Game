@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace CrossBoa.UpgradeTypes
+namespace CrossBoa.Upgrades
 {
     public class StatBoostUpgrade : Upgrade
     {
