@@ -610,6 +610,9 @@ namespace CrossBoa
                 // Kills every enemy if the player presses N while debug is active
                 // NOTE: Will crash if the the player moves to the next room having 
                 // never fired an arrow; for obvious reasons this is a non-issue for now
+
+                /* DISABLED FOR PLAYTEST
+                 * 
                 if (WasKeyPressed(Keys.N))
                 {
                     foreach (GameObject e in gameObjectList)
@@ -618,16 +621,29 @@ namespace CrossBoa
                             ((Enemy)e).TakeDamage(1000);
                     }
                 }
+                
 
                 // TEST CODE TO UNLOCK UPGRADE
+
                 if (WasKeyPressed(Keys.M))
                     UpgradeManager.UnlockUpgrade("Multishot");
-            }
+                */
 
+                isGodModeActive = true;
+            }
+            else
+            {
+                isGodModeActive = false;
+            }
+            
+
+            /* DISABLED FOR PLAYTEST
+             * 
             if (isDebugActive && WasKeyPressed(Keys.F))
                 isGodModeActive = !isGodModeActive;
             if (!isDebugActive)
                 isGodModeActive = false;
+            */
 
             if (LevelManager.Exit.IsOpen || (!player.CanMove && !player.InDodge))
             {
@@ -793,8 +809,8 @@ namespace CrossBoa
             playButton.Draw(_spriteBatch);
 
             // Draw debug button
-            _spriteBatch.DrawString(arial32, isDebugActive ? "Disable Debug:" : "Enable Debug:",
-                new Vector2(windowWidth - 400, windowHeight - 100), isDebugActive ? Color.Red : Color.Green);
+            _spriteBatch.DrawString(arial32, isDebugActive ? "Disable God Mode:" : "Enable God Mode:", // Changed for Playtest
+                new Vector2(windowWidth - 500, windowHeight - 80), isDebugActive ? Color.Red : Color.Green);
             debugButton.Draw(_spriteBatch);
 
             crosshair.Draw(_spriteBatch);
