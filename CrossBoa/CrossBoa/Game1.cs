@@ -62,6 +62,7 @@ namespace CrossBoa
         public static Texture2D totemProjectileSprite;
         public static Texture2D slimeSpritesheet;
         public static Texture2D slimeDeathSpritesheet;
+        public static Texture2D xpSprite;
         private Texture2D snakeSprite;
         private Texture2D crossbowSprite;
         private Texture2D hitBox;
@@ -185,6 +186,7 @@ namespace CrossBoa
             skeletonSprite = Content.Load<Texture2D>("BeastSprite");
             slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
             slimeDeathSpritesheet = Content.Load<Texture2D>("FacelessSlimeDeathSpritesheet-sheet");
+            xpSprite = Content.Load<Texture2D>("XPOrb");
             emptyHeart = Content.Load<Texture2D>("Empty Heart");
             fullHeart = Content.Load<Texture2D>("Full Heart");
             snakeSprite = Content.Load<Texture2D>("snake");
