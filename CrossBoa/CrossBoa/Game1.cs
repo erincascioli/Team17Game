@@ -6,6 +6,7 @@ using System.Xml;
 using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using CrossBoa.Managers;
+using CrossBoa.Upgrades;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -611,8 +612,6 @@ namespace CrossBoa
                 // NOTE: Will crash if the the player moves to the next room having 
                 // never fired an arrow; for obvious reasons this is a non-issue for now
 
-                /* DISABLED FOR PLAYTEST
-                 * 
                 if (WasKeyPressed(Keys.N))
                 {
                     foreach (GameObject e in gameObjectList)
@@ -621,13 +620,11 @@ namespace CrossBoa
                             ((Enemy)e).TakeDamage(1000);
                     }
                 }
-                
 
                 // TEST CODE TO UNLOCK UPGRADE
 
                 if (WasKeyPressed(Keys.M))
                     UpgradeManager.UnlockUpgrade("Multishot");
-                */
 
                 isGodModeActive = true;
             }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace CrossBoa.UpgradeTypes
+namespace CrossBoa.Upgrades
 {
     /// <summary>
     /// The quality of this upgrade

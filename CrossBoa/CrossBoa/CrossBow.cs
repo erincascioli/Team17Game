@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using CrossBoa.Interfaces;
 using CrossBoa.Managers;
-using CrossBoa.UpgradeTypes;
+using CrossBoa.Upgrades;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
