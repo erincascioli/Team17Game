@@ -1,13 +1,35 @@
 ﻿using System.Collections.Generic;
+using CrossBoa.Enemies;
 using Microsoft.Xna.Framework;
 
 namespace CrossBoa.Upgrades
 {
+    /// <summary>
+    /// The quality of this upgrade
+    /// </summary>
+    public enum UpgradeQuality
+    {
+        Bronze,
+        Silver,
+        Gold
+    }
+
+    /// <summary>
+    /// The type of upgrade
+    /// </summary>
+    public enum UpgradeType
+    {
+        OnShot,
+        OnKill,
+        StatBoost
+    }
+
     public static class UpgradeManager
     {
         private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>()
         {
-            {"Multishot", new Upgrade("Multishot", "Fires two additional arrows", Multishot, UpgradeType.OnShot, Game1.whiteSquareSprite)}
+            {"Multishot", new Upgrade("Multishot", "Fires two additional arrows", Multishot, UpgradeType.OnShot, Game1.whiteSquareSprite)},
+            {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)}
         };
 
         /// <summary>
@@ -24,6 +46,9 @@ namespace CrossBoa.Upgrades
                 case UpgradeType.OnShot:
                     Game1.Crossbow.OnShot += upgrade.Effect;
                     break;
+                case UpgradeType.OnKill:
+                    Enemy.OnKill += upgrade.Effect;
+                    break;
             }
 
             // Remove this upgrade from the locked upgrades list
@@ -32,7 +57,7 @@ namespace CrossBoa.Upgrades
 
         #region Upgrade Delegate Methods
         /// <summary>
-        /// OnShotUpgrade that shoots multiple arrows
+        /// Shoot 3 arrows every shot
         /// </summary>
         public static void Multishot()
         {
@@ -54,6 +79,16 @@ namespace CrossBoa.Upgrades
 
             Game1.playerArrowList.AddRange(newArrows);
         }
+
+        /// <summary>
+        /// 5% Chance to heal when killing an enemy
+        /// </summary>
+        public static void Vampirism()
+        {
+            if(Game1.RNG.NextDouble() <= 0.05)
+               Game1.Player.CurrentHealth++;
+        }
+
         #endregion
     }
 }

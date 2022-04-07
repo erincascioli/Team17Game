@@ -32,7 +32,6 @@ namespace CrossBoa
         private const int DefaultPlayerMaxSpeed = 300;
         private const int DefaultPlayerFriction = 2500;
         private const int DefaultPlayerHealth = 5;
-        private const float DefaultPlayerInvulnerabilityFrames = 1.5f;
         private const float DefaultPlayerDodgeCooldown = 2;
         private const float DefaultPlayerDodgeLength = 0.25f;
         private const float DefaultPlayerDodgeSpeed = 3f;
@@ -218,7 +217,6 @@ namespace CrossBoa
                 DefaultPlayerMaxSpeed,
                 DefaultPlayerFriction,
                 DefaultPlayerHealth,
-                DefaultPlayerInvulnerabilityFrames,
                 DefaultPlayerDodgeCooldown,
                 DefaultPlayerDodgeLength,
                 DefaultPlayerDodgeSpeed
@@ -625,6 +623,8 @@ namespace CrossBoa
 
                 if (WasKeyPressed(Keys.M))
                     UpgradeManager.UnlockUpgrade("Multishot");
+                if (WasKeyPressed(Keys.V))
+                    UpgradeManager.UnlockUpgrade("Vampirism");
 
                 isGodModeActive = true;
             }
