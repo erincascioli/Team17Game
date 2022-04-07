@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Text;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,7 +18,6 @@ namespace CrossBoa
     {
         // Player stats
         private int maxHealth;
-        private float invulnerabilityTime;
         private float dodgeCooldown;
         private float dodgeLength;
         private float movementForce;
@@ -57,7 +57,13 @@ namespace CrossBoa
         public int CurrentHealth
         {
             get { return currentHealth; }
-            set { currentHealth = value; }
+            set
+            {
+                if (value <= maxHealth)
+                    currentHealth = value;
+                else
+                    currentHealth = maxHealth;
+            }
         }
 
         /// <summary>
@@ -126,22 +132,20 @@ namespace CrossBoa
         /// </summary>
         /// <param name="sprite">The sprite for this GameObject</param>
         /// <param name="rectangle">A Rectangle containing this GameObject's position and size</param>
-        /// <param name="friction">How fast this object will stop moving.</param>
-        /// <param name="maxSpeed">The maximum speed this object can reach</param>
         /// <param name="movementForce">The force applied to the object when pressing the arrow keys</param>
+        /// <param name="maxSpeed">The maximum speed this object can reach</param>
+        /// <param name="friction">How fast this object will stop moving.</param>
         /// <param name="maxHealth">The maximum health of this player</param>
-        /// <param name="invulnerabilityTime">How long the player should be invincible after being hit</param>
         /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
         /// <param name="dodgeLength">How long the player will dodge for</param>
         /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         public Player(Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float invulnerabilityTime, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
+            int maxHealth, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
             base(sprite, rectangle, maxSpeed, friction)
         {
             this.movementForce = movementForce;
             this.maxHealth = maxHealth;
             currentHealth = maxHealth;
-            this.invulnerabilityTime = invulnerabilityTime;
             this.dodgeCooldown = dodgeCooldown;
             this.dodgeLength = dodgeLength;
             dodgeSpeedBoost = dodgeSpeed;
@@ -223,7 +227,7 @@ namespace CrossBoa
             if (!IsInvincible)
             {
                 currentHealth -= amount;
-                timeLeftInvincible = invulnerabilityTime;
+                timeLeftInvincible = PlayerStats.PlayerInvulnerabilityTime;
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CrossBoa.Interfaces;
+using CrossBoa.Upgrades;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,6 +8,11 @@ namespace CrossBoa.Enemies
 {
     public class Enemy : PhysicsObject, ICollidable
     {
+        /// <summary>
+        /// Invokes upgrades that affect when the player kills an enemy
+        /// </summary>
+        public static event UpgradeBehavior OnKill;
+
         protected List<Collectible> expReward;
 
         protected int health;
@@ -139,6 +145,10 @@ namespace CrossBoa.Enemies
         /// </summary>
         public virtual void Die()
         {
+            // Invoke OnKill upgrades
+            if (OnKill != null) 
+                OnKill();
+
             // Spawn collectibles
             foreach (Collectible collectible in expReward)
             {

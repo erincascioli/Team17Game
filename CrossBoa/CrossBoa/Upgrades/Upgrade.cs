@@ -3,25 +3,6 @@
 namespace CrossBoa.Upgrades
 {
     /// <summary>
-    /// The quality of this upgrade
-    /// </summary>
-    public enum UpgradeQuality
-    {
-        Bronze,
-        Silver,
-        Gold
-    }
-
-    /// <summary>
-    /// The type of upgrade
-    /// </summary>
-    public enum UpgradeType
-    {
-        OnShot,
-        StatBoost
-    }
-
-    /// <summary>
     /// The method that this upgrade should call when used
     /// </summary>
     public delegate void UpgradeBehavior();

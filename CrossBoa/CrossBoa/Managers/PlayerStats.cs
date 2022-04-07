@@ -9,8 +9,18 @@ namespace CrossBoa.Managers
     /// </summary>
     public static class PlayerStats
     {
+        private static float playerInvulnerabilityTime = 3f;
         private static float arrowVelocity = 360f;
         private static float arrowDespawnTime = 20f;
+
+        /// <summary>
+        /// The speed that the player's arrow will fire at
+        /// </summary>
+        public static float PlayerInvulnerabilityTime
+        {
+            get { return playerInvulnerabilityTime; }
+            set { playerInvulnerabilityTime = value; }
+        }
 
         /// <summary>
         /// The speed that the player's arrow will fire at
