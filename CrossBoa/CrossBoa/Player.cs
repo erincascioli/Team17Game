@@ -25,6 +25,7 @@ namespace CrossBoa
         private float dodgeSpeedBoost;
 
         // Player status tracking
+        private Vector2 movementVector;
         private int currentHealth;
         private float timeUntilDodge;
         private float timeLeftInvincible;
@@ -179,17 +180,17 @@ namespace CrossBoa
 
             flashFrames = !flashFrames;
 
+            // Check the player's movement
+            CheckMovementInput(kbState);
+
+            // Apply the player's movement
             if (canMove)
             {
-                // Check the player's input
-                Vector2 movementVector = CheckMovementInput(kbState);
-
-                // Apply the movement
                 ApplyForce(movementVector * movementForce);
 
-                if (kbState.IsKeyDown(Keys.A))
+                if (movementVector.X < 0)
                     isFacingRight = false;
-                if (kbState.IsKeyDown(Keys.D))
+                if (movementVector.X > 0)
                     isFacingRight = true;
             }
             else if (inDodge)
@@ -234,24 +235,36 @@ namespace CrossBoa
         /// <summary>
         /// Helper method to check for player input
         /// </summary>
-        public Vector2 CheckMovementInput(KeyboardState kbState)
+        public void CheckMovementInput(KeyboardState kbState)
         {
-            Vector2 movementVector = new Vector2(0, 0);
+            // Reset vector if player is not moving in either direction
+            if (kbState.IsKeyUp(Keys.W) && kbState.IsKeyUp(Keys.S))
+                movementVector.Y = 0;
+            if (kbState.IsKeyUp(Keys.A) && kbState.IsKeyUp(Keys.D))
+                movementVector.X = 0;
 
-            if (kbState.IsKeyDown(Keys.W))
+            // If a key is pressed, override the previous key. OR
+            //     If a key is released and the other is still held, set it back
+            if (Game1.WasKeyPressed(Keys.W) ||
+                (Game1.WasKeyReleased(Keys.S) && kbState.IsKeyDown(Keys.W)))
                 movementVector.Y = -1;
-            if (kbState.IsKeyDown(Keys.A))
+            if (Game1.WasKeyPressed(Keys.A) ||
+                (Game1.WasKeyReleased(Keys.D) && kbState.IsKeyDown(Keys.A)))
                 movementVector.X = -1;
-            if (kbState.IsKeyDown(Keys.S))
+            if (Game1.WasKeyPressed(Keys.S) ||
+                (Game1.WasKeyReleased(Keys.W) && kbState.IsKeyDown(Keys.S)))
                 movementVector.Y = 1;
-            if (kbState.IsKeyDown(Keys.D))
+            if (Game1.WasKeyPressed(Keys.D) ||
+                (Game1.WasKeyReleased(Keys.A) && kbState.IsKeyDown(Keys.D)))
                 movementVector.X = 1;
+
+            // Un-normalizes vector from last frame
+            movementVector.X = MathF.Sign(movementVector.X);
+            movementVector.Y = MathF.Sign(movementVector.Y);
 
             // Normalize the vector so the player doesn't move faster diagonally
             if (movementVector != Vector2.Zero)
                 movementVector.Normalize();
-
-            return movementVector;
         }
 
         public void ForceMove(int x, int y, GameTime gameTime)
@@ -275,12 +288,12 @@ namespace CrossBoa
         public void Dodge(KeyboardState kbState)
         {
             // If the player presses space and can dodge
-            if (kbState.IsKeyDown(Keys.Space) && timeUntilDodge < 0 &&
+            if (Game1.WasKeyPressed(Keys.Space) && timeUntilDodge < 0 &&
                 (kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) ||
-                kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.D)))
+                 kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.D)))
             {
                 timeUntilDodge = dodgeCooldown;
-                dodgeVector = CheckMovementInput(kbState);
+                dodgeVector = movementVector;
                 canMove = false;
                 dodgeInvulnerabilityTime = dodgeLength;
                 inDodge = true;
