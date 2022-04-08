@@ -48,10 +48,10 @@ namespace CrossBoa
         private bool isDebugActive = false;
         public static bool isGodModeActive = false;
 
-        private KeyboardState kbState;
-        private KeyboardState previousKBState;
-        private MouseState mState;
-        private MouseState previousMState;
+        private static KeyboardState kbState;
+        private static KeyboardState previousKBState;
+        private static MouseState mState;
+        private static MouseState previousMState;
 
         // Assets
         #region Asset Field Declarations
@@ -954,12 +954,22 @@ namespace CrossBoa
         /// Checks if this was the first frame a key was pressed
         /// </summary>
         /// <param name="key">The key to check</param>
-        /// <returns>True if the key was pressed this frame but not pressed last frame; false otherwise</returns>
-        public bool WasKeyPressed(Keys key)
+        /// <returns>True if the key was just pressed this frame but was not pressed last frame; false otherwise</returns>
+        public static bool WasKeyPressed(Keys key)
         {
             return kbState.IsKeyDown(key) && previousKBState.IsKeyUp(key);
         }
-        
+
+        /// <summary>
+        /// Checks if this was the first frame a key was released
+        /// </summary>
+        /// <param name="key">The key to check</param>
+        /// <returns>True if the key was just released this frame and was pressed last frame; false otherwise</returns>
+        public static bool WasKeyReleased(Keys key)
+        {
+            return kbState.IsKeyUp(key) && previousKBState.IsKeyDown(key);
+        }
+
         /// <summary>
         /// Moves and resizes most screen elements when the window is resized
         /// </summary>
