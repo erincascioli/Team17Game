@@ -94,6 +94,8 @@ namespace CrossBoa
         public static List<PlayerArrow> playerArrowList;
         private static List<Collectible> collectibles;
 
+        private TextElement testText;
+
         // Buttons
         private Button playButton;
         private Button pauseButton;
@@ -246,6 +248,9 @@ namespace CrossBoa
             playPressedSprite = Content.Load<Texture2D>("PlayRegular");
             settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
             settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
+
+            testText = new TextElement("A quick brown fox jumps over the lazy dog", pressStart12, 0.5f,
+                ScreenAnchor.Center, new Point(0, 75));
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -500,6 +505,9 @@ namespace CrossBoa
             playButton.Draw(_spriteBatch);
 
             crosshair.Draw(_spriteBatch);
+
+            // TEST TEXT
+            testText.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
