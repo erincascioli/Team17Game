@@ -245,17 +245,13 @@ namespace CrossBoa
 
             // If a key is pressed, override the previous key. OR
             //     If a key is released and the other is still held, set it back
-            if (Game1.WasKeyPressed(Keys.W) ||
-                (Game1.WasKeyReleased(Keys.S) && kbState.IsKeyDown(Keys.W)))
+            if (kbState.IsKeyUp(Keys.S) && kbState.IsKeyDown(Keys.W))
                 movementVector.Y = -1;
-            if (Game1.WasKeyPressed(Keys.A) ||
-                (Game1.WasKeyReleased(Keys.D) && kbState.IsKeyDown(Keys.A)))
+            if (kbState.IsKeyUp(Keys.D) && kbState.IsKeyDown(Keys.A))
                 movementVector.X = -1;
-            if (Game1.WasKeyPressed(Keys.S) ||
-                (Game1.WasKeyReleased(Keys.W) && kbState.IsKeyDown(Keys.S)))
+            if (kbState.IsKeyUp(Keys.W) && kbState.IsKeyDown(Keys.S))
                 movementVector.Y = 1;
-            if (Game1.WasKeyPressed(Keys.D) ||
-                (Game1.WasKeyReleased(Keys.A) && kbState.IsKeyDown(Keys.D)))
+            if (kbState.IsKeyUp(Keys.A) && kbState.IsKeyDown(Keys.D))
                 movementVector.X = 1;
 
             // Un-normalizes vector from last frame
