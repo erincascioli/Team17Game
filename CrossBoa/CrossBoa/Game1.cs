@@ -1054,7 +1054,7 @@ namespace CrossBoa
             LevelManager.LoadLevel();
 
             // Temp enemy spawns for starting level
-            SpawnManager.SpawnTotem(new Point(50, 100));
+            //SpawnManager.SpawnTotem(new Point(50, 100));
             //SpawnManager.SpawnTotem(new Point(64, 64));
             //SpawnManager.SpawnSkeleton(new Point(400, 400));
             //SpawnManager.SpawnTarget(new Point(64, 64));
