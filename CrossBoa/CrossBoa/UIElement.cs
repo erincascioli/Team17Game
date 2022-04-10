@@ -44,7 +44,7 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// A Vector2 representing this GameObject's position
+        /// A Vector2 representing the center of this UI Element
         /// </summary>
         public override Vector2 Position
         {
@@ -86,7 +86,7 @@ namespace CrossBoa
         /// Constructs a UI Element. The position is dependent on the anchor.
         /// </summary>
         /// <param name="sprite">The sprite for this GameObject</param>
-        /// <param name="anchor">The center of this object will be placed at the anchor. The position will offset it from that</param>
+        /// <param name="anchor">The position to center this UI Element at</param>
         /// <param name="offset">How much to offset this UI Element from the anchor point</param>
         /// <param name="size">The size of this object is dependent on the UIScale in Game1</param>
         public UIElement(Texture2D sprite, ScreenAnchor anchor, Point offset, Point size) : base(sprite, new Rectangle(offset, size))
