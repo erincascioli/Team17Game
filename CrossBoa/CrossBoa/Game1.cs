@@ -81,7 +81,7 @@ namespace CrossBoa
         private Texture2D crosshairSprite;
 
         private SpriteFont arial32;
-        private static SpriteFont pressStart6;
+        private static SpriteFont pressStart;
         #endregion
 
         // Objects
@@ -145,7 +145,7 @@ namespace CrossBoa
         /// </summary>
         public static SpriteFont PressStart
         {
-            get { return pressStart6; }
+            get { return pressStart; }
         }
         #endregion
 
@@ -214,7 +214,7 @@ namespace CrossBoa
             crosshairSprite = Content.Load<Texture2D>("Crosshair");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
-            pressStart6 = Content.Load<SpriteFont>("Fonts/PressStart6");
+            pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
 
             for (int i = 0; i < 5; i++)
             {
@@ -402,8 +402,8 @@ namespace CrossBoa
                     // TEST TEXT
                     //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                     //string testText = "a quick brown fox jumps over the lazy dog";
-                    //Vector2 stringLength = pressStart6.MeasureString(testText) * 2;
-                    //_spriteBatch.DrawString(pressStart6, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
+                    //Vector2 stringLength = pressStart.MeasureString(testText) * 2;
+                    //_spriteBatch.DrawString(pressStart, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
                     //_spriteBatch.End();
 
                     break;
@@ -783,7 +783,7 @@ namespace CrossBoa
             }
 
             // Draw score text
-            _spriteBatch.DrawString(pressStart6, "Exp: " + exp, 
+            _spriteBatch.DrawString(pressStart, "Exp: " + exp, 
                 new Vector2(playerHealthBar[0].Rectangle.Left, playerHealthBar[0].Rectangle.Bottom) + new Vector2(3 * UIScale),
                 Color.White, 0, Vector2.Zero, new Vector2(UIScale), SpriteEffects.None, 1);
 

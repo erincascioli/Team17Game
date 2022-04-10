@@ -323,9 +323,6 @@
 #begin Fonts/PressStart6.xnb
 /copy:Fonts/PressStart6.xnb
 
-#begin Fonts/PressStartK.xnb
-/copy:Fonts/PressStartK.xnb
-
 #begin Full Heart.png
 /importer:TextureImporter
 /processor:TextureProcessor
