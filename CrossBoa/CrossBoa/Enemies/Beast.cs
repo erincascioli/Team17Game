@@ -55,10 +55,13 @@ namespace CrossBoa.Enemies
         public override void Move()
         {
             Point player = new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y);
-            ApplyForce((
-                Helper.DirectionBetween(
-                    new Point((int)position.X, (int)position.Y), player)),
+
+            if (Math.Abs(Helper.Distance(new Point((int)position.X + Width / 2, (int)position.Y + Height / 2), player)) > 35)
+            {
+                ApplyForce(Helper.DirectionBetween(
+                    new Point((int)position.X + Width / 2, (int)position.Y + Height / 2), player),
                     MovementForce);
+            }
         }
 
         public override void GetKnockedBack(ICollidable other, float force)
