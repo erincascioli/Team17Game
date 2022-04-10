@@ -81,7 +81,7 @@ namespace CrossBoa
         private Texture2D crosshairSprite;
 
         private SpriteFont arial32;
-        private SpriteFont pressStart12;
+        private static SpriteFont pressStart12;
         #endregion
 
         // Objects
@@ -106,6 +106,7 @@ namespace CrossBoa
 
         private GameState gameState;
 
+        #region Static properties
         /// <summary>
         /// A reference to the player object
         /// </summary>
@@ -138,6 +139,15 @@ namespace CrossBoa
             get { return exp; }
             set { exp = value; }
         }
+
+        /// <summary>
+        /// A static reference to the press start font
+        /// </summary>
+        public static SpriteFont PressStart
+        {
+            get { return pressStart12; }
+        }
+        #endregion
 
         public Game1()
         {
@@ -249,8 +259,8 @@ namespace CrossBoa
             settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
             settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
 
-            testText = new TextElement("A quick brown fox jumps over the lazy dog", pressStart12, 0.5f,
-                ScreenAnchor.Center, new Point(0, 75));
+            testText = new TextElement("A quick brown fox jumps over the lazy dog",
+                ScreenAnchor.Center, new Point(0, 75), 0.5f);
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -435,8 +445,7 @@ namespace CrossBoa
             base.Draw(gameTime);
         }
 
-        // Main Menu
-        // Update and Draw methods
+        // --- Update and draw methods ---
 
         // Main Menu
         /// <summary>

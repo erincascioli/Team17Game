@@ -63,16 +63,21 @@ namespace CrossBoa
         /// Constructs a Text Element. The position is dependent on the anchor.
         /// </summary>
         /// <param name="text">The text for this text element to display</param>
-        /// <param name="font">The font to display this text element in</param>
-        /// <param name="scale">The size of this object is dependent on the UIScale in Game1</param>
         /// <param name="anchor">The position to center this UI Element at</param>
         /// <param name="offset">How much to offset this UI Element from the anchor point</param>
-        public TextElement(string text, SpriteFont font, float scale, ScreenAnchor anchor, Point offset) :
-            base(null, anchor, offset, (font.MeasureString(text) * scale).ToPoint())
+        /// <param name="scale">The size of this object is dependent on the UIScale in Game1 <para>Default: 1</para></param>
+        /// <param name="font">The font to display this text element in. <para>Default: Press Start font</para></param>
+        public TextElement(string text, ScreenAnchor anchor, Point offset, float scale = 1, SpriteFont font = null) :
+            base(null, anchor, offset, Point.Zero)
         {
+            // Sets default font
+            font ??= Game1.PressStart;
+
             this.text = text;
             this.font = font;
             this.scale = scale;
+
+            size = (font.MeasureString(text) * scale).ToPoint();
         }
 
         /// <summary>
@@ -82,14 +87,14 @@ namespace CrossBoa
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(font,
-                text,
-                rectangle.Location.ToVector2(),
-                color,
-                0f,
-                Vector2.Zero,
-                scale * Game1.UIScale,
-                SpriteEffects.None,
-                1f);
+                    text,
+                    rectangle.Location.ToVector2(),
+                    color,
+                    0f,
+                    Vector2.Zero,
+                    scale * Game1.UIScale,
+                    SpriteEffects.None,
+                    1f);
         }
 
         /// <summary>Returns the text that this element contains.</summary>
