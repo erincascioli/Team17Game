@@ -81,7 +81,7 @@ namespace CrossBoa
         private Texture2D crosshairSprite;
 
         private SpriteFont arial32;
-        private static SpriteFont pressStart12;
+        private static SpriteFont pressStart6;
         #endregion
 
         // Objects
@@ -145,7 +145,7 @@ namespace CrossBoa
         /// </summary>
         public static SpriteFont PressStart
         {
-            get { return pressStart12; }
+            get { return pressStart6; }
         }
         #endregion
 
@@ -214,7 +214,7 @@ namespace CrossBoa
             crosshairSprite = Content.Load<Texture2D>("Crosshair");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
-            pressStart12 = Content.Load<SpriteFont>("Fonts/PressStartK");
+            pressStart6 = Content.Load<SpriteFont>("Fonts/PressStart6");
 
             for (int i = 0; i < 5; i++)
             {
@@ -260,7 +260,7 @@ namespace CrossBoa
             settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
 
             testText = new TextElement("A quick brown fox jumps over the lazy dog",
-                ScreenAnchor.Center, new Point(0, 75), 0.5f);
+                ScreenAnchor.Center, new Point(0, 75));
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -402,8 +402,8 @@ namespace CrossBoa
                     // TEST TEXT
                     //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                     //string testText = "a quick brown fox jumps over the lazy dog";
-                    //Vector2 stringLength = pressStart12.MeasureString(testText) * 2;
-                    //_spriteBatch.DrawString(pressStart12, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
+                    //Vector2 stringLength = pressStart6.MeasureString(testText) * 2;
+                    //_spriteBatch.DrawString(pressStart6, testText, new Vector2(windowWidth / 2f - stringLength.X / 2, 700), Color.White, 0, Vector2.Zero, new Vector2(2), SpriteEffects.None, 1f);
                     //_spriteBatch.End();
 
                     break;
@@ -783,9 +783,9 @@ namespace CrossBoa
             }
 
             // Draw score text
-            _spriteBatch.DrawString(pressStart12, "Exp: " + exp, 
+            _spriteBatch.DrawString(pressStart6, "Exp: " + exp, 
                 new Vector2(playerHealthBar[0].Rectangle.Left, playerHealthBar[0].Rectangle.Bottom) + new Vector2(3 * UIScale),
-                Color.White, 0, Vector2.Zero, new Vector2(UIScale / 2), SpriteEffects.None, 1);
+                Color.White, 0, Vector2.Zero, new Vector2(UIScale), SpriteEffects.None, 1);
 
 
             // DEBUG
