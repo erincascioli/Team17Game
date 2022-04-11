@@ -18,6 +18,7 @@ namespace CrossBoa
 
         /// <summary>
         /// The text that this TextElement displays
+        /// <para>DO NOT CHANGE EVERY FRAME</para>
         /// </summary>
         public string Text
         {
@@ -25,7 +26,8 @@ namespace CrossBoa
             set
             {
                 text = value;
-                size = (font.MeasureString(text) * scale).ToPoint();
+                size = font.MeasureString(text).ToPoint();
+                OnResize();
             }
         }
 
@@ -38,7 +40,7 @@ namespace CrossBoa
             set
             {
                 scale = value;
-                size = (font.MeasureString(text) * scale).ToPoint();
+                size = font.MeasureString(text).ToPoint();
             }
         }
 
@@ -77,7 +79,7 @@ namespace CrossBoa
             this.font = font;
             this.scale = scale;
 
-            size = (font.MeasureString(text) * scale).ToPoint();
+            size = font.MeasureString(text).ToPoint();
         }
 
         /// <summary>

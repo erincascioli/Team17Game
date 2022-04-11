@@ -44,6 +44,7 @@ namespace CrossBoa
         public static Rectangle windowRect;
         private float outputAspectRatio;
         private float preferredAspectRatio;
+        private float FPS;
 
         private static bool isDebugActive = false;
         public static bool isGodModeActive = false;
@@ -271,7 +272,7 @@ namespace CrossBoa
 
             testText = new TextElement("A quick brown fox jumps over the lazy dog",
                 ScreenAnchor.Center, new Point(0, 75));
-            FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(10, -10));
+            FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(-10, -6));
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -619,11 +620,18 @@ namespace CrossBoa
                 WasKeyPressed(Keys.Escape))
                 gameState = GameState.Pause;
 
-            // ---- DEBUG ----
+            // ---- DEBUG UPDATE ----
             if (isDebugActive)
             {
                 // Update FPS Counter
-                FPSCounter.Text = (1 / (float) gameTime.ElapsedGameTime.TotalSeconds).ToString();
+                float newFPS = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
+                
+                // If FPS changes by more than 0.5, update the text
+                if (Math.Abs(FPS - newFPS) > 0.5f)
+                {
+                    FPS = newFPS;
+                    FPSCounter.Text = $"{FPS:F0}";
+                }
 
                 // Spawn slimes when pressing E
                 if (WasKeyPressed(Keys.E))
@@ -723,7 +731,7 @@ namespace CrossBoa
                 collectible.Draw(_spriteBatch);
             }
 
-            // DEBUG
+            // ---- DEBUG DRAW ----
             if (isDebugActive)
             {
                 // Shows working hitboxes that don't use points
@@ -731,8 +739,6 @@ namespace CrossBoa
 
                 // TEST CODE TO DRAW ARROW RECTANGLE
                 // _spriteBatch.Draw(whiteSquareSprite, playerArrow.Rectangle, Color.Tan)
-
-                FPSCounter.Draw(_spriteBatch);
             }
 
             _spriteBatch.End();
@@ -804,7 +810,7 @@ namespace CrossBoa
                 Color.White, 0, Vector2.Zero, new Vector2(UIScale), SpriteEffects.None, 1);
 
 
-            // DEBUG
+            // ---- DEBUG UI ----
             if (isDebugActive)
             {
                 // ~~~ Draws the crossbow's timeSinceShot timer
@@ -812,6 +818,9 @@ namespace CrossBoa
 
                 // Draws the crossbow's rotation
                 _spriteBatch.DrawString(arial32, "" + crossbow.Direction, new Vector2(10, windowHeight - 100), Color.White);
+
+                // Draws the FPS Counter
+                FPSCounter.Draw(_spriteBatch);
             }
 
             crosshair.Draw(_spriteBatch);

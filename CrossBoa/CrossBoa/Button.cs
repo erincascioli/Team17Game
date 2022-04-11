@@ -28,14 +28,6 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// A rectangle containing this GameObject's position and size
-        /// </summary>
-        public override Rectangle Rectangle
-        {
-            get { return rectangle; }
-        }
-
-        /// <summary>
         /// Used for an already established location
         /// </summary>
         /// <param name="hoverImage"></param>
@@ -49,7 +41,6 @@ namespace CrossBoa
             : base(offImage, anchor, offset, size)
         {
             this.isInteractable = isInteractable;
-            this.position = offset.ToVector2();
             hoverButtonTexture = hoverImage;
             offButtonTexture = offImage;
         }
