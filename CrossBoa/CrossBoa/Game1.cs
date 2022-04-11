@@ -45,7 +45,7 @@ namespace CrossBoa
         private float outputAspectRatio;
         private float preferredAspectRatio;
 
-        private bool isDebugActive = false;
+        private static bool isDebugActive = false;
         public static bool isGodModeActive = false;
 
         private static KeyboardState kbState;
@@ -95,6 +95,7 @@ namespace CrossBoa
         private static List<Collectible> collectibles;
 
         private TextElement testText;
+        private TextElement FPSCounter;
 
         // Buttons
         private Button playButton;
@@ -147,6 +148,15 @@ namespace CrossBoa
         {
             get { return pressStart; }
         }
+
+        /// <summary>
+        /// Whether or not debug mode is currently active
+        /// </summary>
+        public static bool IsDebugActive
+        {
+            get { return isDebugActive; }
+        }
+
         #endregion
 
         public Game1()
@@ -261,6 +271,7 @@ namespace CrossBoa
 
             testText = new TextElement("A quick brown fox jumps over the lazy dog",
                 ScreenAnchor.Center, new Point(0, 75));
+            FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(10, -10));
 
             // Load menu background layers
             for (int i = 0; i < 10; i++)
@@ -608,13 +619,16 @@ namespace CrossBoa
                 WasKeyPressed(Keys.Escape))
                 gameState = GameState.Pause;
 
-            // DEBUG
+            // ---- DEBUG ----
             if (isDebugActive)
             {
+                // Update FPS Counter
+                FPSCounter.Text = (1 / (float) gameTime.ElapsedGameTime.TotalSeconds).ToString();
+
                 // Spawn slimes when pressing E
                 if (WasKeyPressed(Keys.E))
                 {
-                    //SpawnManager.SpawnSlime(mState.Position);
+                    SpawnManager.SpawnSlime(MousePositionInGame().ToPoint());
                 }
 
                 // Shake the screen if the player presses Enter while debug is active
@@ -636,7 +650,7 @@ namespace CrossBoa
                     }
                 }
 
-                // TEST CODE TO UNLOCK UPGRADE
+                // TEST CODE TO UNLOCK UPGRADES
 
                 if (WasKeyPressed(Keys.M))
                     UpgradeManager.UnlockUpgrade("Multishot");
@@ -716,7 +730,9 @@ namespace CrossBoa
                 CollisionManager.Draw(_spriteBatch, hitBox, arrowHitBox);
 
                 // TEST CODE TO DRAW ARROW RECTANGLE
-                // _spriteBatch.Draw(whiteSquareSprite, playerArrow.Rectangle, Color.Tan);
+                // _spriteBatch.Draw(whiteSquareSprite, playerArrow.Rectangle, Color.Tan)
+
+                FPSCounter.Draw(_spriteBatch);
             }
 
             _spriteBatch.End();
