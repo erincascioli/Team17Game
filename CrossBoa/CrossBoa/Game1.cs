@@ -548,8 +548,7 @@ namespace CrossBoa
                 // Fixes crossbow moving off of player character
                 if (gameObjectList[i] is CrossBow)
                 {
-                    // CollisionManager checks for collisions
-                    CollisionManager.CheckCollision(isGodModeActive);
+                    continue;
                 }
 
                 // Fires a skull's arrow if the cooldown time reaches 0.
@@ -613,6 +612,12 @@ namespace CrossBoa
             {
                 playerArrow.Update(gameTime);
             }
+
+            // CollisionManager checks for collisions
+            CollisionManager.CheckCollision(isGodModeActive);
+
+            // Update crossbow (Fixes crossbow moving off of player)
+            crossbow.Update(gameTime);
 
             // Pause if player presses pause key or escape
             pauseButton.Update(gameTime);
