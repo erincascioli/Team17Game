@@ -826,6 +826,8 @@ namespace CrossBoa
 
                 // Draws the FPS Counter
                 FPSCounter.Draw(_spriteBatch);
+
+               
             }
 
             crosshair.Draw(_spriteBatch);

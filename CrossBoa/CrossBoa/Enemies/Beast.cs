@@ -15,20 +15,32 @@ namespace CrossBoa.Enemies
         // ~~~ FIELDS ~~~
         private const float MovementForce = 1000f;
         private const float FrictionForce = 50f;
+        private const float BaseMaxSpd = 175f;
+        private const float KnockbackMaxSpd = 500f;
 
         // Movement fields
         private Player target;
         private float knockbackTimer;
+        private float provokeRadius;
 
         // ~~~ PROPERTIES ~~~
         /// <summary>
-        /// The skeleton's hitbox.
+        /// The beast's hitbox.
         /// </summary>
         public override Rectangle Hitbox
         {
             get 
             {
                 return Rectangle; // new Rectangle(Rectangle.X + 4, Rectangle.Y + 12, 56, 56); 
+            }
+        }
+
+        public float DistanceBetween
+        {
+            get
+            {
+                return Helper.Distance(ToPoint(position),
+                ToPoint(target.Position));
             }
         }
 
@@ -47,11 +59,15 @@ namespace CrossBoa.Enemies
             color = Color.White;
             isAlive = true;
             target = Game1.Player;
-            maxSpeed = 200f;
+            maxSpeed = BaseMaxSpd;
             knockbackTimer = 0.25f;
+            provokeRadius = 250f;
         }
 
         // ~~~ METHODS ~~~
+        /// <summary>
+        /// Moves the beast towards the target.
+        /// </summary>
         public override void Move()
         {
             Point player = new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y);
@@ -67,16 +83,41 @@ namespace CrossBoa.Enemies
         public override void GetKnockedBack(ICollidable other, float force)
         {
             knockbackTimer = 0;
-            base.GetKnockedBack(other, force * 3);
+            maxSpeed = KnockbackMaxSpd;
+            base.GetKnockedBack(other, force);
+            // Cool feature to make the beast start chasing the player sooner
+            // the more damage it takes
+            provokeRadius += 50f; 
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
             if (knockbackTimer < 0.15)
+            {
+                ApplyFriction(gameTime);
                 knockbackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            else
+                if (knockbackTimer >= 0.15)
+                    maxSpeed = BaseMaxSpd;
+            }
+            else if (Math.Abs(DistanceBetween) < provokeRadius)
                 Move();
+            else if (velocity.Length() > 0f)
+            {
+                velocity = velocity / 1.1f;
+                ApplyFriction(gameTime);
+            }
+        }
+
+        /// <summary>
+        /// A helper method to convert a Vector2 to a Point,
+        /// usable by the Helper method DirectionBetween().
+        /// </summary>
+        /// <param name="position">The Vector2 in question.</param>
+        /// <returns>A point equivalent to that Vector2.</returns>
+        private Point ToPoint(Vector2 position)
+        {
+            return new Point((int)position.X, (int)position.Y);
         }
     }
 }
