@@ -52,9 +52,20 @@ namespace CrossBoa
             float vertDist = vectorToFace.Y - baseVector.Y;
             float totalDist = (float)Math.Sqrt(Math.Pow(vertDist, 2) +
                                                Math.Pow(horizDist, 2));
+            // Code to prevent horizDistance from crashing when any strictly horizontal
+            // angle would be created
+            if (horizDist < 0 && horizDist > -1)
+                horizDist = -1;
+            else if (horizDist >= 0 && horizDist < 1)
+                horizDist = 1;
+            if (vertDist < 0 && vertDist > -1)
+                vertDist = -1;
+            else if (vertDist >= 0 && vertDist < 1)
+                vertDist = 1;
+
             double cosA = (Math.Pow(totalDist, 2) + Math.Pow(horizDist, 2) - Math.Pow(vertDist, 2))
                           / (2 * horizDist * totalDist);
-            if (double.IsNaN(cosA))
+            if (cosA == double.NaN)
                 cosA = 0;
             if (vectorToFace.Y < baseVector.Y)
                 return (float)Math.Acos(cosA) * -1;
