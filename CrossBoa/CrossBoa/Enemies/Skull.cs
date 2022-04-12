@@ -13,7 +13,7 @@ namespace CrossBoa.Enemies
         // No totem sprite yet
         // private Texture2D totemSprite;
 
-        private const double TimePerShot = 2f;
+        private const double TimePerShot = 2.5f;
 
         // ~~~ PROPERTIES ~~~
         public bool ReadyToFire
