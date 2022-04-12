@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Net.Mime;
 using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CrossBoa.Managers
@@ -120,6 +122,8 @@ namespace CrossBoa.Managers
                         playerArrow.IsInAir && 
                         playerArrow.Hitbox.Intersects(tile.Rectangle))
                     {
+                        // Sound of an arrow hitting a wall
+                        Game1.hitWall.CreateInstance().Play();
                         playerArrow.HitSomething();
                     }
                 }
