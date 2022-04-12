@@ -108,16 +108,21 @@ namespace CrossBoa
                 return timeSincePickup < shotCoolDown;
             }
         }
+
         /// <summary>
         /// Returns the direction that the crossbow is facing.
+        /// Get-only property.wwww
         /// </summary>
         public float Direction
         {
             get 
-            { 
-                if (direction != float.NaN)
+            {
+                if (!float.IsNaN(direction))
                     return direction;
-                return 0;
+                else
+                    throw new DivideByZeroException("Crossbow angle returned NaN:\nHoriz. difference: " +
+                        (position.X - Game1.MousePositionInGame().X) +
+                        "\nVert difference: " + (position.Y - Game1.MousePositionInGame().Y));
             }
         }
 
