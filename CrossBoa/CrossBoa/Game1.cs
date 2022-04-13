@@ -8,6 +8,7 @@ using CrossBoa.Interfaces;
 using CrossBoa.Managers;
 using CrossBoa.Upgrades;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
@@ -103,6 +104,9 @@ namespace CrossBoa
         private Button pauseButton;
         private Button debugButton;
         private Button gameOverButton;
+
+        // Sound Effects
+        public static SoundEffect hitWall;
 
         private List<GameObject> gameObjectList;
 
@@ -226,6 +230,8 @@ namespace CrossBoa
 
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
+
+            hitWall = Content.Load<SoundEffect>("Hit_hurt 34");
 
             for (int i = 0; i < 5; i++)
             {
