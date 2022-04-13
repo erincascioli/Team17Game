@@ -9,12 +9,22 @@ using Microsoft.Xna.Framework.Input;
 namespace CrossBoa
 {
     /// <summary>
+    /// A delegate that handles when a button gets clicked
+    /// </summary>
+    public delegate void OnClickHandler();
+
+    /// <summary>
     /// Author: Donovan Scullion
     /// Purpose: Manages all interactions with buttons
     /// Restrictions: none
     /// </summary>
     public class Button : UIElement
     {
+        /// <summary>
+        /// Event that runs when this button is clicked
+        /// </summary>
+        public event OnClickHandler OnClick;
+
         private MouseState mouseState;
         private MouseState previousState;
         private bool isInteractable;
@@ -75,6 +85,9 @@ namespace CrossBoa
                 previousState = mouseState;
 
                 // Button was clicked
+                if (OnClick != null) 
+                    OnClick();
+
                 return true;
             }
             else

@@ -125,7 +125,10 @@ namespace CrossBoa.Enemies
         /// </summary>
         public virtual void DealContactDamage(Player player)
         {
-            player.TakeDamage(1);
+            float dir = Helper.DirectionBetween(
+                            new Point(Rectangle.X, Rectangle.Y),
+                            new Point(Game1.Player.Rectangle.X, Game1.Player.Rectangle.Y));
+            player.TakeDamage(1, dir);
         }
 
         /// <summary>
