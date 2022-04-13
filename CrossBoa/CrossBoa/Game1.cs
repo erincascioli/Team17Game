@@ -105,9 +105,6 @@ namespace CrossBoa
         private Button debugButton;
         private Button gameOverButton;
 
-        // Sound Effects
-        public static SoundEffect hitWall;
-
         private List<GameObject> gameObjectList;
 
         private GameState gameState;
@@ -231,7 +228,6 @@ namespace CrossBoa
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
 
-            hitWall = Content.Load<SoundEffect>("Hit_hurt 34");
 
             for (int i = 0; i < 5; i++)
             {
@@ -327,7 +323,7 @@ namespace CrossBoa
 
             SpawnManager.GameObjectList = gameObjectList;
             LevelManager.LContent = Content;
-            
+
 
             OnResize();
         }

@@ -123,7 +123,7 @@ namespace CrossBoa.Managers
                         playerArrow.Hitbox.Intersects(tile.Rectangle))
                     {
                         // Sound of an arrow hitting a wall
-                        Game1.hitWall.CreateInstance().Play();
+                        SoundManager.hitWall.Play();
                         playerArrow.HitSomething();
                     }
                 }

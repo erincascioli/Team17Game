@@ -1,5 +1,6 @@
 ﻿using System;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -78,6 +79,8 @@ namespace CrossBoa.Enemies
             if (targetY < position.Y)
                 direction *= -1;
             ApplyForce(direction, MovementForce);
+
+            SoundManager.slimeHop.Play(.1f, 0, 0);
 
             // Calculate time until next move
             totalTimeBeforeNextJump = TimeUntilNextJump();
