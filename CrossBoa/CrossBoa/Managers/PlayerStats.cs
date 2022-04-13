@@ -10,7 +10,7 @@ namespace CrossBoa.Managers
     public static class PlayerStats
     {
         private static float playerInvulnerabilityTime = 3f;
-        private static float arrowVelocity = 360f;
+        private static float arrowVelocity = 400f;
         private static float arrowDespawnTime = 20f;
 
         /// <summary>

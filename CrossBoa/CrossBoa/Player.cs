@@ -29,6 +29,8 @@ namespace CrossBoa
         private int currentHealth;
         private float timeUntilDodge;
         private float timeLeftInvincible;
+        private float knockbackTime;
+        private float kbDirection;
         private bool canMove;
         private bool flashFrames;
         private bool inDodge;
@@ -107,7 +109,7 @@ namespace CrossBoa
 
         /// <summary>
         /// Get: returns whether or not the player is still in a dodge.<para></para>
-        /// Set: Enables inDodge to be set to false, ending the dodge early. and 
+        /// Set: Enables inDodge to be set to false, ending the dodge early and 
         /// resetting the dodge cooldown timer. InDodge cannot be set to true.
         /// </summary>
         public bool InDodge
@@ -128,6 +130,13 @@ namespace CrossBoa
             }
         }
 
+        public bool InKnockback
+        {
+            get
+            {
+                return knockbackTime < 0.25;
+            }
+        }
         /// <summary>
         /// Constructs a Player object
         /// </summary>
@@ -152,6 +161,8 @@ namespace CrossBoa
             dodgeSpeedBoost = dodgeSpeed;
             this.canMove = true;
             color = Color.White;
+            knockbackTime = 1;
+            kbDirection = 0;
         }
 
         /// <summary>
@@ -184,7 +195,7 @@ namespace CrossBoa
             CheckMovementInput(kbState);
 
             // Apply the player's movement
-            if (canMove)
+            if (canMove && !InKnockback)
             {
                 ApplyForce(movementVector * movementForce);
 
@@ -197,6 +208,11 @@ namespace CrossBoa
             {
                 dodgeInvulnerabilityTime -= totalSeconds;
                 ApplyForce(dodgeVector * movementForce * 2);
+            }
+            else if (InKnockback)
+            {
+                knockbackTime += totalSeconds;
+                ApplyForce(kbDirection, 50000 * (1 - 4 * knockbackTime));
             }
 
             // ~ Dodging code ~
@@ -223,12 +239,15 @@ namespace CrossBoa
         /// Checks if the player is invincible and deals damage
         /// </summary>
         /// <param name="amount"></param>
-        public void TakeDamage(int amount)
+        public void TakeDamage(int amount, float direction)
         {
             if (!IsInvincible)
             {
                 currentHealth -= amount;
                 timeLeftInvincible = PlayerStats.PlayerInvulnerabilityTime;
+                knockbackTime = 0;
+                velocity = Vector2.Zero;
+                kbDirection = direction;
             }
         }
 
@@ -302,8 +321,6 @@ namespace CrossBoa
         /// called from Update(), the dodge timer is set to 0 in addition to the
         /// normal functions.
         /// </summary>
-        /// <param name="fromUpdate">Whether or not this method was called from
-        /// Update(). </param>
         public void EndDodge()
         {
             canMove = true;
@@ -317,6 +334,8 @@ namespace CrossBoa
             currentHealth = maxHealth;
             position = new Vector2(startingPos.X, startingPos.Y);
             timeLeftInvincible = 0;
+            canMove = true;
+            knockbackTime = 1;
         }
     }
 

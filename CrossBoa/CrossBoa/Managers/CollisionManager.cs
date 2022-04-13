@@ -54,7 +54,7 @@ namespace CrossBoa.Managers
                     if (!isInvincibilityActive)
                     {
                         i.HitSomething();
-                        Game1.Player.TakeDamage(1);
+                        Game1.Player.TakeDamage(1, i.Direction);
                     }
                 }
                 else
