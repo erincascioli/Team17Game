@@ -35,6 +35,7 @@ namespace CrossBoa.Managers
         // Requires a reference
         public static Microsoft.Xna.Framework.Content.ContentManager LContent
         {
+            get { return Content;}
             set { Content = value; }
         }
 

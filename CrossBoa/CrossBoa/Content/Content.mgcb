@@ -377,6 +377,12 @@
 /processorParam:TextureFormat=Color
 /build:Hitbox.png
 
+#begin Jump 77.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Jump 77.wav
+
 #begin LifePot.png
 /importer:TextureImporter
 /processor:TextureProcessor
