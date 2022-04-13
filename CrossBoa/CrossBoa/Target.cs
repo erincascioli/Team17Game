@@ -29,7 +29,7 @@ namespace CrossBoa
         /// <param name="player">The player to not deal damage to.</param>
         public override void DealContactDamage(Player player)
         {
-            player.TakeDamage(0);
+            player.TakeDamage(0, 0);
         }
 
         /// <summary>
