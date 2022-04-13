@@ -99,11 +99,15 @@ namespace CrossBoa
         private TextElement testText;
         private TextElement FPSCounter;
 
+        private TextElement upgradeName;
+        private TextElement upgradeDescription;
+
         // Buttons
         private Button playButton;
         private Button pauseButton;
         private Button debugButton;
         private Button gameOverButton;
+        private Button[] upgradeButtons;
 
         private List<GameObject> gameObjectList;
 
@@ -183,6 +187,7 @@ namespace CrossBoa
             UIElementsList = new List<UIElement>(20);
             playerArrowList = new List<PlayerArrow>();
             collectibles = new List<Collectible>(100);
+            upgradeButtons = new Button[3];
 
             // --- Prepare game rendering ---
             _graphics.PreferredBackBufferWidth = 1600;
@@ -305,6 +310,14 @@ namespace CrossBoa
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
                 ScreenAnchor.Center, new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
+            // Upgrade Buttons
+            upgradeButtons[0] =
+                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(-30, -40), new Point(16));
+            upgradeButtons[1] =
+                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(0, -40), new Point(16));
+            upgradeButtons[2] =
+                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(30, -40), new Point(16));
+
             // Create player health bar
             for (int i = 0; i < DefaultPlayerHealth; i++)
             {
@@ -370,6 +383,11 @@ namespace CrossBoa
 
                     break;
 
+                // Upgrading
+                case GameState.Upgrading:
+                    UpdateUpgradeScreen();
+                    break;
+
                 // Settings - NOT YET IMPLEMENTED
                 case GameState.Settings:
 
@@ -427,6 +445,11 @@ namespace CrossBoa
                     DrawGame();
                     DrawGameUI();
 
+                    break;
+
+                // Upgrading screen
+                case GameState.Upgrading:
+                    DrawUpgradeUI();
                     break;
 
                 // Pause Menu
@@ -866,6 +889,33 @@ namespace CrossBoa
             _spriteBatch.End();
         }
 
+        // Choosing Upgrade
+        private void UpdateUpgradeScreen()
+        {
+
+        }
+
+        private void DrawUpgradeUI()
+        {
+            _spriteBatch.Begin();
+
+            // Draw dark overlay over the game
+            _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(windowWidth, windowHeight)), new Color(Color.Black, 160));
+
+            
+
+            // Draw buttons
+            foreach (Button button in upgradeButtons)
+            {
+
+                button.Draw(_spriteBatch);
+            }
+            
+
+            
+            _spriteBatch.End();
+        }
+
         private void UpdatePauseMenu(GameTime gameTime)
         {
             playButton.Update(gameTime);
@@ -1116,6 +1166,7 @@ namespace CrossBoa
     {
         MainMenu,
         Game,
+        Upgrading,
         Settings,
         Credits,
         Pause,

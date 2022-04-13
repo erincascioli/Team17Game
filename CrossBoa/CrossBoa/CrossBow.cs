@@ -111,7 +111,7 @@ namespace CrossBoa
 
         /// <summary>
         /// Returns the direction that the crossbow is facing.
-        /// Get-only property.wwww
+        /// Get-only property.
         /// </summary>
         public float Direction
         {
@@ -120,8 +120,8 @@ namespace CrossBoa
                 if (!float.IsNaN(direction))
                     return direction;
                 else
-                    throw new DivideByZeroException("Crossbow angle returned NaN:\nHoriz. difference: " +
-                        (position.X - Game1.MousePositionInGame().X) +
+                    throw new DivideByZeroException("Crossbow angle returned NaN:" +
+                        "\nHoriz. difference: " + (position.X - Game1.MousePositionInGame().X) +
                         "\nVert difference: " + (position.Y - Game1.MousePositionInGame().Y));
             }
         }

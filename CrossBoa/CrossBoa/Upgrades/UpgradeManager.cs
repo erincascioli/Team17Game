@@ -33,6 +33,43 @@ namespace CrossBoa.Upgrades
         };
 
         /// <summary>
+        /// Chooses 3 random upgrades to display to the player
+        /// </summary>
+        public static Upgrade[] SwitchToUpgradeState()
+        {
+            // Put all the locked upgrade names into a list
+            List<string> lockedUpgradeNames = new List<string>(lockedUpgrades.Count);
+            lockedUpgradeNames.AddRange(lockedUpgrades.Keys);
+
+            // Generate 3 random indexes
+            int[] randomNumbers = new[]
+            {
+                Game1.RNG.Next(0, lockedUpgradeNames.Count),
+                Game1.RNG.Next(0, lockedUpgradeNames.Count),
+                Game1.RNG.Next(0, lockedUpgradeNames.Count)
+            };
+
+            // Loop through the last 2 indexes and make sure they aren't the same
+            for (int i = 1; i < randomNumbers.Length; i++)
+            {
+                while (randomNumbers[i-1] == randomNumbers[i])
+                {
+                    randomNumbers[i] = Game1.RNG.Next(0, lockedUpgradeNames.Count);
+                }
+            }
+
+            // Make the output array, and return it
+            Upgrade[] output = new[]
+            {
+                lockedUpgrades[lockedUpgradeNames[randomNumbers[0]]],
+                lockedUpgrades[lockedUpgradeNames[randomNumbers[1]]],
+                lockedUpgrades[lockedUpgradeNames[randomNumbers[2]]]
+            };
+
+            return output;
+        }
+
+        /// <summary>
         /// Unlocks the specified upgrade
         /// </summary>
         /// <param name="upgradeName">The upgrade to unlock</param>
