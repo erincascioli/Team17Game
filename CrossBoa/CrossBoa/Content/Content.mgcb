@@ -359,6 +359,12 @@
 /processorParam:TextureFormat=Color
 /build:GrassTest.PNG
 
+#begin Hit_hurt 34.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 34.wav
+
 #begin Hitbox.png
 /importer:TextureImporter
 /processor:TextureProcessor
