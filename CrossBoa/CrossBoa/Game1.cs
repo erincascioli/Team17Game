@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using Microsoft.Xna.Framework.Media;
 
 namespace CrossBoa
 {
@@ -337,6 +338,10 @@ namespace CrossBoa
             SpawnManager.GameObjectList = gameObjectList;
             LevelManager.LContent = Content;
 
+            // Title Track starts playing
+            MediaPlayer.Play(SoundManager.titleTheme);
+            MediaPlayer.IsRepeating = true;
+
 
             OnResize();
         }
@@ -358,7 +363,6 @@ namespace CrossBoa
             {
                 // Main Menu
                 case GameState.MainMenu:
-
                     // Update
                     UpdateMainMenu(gameTime);
 
@@ -367,6 +371,9 @@ namespace CrossBoa
                     {
                         LoadDefaultLevel();
                         gameState = GameState.Game;
+
+                        // Stops current song
+                        MediaPlayer.Stop();
                     }
 
                     break;
@@ -946,6 +953,10 @@ namespace CrossBoa
                 {
                     i.Sprite = fullHeart;
                 }
+
+                // Title Track starts playing
+                MediaPlayer.Play(SoundManager.titleTheme);
+                MediaPlayer.IsRepeating = true;
             }
         }
 
