@@ -22,6 +22,22 @@ namespace CrossBoa.Managers
         public static SoundEffect slimeHop;
         public static Song titleTheme;
 
+        // Will allow menu to control master volume
+        // All individual soundeffects also have their own volume when 
+        // played, which master volume should scale too
+        public static float SFXVolume
+        {
+            get { return SoundEffect.MasterVolume; }
+            set { SoundEffect.MasterVolume = value; }
+        }
+
+        // Will allow menu to control music volume
+        public static float MusicVolume
+        {
+            get { return MediaPlayer.Volume; }
+            set { MediaPlayer.Volume = value; }
+        }
+
         static SoundManager()
         {
             // Gives the ability to read in files
