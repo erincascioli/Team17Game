@@ -140,6 +140,12 @@
 /processorParam:TextureFormat=Color
 /build:Block.png
 
+#begin Canopy Cacophony.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Canopy Cacophony.wav
+
 #begin CornerWall.png
 /importer:TextureImporter
 /processor:TextureProcessor

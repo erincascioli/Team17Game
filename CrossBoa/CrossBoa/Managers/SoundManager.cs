@@ -6,6 +6,7 @@ using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Media;
 
 namespace CrossBoa.Managers
 {
@@ -19,11 +20,15 @@ namespace CrossBoa.Managers
         // Sound Effects
         public static SoundEffect hitWall;
         public static SoundEffect slimeHop;
+        public static Song titleTheme;
 
         static SoundManager()
         {
             // Gives the ability to read in files
             Microsoft.Xna.Framework.Content.ContentManager Content = LevelManager.LContent;
+
+            titleTheme = Content.Load<Song>("Canopy Cacophony");
+
             StreamReader fileReader = new StreamReader("../../../SoundEffects.txt");
 
             // Sound Effects will be gotten one by one
