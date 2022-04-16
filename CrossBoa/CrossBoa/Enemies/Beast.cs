@@ -108,7 +108,7 @@ namespace CrossBoa.Enemies
             color = Color.White;
             isAlive = true;
             target = Game1.Player;
-            maxSpeed = 400f;
+            maxSpeed = 450f;
             knockbackTimer = 0.25f;
             provokeRadius = 250f;
             chargeTimer = 0;
