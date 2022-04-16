@@ -67,7 +67,7 @@ namespace CrossBoa.Managers
                 Game1.skeletonSprite,
                 Game1.slimeDeathSpritesheet,
                 3,
-                new Rectangle(position, new Point(64, 64)));
+                new Rectangle(position, new Point(58, 58)));
             CollisionManager.AddEnemy(newBeast);
             gameObjectList.Add(newBeast);
         }
