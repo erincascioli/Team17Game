@@ -80,6 +80,13 @@ namespace CrossBoa.Managers
                 if (!isInvincibilityActive && Game1.Player.Hitbox.Intersects(enemy.Rectangle))
                 {
                     enemy.DealContactDamage(Game1.Player);
+                    // If the enemy is a Beast, have it get knocked back
+                    if (enemy is Beast && ((Beast)enemy).InCharge)
+                    {
+                        enemy.GetKnockedBack(Game1.Player, 500);
+                        ((Beast)enemy).HasCollided = true;
+                        Camera.ShakeScreen(10);
+                    }
                 }
 
                 // with player arrow
@@ -139,7 +146,19 @@ namespace CrossBoa.Managers
                     if (enemy.Hitbox.Intersects(tile.Rectangle))
                     {
                         EntityEnvironmentCollide<Enemy>(enemy, tile);
+
+                        // If the enemy is a Beast, have it get knocked back
+                        if (enemy is Beast && ((Beast)enemy).InCharge)
+                        {
+                            // I am so good at coding
+                            // -Leo
+                            enemy.GetKnockedBack(new Arrow(null, tile.Rectangle, 0, 0),
+                                500);
+                            ((Beast)enemy).HasCollided = true;
+                            Camera.ShakeScreen(10);
+                        }
                     }
+                    
                 }
 
                 // Collectibles with tiles
