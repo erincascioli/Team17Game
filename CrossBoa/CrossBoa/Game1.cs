@@ -100,9 +100,6 @@ namespace CrossBoa
         private TextElement testText;
         private TextElement FPSCounter;
 
-        private TextElement upgradeName;
-        private TextElement upgradeDescription;
-
         // Buttons
         private Button playButton;
         private Button pauseButton;
@@ -110,8 +107,13 @@ namespace CrossBoa
         private Button gameOverButton;
         private Button[] upgradeButtons;
 
-        private List<GameObject> gameObjectList;
+        // Stuff for Upgrade State
+        private TextElement upgradeName;
+        private TextElement upgradeDescription;
 
+
+        // GameState Stuff
+        private List<GameObject> gameObjectList;
         private GameState gameState;
 
         #region Static properties
@@ -278,8 +280,9 @@ namespace CrossBoa
             settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
             settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
 
-            testText = new TextElement("A quick brown fox jumps over the lazy dog",
-                ScreenAnchor.Center, new Point(0, 75));
+            testText = new TextElement("A\nquick\nbrown\nfox\njumps\nover\nthe\nlazy\ndog",
+                ScreenAnchor.Center, new Point(0, 0));
+
             FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(-10, -6));
 
             // Load menu background layers
@@ -311,13 +314,16 @@ namespace CrossBoa
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
                 ScreenAnchor.Center, new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
-            // Upgrade Buttons
+            // Upgrade Stuff
             upgradeButtons[0] =
-                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(-30, -40), new Point(16));
+                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(-30, 40), new Point(16));
             upgradeButtons[1] =
-                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(0, -40), new Point(16));
+                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(0, 40), new Point(16));
             upgradeButtons[2] =
-                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(30, -40), new Point(16));
+                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(30, 40), new Point(16));
+
+            upgradeName = new TextElement("", ScreenAnchor.Center, new Point(0, -30), 1.5f);
+            upgradeDescription = new TextElement("", ScreenAnchor.Center, new Point(-10));
 
             // Create player health bar
             for (int i = 0; i < DefaultPlayerHealth; i++)
@@ -384,15 +390,22 @@ namespace CrossBoa
                     // Update
                     UpdateGame(gameTime);
 
-                    // Check state changes
+                    // --- Check state changes ---
+                    // Game Over
                     if (player.CurrentHealth <= 0)
                         GameOver();
+
+                    // Pause
+                    pauseButton.Update(gameTime);
+                    if (pauseButton.HasBeenPressed() ||
+                        WasKeyPressed(Keys.Escape))
+                        gameState = GameState.Pause;
 
                     break;
 
                 // Upgrading
                 case GameState.Upgrading:
-                    UpdateUpgradeScreen();
+                    UpdateUpgradeScreen(gameTime);
                     break;
 
                 // Settings - NOT YET IMPLEMENTED
@@ -560,6 +573,7 @@ namespace CrossBoa
             crosshair.Draw(_spriteBatch);
 
             // TEST TEXT
+            _spriteBatch.Draw(whiteSquareSprite, testText.Rectangle, Color.Tan);
             testText.Draw(_spriteBatch);
 
             _spriteBatch.End();
@@ -651,12 +665,6 @@ namespace CrossBoa
             // Update crossbow (Fixes crossbow moving off of player)
             crossbow.Update(gameTime);
 
-            // Pause if player presses pause key or escape
-            pauseButton.Update(gameTime);
-            if (pauseButton.HasBeenPressed() ||
-                WasKeyPressed(Keys.Escape))
-                gameState = GameState.Pause;
-
             // ---- DEBUG UPDATE ----
             if (isDebugActive)
             {
@@ -695,12 +703,19 @@ namespace CrossBoa
                     }
                 }
 
-                // TEST CODE TO UNLOCK UPGRADES
+                // TEST CODE TO SWITCH TO UPGRADE STATE
+                if (WasKeyPressed(Keys.M))
+                {
+                    gameState = GameState.Upgrading;
+                    
+                }
 
+                    // TEST CODE TO UNLOCK UPGRADES
+                /*
                 if (WasKeyPressed(Keys.M))
                     UpgradeManager.UnlockUpgrade("Multishot");
                 if (WasKeyPressed(Keys.V))
-                    UpgradeManager.UnlockUpgrade("Vampirism");
+                    UpgradeManager.UnlockUpgrade("Vampirism");*/
 
                 isGodModeActive = true;
             }
@@ -896,33 +911,6 @@ namespace CrossBoa
             _spriteBatch.End();
         }
 
-        // Choosing Upgrade
-        private void UpdateUpgradeScreen()
-        {
-
-        }
-
-        private void DrawUpgradeUI()
-        {
-            _spriteBatch.Begin();
-
-            // Draw dark overlay over the game
-            _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(windowWidth, windowHeight)), new Color(Color.Black, 160));
-
-            
-
-            // Draw buttons
-            foreach (Button button in upgradeButtons)
-            {
-
-                button.Draw(_spriteBatch);
-            }
-            
-
-            
-            _spriteBatch.End();
-        }
-
         private void UpdatePauseMenu(GameTime gameTime)
         {
             playButton.Update(gameTime);
@@ -936,6 +924,31 @@ namespace CrossBoa
             // Enables debug if player presses debug button
             if (debugButton.HasBeenPressed())
                 isDebugActive = !isDebugActive;
+        }
+
+        // Choosing Upgrade
+        private void UpdateUpgradeScreen(GameTime gameTime)
+        {
+            foreach (Button button in upgradeButtons)
+            {
+                button.Update(gameTime);
+            }
+        }
+
+        private void DrawUpgradeUI()
+        {
+            _spriteBatch.Begin();
+
+            // Draw dark overlay over the game
+            _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(windowWidth, windowHeight)), new Color(Color.Black, 160));
+
+            // Draw buttons
+            foreach (Button button in upgradeButtons)
+            {
+                button.Draw(_spriteBatch);
+            }
+
+            _spriteBatch.End();
         }
 
         // Game Over

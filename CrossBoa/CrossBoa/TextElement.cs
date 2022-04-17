@@ -16,6 +16,10 @@ namespace CrossBoa
         private SpriteFont font;
         private float scale;
 
+        private int lineHeight;
+        private string[] lines;
+        private Rectangle[] lineRects;
+
         /// <summary>
         /// The text that this TextElement displays
         /// <para>DO NOT CHANGE EVERY FRAME</para>
@@ -25,8 +29,17 @@ namespace CrossBoa
             get { return text; }
             set
             {
+                // The value of the text
                 text = value;
+
+                // Measure the entire string
                 size = font.MeasureString(text).ToPoint();
+
+                // Update the rectangle
+                rectangle = Helper.MakeRectangleFromCenter(position.ToPoint(), size * new Point(Game1.UIScale));
+
+                SplitText();
+
                 OnResize();
             }
         }
@@ -78,8 +91,10 @@ namespace CrossBoa
             this.text = text;
             this.font = font;
             this.scale = scale;
+            this.size = (font.MeasureString(text) * scale).ToPoint();
+            this.rectangle = Helper.MakeRectangleFromCenter(offset, size * new Point(Game1.UIScale));
 
-            size = font.MeasureString(text).ToPoint();
+            SplitText();
         }
 
         /// <summary>
@@ -88,15 +103,38 @@ namespace CrossBoa
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font,
-                    text,
-                    rectangle.Location.ToVector2(),
+            for (int i = 0; i < lines.Length; i++)
+            {
+                spriteBatch.DrawString(font,
+                    lines[i],
+                    lineRects[i].Location.ToVector2(),
                     color,
                     0f,
                     Vector2.Zero,
                     scale * Game1.UIScale,
                     SpriteEffects.None,
                     1f);
+            }
+        }
+
+        /// <summary>
+        /// Splits the text up into lines
+        /// </summary>
+        public void SplitText()
+        {
+            // Split the text up into multiple lines
+            lines = text.Split('\n');
+
+            // Set a centered rectangle for each line
+            lineRects = new Rectangle[lines.Length];
+            for (int i = 0; i < lines.Length; i++)
+            {
+                Vector2 lineSize = font.MeasureString(lines[i]) * Game1.UIScale * scale;
+
+                lineRects[i] = Helper.MakeRectangleFromCenter(
+                    new Vector2(rectangle.Center.X, rectangle.Center.Y - (rectangle.Height / 2f) + (lineSize.Y * i)).ToPoint(),
+                    (lineSize * new Vector2(Game1.UIScale * scale)).ToPoint());
+            }
         }
 
         /// <summary>Returns the text that this element contains.</summary>

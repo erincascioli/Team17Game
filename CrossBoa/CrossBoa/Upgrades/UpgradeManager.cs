@@ -29,20 +29,25 @@ namespace CrossBoa.Upgrades
         private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>()
         {
             {"Multishot", new Upgrade("Multishot", "Fires two additional arrows", Multishot, UpgradeType.OnShot, Game1.whiteSquareSprite)},
-            {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)}
+            {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
+            {"Placeholder1", new Upgrade("Placeholder1", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
+            {"Placeholder2", new Upgrade("Placeholder2", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
+            {"Placeholder3", new Upgrade("Placeholder3", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
+            {"Placeholder4", new Upgrade("Placeholder4", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
+            {"Placeholder5", new Upgrade("Placeholder5", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
         };
 
         /// <summary>
         /// Chooses 3 random upgrades to display to the player
         /// </summary>
-        public static Upgrade[] SwitchToUpgradeState()
+        public static Upgrade[] GenerateUpgradeChoices()
         {
             // Put all the locked upgrade names into a list
             List<string> lockedUpgradeNames = new List<string>(lockedUpgrades.Count);
             lockedUpgradeNames.AddRange(lockedUpgrades.Keys);
 
             // Generate 3 random indexes
-            int[] randomNumbers = new[]
+            int[] randomNumbers = 
             {
                 Game1.RNG.Next(0, lockedUpgradeNames.Count),
                 Game1.RNG.Next(0, lockedUpgradeNames.Count),
