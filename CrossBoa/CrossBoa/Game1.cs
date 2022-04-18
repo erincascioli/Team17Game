@@ -111,7 +111,6 @@ namespace CrossBoa
         private TextElement upgradeName;
         private TextElement upgradeDescription;
 
-
         // GameState Stuff
         private List<GameObject> gameObjectList;
         private GameState gameState;
@@ -196,6 +195,8 @@ namespace CrossBoa
             _graphics.PreferredBackBufferWidth = 1600;
             _graphics.PreferredBackBufferHeight = 900;
             _graphics.ApplyChanges();
+
+            UIScale = 4;
 
             // Create a render target that can be much more easily rescaled
             gameRenderTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);

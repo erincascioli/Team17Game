@@ -98,14 +98,13 @@ namespace CrossBoa
 
             windowCenter = Game1.windowRect.Center;
 
-            OnResize();
             Game1.UIElementsList.Add(this);
         }
 
         /// <summary>
         /// Moves and resizes this UI Element when the game window size changes based on the UIScale and Anchor
         /// </summary>
-        public void OnResize()
+        public virtual void OnResize()
         {
             windowCenter = Game1.windowRect.Center;
 
