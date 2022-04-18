@@ -38,8 +38,6 @@ namespace CrossBoa
                 // Update the rectangle
                 rectangle = Helper.MakeRectangleFromCenter(position.ToPoint(), size * new Point(Game1.UIScale));
 
-                SplitText();
-
                 OnResize();
             }
         }
@@ -88,13 +86,9 @@ namespace CrossBoa
             // Sets default font
             font ??= Game1.PressStart;
 
-            this.text = text;
-            this.font = font;
             this.scale = scale;
-            this.size = (font.MeasureString(text) * scale).ToPoint();
-            this.rectangle = Helper.MakeRectangleFromCenter(offset, size * new Point(Game1.UIScale));
-
-            SplitText();
+            this.font = font;
+            this.Text = text;
         }
 
         /// <summary>
@@ -115,6 +109,18 @@ namespace CrossBoa
                     SpriteEffects.None,
                     1f);
             }
+
+            // Draw call for uncentered text
+            //
+            // spriteBatch.DrawString(font,
+            //     text,
+            //     rectangle.Location.ToVector2(),
+            //     color,
+            //     0f,
+            //     Vector2.Zero,
+            //     scale * Game1.UIScale,
+            //     SpriteEffects.None,
+            //     1f);
         }
 
         /// <summary>
@@ -132,9 +138,19 @@ namespace CrossBoa
                 Vector2 lineSize = font.MeasureString(lines[i]) * Game1.UIScale * scale;
 
                 lineRects[i] = Helper.MakeRectangleFromCenter(
-                    new Vector2(rectangle.Center.X, rectangle.Center.Y - (rectangle.Height / 2f) + (lineSize.Y * i)).ToPoint(),
-                    (lineSize * new Vector2(Game1.UIScale * scale)).ToPoint());
+                    new Vector2(rectangle.Center.X,
+                        rectangle.Center.Y - (rectangle.Height / 2f) + (lineSize.Y * i) + (lineSize.Y / 2)).ToPoint(),
+                    lineSize.ToPoint());
             }
+        }
+
+        /// <summary>
+        /// Moves and resizes this UI Element when the game window size changes based on the UIScale and Anchor
+        /// </summary>
+        public override void OnResize()
+        {
+            base.OnResize();
+            SplitText();
         }
 
         /// <summary>Returns the text that this element contains.</summary>
