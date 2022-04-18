@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CrossBoa.Enemies;
 using Microsoft.Xna.Framework;
 
@@ -46,29 +47,22 @@ namespace CrossBoa.Upgrades
             List<string> lockedUpgradeNames = new List<string>(lockedUpgrades.Count);
             lockedUpgradeNames.AddRange(lockedUpgrades.Keys);
 
-            // Generate 3 random indexes
-            int[] randomNumbers = 
+            // Shuffle the locked upgrade names list
+            for (int i = lockedUpgradeNames.Count - 1; i >= 1; i--)
             {
-                Game1.RNG.Next(0, lockedUpgradeNames.Count),
-                Game1.RNG.Next(0, lockedUpgradeNames.Count),
-                Game1.RNG.Next(0, lockedUpgradeNames.Count)
-            };
+                // Generate a random number
+                int j = Game1.RNG.Next(0, i + 1);
 
-            // Loop through the last 2 indexes and make sure they aren't the same
-            for (int i = 1; i < randomNumbers.Length; i++)
-            {
-                while (randomNumbers[i-1] == randomNumbers[i])
-                {
-                    randomNumbers[i] = Game1.RNG.Next(0, lockedUpgradeNames.Count);
-                }
+                // Swap this element with the random chosen element
+                (lockedUpgradeNames[i], lockedUpgradeNames[j]) = (lockedUpgradeNames[j], lockedUpgradeNames[i]);
             }
 
             // Make the output array, and return it
             Upgrade[] output = new[]
             {
-                lockedUpgrades[lockedUpgradeNames[randomNumbers[0]]],
-                lockedUpgrades[lockedUpgradeNames[randomNumbers[1]]],
-                lockedUpgrades[lockedUpgradeNames[randomNumbers[2]]]
+                lockedUpgrades[lockedUpgradeNames[0]],
+                lockedUpgrades[lockedUpgradeNames[1]],
+                lockedUpgrades[lockedUpgradeNames[2]]
             };
 
             return output;
