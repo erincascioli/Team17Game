@@ -242,7 +242,14 @@ namespace CrossBoa.Managers
 
             foreach (Arrow i in enemyProjectiles)
             {
-                sb.Draw(arrowPoint, new Rectangle(i.Hitbox.X - 2, i.Hitbox.Y - 2, 5, 5), Color.Red);
+                if (i is PlayerArrow)
+                {
+                    sb.Draw(arrowPoint, new Rectangle(i.Hitbox.X - 2, i.Hitbox.Y - 2, 5, 5), Color.Red);
+                }
+                else
+                {
+                    sb.Draw(hitBox, i.Hitbox, Color.Red);
+                }
             }
 
             foreach (Enemy enemy in enemies)
