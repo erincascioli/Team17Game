@@ -30,7 +30,6 @@ namespace CrossBoa
         private bool isInteractable;
         private bool hovering;
         private Texture2D hoverButtonTexture;
-        private Texture2D offButtonTexture;
 
         public bool IsInteractable
         {
@@ -52,7 +51,7 @@ namespace CrossBoa
         {
             this.isInteractable = isInteractable;
             hoverButtonTexture = hoverImage;
-            offButtonTexture = offImage;
+            sprite = offImage;
         }
 
         /// <summary>
@@ -106,11 +105,24 @@ namespace CrossBoa
         {
             if (hovering)
             {
-                spriteBatch.Draw(hoverButtonTexture, Rectangle, Color.White);
+                // If there is no texture assigned, draw the regular sprite larger
+                if (hoverButtonTexture == null)
+                {
+                    spriteBatch.Draw(sprite, 
+                        Helper.MakeRectangleFromCenter(Rectangle.Center,
+                        new Vector2(rectangle.Size.X * 1.1f, rectangle.Size.Y * 1.1f).ToPoint()),
+                        Color.White);
+                }
+                else
+                {
+                    // Draw the hover sprite
+                    spriteBatch.Draw(hoverButtonTexture, Rectangle, Color.White);
+                }
             }
             else
             {
-                spriteBatch.Draw(offButtonTexture, Rectangle, Color.White);
+                // Draw the regular sprite
+                spriteBatch.Draw(sprite, Rectangle, Color.White);
             }
         }
 

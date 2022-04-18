@@ -108,8 +108,12 @@ namespace CrossBoa
         private Button[] upgradeButtons;
 
         // Stuff for Upgrade State
+        private TextElement levelUpText;
+        private TextElement selectAnUpgradeText;
         private TextElement upgradeName;
         private TextElement upgradeDescription;
+        private Upgrade[] upgradeChoices;
+        private int prevUpgradeButtonHovered;
 
         // GameState Stuff
         private List<GameObject> gameObjectList;
@@ -315,16 +319,19 @@ namespace CrossBoa
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
                 ScreenAnchor.Center, new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
-            // Upgrade Stuff
-            upgradeButtons[0] =
-                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(-30, 40), new Point(16));
-            upgradeButtons[1] =
-                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(0, 40), new Point(16));
-            upgradeButtons[2] =
-                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(30, 40), new Point(16));
+            // Upgrade UI Stuff
+            levelUpText = new TextElement("LEVEL UP!", ScreenAnchor.Center, new Point(0, -80), 2f);
+            selectAnUpgradeText = new TextElement("Select an upgrade", ScreenAnchor.Center, new Point(0, -63), 1.5f);
 
-            upgradeName = new TextElement("", ScreenAnchor.Center, new Point(0, -30), 1.5f);
-            upgradeDescription = new TextElement("", ScreenAnchor.Center, new Point(-10));
+            upgradeName = new TextElement("", ScreenAnchor.Center, new Point(0, 60), 1.5f);
+            upgradeDescription = new TextElement("", ScreenAnchor.Center, new Point(0, 80));
+
+            upgradeButtons[0] =
+                new Button(null, null, true, ScreenAnchor.Center, new Point(-65, 0), new Point(32));
+            upgradeButtons[1] =
+                new Button(null, null, true, ScreenAnchor.Center, new Point(0, 0), new Point(32));
+            upgradeButtons[2] =
+                new Button(null, null, true, ScreenAnchor.Center, new Point(65, 0), new Point(32));
 
             // Create player health bar
             for (int i = 0; i < DefaultPlayerHealth; i++)
@@ -391,6 +398,14 @@ namespace CrossBoa
                     UpdateGame(gameTime);
 
                     // --- Check state changes ---
+                    // Upgrade
+                    // TEMPORARY TEST CODE TO SWITCH TO UPGRADE STATE
+                    if (WasKeyPressed(Keys.M))
+                    {
+                        gameState = GameState.Upgrading;
+                        DisplayUpgradeChoices();
+                    }
+
                     // Game Over
                     if (player.CurrentHealth <= 0)
                         GameOver();
@@ -469,6 +484,7 @@ namespace CrossBoa
 
                 // Upgrading screen
                 case GameState.Upgrading:
+                    DrawGame();
                     DrawUpgradeUI();
                     break;
 
@@ -498,6 +514,11 @@ namespace CrossBoa
                     DrawGameOver();
                     break;
             }
+
+            // Draw the crosshair
+            _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
+            crosshair.Draw(_spriteBatch);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -617,8 +638,6 @@ namespace CrossBoa
                 Color.White);
 
             playButton.Draw(_spriteBatch);
-
-            crosshair.Draw(_spriteBatch);
 
             // Splash Text
             splashText.Draw(_spriteBatch);
@@ -750,14 +769,7 @@ namespace CrossBoa
                     }
                 }
 
-                // TEST CODE TO SWITCH TO UPGRADE STATE
-                if (WasKeyPressed(Keys.M))
-                {
-                    gameState = GameState.Upgrading;
-                    
-                }
-
-                    // TEST CODE TO UNLOCK UPGRADES
+                // TEST CODE TO UNLOCK UPGRADES
                 /*
                 if (WasKeyPressed(Keys.M))
                     UpgradeManager.UnlockUpgrade("Multishot");
@@ -924,8 +936,6 @@ namespace CrossBoa
                
             }
 
-            crosshair.Draw(_spriteBatch);
-
             _spriteBatch.End();
         }
 
@@ -953,8 +963,6 @@ namespace CrossBoa
                 new Vector2(windowWidth - 500, windowHeight - 80), isDebugActive ? Color.Red : Color.Green);
             debugButton.Draw(_spriteBatch);
 
-            crosshair.Draw(_spriteBatch);
-
             _spriteBatch.End();
         }
 
@@ -976,15 +984,30 @@ namespace CrossBoa
         // Choosing Upgrade
         private void UpdateUpgradeScreen(GameTime gameTime)
         {
-            foreach (Button button in upgradeButtons)
+            for (var i = 0; i < upgradeButtons.Length; i++)
             {
-                button.Update(gameTime);
+                upgradeButtons[i].Update(gameTime);
+                
+                // If the player hovers over a button, display that upgrade's text
+                if (upgradeButtons[i].IsMouseOver() && prevUpgradeButtonHovered != i)
+                {
+                    prevUpgradeButtonHovered = i;
+                    upgradeName.Text = upgradeChoices[i].Name;
+                    upgradeDescription.Text = upgradeChoices[i].Description;
+                }
+
+                // If the player clicks on an upgrade, unlock it
+                if (upgradeButtons[i].HasBeenPressed())
+                {
+                    UpgradeManager.UnlockUpgrade(upgradeChoices[i].Name);
+                    gameState = GameState.Game;
+                }
             }
         }
 
         private void DrawUpgradeUI()
         {
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
             // Draw dark overlay over the game
             _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(windowWidth, windowHeight)), new Color(Color.Black, 160));
@@ -994,6 +1017,13 @@ namespace CrossBoa
             {
                 button.Draw(_spriteBatch);
             }
+
+            // Draw upgrade text
+            levelUpText.Draw(_spriteBatch);
+            selectAnUpgradeText.Draw(_spriteBatch);
+
+            upgradeName.Draw(_spriteBatch);
+            upgradeDescription.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -1039,8 +1069,6 @@ namespace CrossBoa
 
             gameOverButton.Draw(_spriteBatch);
 
-            crosshair.Draw(_spriteBatch);
-
             _spriteBatch.End();
         }
 
@@ -1055,8 +1083,6 @@ namespace CrossBoa
             _spriteBatch.DrawString(arial32, "Credits",
                 new Vector2(windowWidth - 175,
                     windowHeight / 2f), Color.White);
-
-            crosshair.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -1120,6 +1146,19 @@ namespace CrossBoa
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Run this when the player should unlock an upgrade
+        /// </summary>
+        public void DisplayUpgradeChoices()
+        {
+            upgradeChoices = UpgradeManager.GenerateUpgradeChoices();
+
+            for (var i = 0; i < upgradeButtons.Length; i++)
+            {
+                upgradeButtons[i].Sprite = upgradeChoices[i].Sprite;
+            }
         }
 
         /// <summary>
