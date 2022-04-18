@@ -97,6 +97,8 @@ namespace CrossBoa
         public static List<PlayerArrow> playerArrowList;
         private static List<Collectible> collectibles;
 
+        // Main Menu Objects
+        RenderTarget2D menuBGTarget;
         private TextElement splashText;
         private TextElement FPSCounter;
 
@@ -205,6 +207,7 @@ namespace CrossBoa
             UIScale = 4;
 
             // Create a render target that can be much more easily rescaled
+            menuBGTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
             gameRenderTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
 
             // Save aspect ratio
@@ -295,7 +298,7 @@ namespace CrossBoa
             // Load menu background layers
             for (int i = 0; i < 10; i++)
             {
-                Point bgSize = new Point(800, 450);
+                Point bgSize = new Point(1600, 900);
 
                 menuBGLayers[i] = new Rectangle(new Point(
                     i % 2 == 0 ? 0 : -bgSize.X,   // Every other layer is placed 800 pixels to the left
@@ -547,28 +550,28 @@ namespace CrossBoa
             // Layer 1 is a blank image
 
             // Layer 2
-            if (frame % 5 == 0)
+            if (frame % 4 == 0)
             {
                 menuBGLayers[2].Location += new Point(1, 0);
                 menuBGLayers[3].Location += new Point(1, 0);
             }
 
             // Layer 3
-            if (frame % 4 == 0)
+            if (frame % 3 == 0)
             {
                 menuBGLayers[4].Location += new Point(1, 0);
                 menuBGLayers[5].Location += new Point(1, 0);
             }
 
             // Layer 4
-            if (frame % 3 == 0)
+            if (frame % 2 == 0)
             {
                 menuBGLayers[6].Location += new Point(1, 0);
                 menuBGLayers[7].Location += new Point(1, 0);
             }
 
             // Layer 5
-            if (frame % 2 == 0)
+            if (frame % 1 == 0)
             {
                 menuBGLayers[8].Location += new Point(1, 0);
                 menuBGLayers[9].Location += new Point(1, 0);
@@ -591,8 +594,6 @@ namespace CrossBoa
         {
             GraphicsDevice.Clear(new Color(174, 222, 203));
             
-            RenderTarget2D menuBGTarget = new RenderTarget2D(GraphicsDevice, 800, 450, true, default, DepthFormat.Depth16, default, RenderTargetUsage.PreserveContents);
-
             // Draw main menu background to a smaller target, then scale up to reduce lag
             GraphicsDevice.SetRenderTarget(menuBGTarget);
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearClamp);
