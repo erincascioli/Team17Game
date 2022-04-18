@@ -574,9 +574,17 @@ namespace CrossBoa
 
             // Draw main menu background to a smaller target, then scale up to reduce lag
             GraphicsDevice.SetRenderTarget(menuBGTarget);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearClamp);
+
+            for (int i = 0; i < 6; i++)
+            {
+                _spriteBatch.Draw(menuBGSpriteList[i / 2], menuBGLayers[i], Color.White);
+            }
+
+            _spriteBatch.End();
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
-            for (int i = 0; i < menuBGLayers.Length; i++)
+            for (int i = 6; i < 10; i++)
             {
                 _spriteBatch.Draw(menuBGSpriteList[i / 2], menuBGLayers[i], Color.White);
             }
