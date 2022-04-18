@@ -32,7 +32,7 @@ namespace CrossBoa
         /// </summary>
         public virtual Rectangle Hitbox
         {
-            get { return new Rectangle(position.ToPoint().X + (int)(Rectangle.Width * .25), position.ToPoint().Y + (int)(Rectangle.Height * .25), (int)(Rectangle.Width * .5), (int)(Rectangle.Height * .5)); }
+            get { return new Rectangle(position.ToPoint().X - (int)(Rectangle.Width * .25), position.ToPoint().Y - (int)(Rectangle.Height * .25), (int)(Rectangle.Width * .5), (int)(Rectangle.Height * .5)); }
         }
 
         public Arrow(Texture2D sprite, Rectangle rectangle, Vector2 velocity) : base(sprite, rectangle, null, 0)
@@ -78,11 +78,14 @@ namespace CrossBoa
         {
             if (isActive)
             {
+                //double radius = Math.Sqrt(Math.Pow(Rectangle.Width, 2) + Math.Pow(Rectangle.Height, 2));
+
                 spriteBatch.Draw(
                     sprite,
 
                     // Repositions arrow draw call so the tip is on the hitbox
-                    position,
+                    //new Vector2(Rectangle.X + (float)(Rectangle.Width * Math.Sin(direction)), Rectangle.Y + (float)(Rectangle.Height / 2 * Math.Sin(direction))),
+                    position - new Vector2(25),
                     null,
                     color,
                     0,
