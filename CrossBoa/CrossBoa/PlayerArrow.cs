@@ -170,6 +170,28 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Helps determine offset of the rotation
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            if (isActive)
+            {
+                spriteBatch.Draw(
+                    sprite,
+
+                    // Repositions arrow draw call so the tip is on the hitbox
+                    position - (Helper.GetNormalVector(direction) * size.X) + (Helper.GetNormalVector(direction - (MathF.PI * 0.5f)) * size.Y / 2),
+                    null,
+                    color,
+                    direction,
+                    new Vector2(1, 0.5f),
+                    new Vector2(size.X / (float)sprite.Width, size.Y / (float)sprite.Height),
+                    SpriteEffects.None,
+                    0.5f);
+            }
+        }
+        /// <summary>
         /// Run this whenever the arrow hits something
         /// </summary>
         public override void HitSomething()
