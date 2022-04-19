@@ -5,10 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CrossBoa
 {
-    public class Arrow : PhysicsObject, ICollidable
+    public class Projectile : PhysicsObject, ICollidable
     {
         protected float direction;
         protected bool isActive;
+
+        private SpriteEffects spriteFlip;
 
         /// <summary>
         /// The direction vector of the arrow
@@ -35,18 +37,20 @@ namespace CrossBoa
             get { return new Rectangle(position.ToPoint().X - (int)(Rectangle.Width * .25), position.ToPoint().Y - (int)(Rectangle.Height * .25), (int)(Rectangle.Width * .5), (int)(Rectangle.Height * .5)); }
         }
 
-        public Arrow(Texture2D sprite, Rectangle rectangle, Vector2 velocity) : base(sprite, rectangle, null, 0)
+        public Projectile(Texture2D sprite, Rectangle rectangle, Vector2 velocity) : base(sprite, rectangle, null, 0)
         {
             this.velocity = velocity;
             this.direction = MathF.Atan2(velocity.Y, velocity.X);
             this.isActive = true;
+            this.spriteFlip = SpriteEffects.None;
         }
 
-        public Arrow(Texture2D sprite, Rectangle rectangle, float direction, float magnitude) : base(sprite, rectangle, null, 0)
+        public Projectile(Texture2D sprite, Rectangle rectangle, float direction, float magnitude) : base(sprite, rectangle, null, 0)
         {
             this.direction = MathHelper.WrapAngle(direction);
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
             this.isActive = true;
+            this.spriteFlip = SpriteEffects.None;
         }
 
         /// <summary>
@@ -71,6 +75,20 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Updates this object's physics and friction
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            if (velocity.X < 0)
+                spriteFlip = SpriteEffects.FlipHorizontally;
+            else
+                spriteFlip = SpriteEffects.None;
+
+            base.Update(gameTime);
+        }
+
+        /// <summary>
         /// Draws this GameObject to the screen
         /// </summary>
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
@@ -91,7 +109,7 @@ namespace CrossBoa
                     0,
                     new Vector2(1, 0.5f),
                     new Vector2(size.X / (float)sprite.Width, size.Y / (float)sprite.Height),
-                    SpriteEffects.None,
+                    spriteFlip,
                     0.5f);
             }
         }

@@ -18,7 +18,7 @@ namespace CrossBoa
     /// Author:  TacNayn
     /// <para>Represents a playerArrow with a rotation and a constant movement speed</para>
     /// </summary>
-    public class PlayerArrow : Arrow
+    public class PlayerArrow : Projectile
     {
         // Events
         /// <summary>
