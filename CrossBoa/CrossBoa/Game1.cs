@@ -713,9 +713,14 @@ namespace CrossBoa
             }
 
             // Update all player arrows
-            foreach (PlayerArrow playerArrow in playerArrowList)
+            for (int i = 0; i < playerArrowList.Count; i++)
             {
-                playerArrow.Update(gameTime);
+                playerArrowList[i].Update(gameTime);
+                if (playerArrowList[i].FlaggedForDeletion)
+                {
+                    playerArrowList.Remove(playerArrowList[i]);
+                    i--;
+                }
             }
 
             // CollisionManager checks for collisions
@@ -993,6 +998,9 @@ namespace CrossBoa
                 if (upgradeButtons[i].HasBeenPressed())
                 {
                     UpgradeManager.UnlockUpgrade(upgradeChoices[i].Name);
+                    prevUpgradeButtonHovered = -1;
+                    upgradeName.Text = "";
+                    upgradeDescription.Text = "";
                     gameState = GameState.Game;
                 }
             }
