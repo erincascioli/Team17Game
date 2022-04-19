@@ -29,7 +29,7 @@ namespace CrossBoa.Upgrades
     {
         private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>()
         {
-            {"Multishot", new Upgrade("Multishot", "Fires two additional arrows", Multishot, UpgradeType.OnShot, Game1.playerArrowSprite)},
+            {"Multishot", new Upgrade("Multishot", "Fires two additional arrows every few seconds", Multishot, UpgradeType.OnShot, Game1.playerArrowSprite)},
             {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
             {"Placeholder1", new Upgrade("Placeholder1", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
             {"Placeholder2", new Upgrade("Placeholder2", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
@@ -37,6 +37,9 @@ namespace CrossBoa.Upgrades
             {"Placeholder4", new Upgrade("Placeholder4", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
             {"Placeholder5", new Upgrade("Placeholder5", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
         };
+
+        // Fields required to store behavior for upgrades
+        public static PlayerArrow[] multishotArrows = null;
 
         /// <summary>
         /// Chooses 3 random upgrades to display to the player
@@ -97,23 +100,24 @@ namespace CrossBoa.Upgrades
         /// </summary>
         public static void Multishot()
         {
-            // Spawn 2 arrows facing 15 degrees from the center
-            PlayerArrow[] newArrows =
+            if (multishotArrows == null || multishotArrows[0].FlaggedForDeletion)
             {
-                new PlayerArrow(Game1.playerArrowSprite, new Point(48), false) {DirectionOffset = -0.261799388f},
-                new PlayerArrow(Game1.playerArrowSprite, new Point(48), false) {DirectionOffset = 0.261799388f},
-            };
+                // Spawn 2 arrows facing 15 degrees from the center
+                multishotArrows = new[]
+                {
+                    new PlayerArrow(Game1.playerArrowSprite, new Point(48), false) {DirectionOffset = -0.261799388f},
+                    new PlayerArrow(Game1.playerArrowSprite, new Point(48), false) {DirectionOffset = 0.261799388f},
+                };
 
-            foreach (PlayerArrow arrow in newArrows)
-            {
                 // Subscribe the new arrows to the crossbow shoot event so they get shot
-                Game1.Crossbow.FireArrows += arrow.GetShot;
+                foreach (PlayerArrow arrow in multishotArrows)
+                {
+                    Game1.Crossbow.FireArrows += arrow.GetShot;
+                }
 
-                // Subscribe the new arrows to the main arrow's recollect
-                Game1.playerArrowList[0].OnPickup += arrow.Recollect;
+                // Add the arrows to the main list in Game1
+                Game1.playerArrowList.AddRange(multishotArrows);
             }
-
-            Game1.playerArrowList.AddRange(newArrows);
         }
 
         /// <summary>

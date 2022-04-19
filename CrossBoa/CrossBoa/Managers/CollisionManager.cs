@@ -179,8 +179,7 @@ namespace CrossBoa.Managers
                 PlayerArrow playerArrow = Game1.playerArrowList[index];
 
                 // If the arrow is on the ground and intersects with the player, give the arrow back
-                if ((playerArrow.IsReturning || playerArrow.IsMainArrow) &&
-                    !playerArrow.IsInAir &&
+                if (playerArrow.IsMainArrow && !playerArrow.IsInAir &&
                     Game1.Player.Hitbox.Intersects(playerArrow.Hitbox))
                 { 
                     playerArrow.GetPickedUp();
