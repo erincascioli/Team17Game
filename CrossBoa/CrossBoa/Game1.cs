@@ -316,11 +316,11 @@ namespace CrossBoa
                 ScreenAnchor.Center, new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
             // Upgrade UI Stuff
-            levelUpText = new TextElement("LEVEL UP!", ScreenAnchor.Center, new Point(0, -80), 2f);
-            selectAnUpgradeText = new TextElement("Select an upgrade", ScreenAnchor.Center, new Point(0, -63), 1.5f);
+            levelUpText = new TextElement("LEVEL UP!", ScreenAnchor.TopCenter, new Point(0, 40), 2f);
+            selectAnUpgradeText = new TextElement("Select an upgrade", ScreenAnchor.TopCenter, new Point(0, 60), 1.5f);
 
-            upgradeName = new TextElement("", ScreenAnchor.Center, new Point(0, 60), 1.5f);
-            upgradeDescription = new TextElement("", ScreenAnchor.Center, new Point(0, 80));
+            upgradeName = new TextElement("", ScreenAnchor.BottomCenter, new Point(0, -70), 1.5f);
+            upgradeDescription = new TextElement("", ScreenAnchor.BottomCenter, new Point(0, -50));
 
             upgradeButtons[0] =
                 new Button(null, null, true, ScreenAnchor.Center, new Point(-65, 0), new Point(32));
