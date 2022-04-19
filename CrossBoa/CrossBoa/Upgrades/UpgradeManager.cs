@@ -29,7 +29,7 @@ namespace CrossBoa.Upgrades
     {
         private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>()
         {
-            {"Multishot", new Upgrade("Multishot", "Fires two additional arrows every few seconds", Multishot, UpgradeType.OnShot, Game1.playerArrowSprite)},
+            {"Multishot", new Upgrade("Multishot", "Fires two additional arrows\nevery few seconds", Multishot, UpgradeType.OnShot, Game1.playerArrowSprite)},
             {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
             {"Placeholder1", new Upgrade("Placeholder1", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
             {"Placeholder2", new Upgrade("Placeholder2", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
