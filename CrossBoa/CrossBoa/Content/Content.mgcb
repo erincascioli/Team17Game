@@ -13,12 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../../../../Downloads/Canopy Cacophony.wav
-/importer:WavImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:../../../../../../../Downloads/Canopy Cacophony.wav;Canopy Cacophony.wav
-
 #begin AltCrackedWall.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -145,6 +139,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Block.png
+
+#begin Canopy Cacophony.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Canopy Cacophony.ogg
 
 #begin CornerWall.png
 /importer:TextureImporter
