@@ -66,7 +66,7 @@ namespace CrossBoa
         public static Texture2D slimeSpritesheet;
         public static Texture2D slimeDeathSpritesheet;
         public static Texture2D xpSprite;
-        private Texture2D snakeSprite;
+        private Texture2D snakeSpriteSheet;
         private Texture2D crossbowSprite;
         private Texture2D hitBox;
         private Texture2D arrowHitBox;
@@ -230,7 +230,7 @@ namespace CrossBoa
             xpSprite = Content.Load<Texture2D>("XPOrb");
             emptyHeart = Content.Load<Texture2D>("Empty Heart");
             fullHeart = Content.Load<Texture2D>("Full Heart");
-            snakeSprite = Content.Load<Texture2D>("snake");
+            snakeSpriteSheet = Content.Load<Texture2D>("SnakeSpritesheet");
             crossbowSprite = Content.Load<Texture2D>("Crossbow");
             hitBox = Content.Load<Texture2D>("Hitbox");
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
@@ -248,7 +248,7 @@ namespace CrossBoa
 
             // Load Player
             player = new Player(
-                snakeSprite,
+                snakeSpriteSheet,
                 new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)),
                 DefaultPlayerMovementForce,
                 DefaultPlayerMaxSpeed,
