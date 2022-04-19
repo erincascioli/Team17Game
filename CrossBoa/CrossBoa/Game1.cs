@@ -76,7 +76,7 @@ namespace CrossBoa
         private Texture2D settingsPressedSprite;
         private Texture2D emptyHeart;
         private Texture2D fullHeart;
-        private Texture2D[] menuBGSpriteList;
+        private Texture2D menuBGSheet;
         private Texture2D titleText;
         private Texture2D pauseText;
         private Texture2D gameOverText;
@@ -191,8 +191,7 @@ namespace CrossBoa
         {
             // TODO: Add your initialization logic here
             gameObjectList = new List<GameObject>();
-            menuBGSpriteList = new Texture2D[5];
-            menuBGLayers = new Rectangle[10];
+            menuBGLayers = new Rectangle[8];
             playerHealthBar = new List<UIElement>();
             UIElementsList = new List<UIElement>(20);
             playerArrowList = new List<PlayerArrow>();
@@ -207,7 +206,7 @@ namespace CrossBoa
             UIScale = 4;
 
             // Create a render target that can be much more easily rescaled
-            menuBGTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
+            menuBGTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
             gameRenderTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
 
             // Save aspect ratio
@@ -242,15 +241,10 @@ namespace CrossBoa
             gameOverText = Content.Load<Texture2D>("GameOverText");
             collectibleSprite = Content.Load<Texture2D>("LifePot");
             crosshairSprite = Content.Load<Texture2D>("Crosshair");
+            menuBGSheet = Content.Load<Texture2D>("bg-sheet");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
-
-
-            for (int i = 0; i < 5; i++)
-            {
-                menuBGSpriteList[i] = Content.Load<Texture2D>("bg" + (i + 1));
-            }
 
             // Load Player
             player = new Player(
@@ -296,10 +290,9 @@ namespace CrossBoa
             FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(-10, -6));
 
             // Load menu background layers
-            for (int i = 0; i < 10; i++)
+            Point bgSize = new Point(1920, 1080);
+            for (int i = 0; i < 8; i++)
             {
-                Point bgSize = new Point(1600, 900);
-
                 menuBGLayers[i] = new Rectangle(new Point(
                     i % 2 == 0 ? 0 : -bgSize.X,   // Every other layer is placed 800 pixels to the left
                     0),
@@ -550,37 +543,37 @@ namespace CrossBoa
             // Layer 1 is a blank image
 
             // Layer 2
-            if (frame % 4 == 0)
+            if (frame % 3 == 0)
+            {
+                menuBGLayers[0].Location += new Point(1, 0);
+                menuBGLayers[1].Location += new Point(1, 0);
+            }
+
+            // Layer 3
+            if (frame % 2 == 0)
             {
                 menuBGLayers[2].Location += new Point(1, 0);
                 menuBGLayers[3].Location += new Point(1, 0);
             }
 
-            // Layer 3
-            if (frame % 3 == 0)
+            // Layer 4
+            if (frame % 3 == 0 || frame % 3 == 1)
             {
                 menuBGLayers[4].Location += new Point(1, 0);
                 menuBGLayers[5].Location += new Point(1, 0);
             }
 
-            // Layer 4
-            if (frame % 2 == 0)
+            // Layer 5
+            if (frame % 1 == 0)
             {
                 menuBGLayers[6].Location += new Point(1, 0);
                 menuBGLayers[7].Location += new Point(1, 0);
             }
 
-            // Layer 5
-            if (frame % 1 == 0)
-            {
-                menuBGLayers[8].Location += new Point(1, 0);
-                menuBGLayers[9].Location += new Point(1, 0);
-            }
-
             // Wrap image around the screen after it goes off the edge
             for (int i = 0; i < menuBGLayers.Length; i++)
             {
-                if (menuBGLayers[i].Location.X > menuBGLayers[2].Width)
+                if (menuBGLayers[i].Location.X > menuBGLayers[0].Width)
                 {
                     menuBGLayers[i].Location -= new Point(menuBGLayers[0].Width * 2, 0);
                 }
@@ -592,23 +585,22 @@ namespace CrossBoa
         /// </summary>
         private void DrawMainMenu()
         {
-            GraphicsDevice.Clear(new Color(174, 222, 203));
-            
             // Draw main menu background to a smaller target, then scale up to reduce lag
             GraphicsDevice.SetRenderTarget(menuBGTarget);
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearClamp);
+            GraphicsDevice.Clear(new Color(174, 222, 203));
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             for (int i = 0; i < 6; i++)
             {
-                _spriteBatch.Draw(menuBGSpriteList[i / 2], menuBGLayers[i], Color.White);
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
             }
 
             _spriteBatch.End();
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
-            for (int i = 6; i < 10; i++)
+            for (int i = 6; i < 8; i++)
             {
-                _spriteBatch.Draw(menuBGSpriteList[i / 2], menuBGLayers[i], Color.White);
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
             }
 
             _spriteBatch.End();
@@ -1056,13 +1048,46 @@ namespace CrossBoa
         /// </summary>
         private void DrawGameOver()
         {
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
             GraphicsDevice.Clear(new Color(174, 222, 203));
 
-            for (int i = 0; i < menuBGLayers.Length; i++)
+            // Draw main menu background to a smaller target, then scale up to reduce lag
+            GraphicsDevice.SetRenderTarget(menuBGTarget);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearClamp);
+
+            for (int i = 0; i < 6; i++)
             {
-                _spriteBatch.Draw(menuBGSpriteList[i / 2], menuBGLayers[i], Color.White);
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
             }
+
+            _spriteBatch.End();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+
+            for (int i = 6; i < 8; i++)
+            {
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
+            }
+
+            _spriteBatch.End();
+            GraphicsDevice.SetRenderTarget(null);
+
+            // Draw the main menu
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+
+            // Determine background size
+            Point menuBGSize;
+            if (outputAspectRatio <= preferredAspectRatio)
+            {
+                // output is taller than it is wider, set size to window height
+                menuBGSize = new Point((int)MathF.Round(windowHeight * preferredAspectRatio), windowHeight);
+            }
+            else
+            {
+                // output is wider than it is tall, set size to window width
+                menuBGSize = new Point(windowWidth, (int)MathF.Round(windowWidth / preferredAspectRatio));
+            }
+
+            // Draw background
+            _spriteBatch.Draw(menuBGTarget, new Rectangle(Point.Zero, menuBGSize), Color.White);
 
             _spriteBatch.Draw(gameOverText, 
                 Helper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), gameOverText.Bounds.Size * new Point(UIScale * 4)), 
