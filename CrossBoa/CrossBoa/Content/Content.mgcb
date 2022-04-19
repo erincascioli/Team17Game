@@ -92,11 +92,11 @@
 /processorParam:TextureFormat=Color
 /build:Block.png
 
-#begin Canopy Cacophony.wav
-/importer:WavImporter
+#begin Canopy Cacophony.ogg
+/importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Canopy Cacophony.wav
+/build:Canopy Cacophony.ogg
 
 #begin CornerWall.png
 /importer:TextureImporter
