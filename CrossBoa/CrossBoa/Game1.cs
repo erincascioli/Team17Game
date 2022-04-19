@@ -661,22 +661,22 @@ namespace CrossBoa
                 if ((skull = gameObjectList[i] as Skull) != null && skull.IsAlive
                     && skull.ReadyToFire)
                 {
-                    Arrow newTotemArrow = new Arrow(totemProjectileSprite,
+                    Projectile newTotemProjectile = new Projectile(totemProjectileSprite,
                         new Rectangle(-100,
                                       -100,
                                       48,
                                       48),
                         new Vector2(0, 0));
 
-                    CollisionManager.AddProjectile(newTotemArrow);
-                    gameObjectList.Add(newTotemArrow);
+                    CollisionManager.AddProjectile(newTotemProjectile);
+                    gameObjectList.Add(newTotemProjectile);
 
-                    skull.Shoot(newTotemArrow);
+                    skull.Shoot(newTotemProjectile);
                 }
 
                 // Removes all inactive projectiles from play.
-                Arrow arrow;
-                if ((arrow = gameObjectList[i] as Arrow) != null && !arrow.IsActive)
+                Projectile projectile;
+                if ((projectile = gameObjectList[i] as Projectile) != null && !projectile.IsActive)
                 {
                     gameObjectList.RemoveAt(i);
                     i--;

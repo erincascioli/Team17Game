@@ -45,7 +45,7 @@ namespace CrossBoa.Enemies
             // This enemy does not get knocked back, therefore this override does not call base
         }
 
-        public void Shoot(Arrow projectile)
+        public void Shoot(Projectile projectile)
         {
             timeSinceShot = 0f;
             projectile.GetShot(
