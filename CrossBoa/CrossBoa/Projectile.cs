@@ -5,10 +5,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CrossBoa
 {
-    public class Arrow : PhysicsObject, ICollidable
+    public class Projectile : PhysicsObject, ICollidable
     {
         protected float direction;
         protected bool isActive;
+
+        private SpriteEffects spriteFlip;
+        private int currentAnimationFrame;
+        private double previousFrameChange;
 
         /// <summary>
         /// The direction vector of the arrow
@@ -32,21 +36,23 @@ namespace CrossBoa
         /// </summary>
         public virtual Rectangle Hitbox
         {
-            get { return new Rectangle(position.ToPoint(), Point.Zero); }
+            get { return new Rectangle(position.ToPoint().X - (int)(Rectangle.Width * .25), position.ToPoint().Y - (int)(Rectangle.Height * .25), (int)(Rectangle.Width * .5), (int)(Rectangle.Height * .5)); }
         }
 
-        public Arrow(Texture2D sprite, Rectangle rectangle, Vector2 velocity) : base(sprite, rectangle, null, 0)
+        public Projectile(Texture2D sprite, Rectangle rectangle, Vector2 velocity) : base(sprite, rectangle, null, 0)
         {
             this.velocity = velocity;
             this.direction = MathF.Atan2(velocity.Y, velocity.X);
             this.isActive = true;
+            this.spriteFlip = SpriteEffects.None;
         }
 
-        public Arrow(Texture2D sprite, Rectangle rectangle, float direction, float magnitude) : base(sprite, rectangle, null, 0)
+        public Projectile(Texture2D sprite, Rectangle rectangle, float direction, float magnitude) : base(sprite, rectangle, null, 0)
         {
             this.direction = MathHelper.WrapAngle(direction);
             this.velocity = new Vector2(MathF.Cos(direction), MathF.Sin(direction)) * magnitude;
             this.isActive = true;
+            this.spriteFlip = SpriteEffects.None;
         }
 
         /// <summary>
@@ -71,6 +77,34 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Updates this object's physics and friction
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            UpdateAnimations(gameTime);
+
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Updates the animations of this projectile
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void UpdateAnimations(GameTime gameTime)
+        {
+            // Change frame every 0.1 seconds
+            if (gameTime.TotalGameTime.TotalSeconds > previousFrameChange + 0.1)
+            {
+                previousFrameChange = gameTime.TotalGameTime.TotalSeconds;
+
+                currentAnimationFrame++;
+                if (currentAnimationFrame > 3)
+                    currentAnimationFrame = 0;
+            }
+        }
+
+        /// <summary>
         /// Draws this GameObject to the screen
         /// </summary>
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
@@ -78,17 +112,20 @@ namespace CrossBoa
         {
             if (isActive)
             {
+                //double radius = Math.Sqrt(Math.Pow(Rectangle.Width, 2) + Math.Pow(Rectangle.Height, 2));
+
                 spriteBatch.Draw(
                     sprite,
 
                     // Repositions arrow draw call so the tip is on the hitbox
-                    position - (Helper.GetNormalVector(direction) * size.X) + (Helper.GetNormalVector(direction - (MathF.PI * 0.5f)) * size.Y / 2),
-                    null,
+                    //new Vector2(Rectangle.X + (float)(Rectangle.Width * Math.Sin(direction)), Rectangle.Y + (float)(Rectangle.Height / 2 * Math.Sin(direction))),
+                    position,
+                    new Rectangle(currentAnimationFrame * 16, 0, 16, 16),
                     color,
-                    direction,
-                    new Vector2(1, 0.5f),
-                    new Vector2(size.X / (float)sprite.Width, size.Y / (float)sprite.Height),
-                    SpriteEffects.None,
+                    Direction,
+                    new Vector2(8f, 8f),
+                    new Vector2(size.X / 16f, size.Y / 16f),
+                    spriteFlip,
                     0.5f);
             }
         }

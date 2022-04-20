@@ -281,6 +281,70 @@ namespace CrossBoa.Managers
                 }
             }
 
+            Stack<int> toRemove = new Stack<int>();
+            int index = 0;
+
+            if (exitLocation == ExitLocation.Left)
+            {
+                foreach (Tile i in safe)
+                {
+                    if (i.Rectangle.X > 21 * blockWidth &&
+                        i.Rectangle.Y <= (exit.Rectangle.Y + blockHeight) &&
+                        i.Rectangle.Y >= exit.Rectangle.Y - blockHeight)
+                    {
+                        toRemove.Push(index);
+                    }
+                    index++;
+                }
+            }
+
+            if (exitLocation == ExitLocation.Right)
+            {
+                foreach (Tile i in safe)
+                {
+                    if (i.Rectangle.X < 3 * blockWidth &&
+                        i.Rectangle.Y <= (exit.Rectangle.Y + blockHeight) &&
+                        i.Rectangle.Y >= exit.Rectangle.Y - blockHeight)
+                    {
+                        toRemove.Push(index);
+                    }
+                    index++;
+                }
+            }
+
+            if (exitLocation == ExitLocation.Top)
+            {
+                foreach (Tile i in safe)
+                {
+                    if (i.Rectangle.Y > 9 * blockHeight &&
+                        i.Rectangle.X <= (exit.Rectangle.X + blockHeight) &&
+                        i.Rectangle.X >= exit.Rectangle.X - blockHeight)
+                    {
+                        toRemove.Push(index);
+                    }
+                    index++;
+                }
+            }
+
+            if (exitLocation == ExitLocation.Bottom)
+            {
+                foreach (Tile i in safe)
+                {
+                    if (i.Rectangle.Y < 4 * blockHeight &&
+                        i.Rectangle.X <= (exit.Rectangle.X + blockHeight) &&
+                        i.Rectangle.X >= exit.Rectangle.X - blockHeight)
+                    {
+                        toRemove.Push(index);
+                    }
+                    index++;
+                }
+            }
+
+            while (toRemove.Count > 0)
+            {
+                safe.RemoveAt(toRemove.Pop());
+            }
+
             return safe;
         }
 

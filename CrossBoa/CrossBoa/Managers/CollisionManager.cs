@@ -17,7 +17,7 @@ namespace CrossBoa.Managers
     {
         private static CrossBow crossbow;
         private static List<Enemy> enemies;
-        private static List<Arrow> enemyProjectiles;
+        private static List<Projectile> enemyProjectiles;
         private static List<Tile> levelObstacles;
         private static int alternate;
 
@@ -33,8 +33,7 @@ namespace CrossBoa.Managers
         {
             // Lists are created
             enemies = new List<Enemy>();
-            enemyProjectiles = new List<Arrow>();
-            //levelObstacles = new List<Tile>();
+            enemyProjectiles = new List<Projectile>();
 
             alternate = 0;
         }
@@ -46,7 +45,7 @@ namespace CrossBoa.Managers
         public static void CheckCollision(bool isInvincibilityActive)
         {
             // enemy Projectiles
-            foreach (Arrow i in enemyProjectiles)
+            foreach (Projectile i in enemyProjectiles)
             {
                 // First checks for player projectile collisions
                 if (i.Hitbox.Intersects(Game1.Player.Hitbox) && !Game1.Player.IsInvincible)
@@ -65,6 +64,7 @@ namespace CrossBoa.Managers
                         if (i.Hitbox.Intersects(j.Rectangle))
                         {
                             i.HitSomething();
+                            SoundManager.fireDissipate.Play(.1f, 0, 0);
                         }
                     }
                 }
@@ -80,6 +80,13 @@ namespace CrossBoa.Managers
                 if (!isInvincibilityActive && Game1.Player.Hitbox.Intersects(enemy.Rectangle))
                 {
                     enemy.DealContactDamage(Game1.Player);
+                    // If the enemy is a Beast, have it get knocked back
+                    if (enemy is Beast && ((Beast)enemy).InCharge)
+                    {
+                        enemy.GetKnockedBack(Game1.Player, 500);
+                        ((Beast)enemy).HasCollided = true;
+                        Camera.ShakeScreen(10);
+                    }
                 }
 
                 // with player arrow
@@ -123,7 +130,7 @@ namespace CrossBoa.Managers
                         playerArrow.Hitbox.Intersects(tile.Rectangle))
                     {
                         // Sound of an arrow hitting a wall
-                        SoundManager.hitWall.Play();
+                        SoundManager.hitWall.Play(.3f, 0, 0);
                         playerArrow.HitSomething();
                     }
                 }
@@ -139,7 +146,19 @@ namespace CrossBoa.Managers
                     if (enemy.Hitbox.Intersects(tile.Rectangle))
                     {
                         EntityEnvironmentCollide<Enemy>(enemy, tile);
+
+                        // If the enemy is a Beast, have it get knocked back
+                        if (enemy is Beast && ((Beast)enemy).InCharge)
+                        {
+                            // I am so good at coding
+                            // -Leo
+                            enemy.GetKnockedBack(new Projectile(null, tile.Rectangle, 0, 0),
+                                500);
+                            ((Beast)enemy).HasCollided = true;
+                            Camera.ShakeScreen(10);
+                        }
                     }
+                    
                 }
 
                 // Collectibles with tiles
@@ -160,8 +179,7 @@ namespace CrossBoa.Managers
                 PlayerArrow playerArrow = Game1.playerArrowList[index];
 
                 // If the arrow is on the ground and intersects with the player, give the arrow back
-                if ((playerArrow.IsReturning || playerArrow.IsMainArrow) &&
-                    !playerArrow.IsInAir &&
+                if (playerArrow.IsMainArrow && !playerArrow.IsInAir &&
                     Game1.Player.Hitbox.Intersects(playerArrow.Hitbox))
                 { 
                     playerArrow.GetPickedUp();
@@ -221,9 +239,16 @@ namespace CrossBoa.Managers
                     sb.Draw(arrowPoint, playerArrow.Hitbox, Color.Red);
             }
 
-            foreach (Arrow i in enemyProjectiles)
+            foreach (Projectile i in enemyProjectiles)
             {
-                sb.Draw(arrowPoint, new Rectangle(i.Hitbox.X - 2, i.Hitbox.Y - 2, 5, 5), Color.Red);
+                if (i is PlayerArrow)
+                {
+                    sb.Draw(arrowPoint, new Rectangle(i.Hitbox.X - 2, i.Hitbox.Y - 2, 5, 5), Color.Red);
+                }
+                else
+                {
+                    sb.Draw(hitBox, i.Hitbox, Color.Red);
+                }
             }
 
             foreach (Enemy enemy in enemies)
@@ -254,7 +279,7 @@ namespace CrossBoa.Managers
         /// Restrictions: none
         /// </summary>
         /// <param name="projectile"></param>
-        public static void AddProjectile(Arrow projectile)
+        public static void AddProjectile(Projectile projectile)
         {
             enemyProjectiles.Add(projectile);
         }

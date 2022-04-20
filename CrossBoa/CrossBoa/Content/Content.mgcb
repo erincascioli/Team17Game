@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../../../../../../../Downloads/1000+NintendoSFX!/SFX_Hit-Hurt/Hit_hurt 7.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:../../../../../../../Downloads/1000+NintendoSFX!/SFX_Hit-Hurt/Hit_hurt 7.wav;Hit_hurt 7.wav
+
 #begin AltCrackedWall.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -68,7 +74,7 @@
 /processorParam:TextureFormat=Color
 /build:BeastSprite.png
 
-#begin bg1.png
+#begin bg-sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -78,55 +84,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:bg1.png
-
-#begin bg2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:bg2.png
-
-#begin bg3.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:bg3.png
-
-#begin bg4.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:bg4.png
-
-#begin bg5.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:bg5.png
+/build:bg-sheet.png
 
 #begin Block.png
 /importer:TextureImporter
@@ -139,6 +97,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Block.png
+
+#begin Canopy Cacophony.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Canopy Cacophony.ogg
 
 #begin CornerWall.png
 /importer:TextureImporter
@@ -365,6 +329,18 @@
 /processorParam:Quality=Best
 /build:Hit_hurt 34.wav
 
+#begin Hit_hurt 45 (1).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 45 (1).wav
+
+#begin Hit_hurt 45 (2).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 45 (2).wav
+
 #begin Hitbox.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -538,18 +514,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SlimeSpritesheet.png
-
-#begin Snake.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Snake.png
 
 #begin SnakeSpritesheet.png
 /importer:TextureImporter

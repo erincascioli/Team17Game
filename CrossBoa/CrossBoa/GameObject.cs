@@ -21,8 +21,6 @@ namespace CrossBoa
         protected Point size;
         protected Color color;
 
-        private Rectangle rectCache;
-
         // ------------
         //  Properties
         // ------------
@@ -102,7 +100,6 @@ namespace CrossBoa
             this.sprite = sprite;
             this.position = rectangle.Location.ToVector2();
             this.size = rectangle.Size;
-            this.rectCache = Rectangle.Empty;
             this.color = Color.White;
         }
 
