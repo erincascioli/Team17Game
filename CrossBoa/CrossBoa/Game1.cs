@@ -62,7 +62,7 @@ namespace CrossBoa
         public static Texture2D skullSpriteSheet;
         public static Texture2D skeletonSprite;
         public static Texture2D playerArrowSprite;
-        public static Texture2D totemProjectileSprite;
+        public static Texture2D fireballSpritesheet;
         public static Texture2D slimeSpritesheet;
         public static Texture2D slimeDeathSpritesheet;
         public static Texture2D xpSprite;
@@ -235,7 +235,7 @@ namespace CrossBoa
             hitBox = Content.Load<Texture2D>("Hitbox");
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
             playerArrowSprite = Content.Load<Texture2D>("arrow2");
-            totemProjectileSprite = Content.Load<Texture2D>("FireballSprite");
+            fireballSpritesheet = Content.Load<Texture2D>("FireballSpriteSheet");
             titleText = Content.Load<Texture2D>("TitleText");
             pauseText = Content.Load<Texture2D>("PauseText");
             gameOverText = Content.Load<Texture2D>("GameOverText");
@@ -661,7 +661,7 @@ namespace CrossBoa
                 if ((skull = gameObjectList[i] as Skull) != null && skull.IsAlive
                     && skull.ReadyToFire)
                 {
-                    Projectile newTotemProjectile = new Projectile(totemProjectileSprite,
+                    Projectile newTotemProjectile = new Projectile(fireballSpritesheet,
                         new Rectangle(-100,
                                       -100,
                                       48,

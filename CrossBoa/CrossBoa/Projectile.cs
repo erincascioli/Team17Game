@@ -11,6 +11,8 @@ namespace CrossBoa
         protected bool isActive;
 
         private SpriteEffects spriteFlip;
+        private int currentAnimationFrame;
+        private double previousFrameChange;
 
         /// <summary>
         /// The direction vector of the arrow
@@ -80,12 +82,26 @@ namespace CrossBoa
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (velocity.X < 0)
-                spriteFlip = SpriteEffects.FlipHorizontally;
-            else
-                spriteFlip = SpriteEffects.None;
+            UpdateAnimations(gameTime);
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Updates the animations of this projectile
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void UpdateAnimations(GameTime gameTime)
+        {
+            // Change frame every 0.1 seconds
+            if (gameTime.TotalGameTime.TotalSeconds > previousFrameChange + 0.1)
+            {
+                previousFrameChange = gameTime.TotalGameTime.TotalSeconds;
+
+                currentAnimationFrame++;
+                if (currentAnimationFrame > 3)
+                    currentAnimationFrame = 0;
+            }
         }
 
         /// <summary>
@@ -103,12 +119,12 @@ namespace CrossBoa
 
                     // Repositions arrow draw call so the tip is on the hitbox
                     //new Vector2(Rectangle.X + (float)(Rectangle.Width * Math.Sin(direction)), Rectangle.Y + (float)(Rectangle.Height / 2 * Math.Sin(direction))),
-                    position - new Vector2(25),
-                    null,
+                    position,
+                    new Rectangle(currentAnimationFrame * 16, 0, 16, 16),
                     color,
-                    0,
-                    new Vector2(1, 0.5f),
-                    new Vector2(size.X / (float)sprite.Width, size.Y / (float)sprite.Height),
+                    Direction,
+                    new Vector2(8f, 8f),
+                    new Vector2(size.X / 16f, size.Y / 16f),
                     spriteFlip,
                     0.5f);
             }
