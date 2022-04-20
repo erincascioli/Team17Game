@@ -59,7 +59,7 @@ namespace CrossBoa
         // Assets
         #region Asset Field Declarations
         public static Texture2D whiteSquareSprite;
-        public static Texture2D totemSprite;
+        public static Texture2D skullSpriteSheet;
         public static Texture2D skeletonSprite;
         public static Texture2D playerArrowSprite;
         public static Texture2D totemProjectileSprite;
@@ -223,7 +223,7 @@ namespace CrossBoa
 
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
-            totemSprite = Content.Load<Texture2D>("TotemSprite");
+            skullSpriteSheet = Content.Load<Texture2D>("TotemSpriteSheet");
             skeletonSprite = Content.Load<Texture2D>("BeastSprite");
             slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
             slimeDeathSpritesheet = Content.Load<Texture2D>("FacelessSlimeDeathSpritesheet-sheet");
