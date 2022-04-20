@@ -73,8 +73,6 @@ namespace CrossBoa
         private Texture2D playPressedSprite;
         private Texture2D settingsHoverSprite;
         private Texture2D settingsPressedSprite;
-        private Texture2D creditsHoverSprite;
-        private Texture2D creditsPressedSprite;
         private Texture2D emptyHeart;
         private Texture2D fullHeart;
         private Texture2D[] menuBGSpriteList;
@@ -99,7 +97,6 @@ namespace CrossBoa
         private static List<Collectible> collectibles;
 
         private TextElement testText;
-        private TextElement creditsText;
         private TextElement FPSCounter;
 
         private TextElement upgradeName;
@@ -107,13 +104,10 @@ namespace CrossBoa
 
         // Buttons
         private Button playButton;
-        private Button creditsButton;
         private Button pauseButton;
         private Button debugButton;
         private Button gameOverButton;
         private Button[] upgradeButtons;
-
-        private Point creditsStartingPoint;
 
         private List<GameObject> gameObjectList;
 
@@ -285,12 +279,6 @@ namespace CrossBoa
 
             testText = new TextElement("A quick brown fox jumps over the lazy dog",
                 ScreenAnchor.Center, new Point(0, 75));
-
-            creditsStartingPoint = new Point(0, 50);
-
-            creditsText = new TextElement("Created By:\n\nJustin Baez\n\nIan Knecht\n\nLeo-Gerendasi Schindler\n\nDonovan Scullion",
-                ScreenAnchor.Center, creditsStartingPoint);
-
             FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(-10, -6));
 
             // Load menu background layers
@@ -309,10 +297,6 @@ namespace CrossBoa
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
                 ScreenAnchor.Center, Point.Zero, playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
-
-            // Credits Button
-            creditsButton = new Button(playHoverSprite, playPressedSprite, true,
-                ScreenAnchor.Center, new Point(0, 30), playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
             // Pause Button
             pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
@@ -385,11 +369,6 @@ namespace CrossBoa
                         gameState = GameState.Game;
                     }
 
-                    if (creditsButton.HasBeenPressed())
-                    {
-                        gameState = GameState.Credits;
-                    }
-
                     break;
 
                 // Game
@@ -416,8 +395,6 @@ namespace CrossBoa
 
                 // Credits - NOT YET IMPLEMENTED
                 case GameState.Credits:
-
-                    UpdateCredits(gameTime);
 
                     break;
 
@@ -517,7 +494,6 @@ namespace CrossBoa
             AnimateMainMenuBG();
 
             playButton.Update(gameTime);
-            creditsButton.Update(gameTime);
 
         }
 
@@ -574,12 +550,10 @@ namespace CrossBoa
 
             playButton.Draw(_spriteBatch);
 
-            creditsButton.Draw(_spriteBatch);
-
             crosshair.Draw(_spriteBatch);
 
             // TEST TEXT
-            //testText.Draw(_spriteBatch);
+            testText.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -1005,40 +979,17 @@ namespace CrossBoa
         /// </summary>
         private void DrawCredits()
         {
-            AnimateMainMenuBG();
-
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
-
-            foreach (GameObject background in menuBGLayers)
-            {
-                background.Draw(_spriteBatch);
-            }
-
-            creditsText.Draw(_spriteBatch);
-
-            crosshair.Draw(_spriteBatch);
-
-            _spriteBatch.End();
-
-            /*
             _spriteBatch.Begin();
 
             _spriteBatch.DrawString(arial32, "Credits",
                 new Vector2(windowWidth - 175,
                     windowHeight / 2f), Color.White);
 
-            
+            crosshair.Draw(_spriteBatch);
 
             _spriteBatch.End();
-            */
         }
 
-        private void UpdateCredits(GameTime gameTime)
-        {
-            creditsText.Update(gameTime);
-            creditsStartingPoint.Y++;
-            
-        }
         // Helper Methods
         /// <summary>
         /// Gets the coordinates of the mouse position in the game world
