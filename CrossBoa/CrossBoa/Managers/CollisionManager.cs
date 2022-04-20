@@ -34,7 +34,6 @@ namespace CrossBoa.Managers
             // Lists are created
             enemies = new List<Enemy>();
             enemyProjectiles = new List<Projectile>();
-            //levelObstacles = new List<Tile>();
 
             alternate = 0;
         }
@@ -65,6 +64,7 @@ namespace CrossBoa.Managers
                         if (i.Hitbox.Intersects(j.Rectangle))
                         {
                             i.HitSomething();
+                            SoundManager.fireDissipate.Play(.1f, 0, 0);
                         }
                     }
                 }
