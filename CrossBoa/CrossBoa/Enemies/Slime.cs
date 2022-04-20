@@ -63,7 +63,7 @@ namespace CrossBoa.Enemies
         /// </summary>
         public override void Move()
         {
-            float direction = 0;
+            float direction; // No need to assign a default
             // Formula used for calculations: 
             // Cos(A) = (b^2 + c^2 - a^2) / 2bc
             // A = arccos the formula above
@@ -182,14 +182,14 @@ namespace CrossBoa.Enemies
                 base.Update(gameTime);
             }
 
-            UpdateAnimations(gameTime);
+            UpdateAnimations();
         }
 
         /// <summary>
         /// Updates this slime's animations
         /// </summary>
         /// <param name="gameTime">A reference to the GameTime</param>
-        public void UpdateAnimations(GameTime gameTime)
+        public void UpdateAnimations()
         {
             // Movement animation state
             if (isAlive && animationState != SlimeAnimState.Dying)

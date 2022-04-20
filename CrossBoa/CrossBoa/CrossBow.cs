@@ -164,12 +164,10 @@ namespace CrossBoa
                 isLoaded = false;
 
                 // Invoke shot modifiers
-                if (OnShot != null)
-                    OnShot();
+                OnShot?.Invoke();
 
                 // Fire additional arrows
-                if (FireArrows != null)
-                    FireArrows(DrawnPosition, Direction, PlayerStats.ArrowVelocity);
+                FireArrows?.Invoke(DrawnPosition, Direction, PlayerStats.ArrowVelocity);
 
                 // Handled by event now
                 //playerArrow.GetShot(
@@ -247,10 +245,10 @@ namespace CrossBoa
                      direction > Math.PI * -0.49)
                 spriteEffects = SpriteEffects.None;
             
-            UpdateAnimations(gameTime);
+            UpdateAnimations();
         }
 
-        public void UpdateAnimations(GameTime gameTime)
+        public void UpdateAnimations()
         {
             // Shot animation
             if (timeSinceShot < 0.075f)
