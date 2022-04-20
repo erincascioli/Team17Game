@@ -1,5 +1,6 @@
 ﻿using System;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -53,6 +54,9 @@ namespace CrossBoa.Enemies
                             Rectangle.Y + Height/2),
                 Helper.DirectionBetween(Rectangle.Location, target.Rectangle.Location),
                 500);
+
+            // Play Sound Effect
+            SoundManager.fireShoot.Play(.3f, 0, 0);
         }
 
         public override void Update(GameTime gameTime)
