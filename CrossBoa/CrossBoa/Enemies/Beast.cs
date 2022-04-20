@@ -1,5 +1,6 @@
 ﻿using System;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -198,6 +199,7 @@ namespace CrossBoa.Enemies
                     Move();
                     if (hasCollided)
                     {
+                        SoundManager.beastWallBump.Play();
                         hasCollided = false;
                         chargeTimer = 1.5f;
                     }
