@@ -1,2 +1,3 @@
 ﻿Hit_hurt 34
 Jump 77
+Hit_hurt 7
