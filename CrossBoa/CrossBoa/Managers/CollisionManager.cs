@@ -155,6 +155,7 @@ namespace CrossBoa.Managers
                             enemy.GetKnockedBack(new Projectile(null, tile.Rectangle, 0, 0),
                                 500);
                             ((Beast)enemy).HasCollided = true;
+                            SoundManager.beastWallBump.Play();
                             Camera.ShakeScreen(10);
                         }
                     }
