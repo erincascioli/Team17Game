@@ -646,7 +646,7 @@ namespace CrossBoa
         private void UpdateGame(GameTime gameTime)
         {
             // Update all GameObjects
-            Camera.Update(kbState, gameTime);
+            Camera.Update(gameTime);
 
             for (int i = 0; i < gameObjectList.Count; i++)
             {
@@ -657,8 +657,7 @@ namespace CrossBoa
                 }
 
                 // Fires a skull's arrow if the cooldown time reaches 0.
-                Skull skull;
-                if ((skull = gameObjectList[i] as Skull) != null && skull.IsAlive
+                if (gameObjectList[i] is Skull skull && skull.IsAlive
                     && skull.ReadyToFire)
                 {
                     Projectile newTotemProjectile = new Projectile(fireballSpritesheet,
@@ -675,8 +674,7 @@ namespace CrossBoa
                 }
 
                 // Removes all inactive projectiles from play.
-                Projectile projectile;
-                if ((projectile = gameObjectList[i] as Projectile) != null && !projectile.IsActive)
+                if (gameObjectList[i] is Projectile projectile && !projectile.IsActive)
                 {
                     gameObjectList.RemoveAt(i);
                     i--;
@@ -684,8 +682,7 @@ namespace CrossBoa
 
                 // ~~~~~ DO ALL EXTERNAL GAMEOBJECT MODIFICATION ABOVE THIS CODE ~~~~~
                 // Delete enemies from lists after they die
-                Enemy enemy;
-                if ((enemy = gameObjectList[i] as Enemy) != null && !enemy.IsAlive)
+                if (gameObjectList[i] is Enemy enemy && !enemy.IsAlive)
                 {
                     gameObjectList.RemoveAt(i);
                     i--;
@@ -762,8 +759,10 @@ namespace CrossBoa
                 {
                     foreach (GameObject e in gameObjectList)
                     {
-                        if (e is Enemy)
-                            ((Enemy)e).TakeDamage(1000);
+                        if (e is Enemy enemy)
+                        {
+                            enemy.TakeDamage(1000);
+                        }
                     }
                 }
 
