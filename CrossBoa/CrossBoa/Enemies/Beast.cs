@@ -241,19 +241,9 @@ namespace CrossBoa.Enemies
                                 new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y));
                             chargingState = ChargingState.Charging;
                         }
+
                         break;
 
-                case ChargingState.Charging:
-                    Move();
-                    if (hasCollided)
-                    {
-                        SoundManager.beastWallBump.Play();
-                        hasCollided = false;
-                        chargeTimer = 1.5f;
-                    }
-                    if (chargeTimer >= 1.5f)
-                        chargingState = ChargingState.Resting;
-                    break;
                     case ChargingState.Charging:
                         Move();
                         if (hasCollided)
