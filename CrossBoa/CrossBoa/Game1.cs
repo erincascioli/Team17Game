@@ -59,10 +59,10 @@ namespace CrossBoa
         // Assets
         #region Asset Field Declarations
         public static Texture2D whiteSquareSprite;
-        public static Texture2D totemSprite;
-        public static Texture2D skeletonSprite;
+        public static Texture2D skullSpriteSheet;
+        public static Texture2D beastSprite;
         public static Texture2D playerArrowSprite;
-        public static Texture2D totemProjectileSprite;
+        public static Texture2D fireballSpritesheet;
         public static Texture2D slimeSpritesheet;
         public static Texture2D slimeDeathSpritesheet;
         public static Texture2D xpSprite;
@@ -223,8 +223,8 @@ namespace CrossBoa
 
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
-            totemSprite = Content.Load<Texture2D>("TotemSprite");
-            skeletonSprite = Content.Load<Texture2D>("BeastSprite");
+            skullSpriteSheet = Content.Load<Texture2D>("TotemSpriteSheet");
+            beastSprite = Content.Load<Texture2D>("BeastSpriteSheet");
             slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
             slimeDeathSpritesheet = Content.Load<Texture2D>("FacelessSlimeDeathSpritesheet-sheet");
             xpSprite = Content.Load<Texture2D>("XPOrb");
@@ -235,7 +235,7 @@ namespace CrossBoa
             hitBox = Content.Load<Texture2D>("Hitbox");
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
             playerArrowSprite = Content.Load<Texture2D>("arrow2");
-            totemProjectileSprite = Content.Load<Texture2D>("FireballSprite");
+            fireballSpritesheet = Content.Load<Texture2D>("FireballSpriteSheet");
             titleText = Content.Load<Texture2D>("TitleText");
             pauseText = Content.Load<Texture2D>("PauseText");
             gameOverText = Content.Load<Texture2D>("GameOverText");
@@ -661,7 +661,7 @@ namespace CrossBoa
                 if ((skull = gameObjectList[i] as Skull) != null && skull.IsAlive
                     && skull.ReadyToFire)
                 {
-                    Projectile newTotemProjectile = new Projectile(totemProjectileSprite,
+                    Projectile newTotemProjectile = new Projectile(fireballSpritesheet,
                         new Rectangle(-100,
                                       -100,
                                       48,
