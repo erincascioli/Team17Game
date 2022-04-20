@@ -1,17 +1,28 @@
 ﻿using System;
+using System.Xml.Schema;
 using CrossBoa.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CrossBoa.Enemies
 {
+    public enum SkullAnimState
+    {
+        FacingDown,
+        FacingUp,
+        FacingLeft,
+        FacingRight
+    }
+
     class Skull : Enemy
     {
         // ~~~ FIELDS ~~~
         private double timeSinceShot;
         private Player target;
-        // No totem sprite yet
-        // private Texture2D totemSprite;
+
+        private SkullAnimState animationState;
+        private int currentAnimationFrame;
+        private double previousFrameChangeTime;
 
         private const double TimePerShot = 2.5f;
 
@@ -32,6 +43,8 @@ namespace CrossBoa.Enemies
             isAlive = true;
             color = Color.White;
             target = Game1.Player;
+            animationState = SkullAnimState.FacingDown;
+            currentAnimationFrame = 0;
         }
 
         // ~~~ METHODS ~~~
@@ -59,6 +72,52 @@ namespace CrossBoa.Enemies
         {
             base.Update(gameTime);
             timeSinceShot += gameTime.ElapsedGameTime.TotalSeconds;
+
+            UpdateAnimations(gameTime);
+        }
+
+        /// <summary>
+        /// Draws this GameObject to the screen
+        /// </summary>
+        /// <param name="spriteBatch">A reference to the SpriteBatch</param>
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            if (isAlive)
+                spriteBatch.Draw(sprite, Rectangle, new Rectangle((int)animationState * 16, currentAnimationFrame * 16, 16, 16), color);
+        }
+
+        /// <summary>
+        /// Updates the skull's animations based on the current state
+        /// </summary>
+        private void UpdateAnimations(GameTime gameTime)
+        {
+            // Change frame every 0.15 seconds
+            if (gameTime.TotalGameTime.TotalSeconds > previousFrameChangeTime + 0.15)
+            {
+                previousFrameChangeTime = gameTime.TotalGameTime.TotalSeconds;
+
+                currentAnimationFrame++;
+                if (currentAnimationFrame > 3)
+                    currentAnimationFrame = 0;
+            }
+
+            Point differenceBetweenPlayer = Game1.Player.Rectangle.Center - this.Rectangle.Center;
+
+            // Enemy should face left or right
+            if (MathF.Abs(differenceBetweenPlayer.X) > MathF.Abs(differenceBetweenPlayer.Y))
+            {
+                animationState = differenceBetweenPlayer.X > 0 ? 
+                    SkullAnimState.FacingRight : 
+                    SkullAnimState.FacingLeft;
+            }
+
+            // Enemy should face up or down
+            else
+            {
+                animationState = differenceBetweenPlayer.Y > 0 ? 
+                    SkullAnimState.FacingDown : 
+                    SkullAnimState.FacingUp;
+            }
         }
     }
 }
