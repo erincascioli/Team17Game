@@ -329,6 +329,24 @@
 /processorParam:TextureFormat=Color
 /build:GrassTest.PNG
 
+#begin Hit_hurt 114 (4).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 114 (4).wav
+
+#begin Hit_hurt 114 (5).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 114 (5).wav
+
+#begin Hit_hurt 200 (22).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 200 (22).wav
+
 #begin Hit_hurt 34.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
