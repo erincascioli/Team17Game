@@ -21,6 +21,14 @@ namespace CrossBoa.Enemies
         Resting
     }
 
+    public enum BeastAnimState
+    {
+        FacingDown,
+        FacingUp,
+        FacingLeft,
+        FacingRight
+    }
+
     class Beast : Enemy, ICollidable
     {
         // ~~~ FIELDS ~~~
@@ -39,6 +47,11 @@ namespace CrossBoa.Enemies
         // Other fields
         private Rectangle drawRect;
 
+        // Animation Fields
+        private BeastAnimState animationState;
+        private int currentAnimationFrame;
+        private double previousFrameChangeTime;
+
         // ~~~ PROPERTIES ~~~
         /// <summary>
         /// The beast's hitbox.
@@ -50,8 +63,6 @@ namespace CrossBoa.Enemies
                 return Rectangle; // new Rectangle(Rectangle.X + 4, Rectangle.Y + 12, 56, 56); 
             }
         }
-
-        
 
         /// <summary>
         /// The distance between the the Beast and the player.
@@ -226,14 +237,65 @@ namespace CrossBoa.Enemies
                     ApplyFriction(gameTime);
                 }
             }
+
+            UpdateAnimations(gameTime);
         }
 
+        /// <summary>
+        /// Updates the beast's animations based on the current state
+        /// </summary>
+        private void UpdateAnimations(GameTime gameTime)
+        {
+            // Only face the player and move directions when charging
+            if (chargingState == ChargingState.Charging)
+            {
+                // Change frame every 0.12 seconds
+                if (gameTime.TotalGameTime.TotalSeconds > previousFrameChangeTime + 0.12)
+                {
+                    previousFrameChangeTime = gameTime.TotalGameTime.TotalSeconds;
+
+                    currentAnimationFrame++;
+                    if (currentAnimationFrame > 3)
+                        currentAnimationFrame = 0;
+                }
+            }
+            
+            // If not charging, reset frame to 0
+            else
+            {
+                currentAnimationFrame = 0;
+            }
+
+            // Look at the player if readying or charging
+            if (chargingState == ChargingState.Readying || chargingState == ChargingState.Charging)
+            {
+                Point differenceBetweenPlayer = Game1.Player.Rectangle.Center - this.Rectangle.Center;
+
+                // Enemy should face left or right
+                if (MathF.Abs(differenceBetweenPlayer.X) > MathF.Abs(differenceBetweenPlayer.Y))
+                {
+                    animationState = differenceBetweenPlayer.X > 0 ?
+                        BeastAnimState.FacingRight :
+                        BeastAnimState.FacingLeft;
+                }
+
+                // Enemy should face up or down
+                else
+                {
+                    animationState = differenceBetweenPlayer.Y > 0 ?
+                        BeastAnimState.FacingDown :
+                        BeastAnimState.FacingUp;
+                }
+            }
+        }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            
             if (isAlive)
             {
-                spriteBatch.Draw(sprite, drawRect, color);
+                spriteBatch.Draw(sprite,
+                    drawRect,
+                    new Rectangle((int)animationState * 16, currentAnimationFrame * 16, 16, 16),
+                    color);
             }
         }
 

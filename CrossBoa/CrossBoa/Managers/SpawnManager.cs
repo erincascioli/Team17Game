@@ -28,6 +28,8 @@ namespace CrossBoa.Managers
 
         static SpawnManager()
         {
+
+
         }
 
         
@@ -64,7 +66,7 @@ namespace CrossBoa.Managers
         public static void SpawnSkeleton(Point position)
         {
             Beast newBeast = new Beast(
-                Game1.skeletonSprite,
+                Game1.beastSprite,
                 Game1.slimeDeathSpritesheet,
                 3,
                 new Rectangle(position, new Point(58, 58)));
