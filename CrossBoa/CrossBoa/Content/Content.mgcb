@@ -347,6 +347,12 @@
 /processorParam:Quality=Best
 /build:Hit_hurt 34.wav
 
+#begin Hit_hurt 7.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 7.wav
+
 #begin Hitbox.png
 /importer:TextureImporter
 /processor:TextureProcessor
