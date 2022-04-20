@@ -21,6 +21,9 @@ namespace CrossBoa.Managers
         public static SoundEffect hitWall;
         public static SoundEffect slimeHop;
         public static Song titleTheme;
+        public static SoundEffect beastWallBump;
+        public static SoundEffect fireShoot;
+        public static SoundEffect fireDissipate;
 
         // Will allow menu to control master volume
         // All individual soundeffects also have their own volume when 
@@ -53,6 +56,15 @@ namespace CrossBoa.Managers
 
             slimeHop = Content.Load<SoundEffect>(fileReader.ReadLine());
             slimeHop.CreateInstance();
+
+            beastWallBump = Content.Load<SoundEffect>(fileReader.ReadLine());
+            beastWallBump.CreateInstance();
+
+            fireShoot = Content.Load<SoundEffect>(fileReader.ReadLine());
+            fireShoot.CreateInstance();
+
+            fireDissipate = Content.Load<SoundEffect>(fileReader.ReadLine());
+            fireDissipate.CreateInstance();
 
             fileReader.Close();
         }
