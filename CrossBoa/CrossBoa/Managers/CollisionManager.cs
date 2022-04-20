@@ -34,7 +34,6 @@ namespace CrossBoa.Managers
             // Lists are created
             enemies = new List<Enemy>();
             enemyProjectiles = new List<Projectile>();
-            //levelObstacles = new List<Tile>();
 
             alternate = 0;
         }
@@ -65,6 +64,7 @@ namespace CrossBoa.Managers
                         if (i.Hitbox.Intersects(j.Rectangle))
                         {
                             i.HitSomething();
+                            SoundManager.fireDissipate.Play(.1f, 0, 0);
                         }
                     }
                 }
@@ -130,7 +130,7 @@ namespace CrossBoa.Managers
                         playerArrow.Hitbox.Intersects(tile.Rectangle))
                     {
                         // Sound of an arrow hitting a wall
-                        SoundManager.hitWall.Play();
+                        SoundManager.hitWall.Play(.3f, 0, 0);
                         playerArrow.HitSomething();
                     }
                 }
