@@ -222,7 +222,7 @@ namespace CrossBoa
             maxSpeed = null;
 
             // Makes the playerArrow appear from the bow instead of behind the player.
-            this.position += (velocity / velocity.Length()) * 5;
+            this.position += (velocity / velocity.Length()) * 4;
         }
 
         /// <summary>
