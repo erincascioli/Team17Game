@@ -53,7 +53,7 @@ namespace CrossBoa.Managers
         /// <param name="position">The position to spawn the totem at</param>
         public static void SpawnTotem(Point position)
         {
-            Skull testSkull = new Skull(Game1.totemSprite,
+            Skull testSkull = new Skull(Game1.skullSpriteSheet,
                 new Rectangle(position, new Point(64, 64)),
                 3);
 
@@ -67,7 +67,7 @@ namespace CrossBoa.Managers
                 Game1.skeletonSprite,
                 Game1.slimeDeathSpritesheet,
                 3,
-                new Rectangle(position, new Point(64, 64)));
+                new Rectangle(position, new Point(58, 58)));
             CollisionManager.AddEnemy(newBeast);
             gameObjectList.Add(newBeast);
         }

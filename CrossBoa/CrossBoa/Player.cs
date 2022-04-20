@@ -10,6 +10,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossBoa
 {
+    public enum PlayerAnimState
+    {
+        Idle,
+        Walk
+    }
+
     /// <summary>
     /// Author: Ian Knecht
     /// Purpose: Allows the user to interact with the game world 
@@ -35,7 +41,12 @@ namespace CrossBoa
         private bool flashFrames;
         private bool inDodge;
 
-        private bool isFacingRight;
+        // Animation
+        private PlayerAnimState animationState;
+        private int currentAnimationFrame;
+        private double previousWalkFrameChange;
+
+        private SpriteEffects spriteFlipEffect;
         private Vector2 dodgeVector;
 
         /// <summary>
@@ -163,6 +174,8 @@ namespace CrossBoa
             color = Color.White;
             knockbackTime = 1;
             kbDirection = 0;
+            animationState = PlayerAnimState.Idle;
+            currentAnimationFrame = 0;
         }
 
         /// <summary>
@@ -200,9 +213,9 @@ namespace CrossBoa
                 ApplyForce(movementVector * movementForce);
 
                 if (movementVector.X < 0)
-                    isFacingRight = false;
+                    spriteFlipEffect = SpriteEffects.FlipHorizontally;
                 if (movementVector.X > 0)
-                    isFacingRight = true;
+                    spriteFlipEffect = SpriteEffects.None;
             }
             else if (inDodge)
             {
@@ -224,15 +237,15 @@ namespace CrossBoa
             if (inDodge && dodgeInvulnerabilityTime < 0)
                 EndDodge();
 
+            // Update animations for this frame
+            UpdateAnimations(gameTime);
+
             base.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch sb)
-        {
-            if (isFacingRight)
-                sb.Draw(sprite, Rectangle, null, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
-            else
-                sb.Draw(sprite, Rectangle, color);
+        { 
+            sb.Draw(sprite, Rectangle, new Rectangle(currentAnimationFrame * 16, 0, 16, 16), color, 0, Vector2.Zero, spriteFlipEffect, 0);
         }
 
         /// <summary>
@@ -295,6 +308,39 @@ namespace CrossBoa
             //ApplyFriction(gameTime);
 
             UpdatePhysics(gameTime);
+        }
+
+        /// <summary>
+        /// Updates the player's animations based on the current state
+        /// </summary>
+        private void UpdateAnimations(GameTime gameTime)
+        {
+            switch (animationState)
+            {
+                case PlayerAnimState.Idle:
+                    currentAnimationFrame = 0;
+
+                    if (movementVector != Vector2.Zero)
+                        animationState = PlayerAnimState.Walk;
+
+                    break;
+
+                case PlayerAnimState.Walk:
+                    // Change frame every 0.2 seconds
+                    if (gameTime.TotalGameTime.TotalSeconds > previousWalkFrameChange + 0.2)
+                    {
+                        previousWalkFrameChange = gameTime.TotalGameTime.TotalSeconds;
+
+                        currentAnimationFrame++;
+                        if (currentAnimationFrame > 3)
+                            currentAnimationFrame = 0;
+                    }
+
+                    if (movementVector == Vector2.Zero)
+                        animationState = PlayerAnimState.Idle;
+
+                    break;
+            }
         }
 
         /// <summary>

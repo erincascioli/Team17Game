@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using Microsoft.Xna.Framework.Media;
 
 namespace CrossBoa
 {
@@ -58,14 +59,14 @@ namespace CrossBoa
         // Assets
         #region Asset Field Declarations
         public static Texture2D whiteSquareSprite;
-        public static Texture2D totemSprite;
+        public static Texture2D skullSpriteSheet;
         public static Texture2D skeletonSprite;
         public static Texture2D playerArrowSprite;
-        public static Texture2D totemProjectileSprite;
+        public static Texture2D fireballSpritesheet;
         public static Texture2D slimeSpritesheet;
         public static Texture2D slimeDeathSpritesheet;
         public static Texture2D xpSprite;
-        private Texture2D snakeSprite;
+        private Texture2D snakeSpriteSheet;
         private Texture2D crossbowSprite;
         private Texture2D hitBox;
         private Texture2D arrowHitBox;
@@ -75,7 +76,7 @@ namespace CrossBoa
         private Texture2D settingsPressedSprite;
         private Texture2D emptyHeart;
         private Texture2D fullHeart;
-        private Texture2D[] menuBGSpriteList;
+        private Texture2D menuBGSheet;
         private Texture2D titleText;
         private Texture2D pauseText;
         private Texture2D gameOverText;
@@ -87,7 +88,7 @@ namespace CrossBoa
         #endregion
 
         // Objects
-        private GameObject[] menuBGLayers;
+        private Rectangle[] menuBGLayers;
         private List<UIElement> playerHealthBar;
         public static List<UIElement> UIElementsList;
         private UIElement crosshair;
@@ -96,11 +97,10 @@ namespace CrossBoa
         public static List<PlayerArrow> playerArrowList;
         private static List<Collectible> collectibles;
 
-        private TextElement testText;
+        // Main Menu Objects
+        RenderTarget2D menuBGTarget;
+        private TextElement splashText;
         private TextElement FPSCounter;
-
-        private TextElement upgradeName;
-        private TextElement upgradeDescription;
 
         // Buttons
         private Button playButton;
@@ -109,8 +109,16 @@ namespace CrossBoa
         private Button gameOverButton;
         private Button[] upgradeButtons;
 
-        private List<GameObject> gameObjectList;
+        // Stuff for Upgrade State
+        private TextElement levelUpText;
+        private TextElement selectAnUpgradeText;
+        private TextElement upgradeName;
+        private TextElement upgradeDescription;
+        private Upgrade[] upgradeChoices;
+        private int prevUpgradeButtonHovered;
 
+        // GameState Stuff
+        private List<GameObject> gameObjectList;
         private GameState gameState;
 
         #region Static properties
@@ -174,6 +182,8 @@ namespace CrossBoa
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
 
+            _graphics.SynchronizeWithVerticalRetrace = false;
+
             IsMouseVisible = false;
         }
 
@@ -181,8 +191,7 @@ namespace CrossBoa
         {
             // TODO: Add your initialization logic here
             gameObjectList = new List<GameObject>();
-            menuBGSpriteList = new Texture2D[5];
-            menuBGLayers = new GameObject[10];
+            menuBGLayers = new Rectangle[8];
             playerHealthBar = new List<UIElement>();
             UIElementsList = new List<UIElement>(20);
             playerArrowList = new List<PlayerArrow>();
@@ -194,7 +203,10 @@ namespace CrossBoa
             _graphics.PreferredBackBufferHeight = 900;
             _graphics.ApplyChanges();
 
+            UIScale = 4;
+
             // Create a render target that can be much more easily rescaled
+            menuBGTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
             gameRenderTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
 
             // Save aspect ratio
@@ -211,37 +223,32 @@ namespace CrossBoa
 
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
-            totemSprite = Content.Load<Texture2D>("TotemSprite");
+            skullSpriteSheet = Content.Load<Texture2D>("TotemSpriteSheet");
             skeletonSprite = Content.Load<Texture2D>("BeastSprite");
             slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
             slimeDeathSpritesheet = Content.Load<Texture2D>("FacelessSlimeDeathSpritesheet-sheet");
             xpSprite = Content.Load<Texture2D>("XPOrb");
             emptyHeart = Content.Load<Texture2D>("Empty Heart");
             fullHeart = Content.Load<Texture2D>("Full Heart");
-            snakeSprite = Content.Load<Texture2D>("snake");
+            snakeSpriteSheet = Content.Load<Texture2D>("SnakeSpritesheet");
             crossbowSprite = Content.Load<Texture2D>("Crossbow");
             hitBox = Content.Load<Texture2D>("Hitbox");
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
             playerArrowSprite = Content.Load<Texture2D>("arrow2");
-            totemProjectileSprite = Content.Load<Texture2D>("FireballSprite");
+            fireballSpritesheet = Content.Load<Texture2D>("FireballSpriteSheet");
             titleText = Content.Load<Texture2D>("TitleText");
             pauseText = Content.Load<Texture2D>("PauseText");
             gameOverText = Content.Load<Texture2D>("GameOverText");
             collectibleSprite = Content.Load<Texture2D>("LifePot");
             crosshairSprite = Content.Load<Texture2D>("Crosshair");
+            menuBGSheet = Content.Load<Texture2D>("bg-sheet");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
 
-
-            for (int i = 0; i < 5; i++)
-            {
-                menuBGSpriteList[i] = Content.Load<Texture2D>("bg" + (i + 1));
-            }
-
             // Load Player
             player = new Player(
-                snakeSprite,
+                snakeSpriteSheet,
                 new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)),
                 DefaultPlayerMovementForce,
                 DefaultPlayerMaxSpeed,
@@ -277,21 +284,19 @@ namespace CrossBoa
             settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
             settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
 
-            testText = new TextElement("A quick brown fox jumps over the lazy dog",
-                ScreenAnchor.Center, new Point(0, 75));
+            splashText = new TextElement("A quick brown fox\njumps over the lazy dog",
+                ScreenAnchor.Center, new Point(0, 50));
+
             FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(-10, -6));
 
             // Load menu background layers
-            for (int i = 0; i < 10; i++)
+            Point bgSize = new Point(1920, 1080);
+            for (int i = 0; i < 8; i++)
             {
-                if (i % 2 == 0)
-                {
-                    menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(0, 0, windowWidth + 10, windowHeight));
-                }
-                else
-                {
-                    menuBGLayers[i] = new GameObject(menuBGSpriteList[i / 2], new Rectangle(-(windowWidth + 10), 0, windowWidth + 10, windowHeight));
-                }
+                menuBGLayers[i] = new Rectangle(new Point(
+                    i % 2 == 0 ? 0 : -bgSize.X,   // Every other layer is placed 800 pixels to the left
+                    0),
+                    bgSize);
             }
 
             // Play Button
@@ -310,13 +315,19 @@ namespace CrossBoa
             gameOverButton = new Button(playHoverSprite, playPressedSprite, true,
                 ScreenAnchor.Center, new Point(0, 10), playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
-            // Upgrade Buttons
+            // Upgrade UI Stuff
+            levelUpText = new TextElement("LEVEL UP!", ScreenAnchor.TopCenter, new Point(0, 40), 2f);
+            selectAnUpgradeText = new TextElement("Select an upgrade", ScreenAnchor.TopCenter, new Point(0, 60), 1.5f);
+
+            upgradeName = new TextElement("", ScreenAnchor.BottomCenter, new Point(0, -70), 1.5f);
+            upgradeDescription = new TextElement("", ScreenAnchor.BottomCenter, new Point(0, -50));
+
             upgradeButtons[0] =
-                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(-30, -40), new Point(16));
+                new Button(null, null, true, ScreenAnchor.Center, new Point(-65, 0), new Point(32));
             upgradeButtons[1] =
-                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(0, -40), new Point(16));
+                new Button(null, null, true, ScreenAnchor.Center, new Point(0, 0), new Point(32));
             upgradeButtons[2] =
-                new Button(null, null, true, ScreenAnchor.BottomCenter, new Point(30, -40), new Point(16));
+                new Button(null, null, true, ScreenAnchor.Center, new Point(65, 0), new Point(32));
 
             // Create player health bar
             for (int i = 0; i < DefaultPlayerHealth; i++)
@@ -337,6 +348,9 @@ namespace CrossBoa
             SpawnManager.GameObjectList = gameObjectList;
             LevelManager.LContent = Content;
 
+            // Title Track starts playing
+            MediaPlayer.Play(SoundManager.titleTheme);
+            MediaPlayer.IsRepeating = true;
 
             OnResize();
         }
@@ -358,7 +372,6 @@ namespace CrossBoa
             {
                 // Main Menu
                 case GameState.MainMenu:
-
                     // Update
                     UpdateMainMenu(gameTime);
 
@@ -367,6 +380,9 @@ namespace CrossBoa
                     {
                         LoadDefaultLevel();
                         gameState = GameState.Game;
+
+                        // Stops current song
+                        MediaPlayer.Stop();
                     }
 
                     break;
@@ -377,15 +393,30 @@ namespace CrossBoa
                     // Update
                     UpdateGame(gameTime);
 
-                    // Check state changes
+                    // --- Check state changes ---
+                    // Upgrade
+                    // TEMPORARY TEST CODE TO SWITCH TO UPGRADE STATE
+                    if (WasKeyPressed(Keys.M))
+                    {
+                        gameState = GameState.Upgrading;
+                        DisplayUpgradeChoices();
+                    }
+
+                    // Game Over
                     if (player.CurrentHealth <= 0)
                         GameOver();
+
+                    // Pause
+                    pauseButton.Update(gameTime);
+                    if (pauseButton.HasBeenPressed() ||
+                        WasKeyPressed(Keys.Escape))
+                        gameState = GameState.Pause;
 
                     break;
 
                 // Upgrading
                 case GameState.Upgrading:
-                    UpdateUpgradeScreen();
+                    UpdateUpgradeScreen(gameTime);
                     break;
 
                 // Settings - NOT YET IMPLEMENTED
@@ -449,6 +480,7 @@ namespace CrossBoa
 
                 // Upgrading screen
                 case GameState.Upgrading:
+                    DrawGame();
                     DrawUpgradeUI();
                     break;
 
@@ -479,6 +511,11 @@ namespace CrossBoa
                     break;
             }
 
+            // Draw the crosshair
+            _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
+            crosshair.Draw(_spriteBatch);
+            _spriteBatch.End();
+
             base.Draw(gameTime);
         }
 
@@ -491,41 +528,54 @@ namespace CrossBoa
         /// <param name="gameTime">A reference to the GameTime</param>
         private void UpdateMainMenu(GameTime gameTime)
         {
-            AnimateMainMenuBG();
+            AnimateMainMenuBG(gameTime);
 
             playButton.Update(gameTime);
-
         }
 
         /// <summary>
         /// Animates the main menu with parallax
         /// </summary>
-        private void AnimateMainMenuBG()
+        private void AnimateMainMenuBG(GameTime gameTime)
         {
+            int frame = (int) (gameTime.TotalGameTime.TotalSeconds * 60);
+
             // Layer 1 is a blank image
 
             // Layer 2
-            menuBGLayers[2].Position += new Vector2(0.1f * UIScale, 0);
-            menuBGLayers[3].Position += new Vector2(0.1f * UIScale, 0);
+            if (frame % 3 == 0)
+            {
+                menuBGLayers[0].Location += new Point(1, 0);
+                menuBGLayers[1].Location += new Point(1, 0);
+            }
 
             // Layer 3
-            menuBGLayers[4].Position += new Vector2(0.2f * UIScale, 0);
-            menuBGLayers[5].Position += new Vector2(0.2f * UIScale, 0);
+            if (frame % 2 == 0)
+            {
+                menuBGLayers[2].Location += new Point(1, 0);
+                menuBGLayers[3].Location += new Point(1, 0);
+            }
 
             // Layer 4
-            menuBGLayers[6].Position += new Vector2(0.3f * UIScale, 0);
-            menuBGLayers[7].Position += new Vector2(0.3f * UIScale, 0);
+            if (frame % 3 == 0 || frame % 3 == 1)
+            {
+                menuBGLayers[4].Location += new Point(1, 0);
+                menuBGLayers[5].Location += new Point(1, 0);
+            }
 
             // Layer 5
-            menuBGLayers[8].Position += new Vector2(0.4f * UIScale, 0);
-            menuBGLayers[9].Position += new Vector2(0.4f * UIScale, 0);
+            if (frame % 1 == 0)
+            {
+                menuBGLayers[6].Location += new Point(1, 0);
+                menuBGLayers[7].Location += new Point(1, 0);
+            }
 
             // Wrap image around the screen after it goes off the edge
-            foreach (GameObject layer in menuBGLayers)
+            for (int i = 0; i < menuBGLayers.Length; i++)
             {
-                if (layer.Position.X > windowWidth)
+                if (menuBGLayers[i].Location.X > menuBGLayers[0].Width)
                 {
-                    layer.Position -= new Vector2(menuBGLayers[0].Width * 2, 0);
+                    menuBGLayers[i].Location -= new Point(menuBGLayers[0].Width * 2, 0);
                 }
             }
         }
@@ -535,25 +585,55 @@ namespace CrossBoa
         /// </summary>
         private void DrawMainMenu()
         {
+            // Draw main menu background to a smaller target, then scale up to reduce lag
+            GraphicsDevice.SetRenderTarget(menuBGTarget);
+            GraphicsDevice.Clear(new Color(174, 222, 203));
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
-            GraphicsDevice.Clear(new Color(174, 222, 203));
-
-            foreach (GameObject background in menuBGLayers)
+            for (int i = 0; i < 6; i++)
             {
-                background.Draw(_spriteBatch);
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
             }
 
+            _spriteBatch.End();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+
+            for (int i = 6; i < 8; i++)
+            {
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
+            }
+
+            _spriteBatch.End();
+            GraphicsDevice.SetRenderTarget(null);
+
+            // Draw the main menu
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+
+            // Determine background size
+            Point menuBGSize;
+            if (outputAspectRatio <= preferredAspectRatio)
+            {
+                // output is taller than it is wider, set size to window height
+                menuBGSize = new Point((int) MathF.Round(windowHeight * preferredAspectRatio), windowHeight);
+            }
+            else
+            {
+                // output is wider than it is tall, set size to window width
+                menuBGSize = new Point(windowWidth, (int) MathF.Round(windowWidth / preferredAspectRatio));
+            }
+            
+            // Draw background
+            _spriteBatch.Draw(menuBGTarget, new Rectangle(Point.Zero, menuBGSize), Color.White);
+
+            // Title Text
             _spriteBatch.Draw(titleText, 
                 Helper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), titleText.Bounds.Size * new Point(UIScale * 4)), 
                 Color.White);
 
             playButton.Draw(_spriteBatch);
 
-            crosshair.Draw(_spriteBatch);
-
-            // TEST TEXT
-            testText.Draw(_spriteBatch);
+            // Splash Text
+            splashText.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -581,22 +661,22 @@ namespace CrossBoa
                 if ((skull = gameObjectList[i] as Skull) != null && skull.IsAlive
                     && skull.ReadyToFire)
                 {
-                    Arrow newTotemArrow = new Arrow(totemProjectileSprite,
+                    Projectile newTotemProjectile = new Projectile(fireballSpritesheet,
                         new Rectangle(-100,
                                       -100,
                                       48,
                                       48),
                         new Vector2(0, 0));
 
-                    CollisionManager.AddProjectile(newTotemArrow);
-                    gameObjectList.Add(newTotemArrow);
+                    CollisionManager.AddProjectile(newTotemProjectile);
+                    gameObjectList.Add(newTotemProjectile);
 
-                    skull.Shoot(newTotemArrow);
+                    skull.Shoot(newTotemProjectile);
                 }
 
                 // Removes all inactive projectiles from play.
-                Arrow arrow;
-                if ((arrow = gameObjectList[i] as Arrow) != null && !arrow.IsActive)
+                Projectile projectile;
+                if ((projectile = gameObjectList[i] as Projectile) != null && !projectile.IsActive)
                 {
                     gameObjectList.RemoveAt(i);
                     i--;
@@ -633,9 +713,14 @@ namespace CrossBoa
             }
 
             // Update all player arrows
-            foreach (PlayerArrow playerArrow in playerArrowList)
+            for (int i = 0; i < playerArrowList.Count; i++)
             {
-                playerArrow.Update(gameTime);
+                playerArrowList[i].Update(gameTime);
+                if (playerArrowList[i].FlaggedForDeletion)
+                {
+                    playerArrowList.Remove(playerArrowList[i]);
+                    i--;
+                }
             }
 
             // CollisionManager checks for collisions
@@ -643,12 +728,6 @@ namespace CrossBoa
 
             // Update crossbow (Fixes crossbow moving off of player)
             crossbow.Update(gameTime);
-
-            // Pause if player presses pause key or escape
-            pauseButton.Update(gameTime);
-            if (pauseButton.HasBeenPressed() ||
-                WasKeyPressed(Keys.Escape))
-                gameState = GameState.Pause;
 
             // ---- DEBUG UPDATE ----
             if (isDebugActive)
@@ -689,11 +768,11 @@ namespace CrossBoa
                 }
 
                 // TEST CODE TO UNLOCK UPGRADES
-
+                /*
                 if (WasKeyPressed(Keys.M))
                     UpgradeManager.UnlockUpgrade("Multishot");
                 if (WasKeyPressed(Keys.V))
-                    UpgradeManager.UnlockUpgrade("Vampirism");
+                    UpgradeManager.UnlockUpgrade("Vampirism");*/
 
                 isGodModeActive = true;
             }
@@ -855,8 +934,6 @@ namespace CrossBoa
                
             }
 
-            crosshair.Draw(_spriteBatch);
-
             _spriteBatch.End();
         }
 
@@ -884,35 +961,6 @@ namespace CrossBoa
                 new Vector2(windowWidth - 500, windowHeight - 80), isDebugActive ? Color.Red : Color.Green);
             debugButton.Draw(_spriteBatch);
 
-            crosshair.Draw(_spriteBatch);
-
-            _spriteBatch.End();
-        }
-
-        // Choosing Upgrade
-        private void UpdateUpgradeScreen()
-        {
-
-        }
-
-        private void DrawUpgradeUI()
-        {
-            _spriteBatch.Begin();
-
-            // Draw dark overlay over the game
-            _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(windowWidth, windowHeight)), new Color(Color.Black, 160));
-
-            
-
-            // Draw buttons
-            foreach (Button button in upgradeButtons)
-            {
-
-                button.Draw(_spriteBatch);
-            }
-            
-
-            
             _spriteBatch.End();
         }
 
@@ -931,10 +979,60 @@ namespace CrossBoa
                 isDebugActive = !isDebugActive;
         }
 
+        // Choosing Upgrade
+        private void UpdateUpgradeScreen(GameTime gameTime)
+        {
+            for (var i = 0; i < upgradeButtons.Length; i++)
+            {
+                upgradeButtons[i].Update(gameTime);
+                
+                // If the player hovers over a button, display that upgrade's text
+                if (upgradeButtons[i].IsMouseOver() && prevUpgradeButtonHovered != i)
+                {
+                    prevUpgradeButtonHovered = i;
+                    upgradeName.Text = upgradeChoices[i].Name;
+                    upgradeDescription.Text = upgradeChoices[i].Description;
+                }
+
+                // If the player clicks on an upgrade, unlock it
+                if (upgradeButtons[i].HasBeenPressed())
+                {
+                    UpgradeManager.UnlockUpgrade(upgradeChoices[i].Name);
+                    prevUpgradeButtonHovered = -1;
+                    upgradeName.Text = "";
+                    upgradeDescription.Text = "";
+                    gameState = GameState.Game;
+                }
+            }
+        }
+
+        private void DrawUpgradeUI()
+        {
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+            // Draw dark overlay over the game
+            _spriteBatch.Draw(whiteSquareSprite, new Rectangle(Point.Zero, new Point(windowWidth, windowHeight)), new Color(Color.Black, 160));
+
+            // Draw buttons
+            foreach (Button button in upgradeButtons)
+            {
+                button.Draw(_spriteBatch);
+            }
+
+            // Draw upgrade text
+            levelUpText.Draw(_spriteBatch);
+            selectAnUpgradeText.Draw(_spriteBatch);
+
+            upgradeName.Draw(_spriteBatch);
+            upgradeDescription.Draw(_spriteBatch);
+
+            _spriteBatch.End();
+        }
+
         // Game Over
         private void UpdateGameOver(GameTime gameTime)
         {
-            AnimateMainMenuBG();
+            AnimateMainMenuBG(gameTime);
 
             gameOverButton.Update(gameTime);
 
@@ -946,6 +1044,10 @@ namespace CrossBoa
                 {
                     i.Sprite = fullHeart;
                 }
+
+                // Title Track starts playing
+                MediaPlayer.Play(SoundManager.titleTheme);
+                MediaPlayer.IsRepeating = true;
             }
         }
 
@@ -954,21 +1056,52 @@ namespace CrossBoa
         /// </summary>
         private void DrawGameOver()
         {
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
             GraphicsDevice.Clear(new Color(174, 222, 203));
 
-            foreach (GameObject background in menuBGLayers)
+            // Draw main menu background to a smaller target, then scale up to reduce lag
+            GraphicsDevice.SetRenderTarget(menuBGTarget);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearClamp);
+
+            for (int i = 0; i < 6; i++)
             {
-                background.Draw(_spriteBatch);
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
             }
+
+            _spriteBatch.End();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+
+            for (int i = 6; i < 8; i++)
+            {
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
+            }
+
+            _spriteBatch.End();
+            GraphicsDevice.SetRenderTarget(null);
+
+            // Draw the main menu
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+
+            // Determine background size
+            Point menuBGSize;
+            if (outputAspectRatio <= preferredAspectRatio)
+            {
+                // output is taller than it is wider, set size to window height
+                menuBGSize = new Point((int)MathF.Round(windowHeight * preferredAspectRatio), windowHeight);
+            }
+            else
+            {
+                // output is wider than it is tall, set size to window width
+                menuBGSize = new Point(windowWidth, (int)MathF.Round(windowWidth / preferredAspectRatio));
+            }
+
+            // Draw background
+            _spriteBatch.Draw(menuBGTarget, new Rectangle(Point.Zero, menuBGSize), Color.White);
 
             _spriteBatch.Draw(gameOverText, 
                 Helper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), gameOverText.Bounds.Size * new Point(UIScale * 4)), 
                 Color.White);
 
             gameOverButton.Draw(_spriteBatch);
-
-            crosshair.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -984,8 +1117,6 @@ namespace CrossBoa
             _spriteBatch.DrawString(arial32, "Credits",
                 new Vector2(windowWidth - 175,
                     windowHeight / 2f), Color.White);
-
-            crosshair.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -1052,6 +1183,19 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Run this when the player should unlock an upgrade
+        /// </summary>
+        public void DisplayUpgradeChoices()
+        {
+            upgradeChoices = UpgradeManager.GenerateUpgradeChoices();
+
+            for (var i = 0; i < upgradeButtons.Length; i++)
+            {
+                upgradeButtons[i].Sprite = upgradeChoices[i].Sprite;
+            }
+        }
+
+        /// <summary>
         /// Checks if this was the first frame a key was pressed
         /// </summary>
         /// <param name="key">The key to check</param>
@@ -1103,20 +1247,24 @@ namespace CrossBoa
                 element.OnResize();
             }
 
-            // Update the sizes of all the background layers
-            for (int i = 0; i < 10; i++)
-            {
-                if (i % 2 == 0)
-                {
-                    menuBGLayers[i].Position = Vector2.Zero;
-                    menuBGLayers[i].Size = new Point(windowWidth + 10, windowHeight);
-                }
-                else
-                {
-                    menuBGLayers[i].Position = new Vector2(-(windowWidth + 10), 0);
-                    menuBGLayers[i].Size = new Point(windowWidth + 10, windowHeight);
-                }
-            }
+            // --- No longer necessary ---
+            //// Update the size and position of all the background layers
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    if (outputAspectRatio <= preferredAspectRatio)
+            //    {
+            //        // output is taller than it is wider, set size to window height
+            //        menuBGLayers[i].Size = new Point((int)MathF.Round(windowHeight * preferredAspectRatio), windowHeight);
+            //    }
+            //    else
+            //    {
+            //        // output is wider than it is tall, set size to window width
+            //        menuBGLayers[i].Size = new Point(windowWidth, (int)MathF.Round(windowWidth / preferredAspectRatio));
+            //    }
+            //
+            //    // Update the position of all the background layers
+            //    menuBGLayers[i].Position = i % 2 == 0 ? Vector2.Zero : new Vector2(-(menuBGLayers[i].Size.X), 0);
+            //}
         }
 
         /// <summary>
