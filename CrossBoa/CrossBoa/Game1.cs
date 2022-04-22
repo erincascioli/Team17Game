@@ -83,6 +83,8 @@ namespace CrossBoa
         private Texture2D collectibleSprite;
         private Texture2D crosshairSprite;
 
+        public static Texture2D UpgradeBloodOrb;
+
         private SpriteFont arial32;
         private static SpriteFont pressStart;
         #endregion
@@ -242,6 +244,9 @@ namespace CrossBoa
             collectibleSprite = Content.Load<Texture2D>("LifePot");
             crosshairSprite = Content.Load<Texture2D>("Crosshair");
             menuBGSheet = Content.Load<Texture2D>("bg-sheet");
+
+            // Upgrade sprites
+            UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
