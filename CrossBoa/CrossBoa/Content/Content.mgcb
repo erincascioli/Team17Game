@@ -461,6 +461,27 @@
 /processorParam:Quality=Best
 /build:Jump 77.wav
 
+#begin Levels/Level1.txt
+/copy:Levels/Level1.txt
+
+#begin Levels/Level2.txt
+/copy:Levels/Level2.txt
+
+#begin Levels/Level3.txt
+/copy:Levels/Level3.txt
+
+#begin Levels/Level4.txt
+/copy:Levels/Level4.txt
+
+#begin Levels/Level5.txt
+/copy:Levels/Level5.txt
+
+#begin Levels/LevelObjectList.txt
+/copy:Levels/LevelObjectList.txt
+
+#begin Levels/TutorialLevel.txt
+/copy:Levels/TutorialLevel.txt
+
 #begin LifePot.png
 /importer:TextureImporter
 /processor:TextureProcessor

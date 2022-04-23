@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace CrossBoa.Managers
 {
@@ -20,7 +21,7 @@ namespace CrossBoa.Managers
         private static StreamReader reader;
         private const int blockWidth = 64;
         private const int blockHeight = 64;
-        private static Microsoft.Xna.Framework.Content.ContentManager Content;
+        private static ContentManager Content;
         private static Door entrance;
         private static Door exit;
         private static int stage;
@@ -33,7 +34,7 @@ namespace CrossBoa.Managers
         private static string currentLevel;
 
         // Requires a reference
-        public static Microsoft.Xna.Framework.Content.ContentManager LContent
+        public static ContentManager LContent
         {
             get { return Content;}
             set { Content = value; }
@@ -59,6 +60,12 @@ namespace CrossBoa.Managers
             get { return stage; }
         }
 
+        public static string CurrentLevel
+        {
+            get { return currentLevel; }
+            set { currentLevel = value; }
+        }
+
         static LevelManager()
         {
             levelTiles = new List<Tile>();
@@ -69,7 +76,7 @@ namespace CrossBoa.Managers
             // before any other method can be made
             try
             {
-                reader = new StreamReader("../../../LevelObjectList.txt");
+                reader = new StreamReader("Content/Levels/LevelObjectList.txt");
 
                 // Gets the default instructions out of the file
                 string[] fileData = reader.ReadLine().Split(',');
@@ -89,7 +96,8 @@ namespace CrossBoa.Managers
                 try
                 {
                     // Just in case it's open
-                    reader.Close();
+                    if (reader != null)
+                        reader.Close();
                 }
                 catch
                 {
@@ -103,7 +111,6 @@ namespace CrossBoa.Managers
         /// Restrictions: Given file must exist and be accurate
         ///               16 x 16 is the only accepted file size at the moment
         /// </summary>
-        /// <param name="fileName"></param>
         public static void LoadLevel()
         {
             // Level is cleared so that the next may be loaded
@@ -143,7 +150,7 @@ namespace CrossBoa.Managers
             try
             {
                 // file is accessed by the reader
-                reader = new StreamReader("../../../" + currentLevel + ".txt");
+                reader = new StreamReader("Content/Levels/" + currentLevel + ".txt");
 
                 // Data for table size is stored
                 string[] tableInfo = reader.ReadLine().Split(',');
@@ -218,7 +225,8 @@ namespace CrossBoa.Managers
                 try
                 {
                     // Just in case
-                    reader.Close();
+                    if (reader != null)
+                        reader.Close();
                 }
                 catch
                 {
@@ -823,7 +831,6 @@ namespace CrossBoa.Managers
                 case 5:
                     currentLevel = "Level5";
                     break;
-
             }
         }
 
