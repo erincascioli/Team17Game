@@ -84,8 +84,7 @@ namespace CrossBoa
                 previousState = mouseState;
 
                 // Button was clicked
-                if (OnClick != null) 
-                    OnClick();
+                OnClick?.Invoke();
 
                 return true;
             }

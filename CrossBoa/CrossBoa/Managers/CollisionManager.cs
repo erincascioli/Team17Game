@@ -81,10 +81,10 @@ namespace CrossBoa.Managers
                 {
                     enemy.DealContactDamage(Game1.Player);
                     // If the enemy is a Beast, have it get knocked back
-                    if (enemy is Beast && ((Beast)enemy).InCharge)
+                    if (enemy is Beast beast && beast.InCharge)
                     {
                         enemy.GetKnockedBack(Game1.Player, 500);
-                        ((Beast)enemy).HasCollided = true;
+                        beast.HasCollided = true;
                         Camera.ShakeScreen(10);
                     }
                 }
@@ -148,13 +148,16 @@ namespace CrossBoa.Managers
                         EntityEnvironmentCollide<Enemy>(enemy, tile);
 
                         // If the enemy is a Beast, have it get knocked back
-                        if (enemy is Beast && ((Beast)enemy).InCharge)
+                        if (enemy is Beast beast && beast.InCharge)
                         {
                             // I am so good at coding
                             // -Leo
+                            // I simplified the code
+                            // -Donovan
                             enemy.GetKnockedBack(new Projectile(null, tile.Rectangle, 0, 0),
                                 500);
-                            ((Beast)enemy).HasCollided = true;
+                            beast.HasCollided = true;
+                            SoundManager.beastWallBump.Play();
                             Camera.ShakeScreen(10);
                         }
                     }

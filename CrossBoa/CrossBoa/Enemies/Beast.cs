@@ -8,24 +8,41 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CrossBoa.Enemies
 {
     /// <summary>
-    /// A skeleton (whether or not it turns out to actually
-    /// be a skeleton will be decided). It charges at the player constantly.
-    /// Written by: Leo Schindler-Gerendasi.
+    /// The current charging state of the beast.
+    /// Unnoticed: The beast is idle.
+    /// Readying: The beast vibrates.
+    /// Charging: The beast moves towards the player fast.
+    /// Tired: The beast moves towards the player slower.
     /// </summary>
-
     enum ChargingState
     {
         Unnoticed,
         Readying,
         Charging,
-        Resting
+        Tired
     }
 
+    public enum BeastAnimState
+    {
+        FacingDown,
+        FacingUp,
+        FacingLeft,
+        FacingRight
+    }
+
+
+    /// <summary>
+    /// A Beast (formerly a skeleton). It stands still until you enter
+    /// its provoke radius, at which point it will charge at you constantly.
+    /// Written by: Leo Schindler-Gerendasi.
+    /// </summary>
     class Beast : Enemy, ICollidable
     {
         // ~~~ FIELDS ~~~
-        private const float MovementForce = 5000f;
-        private const float FrictionForce = 50f;
+        private const float MovementForce = 1000f;
+        private const float FrictionForce = 100f;
+        private const float MovementMaxSpd = 250f;
+        private const float KnockbackMaxSpd = 450f;
 
         // Movement fields
         private Player target;
@@ -39,6 +56,11 @@ namespace CrossBoa.Enemies
         // Other fields
         private Rectangle drawRect;
 
+        // Animation Fields
+        private BeastAnimState animationState;
+        private int currentAnimationFrame;
+        private double previousFrameChangeTime;
+
         // ~~~ PROPERTIES ~~~
         /// <summary>
         /// The beast's hitbox.
@@ -50,8 +72,6 @@ namespace CrossBoa.Enemies
                 return Rectangle; // new Rectangle(Rectangle.X + 4, Rectangle.Y + 12, 56, 56); 
             }
         }
-
-        
 
         /// <summary>
         /// The distance between the the Beast and the player.
@@ -90,7 +110,7 @@ namespace CrossBoa.Enemies
         {
             get
             {
-                return chargingState == ChargingState.Charging;
+                return chargingState == ChargingState.Charging || chargingState == ChargingState.Tired;
             }
         }
 
@@ -109,7 +129,7 @@ namespace CrossBoa.Enemies
             color = Color.White;
             isAlive = true;
             target = Game1.Player;
-            maxSpeed = 450f;
+            maxSpeed = MovementMaxSpd;
             knockbackTimer = 0.25f;
             provokeRadius = 250f;
             chargeTimer = 0;
@@ -124,7 +144,14 @@ namespace CrossBoa.Enemies
         /// </summary>
         public override void Move()
         {
-            ApplyForce(chargeDirection, MovementForce);
+            float movForce = MovementForce;
+            if (chargingState == ChargingState.Tired)
+                movForce *= 0.85f;
+            
+            ApplyForce(Helper.DirectionBetween(
+                                new Point((int)position.X + Width / 2, (int)position.Y + Height / 2),
+                                new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y)), 
+                       movForce);
             //velocity *= 5f;
             /*Point player = new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y);
 
@@ -136,6 +163,9 @@ namespace CrossBoa.Enemies
         public override void GetKnockedBack(ICollidable other, float force)
         {
             knockbackTimer = 0;
+            maxSpeed = KnockbackMaxSpd;
+            if (other is Projectile && !(other is PlayerArrow))
+                chargingState = ChargingState.Unnoticed;
             base.GetKnockedBack(other, force * 1000);
         }
 
@@ -145,9 +175,19 @@ namespace CrossBoa.Enemies
             // the more damage it takes
             provokeRadius += 50f;
 
-            // Resets the beast's charging state.
-            chargingState = ChargingState.Resting;
-            chargeTimer = 2f;
+            // Provokes the beast if it's not yet provoked, 
+            // and un-tireds[sic] the beast if it is.
+            if (chargingState == ChargingState.Unnoticed)
+            {
+
+                chargingState = ChargingState.Readying;
+                chargeTimer = 0f;
+            }
+            else
+            {
+                chargingState = ChargingState.Charging;
+                chargeTimer = 2f;
+            }
             base.TakeDamage(damage);
         }
 
@@ -157,60 +197,75 @@ namespace CrossBoa.Enemies
             float totalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Knockback stuff
-            if (knockbackTimer < 0.15)
+            if (knockbackTimer < 0.25)
             {
-                ApplyFriction(gameTime);
+                if (velocity != Vector2.Zero)
+                {
+                    velocity /= 1.1f;
+                    ApplyFriction(gameTime);
+                }
+                drawRect = Rectangle;
                 knockbackTimer += totalSeconds;
             }
+            else if (maxSpeed != MovementMaxSpd)
+                maxSpeed = MovementMaxSpd;
             else if (Math.Abs(DistanceBetween) < provokeRadius && chargingState == ChargingState.Unnoticed)
             {
                 chargingState = ChargingState.Readying;
                 chargeTimer = 0;
             }
-
-            // State machine to deal with beast's current movement state
-            // in all cases: increase the charge timer, as that is the basis for this chunk of code
-            // from 0 - 1 seconds: ready the attack (vibrate)
-            // from 1 - 1.5 seconds: charge (move forward very very fast)
-            //      also check for collisions. If the beast runs into a wall, set charge timer
-            //      to 1.5 seconds immediately (stop the charge) and knock the beast back
-            // from 1.5 - 3 seconds: do nothing lmao
-            if (chargeTimer <= 3 && chargingState != ChargingState.Unnoticed)
-                chargeTimer += totalSeconds;
-
-            switch (chargingState)
+            else
             {
-                case ChargingState.Readying:
-                    Point vibrationMod =
-                        new Point(Game1.RNG.Next(-1, 1), Game1.RNG.Next(-1, 1));
-                    drawRect = new Rectangle(
-                    new Point(Rectangle.X + vibrationMod.X, Rectangle.Y + vibrationMod.Y),
-                    Rectangle.Size);
-                    if (chargeTimer >= 1f)
-                    {
-                        chargeDirection = Helper.DirectionBetween(
-                            new Point((int)position.X + Width / 2, (int)position.Y + Height / 2),
-                            new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y));
-                        chargingState = ChargingState.Charging;
-                    }
-                    break;
+                // State machine to deal with beast's current movement state
+                // in all cases: increase the charge timer, as that is the basis for this chunk of code
+                // from 0 - 0.5 seconds: ready the attack (vibrate)
+                // from 0.5 - 3 seconds: charge (move towards the player fast)
+                //      also check for collisions. If the beast runs into a wall, set charge timer
+                //      to 3 seconds immediately (stop the charge) and knock the beast back
+                // from 3 seconds onwards: charge towards the player at a slower speed until they 
+                if (chargingState != ChargingState.Unnoticed)
+                    chargeTimer += totalSeconds;
 
-                case ChargingState.Charging:
-                    Move();
-                    if (hasCollided)
-                    {
-                        SoundManager.beastWallBump.Play();
-                        hasCollided = false;
-                        chargeTimer = 1.5f;
-                    }
-                    if (chargeTimer >= 1.5f)
-                        chargingState = ChargingState.Resting;
-                    break;
+                switch (chargingState)
+                {
+                    case ChargingState.Readying:
+                        Point vibrationMod =
+                            new Point(Game1.RNG.Next(-1, 1), Game1.RNG.Next(-1, 1));
+                        drawRect = new Rectangle(
+                        new Point(Rectangle.X + vibrationMod.X, Rectangle.Y + vibrationMod.Y),
+                        Rectangle.Size);
+                        if (chargeTimer >= 0.5f)
+                        {
+                            chargeDirection = Helper.DirectionBetween(
+                                new Point((int)position.X + Width / 2, (int)position.Y + Height / 2),
+                                new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y));
+                            chargingState = ChargingState.Charging;
+                        }
 
-                case ChargingState.Resting:
-                    if (chargeTimer >= 3f)
-                        chargingState = ChargingState.Unnoticed;
-                    break;
+                        break;
+
+                    case ChargingState.Charging:
+                        Move();
+                        if (hasCollided)
+                        {
+                            hasCollided = false;
+                            chargeTimer = 1.5f;
+                        }
+                        if (chargeTimer >= 3f && Math.Abs(DistanceBetween) < provokeRadius * 1.5)
+                        {
+                            chargeTimer = 3f;
+                            chargingState = ChargingState.Tired;
+                        }
+                        break;
+
+                    case ChargingState.Tired:
+                        Move();
+                        if (Math.Abs(DistanceBetween) < provokeRadius)
+                            chargingState = ChargingState.Charging;
+                        else if (chargeTimer >= 5f && Math.Abs(DistanceBetween) < provokeRadius * 2)
+                            chargingState = ChargingState.Unnoticed;
+                        break;
+                }
             }
 
             // Other modifications based on charge state:
@@ -226,14 +281,65 @@ namespace CrossBoa.Enemies
                     ApplyFriction(gameTime);
                 }
             }
+
+            UpdateAnimations(gameTime);
         }
 
+        /// <summary>
+        /// Updates the beast's animations based on the current state
+        /// </summary>
+        private void UpdateAnimations(GameTime gameTime)
+        {
+            // Only face the player and move directions when charging
+            if (chargingState == ChargingState.Charging)
+            {
+                // Change frame every 0.12 seconds
+                if (gameTime.TotalGameTime.TotalSeconds > previousFrameChangeTime + 0.12)
+                {
+                    previousFrameChangeTime = gameTime.TotalGameTime.TotalSeconds;
+
+                    currentAnimationFrame++;
+                    if (currentAnimationFrame > 3)
+                        currentAnimationFrame = 0;
+                }
+            }
+            
+            // If not charging, reset frame to 0
+            else
+            {
+                currentAnimationFrame = 0;
+            }
+
+            // Look at the player if readying or charging
+            if (chargingState == ChargingState.Readying || chargingState == ChargingState.Charging)
+            {
+                Point differenceBetweenPlayer = Game1.Player.Rectangle.Center - this.Rectangle.Center;
+
+                // Enemy should face left or right
+                if (MathF.Abs(differenceBetweenPlayer.X) > MathF.Abs(differenceBetweenPlayer.Y))
+                {
+                    animationState = differenceBetweenPlayer.X > 0 ?
+                        BeastAnimState.FacingRight :
+                        BeastAnimState.FacingLeft;
+                }
+
+                // Enemy should face up or down
+                else
+                {
+                    animationState = differenceBetweenPlayer.Y > 0 ?
+                        BeastAnimState.FacingDown :
+                        BeastAnimState.FacingUp;
+                }
+            }
+        }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            
             if (isAlive)
             {
-                spriteBatch.Draw(sprite, drawRect, color);
+                spriteBatch.Draw(sprite,
+                    drawRect,
+                    new Rectangle((int)animationState * 16, currentAnimationFrame * 16, 16, 16),
+                    color);
             }
         }
 

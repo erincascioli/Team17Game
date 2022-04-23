@@ -3,3 +3,6 @@ Jump 77
 Hit_hurt 7
 Hit_hurt 45 (1)
 Hit_hurt 45 (2)
+Hit_hurt 200 (22)
+Hit_hurt 114 (4)
+Hit_hurt 114 (5)

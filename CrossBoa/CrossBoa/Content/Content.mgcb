@@ -13,12 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../../../../Downloads/1000+NintendoSFX!/SFX_Hit-Hurt/Hit_hurt 7.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:../../../../../../../Downloads/1000+NintendoSFX!/SFX_Hit-Hurt/Hit_hurt 7.wav;Hit_hurt 7.wav
-
 #begin AltCrackedWall.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -73,6 +67,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:BeastSprite.png
+
+#begin BeastSpriteSheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BeastSpriteSheet.png
 
 #begin bg-sheet.png
 /importer:TextureImporter
@@ -323,6 +329,24 @@
 /processorParam:TextureFormat=Color
 /build:GrassTest.PNG
 
+#begin Hit_hurt 114 (4).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 114 (4).wav
+
+#begin Hit_hurt 114 (5).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 114 (5).wav
+
+#begin Hit_hurt 200 (22).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 200 (22).wav
+
 #begin Hit_hurt 34.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -341,6 +365,12 @@
 /processorParam:Quality=Best
 /build:Hit_hurt 45 (2).wav
 
+#begin Hit_hurt 7.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 7.wav
+
 #begin Hitbox.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -352,6 +382,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Hitbox.png
+
+#begin Icons_23.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Icons_23.png;Upgrade_BloodOrb.png
 
 #begin Jump 77.wav
 /importer:WavImporter
@@ -370,6 +412,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:LifePot.png
+
+#begin MainMenuPressed.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MainMenuPressed.png
+
+#begin MainMenuReguar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MainMenuReguar.png
 
 #begin Minecraft Arrow.png
 /importer:TextureImporter
