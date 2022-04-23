@@ -537,6 +537,8 @@ namespace CrossBoa
             AnimateMainMenuBG(gameTime);
 
             playButton.Update(gameTime);
+
+            playButton.Position += Vector2.UnitY;
         }
 
         /// <summary>

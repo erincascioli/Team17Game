@@ -72,7 +72,7 @@ namespace CrossBoa
             set
             {
                 position = value;
-                rectangle = Helper.MakeRectangleFromCenter(value.ToPoint(), rectangle.Size);
+                OnResize();
 
                 // If the text has multiple lines, loop through it and edit the positions of each line
                 if (lines != null)
