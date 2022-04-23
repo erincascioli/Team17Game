@@ -235,8 +235,7 @@ namespace CrossBoa
             position = new Vector2(-1000, -1000);
 
             // Invoke OnPickup event
-            if (OnPickup != null)
-                OnPickup();
+            OnPickup?.Invoke();
         }
 
         /// <summary>
