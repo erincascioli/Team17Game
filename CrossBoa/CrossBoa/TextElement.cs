@@ -64,6 +64,31 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// A Vector2 representing the center of this UI Element
+        /// </summary>
+        public override Vector2 Position
+        {
+            get { return position; }
+            set
+            {
+                position = value;
+                OnResize();
+
+                // If the text has multiple lines, loop through it and edit the positions of each line
+                if (lines != null)
+                {
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        lineRects[i] = Helper.MakeRectangleFromCenter(
+                            new Vector2(rectangle.Center.X,
+                                rectangle.Center.Y - (rectangle.Height / 2f) + (lineRects[i].Size.Y * i) + (lineRects[i].Size.Y / 2f)).ToPoint(),
+                            lineRects[i].Size);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// A point representing this GameObject's size
         /// </summary>
         public override Point Size
@@ -126,7 +151,7 @@ namespace CrossBoa
         /// <summary>
         /// Splits the text up into lines
         /// </summary>
-        public void SplitText()
+        private void SplitText()
         {
             // Split the text up into multiple lines
             lines = text.Split('\n');
