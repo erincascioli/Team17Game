@@ -84,6 +84,8 @@ namespace CrossBoa
         private Texture2D collectibleSprite;
         private Texture2D crosshairSprite;
         private Texture2D flashSprite;
+        private Texture2D healthRecoverySprite;
+        private Texture2D targetSprite;
 
         public static Texture2D UpgradeBloodOrb;
 
@@ -247,6 +249,8 @@ namespace CrossBoa
             crosshairSprite = Content.Load<Texture2D>("Crosshair");
             menuBGSheet = Content.Load<Texture2D>("bg-sheet");
             flashSprite = Content.Load<Texture2D>("RecoveryFlash");
+            healthRecoverySprite = Content.Load<Texture2D>("HealthCollectible");
+            targetSprite = Content.Load<Texture2D>("TargetSprite");
 
             // Upgrade sprites
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");

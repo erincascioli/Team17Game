@@ -365,6 +365,18 @@
 /processorParam:TextureFormat=Color
 /build:GrassTest.PNG
 
+#begin HealthCollectible.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HealthCollectible.png
+
 #begin Hit_hurt 114 (2).wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -727,6 +739,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SnakeSpritesheet.png
+
+#begin TargetSprite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TargetSprite.png
 
 #begin TitleText.png
 /importer:TextureImporter
