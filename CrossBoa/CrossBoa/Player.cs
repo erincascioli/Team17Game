@@ -428,6 +428,15 @@ namespace CrossBoa
             canMove = true;
             knockbackTime = 1;
         }
+
+        /// <summary>
+        /// Restores 1 HP to the player.
+        /// </summary>
+        public void Heal()
+        {
+            if (currentHealth < maxHealth)
+                currentHealth++;
+        }
     }
 
 

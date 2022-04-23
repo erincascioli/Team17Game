@@ -118,7 +118,7 @@ namespace CrossBoa
         /// <summary>
         /// Performs all necessary interactions when the player collects this
         /// </summary>
-        public void GetCollected()
+        public virtual void GetCollected()
         {
             if(isActive)
             {
