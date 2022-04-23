@@ -52,7 +52,7 @@ namespace CrossBoa
             set
             {
                 position = value;
-                rectangle = Helper.MakeRectangleFromCenter(value.ToPoint(), rectangle.Size);
+                OnResize();
             }
         }
 
