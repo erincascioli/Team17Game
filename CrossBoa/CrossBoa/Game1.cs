@@ -74,6 +74,14 @@ namespace CrossBoa
         private Texture2D playPressedSprite;
         private Texture2D settingsHoverSprite;
         private Texture2D settingsPressedSprite;
+        private Texture2D creditsHoverSprite;
+        private Texture2D creditsPressedSprite;
+        private Texture2D mainMenuHoverSprite;
+        private Texture2D mainMenuPressedSprite;
+        private Texture2D playAgainHoverSprite;
+        private Texture2D playAgainPressedSprite;
+        private Texture2D pauseHoverSprite;
+        private Texture2D pausePressedSprite;
         private Texture2D emptyHeart;
         private Texture2D fullHeart;
         private Texture2D menuBGSheet;
@@ -103,9 +111,20 @@ namespace CrossBoa
         RenderTarget2D menuBGTarget;
         private TextElement splashText;
         private TextElement FPSCounter;
+        private TextElement creditsTitle;
+        private TextElement developersText;
+        private TextElement developersTitle;
+        private TextElement thanksTitle;
+        private TextElement thanksText;
+        private TextElement specialThanksTitle;
+        private TextElement specialThanksText;
 
         // Buttons
         private Button playButton;
+        private Button playAgainButton;
+        private Button creditsButton;
+        private Button settingsButton;
+        private Button mainMenuButton;
         private Button pauseButton;
         private Button debugButton;
         private Button gameOverButton;
@@ -288,12 +307,26 @@ namespace CrossBoa
             playPressedSprite = Content.Load<Texture2D>("PlayRegular");
             settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
             settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
+            mainMenuHoverSprite = Content.Load<Texture2D>("MainMenuReguar");
+            mainMenuPressedSprite = Content.Load<Texture2D>("MainMenuPressed");
+            pauseHoverSprite = Content.Load<Texture2D>("PauseRegular");
+            pausePressedSprite = Content.Load<Texture2D>("PausePressed");
+            creditsHoverSprite = Content.Load<Texture2D>("CreditsRegular");
+            creditsPressedSprite = Content.Load<Texture2D>("CreditsPressed");
 
-            splashText = new TextElement("A quick brown fox\njumps over the lazy dog",
-                ScreenAnchor.Center, new Point(0, 50));
+            //splashText = new TextElement("A quick brown fox\njumps over the lazy dog", ScreenAnchor.Center, new Point(0, 50));
 
             FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(-10, -6));
 
+            creditsTitle = new TextElement("CREDITS", ScreenAnchor.TopCenter, new Point(0, 20), 3f);
+
+            developersTitle = new TextElement("DEVELOPERS", ScreenAnchor.TopCenter, new Point(0, 55), 1.5f);
+
+            developersText = new TextElement("Justin Baez\n\n TacNayn\n\nLeo Schindler-Gerendasi\n\nDonovan Scullion", ScreenAnchor.TopCenter, new Point(0, 100), 1.2f);
+
+            thanksTitle = new TextElement("THANKS TO", ScreenAnchor.TopCenter, new Point(0, 155), 1.5f);
+
+            //thanksText = new TextElement("")
             // Load menu background layers
             Point bgSize = new Point(1920, 1080);
             for (int i = 0; i < 8; i++)
@@ -309,8 +342,12 @@ namespace CrossBoa
                 ScreenAnchor.Center, Point.Zero, playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
 
             // Pause Button
-            pauseButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
+            pauseButton = new Button(pausePressedSprite, pauseHoverSprite, true,
                 ScreenAnchor.TopRight, new Point(-14, 12), settingsHoverSprite.Bounds.Size / new Point(4));
+
+            // Credits Button
+            creditsButton = new Button(creditsPressedSprite, creditsHoverSprite, true,
+                ScreenAnchor.Center, new Point(0, 35), creditsHoverSprite.Bounds.Size * new Point(7) / new Point(20));
 
             // Debug Button
             debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
@@ -390,6 +427,10 @@ namespace CrossBoa
                         MediaPlayer.Stop();
                     }
 
+                    if (creditsButton.HasBeenPressed())
+                    {
+                        gameState = GameState.Credits;
+                    }
                     break;
 
                 // Game
@@ -431,7 +472,7 @@ namespace CrossBoa
 
                 // Credits - NOT YET IMPLEMENTED
                 case GameState.Credits:
-
+                    UpdateCredits(gameTime);
                     break;
 
                 // Pause
@@ -536,6 +577,8 @@ namespace CrossBoa
             AnimateMainMenuBG(gameTime);
 
             playButton.Update(gameTime);
+
+            creditsButton.Update(gameTime);
         }
 
         /// <summary>
@@ -616,6 +659,7 @@ namespace CrossBoa
 
             // Determine background size
             Point menuBGSize;
+
             if (outputAspectRatio <= preferredAspectRatio)
             {
                 // output is taller than it is wider, set size to window height
@@ -637,8 +681,10 @@ namespace CrossBoa
 
             playButton.Draw(_spriteBatch);
 
+            creditsButton.Draw(_spriteBatch);
+
             // Splash Text
-            splashText.Draw(_spriteBatch);
+            //splashText.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -1111,16 +1157,70 @@ namespace CrossBoa
         }
 
         // Credits
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateCredits(GameTime gameTime)
+        {
+            AnimateMainMenuBG(gameTime);
+
+            
+        }
+
         /// <summary>
         /// Draws the credits screen
         /// </summary>
         private void DrawCredits()
         {
-            _spriteBatch.Begin();
+            // Draw main menu background to a smaller target, then scale up to reduce lag
+            GraphicsDevice.SetRenderTarget(menuBGTarget);
+            GraphicsDevice.Clear(new Color(174, 222, 203));
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
-            _spriteBatch.DrawString(arial32, "Credits",
-                new Vector2(windowWidth - 175,
-                    windowHeight / 2f), Color.White);
+            for (int i = 0; i < 6; i++)
+            {
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
+            }
+
+            _spriteBatch.End();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+
+            for (int i = 6; i < 8; i++)
+            {
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
+            }
+
+            _spriteBatch.End();
+            GraphicsDevice.SetRenderTarget(null);
+
+            // Draw the main menu
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+
+            // Determine background size
+            Point menuBGSize;
+
+            if (outputAspectRatio <= preferredAspectRatio)
+            {
+                // output is taller than it is wider, set size to window height
+                menuBGSize = new Point((int)MathF.Round(windowHeight * preferredAspectRatio), windowHeight);
+            }
+            else
+            {
+                // output is wider than it is tall, set size to window width
+                menuBGSize = new Point(windowWidth, (int)MathF.Round(windowWidth / preferredAspectRatio));
+            }
+
+            // Draw background
+            _spriteBatch.Draw(menuBGTarget, new Rectangle(Point.Zero, menuBGSize), Color.White);
+
+            creditsTitle.Draw(_spriteBatch);
+
+            developersTitle.Draw(_spriteBatch);
+
+            developersText.Draw(_spriteBatch);
+
+            thanksTitle.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
