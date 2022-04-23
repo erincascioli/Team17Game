@@ -149,8 +149,7 @@ namespace CrossBoa.Enemies
         public virtual void Die()
         {
             // Invoke OnKill upgrades
-            if (OnKill != null) 
-                OnKill();
+            OnKill?.Invoke();
 
             // Spawn collectibles
             foreach (Collectible collectible in expReward)

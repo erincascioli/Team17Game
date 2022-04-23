@@ -56,7 +56,7 @@ namespace CrossBoa
             cameraCrew = new PhysicsObject(null, new Rectangle(0, 0, Game1.windowWidth, Game1.windowHeight), null, 20000);
         }
 
-        public static void Update(KeyboardState kbState, GameTime gameTime)
+        public static void Update(GameTime gameTime)
         {
             UpdateScreenShake();
 
