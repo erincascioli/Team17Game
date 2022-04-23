@@ -70,7 +70,7 @@ namespace CrossBoa.Managers
         {
             levelTiles = new List<Tile>();
             tileList = new List<string[]>();
-            stage = 0; // No levels yet
+            stage = -1; // No levels yet
 
             // tileList is immediately filled as it's data is needed
             // before any other method can be made
@@ -205,7 +205,8 @@ namespace CrossBoa.Managers
                 }
 
                 // Done before doors so enemies don't spawn in doorways
-                SpawnManager.UpdateLevel();
+                if(stage >= 1)
+                    SpawnManager.UpdateLevel();
 
                 // Doors are inserted into the level
                 PlaceDoors();
@@ -213,7 +214,8 @@ namespace CrossBoa.Managers
                 // passes all active tiles to the collision manager
                 CollisionManager.UpdateLevel();
                 Game1.Collectibles.Clear();
-                SpawnManager.FillLevel();
+                if(stage >= 1)
+                    SpawnManager.FillLevel();
             }
             catch (Exception e)
             {
@@ -384,7 +386,7 @@ namespace CrossBoa.Managers
         public static void PlaceDoors()
         {
             // Entrance location placement; always opposite of the previous exit
-            if (stage > 1)
+            if (stage >= 1)
             {
                 switch (exitLocation)
                 {
@@ -446,7 +448,7 @@ namespace CrossBoa.Managers
             {
             // Top
             case 0:
-                if (stage > 1 && exitLocation == ExitLocation.Bottom)
+                if (stage >= 1 && exitLocation == ExitLocation.Bottom)
                 {
                     // Invalid location for the exit. New attempt is made
                     PlaceDoors();
@@ -470,7 +472,7 @@ namespace CrossBoa.Managers
 
             // Right
             case 1:
-                if (stage > 1 && exitLocation == ExitLocation.Left)
+                if (stage >= 1 && exitLocation == ExitLocation.Left)
                 {
                     // Invalid location for the exit. New attempt is made
                     PlaceDoors();
@@ -488,7 +490,7 @@ namespace CrossBoa.Managers
 
             // Bottom
             case 2:
-                if (stage > 1 && exitLocation == ExitLocation.Top)
+                if (stage >= 1 && exitLocation == ExitLocation.Top)
                 {
                     // Invalid location for the exit. New attempt is made
                     PlaceDoors();
@@ -515,7 +517,7 @@ namespace CrossBoa.Managers
 
             // Left
             case 3:
-                if (stage > 1 && exitLocation == ExitLocation.Right)
+                if (stage >= 1 && exitLocation == ExitLocation.Right)
                 {
                     // Invalid location for the exit. New attempt is made
                     PlaceDoors();
@@ -795,7 +797,7 @@ namespace CrossBoa.Managers
         /// </summary>
         public static void GameOver()
         {
-            stage = 0;
+            stage = -1;
             exitLocation = ExitLocation.Null;
             previousExit = ExitLocation.Null;
             // Might do more if we want the level manager to do other stuff
