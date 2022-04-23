@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 
 namespace CrossBoa
 {
@@ -125,6 +126,7 @@ namespace CrossBoa
                 isActive = false;
                 isAssigned = false;
                 Game1.Exp++;
+                SoundManager.collectXP.Play(.1f, 0, 0);
             }
         }
     }

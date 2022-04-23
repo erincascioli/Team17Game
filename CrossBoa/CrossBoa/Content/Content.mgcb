@@ -389,12 +389,6 @@
 /processorParam:Quality=Best
 /build:Hit_hurt 114 (8).wav
 
-#begin Hit_hurt 200 (22).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Hit_hurt 200 (22).wav
-
 #begin Hit_hurt 200 (29).wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
