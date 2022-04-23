@@ -407,6 +407,18 @@
 /processorParam:TextureFormat=Color
 /build:Hitbox.png
 
+#begin Icons_23.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Icons_23.png;Upgrade_BloodOrb.png
+
 #begin Jump 77.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
