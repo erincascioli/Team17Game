@@ -251,11 +251,11 @@ namespace CrossBoa.Enemies
                             hasCollided = false;
                             chargeTimer = 1.5f;
                         }
-                        if (chargeTimer >= 3f && Math.Abs(DistanceBetween) < provokeRadius * 1.5)
+                        /*if (chargeTimer >= 3f && Math.Abs(DistanceBetween) < provokeRadius * 1.5)
                         {
                             chargeTimer = 3f;
                             chargingState = ChargingState.Tired;
-                        }
+                        }*/
                         break;
 
                     case ChargingState.Tired:
