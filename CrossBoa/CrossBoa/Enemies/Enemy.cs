@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 using CrossBoa.Upgrades;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -140,7 +141,18 @@ namespace CrossBoa.Enemies
             health -= damage;
             hurtFlashTime = 0.1f;
             if (health <= 0)
+            {
                 Die();
+                if (this is Skull)
+                {
+                    SoundManager.totemDeath.Play(.3f, 0, 0);
+                }
+
+                if (this is Beast)
+                {
+                    SoundManager.beastDeath.Play(.2f, 0, 0);
+                }
+            }
         }
 
         /// <summary>

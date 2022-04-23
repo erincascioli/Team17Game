@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using CrossBoa.Managers;
@@ -27,6 +28,11 @@ namespace CrossBoa.Managers
         public static SoundEffect slimeDeath;
         public static SoundEffect beastDamaged;
         public static SoundEffect beastCharge;
+        public static SoundEffect collectXP;
+        public static SoundEffect shootBow;
+        public static SoundEffect totemDeath;
+        public static SoundEffect beastDeath;
+        public static SoundEffect hurtPlayer;
 
         // Will allow menu to control master volume
         // All individual soundeffects also have their own volume when 
@@ -77,6 +83,21 @@ namespace CrossBoa.Managers
 
             beastCharge = Content.Load<SoundEffect>(fileReader.ReadLine());
             beastCharge.CreateInstance();
+
+            collectXP = Content.Load<SoundEffect>(fileReader.ReadLine());
+            collectXP.CreateInstance();
+
+            shootBow = Content.Load<SoundEffect>(fileReader.ReadLine());
+            shootBow.CreateInstance();
+
+            totemDeath = Content.Load<SoundEffect>(fileReader.ReadLine());
+            totemDeath.CreateInstance();
+
+            beastDeath = Content.Load<SoundEffect>(fileReader.ReadLine());
+            beastDeath.CreateInstance();
+
+            hurtPlayer = Content.Load<SoundEffect>(fileReader.ReadLine());
+            hurtPlayer.CreateInstance();
 
             fileReader.Close();
         }
