@@ -69,7 +69,7 @@ namespace CrossBoa.Managers
             // before any other method can be made
             try
             {
-                reader = new StreamReader("../../../LevelObjectList.txt");
+                reader = new StreamReader("Content/Levels/LevelObjectList.txt");
 
                 // Gets the default instructions out of the file
                 string[] fileData = reader.ReadLine().Split(',');
@@ -89,7 +89,8 @@ namespace CrossBoa.Managers
                 try
                 {
                     // Just in case it's open
-                    reader.Close();
+                    if (reader != null)
+                        reader.Close();
                 }
                 catch
                 {
@@ -143,7 +144,7 @@ namespace CrossBoa.Managers
             try
             {
                 // file is accessed by the reader
-                reader = new StreamReader("../../../" + currentLevel + ".txt");
+                reader = new StreamReader("Content/Levels/" + currentLevel + ".txt");
 
                 // Data for table size is stored
                 string[] tableInfo = reader.ReadLine().Split(',');
@@ -218,7 +219,8 @@ namespace CrossBoa.Managers
                 try
                 {
                     // Just in case
-                    reader.Close();
+                    if (reader != null)
+                        reader.Close();
                 }
                 catch
                 {
