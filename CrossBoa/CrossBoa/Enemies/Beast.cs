@@ -240,6 +240,7 @@ namespace CrossBoa.Enemies
                                 new Point((int)position.X + Width / 2, (int)position.Y + Height / 2),
                                 new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y));
                             chargingState = ChargingState.Charging;
+                            SoundManager.beastCharge.Play(.2f, 0f, 0f);
                         }
 
                         break;
@@ -261,7 +262,9 @@ namespace CrossBoa.Enemies
                     case ChargingState.Tired:
                         Move();
                         if (Math.Abs(DistanceBetween) < provokeRadius)
+                        {
                             chargingState = ChargingState.Charging;
+                        }
                         else if (chargeTimer >= 5f && Math.Abs(DistanceBetween) < provokeRadius * 2)
                             chargingState = ChargingState.Unnoticed;
                         break;

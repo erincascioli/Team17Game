@@ -25,10 +25,8 @@ namespace CrossBoa.Managers
         public static SoundEffect fireShoot;
         public static SoundEffect fireDissipate;
         public static SoundEffect slimeDeath;
-
-        // TODO: not implemented
-        public static SoundEffect beast1;
-        public static SoundEffect beast2;
+        public static SoundEffect beastDamaged;
+        public static SoundEffect beastCharge;
 
         // Will allow menu to control master volume
         // All individual soundeffects also have their own volume when 
@@ -74,11 +72,11 @@ namespace CrossBoa.Managers
             slimeDeath = Content.Load<SoundEffect>(fileReader.ReadLine());
             slimeDeath.CreateInstance();
 
-            beast1 = Content.Load<SoundEffect>(fileReader.ReadLine());
-            beast1.CreateInstance();
+            beastDamaged = Content.Load<SoundEffect>(fileReader.ReadLine());
+            beastDamaged.CreateInstance();
 
-            beast2 = Content.Load<SoundEffect>(fileReader.ReadLine());
-            beast2.CreateInstance();
+            beastCharge = Content.Load<SoundEffect>(fileReader.ReadLine());
+            beastCharge.CreateInstance();
 
             fileReader.Close();
         }
