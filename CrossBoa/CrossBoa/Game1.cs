@@ -524,8 +524,6 @@ namespace CrossBoa
             base.Draw(gameTime);
         }
 
-        // --- Update and draw methods ---
-
         // Main Menu
         /// <summary>
         /// Updates the main menu
