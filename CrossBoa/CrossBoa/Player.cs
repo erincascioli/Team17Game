@@ -282,6 +282,7 @@ namespace CrossBoa
                 knockbackTime = 0;
                 velocity = Vector2.Zero;
                 kbDirection = direction;
+                SoundManager.hurtPlayer.Play(.4f, -.9f, 0);
             }
         }
 
@@ -427,6 +428,15 @@ namespace CrossBoa
             timeLeftInvincible = 0;
             canMove = true;
             knockbackTime = 1;
+        }
+
+        /// <summary>
+        /// Restores 1 HP to the player.
+        /// </summary>
+        public void Heal()
+        {
+            if (currentHealth < maxHealth)
+                currentHealth++;
         }
     }
 

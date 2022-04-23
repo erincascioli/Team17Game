@@ -81,7 +81,7 @@ namespace CrossBoa.Managers
                 {
                     enemy.DealContactDamage(Game1.Player);
                     // If the enemy is a Beast, have it get knocked back
-                    if (enemy is Beast {InCharge: true} beast)
+                    if (enemy is Beast {InCharge: true} beast && !Game1.Player.InDodge)
                     {
                         enemy.GetKnockedBack(Game1.Player, 500);
                         beast.HasCollided = true;
@@ -99,7 +99,7 @@ namespace CrossBoa.Managers
                         // Health value not decided on yet
                         enemy.TakeDamage(1);
 
-                        if (enemy is Beast {InCharge: true})
+                        if (enemy is Beast {InCharge: true} && enemy.Health != 0)
                         {
                             SoundManager.beastDamaged.Play(.3f, 0, 0);
                         }
