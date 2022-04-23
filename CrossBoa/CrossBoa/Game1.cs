@@ -1166,7 +1166,8 @@ namespace CrossBoa
         {
             AnimateMainMenuBG(gameTime);
 
-            
+            developersText.Position += new Vector2(developersText.Position.X, -5);
+
         }
 
         /// <summary>
