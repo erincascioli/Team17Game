@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
@@ -1304,14 +1305,16 @@ namespace CrossBoa
         public void LoadDefaultLevel()
         {
             // Level layout
-            LevelManager.RandomizeLevel();
+            LevelManager.CurrentLevel = "TutorialLevel";
             LevelManager.LoadLevel();
 
+            Dictionary<string, Texture2D> testDict;
+
             // Temp enemy spawns for starting level
-            //SpawnManager.SpawnTotem(new Point(50, 100));
-            //SpawnManager.SpawnTotem(new Point(64, 64));
-            //SpawnManager.SpawnSkeleton(new Point(400, 400));
-            //SpawnManager.SpawnTarget(new Point(64, 64));
+            SpawnManager.SpawnTotem(new Point(50, 100));
+            SpawnManager.SpawnTotem(new Point(64, 64));
+            SpawnManager.SpawnSkeleton(new Point(400, 400));
+            SpawnManager.SpawnTarget(new Point(64, 64));
         }
     }
 
