@@ -11,5 +11,3 @@ Explosion 17
 Hit_hurt 114 (2)
 Hit_hurt 114 (8)
 Hit_hurt 74 (3)
-
-Remove 200 (22)
