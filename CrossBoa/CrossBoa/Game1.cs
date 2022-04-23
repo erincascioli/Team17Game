@@ -341,7 +341,7 @@ namespace CrossBoa
             }
 
             // Create crosshair
-            crosshair = new UIElement(crosshairSprite, ScreenAnchor.TopLeft, Point.Zero, crosshairSprite.Bounds.Size / new Point(2))
+            crosshair = new UIElement(crosshairSprite, ScreenAnchor.TopLeft, Point.Zero, crosshairSprite.Bounds.Size)
             {
                 DoesPositionScale = false
             };
@@ -370,7 +370,7 @@ namespace CrossBoa
             if(WasKeyPressed(Keys.F11))
                 ToggleFullscreen();
 
-            // Get the position of the mouse for the crosshair
+            // Get the position of the mouse for the d
             crosshair.Position = mState.Position.ToVector2();
 
             switch (gameState)
