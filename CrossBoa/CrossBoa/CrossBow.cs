@@ -177,6 +177,7 @@ namespace CrossBoa
 
                 // Shake the screen
                 Camera.ShakeScreen(12);
+                SoundManager.shootBow.Play(.1f, -.5f, 0);
             }
         }
            

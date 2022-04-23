@@ -226,7 +226,7 @@ namespace CrossBoa.Enemies
         public override void Die()
         {
             animationState = SlimeAnimState.Dying;
-            SoundManager.slimeDeath.Play(.3f, .2f, 0);
+            SoundManager.slimeDeath.Play(.3f, .7f, 0);
 
             // Spawn collectibles
             foreach (Collectible collectible in expReward)
