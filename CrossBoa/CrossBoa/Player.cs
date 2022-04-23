@@ -45,6 +45,10 @@ namespace CrossBoa
         private PlayerAnimState animationState;
         private int currentAnimationFrame;
         private double previousWalkFrameChange;
+        private Texture2D flashAnimSheet;
+        private int flashAnimFrame;
+        private bool canFlashTrigger;
+        private double prevFlashFrameChange;
 
         private SpriteEffects spriteFlipEffect;
         private Vector2 dodgeVector;
@@ -148,6 +152,7 @@ namespace CrossBoa
                 return knockbackTime < 0.25;
             }
         }
+
         /// <summary>
         /// Constructs a Player object
         /// </summary>
@@ -161,7 +166,7 @@ namespace CrossBoa
         /// <param name="dodgeLength">How long the player will dodge for</param>
         /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         public Player(Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed, float friction,
-            int maxHealth, float dodgeCooldown, float dodgeLength, float dodgeSpeed) :
+            int maxHealth, float dodgeCooldown, float dodgeLength, float dodgeSpeed, Texture2D flashSprite) :
             base(sprite, rectangle, maxSpeed, friction)
         {
             this.movementForce = movementForce;
@@ -176,6 +181,9 @@ namespace CrossBoa
             kbDirection = 0;
             animationState = PlayerAnimState.Idle;
             currentAnimationFrame = 0;
+            flashAnimSheet = flashSprite;
+            flashAnimFrame = 4;
+            canFlashTrigger = false;
         }
 
         /// <summary>
@@ -196,7 +204,9 @@ namespace CrossBoa
             {
                 color = new Color(Color.Black, 60);
             }
-
+            // If the player can't dodge, tint them gray
+            else if (timeUntilDodge > 0)
+                color = new Color(224, 224, 224);//Color.LightGray;
             else
             {
                 color = Color.White;
@@ -237,6 +247,13 @@ namespace CrossBoa
             if (inDodge && dodgeInvulnerabilityTime < 0)
                 EndDodge();
 
+            // When the player regains their dodge, trigger a flash to notify them.
+            if (canFlashTrigger && timeUntilDodge <= 0)
+            {
+                canFlashTrigger = false;
+                flashAnimFrame = 0;
+            }
+
             // Update animations for this frame
             UpdateAnimations(gameTime);
 
@@ -246,6 +263,10 @@ namespace CrossBoa
         public override void Draw(SpriteBatch sb)
         { 
             sb.Draw(sprite, Rectangle, new Rectangle(currentAnimationFrame * 16, 0, 16, 16), color, 0, Vector2.Zero, spriteFlipEffect, 0);
+            if (flashAnimFrame <= 3)
+                sb.Draw(flashAnimSheet, new Rectangle(Rectangle.X, Rectangle.Y - 4, Rectangle.Width, Rectangle.Height),
+                    new Rectangle(flashAnimFrame * 16, 0, 16, 16), 
+                    Color.White, 0, Vector2.Zero, SpriteEffects.None, 0);
         }
 
         /// <summary>
@@ -297,6 +318,13 @@ namespace CrossBoa
 
         public void ForceMove(int x, int y, GameTime gameTime)
         {
+            // If the player can't dodge, changes variables to allow the player to dodge upon regaining control.
+            if (timeUntilDodge > 0)
+            {
+                timeUntilDodge = 0;
+                canFlashTrigger = false;
+            }
+
             Vector2 movementVector = new Vector2(x, y);
 
             // Normalize the vector so the player doesn't move faster diagonally
@@ -342,6 +370,16 @@ namespace CrossBoa
 
                     break;
             }
+
+            if (flashAnimFrame <= 3)
+            {
+                prevFlashFrameChange += gameTime.ElapsedGameTime.TotalSeconds;
+                if (prevFlashFrameChange > 0.05)
+                {
+                    prevFlashFrameChange = 0;
+                    flashAnimFrame++;
+                }
+            }
         }
 
         /// <summary>
@@ -360,6 +398,7 @@ namespace CrossBoa
                 dodgeInvulnerabilityTime = dodgeLength;
                 inDodge = true;
                 maxSpeed *= dodgeSpeedBoost;
+                canFlashTrigger = true;
             }
         }
 
@@ -376,6 +415,11 @@ namespace CrossBoa
             dodgeInvulnerabilityTime = 0;
         }
 
+        /// <summary>
+        /// Resets the player's stats and position to normal,
+        /// used whenever a new game is started.
+        /// </summary>
+        /// <param name="startingPos"></param>
         public void ResetPlayer(Rectangle startingPos)
         {
             currentHealth = maxHealth;

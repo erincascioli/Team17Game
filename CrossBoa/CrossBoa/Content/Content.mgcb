@@ -92,6 +92,12 @@
 /processorParam:TextureFormat=Color
 /build:bg-sheet.png
 
+#begin Blip_select 22 (1).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Blip_select 22 (1).wav
+
 #begin Block.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -242,6 +248,12 @@
 /processorParam:TextureFormat=Color
 /build:Empty Heart.png
 
+#begin Explosion 17.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Explosion 17.wav
+
 #begin FacelessSlimeDeathSpritesheet-sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -353,6 +365,12 @@
 /processorParam:TextureFormat=Color
 /build:GrassTest.PNG
 
+#begin Hit_hurt 114 (2).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 114 (2).wav
+
 #begin Hit_hurt 114 (4).wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -365,11 +383,23 @@
 /processorParam:Quality=Best
 /build:Hit_hurt 114 (5).wav
 
+#begin Hit_hurt 114 (8).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 114 (8).wav
+
 #begin Hit_hurt 200 (22).wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Hit_hurt 200 (22).wav
+
+#begin Hit_hurt 200 (29).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 200 (29).wav
 
 #begin Hit_hurt 34.wav
 /importer:WavImporter
@@ -394,6 +424,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Hit_hurt 7.wav
+
+#begin Hit_hurt 74 (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 74 (3).wav
 
 #begin Hitbox.png
 /importer:TextureImporter
