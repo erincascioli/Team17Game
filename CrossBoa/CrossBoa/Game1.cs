@@ -90,6 +90,7 @@ namespace CrossBoa
         private Texture2D gameOverText;
         private Texture2D collectibleSprite;
         private Texture2D crosshairSprite;
+        private Texture2D flashSprite;
 
         public static Texture2D UpgradeBloodOrb;
 
@@ -263,6 +264,7 @@ namespace CrossBoa
             collectibleSprite = Content.Load<Texture2D>("LifePot");
             crosshairSprite = Content.Load<Texture2D>("Crosshair");
             menuBGSheet = Content.Load<Texture2D>("bg-sheet");
+            flashSprite = Content.Load<Texture2D>("RecoveryFlash");
 
             // Upgrade sprites
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
@@ -280,7 +282,8 @@ namespace CrossBoa
                 DefaultPlayerHealth,
                 DefaultPlayerDodgeCooldown,
                 DefaultPlayerDodgeLength,
-                DefaultPlayerDodgeSpeed
+                DefaultPlayerDodgeSpeed,
+                flashSprite
             );
 
             // Load Crossbow
@@ -378,7 +381,7 @@ namespace CrossBoa
             }
 
             // Create crosshair
-            crosshair = new UIElement(crosshairSprite, ScreenAnchor.TopLeft, Point.Zero, crosshairSprite.Bounds.Size / new Point(2))
+            crosshair = new UIElement(crosshairSprite, ScreenAnchor.TopLeft, Point.Zero, crosshairSprite.Bounds.Size)
             {
                 DoesPositionScale = false
             };
@@ -407,7 +410,7 @@ namespace CrossBoa
             if(WasKeyPressed(Keys.F11))
                 ToggleFullscreen();
 
-            // Get the position of the mouse for the crosshair
+            // Get the position of the mouse for the d
             crosshair.Position = mState.Position.ToVector2();
 
             switch (gameState)
@@ -564,8 +567,6 @@ namespace CrossBoa
 
             base.Draw(gameTime);
         }
-
-        // --- Update and draw methods ---
 
         // Main Menu
         /// <summary>
