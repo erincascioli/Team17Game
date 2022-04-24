@@ -61,6 +61,7 @@ namespace CrossBoa
         // Assets
         #region Asset Field Declarations
         public static Texture2D whiteSquareSprite;
+        public static Texture2D blackSquareSprite;
         public static Texture2D skullSpriteSheet;
         public static Texture2D beastSprite;
         public static Texture2D playerArrowSprite;
@@ -267,6 +268,7 @@ namespace CrossBoa
             wallSprite = Content.Load<Texture2D>("Wall");
             topDoorBottomHalfSprite = Content.Load<Texture2D>("Wall2");
             topExitBottomHalfSprite = Content.Load<Texture2D>("VeryCrackedWallBottomHalf");
+            blackSquareSprite = Content.Load<Texture2D>("Shadow");
 
             // Upgrade sprites
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
