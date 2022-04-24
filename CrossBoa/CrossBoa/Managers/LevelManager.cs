@@ -33,6 +33,9 @@ namespace CrossBoa.Managers
         private static int forcedY;
         private static string currentLevel;
 
+        private static Tile entranceOtherHalf;
+        private static Tile exitOtherHalf;
+
         // Requires a reference
         public static ContentManager LContent
         {
@@ -126,10 +129,18 @@ namespace CrossBoa.Managers
                     new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true);
 
+                entranceOtherHalf = new Tile(Game1.topDoorBottomHalfSprite,
+                    new Rectangle(-100, -100, blockWidth, blockHeight),
+                    true);
+
                 exit = new Door(Game1.floorSprite, // Open Sprite
                     Game1.leftRightDoorSprite, // Closed Sprite
                     new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true); // Has hitbox
+
+                exitOtherHalf = new Tile(Game1.topExitBottomHalfSprite,
+                    new Rectangle(-100, -100, blockWidth, blockHeight),
+                    true);
             }
 
             // Exit must default to closed
@@ -251,6 +262,16 @@ namespace CrossBoa.Managers
                 sb.Draw(i.Sprite,   // Asset
                     i.Rectangle,     // Location
                     Color.White);   // Background color
+            }
+
+            if (!entrance.IsOpen && (previousExit == ExitLocation.Top || previousExit == ExitLocation.Bottom))
+            {
+                entranceOtherHalf.Draw(sb);
+            }
+
+            if (!exit.IsOpen && (exitLocation == ExitLocation.Top || exitLocation == ExitLocation.Bottom))
+            {
+                exitOtherHalf.Draw(sb);
             }
         }
 
@@ -395,21 +416,29 @@ namespace CrossBoa.Managers
                         entrance.ClosedSprite = Game1.wallSprite;
                         entrance.Position = new Vector2(
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
-                            levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle
-                                .Y);
+                            levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.Y);
                         levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)] =
                             entrance; // Replacement
 
                         // Intro to Hallway; Tile is replaced to be something without interactions
                         levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1] = new Tile(
-                            Content.Load<Texture2D>("Shadow"), // Asset
+                            Game1.blackSquareSprite, // Asset
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1]
                                 .Rectangle, // Location
                             false); // Hitbox
+
+                        // Spawn a fake tile on the bottom of the hallway to fill in the door texture
+                        entranceOtherHalf.Sprite = Game1.topDoorBottomHalfSprite;
+                        entranceOtherHalf.Position = new Vector2(
+                            levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
+                            levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0)].Rectangle.Y);
+
                         break;
 
                     case ExitLocation.Right:
+                        entrance.Sprite = Game1.blackSquareSprite;
                         entrance.ClosedSprite = Game1.sideWallSprite;
+
                         entrance.Position = new Vector2(
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.X,
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.Y);
@@ -419,7 +448,7 @@ namespace CrossBoa.Managers
 
                     case ExitLocation.Bottom:
                         // Door
-                        entrance.ClosedSprite = Game1.wallSprite;
+                        entrance.ClosedSprite = Game1.topDoorBottomHalfSprite;
                         entrance.Position = new Vector2(
                             levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X,
                             levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.Y);
@@ -427,9 +456,16 @@ namespace CrossBoa.Managers
 
                         // Intro to Hallway; Tile is replaced to be something without interactions
                         levelTiles[(int)Math.Round(levelWidth / 2.0)] = new Tile(
-                            Content.Load<Texture2D>("Shadow"), // Asset
+                            Game1.blackSquareSprite, // Asset
                             levelTiles[(int)Math.Round(levelWidth / 2.0)].Rectangle, // Location
                             false); // Hitbox
+
+                        // Spawn a fake tile on top of the hallway to fill in the door texture
+                        entranceOtherHalf.Sprite = Game1.wallSprite;
+                        entranceOtherHalf.Position = new Vector2(
+                            levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
+                            0);
+
                         break;
 
                     case ExitLocation.Left:
@@ -460,7 +496,9 @@ namespace CrossBoa.Managers
                     }
 
                     // Door
-                    exit.Sprite = Game1.bottomTopDoorSprite;
+                    exit.Sprite = Game1.topExitBottomHalfSprite;
+                    exit.OpenSprite = Game1.floorSprite;
+
                     exit.Position = new Vector2(
                         levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X,
                         levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.Y);
@@ -468,9 +506,15 @@ namespace CrossBoa.Managers
 
                     // Intro to Hallway; Tile is replaced to be something without interactions
                     levelTiles[(int)Math.Round(levelWidth / 2.0)] = new Tile(
-                        Content.Load<Texture2D>("Shadow"), // Asset
+                        Game1.blackSquareSprite, // Asset
                         levelTiles[(int)Math.Round(levelWidth / 2.0)].Rectangle, // Location
                         false); // Hitbox
+
+                    // Spawn a fake tile on top of the hallway to fill in the door texture
+                    exitOtherHalf.Sprite = Game1.bottomTopDoorSprite;
+                    exitOtherHalf.Position = new Vector2(
+                        levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
+                        0);
 
                     exitLocation = ExitLocation.Top;
                     break;
@@ -485,6 +529,8 @@ namespace CrossBoa.Managers
                     }
 
                     exit.Sprite = Game1.leftRightDoorSprite;
+                    exit.OpenSprite = Game1.floorSprite;
+
                     exit.Position = new Vector2(
                     levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.X,
                     levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.Y);
@@ -505,6 +551,8 @@ namespace CrossBoa.Managers
 
                     // Door
                     exit.Sprite = Game1.bottomTopDoorSprite;
+                    exit.OpenSprite = Game1.floorSprite;
+
                     exit.Position = new Vector2(
                     levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
                     levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle
@@ -514,10 +562,16 @@ namespace CrossBoa.Managers
 
                     // Intro to Hallway; Tile is replaced to be something without interactions
                     levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1] = new Tile(
-                        Content.Load<Texture2D>("Shadow"), // Asset
+                        Game1.blackSquareSprite, // Asset
                         levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1]
                             .Rectangle, // Location
                         false); // Hitbox
+
+                    // Spawn a fake tile on top of the hallway to fill in the door texture
+                    exitOtherHalf.Sprite = Game1.topExitBottomHalfSprite;
+                    exitOtherHalf.Position = new Vector2(
+                        levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
+                        levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0)].Rectangle.Y);
 
                     exitLocation = ExitLocation.Bottom;
                     break;
@@ -531,6 +585,7 @@ namespace CrossBoa.Managers
                         break;
                     }
                     exit.Sprite = Game1.leftRightDoorSprite;
+                    exit.OpenSprite = Game1.blackSquareSprite;
 
                     exit.Position = new Vector2(
                         levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.X,
