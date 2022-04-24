@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 using CrossBoa.Upgrades;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -76,7 +77,11 @@ namespace CrossBoa.Enemies
             // If there are not enough collectibles instantiated, generate more until the list is full
             while (expReward.Count < expReward.Capacity)
             {
-                Collectible newCollectible = new Collectible(Game1.xpSprite, new Point(32));
+                Collectible newCollectible;
+                if (Game1.RNG.Next(1,91) == 10)
+                    newCollectible = new HealthCollectible(Game1.healthRecoverySprite, new Point(32));
+                else
+                    newCollectible = new Collectible(Game1.xpSprite, new Point(32));
 
                 Game1.Collectibles.Add(newCollectible);
                 expReward.Add(newCollectible);
@@ -140,7 +145,21 @@ namespace CrossBoa.Enemies
             health -= damage;
             hurtFlashTime = 0.1f;
             if (health <= 0)
+            {
                 Die();
+                if (this is Skull)
+                {
+                    SoundManager.totemDeath.Play(.3f, 0, 0);
+                }
+                else if (this is Beast)
+                {
+                    SoundManager.beastDeath.Play(.2f, 0, 0);
+                }
+                else
+                {
+                    SoundManager.targetDamage.Play(.4f, -.2f, 0);
+                }
+            }
         }
 
         /// <summary>

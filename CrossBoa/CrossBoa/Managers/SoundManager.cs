@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using CrossBoa.Managers;
@@ -27,9 +28,19 @@ namespace CrossBoa.Managers
         public static SoundEffect slimeDeath;
         public static SoundEffect beastDamaged;
         public static SoundEffect beastCharge;
+        public static SoundEffect collectXP;
+        public static SoundEffect shootBow;
+        public static SoundEffect totemDeath;
+        public static SoundEffect beastDeath;
+        public static SoundEffect hurtPlayer;
+        public static SoundEffect playerDodge;
+        public static SoundEffect slimeDamage;
+        public static SoundEffect skullDamage;
+        public static SoundEffect buttonClick;
+        public static SoundEffect targetDamage;
 
         // Will allow menu to control master volume
-        // All individual soundeffects also have their own volume when 
+        // All individual sound effects also have their own volume when 
         // played, which master volume should scale too
         public static float SFXVolume
         {
@@ -51,7 +62,7 @@ namespace CrossBoa.Managers
 
             titleTheme = Content.Load<Song>("Canopy Cacophony");
 
-            StreamReader fileReader = new StreamReader("../../../SoundEffects.txt");
+            StreamReader fileReader = new StreamReader("Content/SoundEffects.txt");
 
             // Sound Effects will be gotten one by one
             hitWall = Content.Load<SoundEffect>(fileReader.ReadLine());
@@ -77,6 +88,37 @@ namespace CrossBoa.Managers
 
             beastCharge = Content.Load<SoundEffect>(fileReader.ReadLine());
             beastCharge.CreateInstance();
+
+            collectXP = Content.Load<SoundEffect>(fileReader.ReadLine());
+            collectXP.CreateInstance();
+
+            shootBow = Content.Load<SoundEffect>(fileReader.ReadLine());
+            shootBow.CreateInstance();
+
+            totemDeath = Content.Load<SoundEffect>(fileReader.ReadLine());
+            totemDeath.CreateInstance();
+
+            beastDeath = Content.Load<SoundEffect>(fileReader.ReadLine());
+            beastDeath.CreateInstance();
+
+            hurtPlayer = Content.Load<SoundEffect>(fileReader.ReadLine());
+            hurtPlayer.CreateInstance();
+
+            playerDodge = Content.Load<SoundEffect>(fileReader.ReadLine());
+            playerDodge.CreateInstance();
+
+            slimeDamage = Content.Load<SoundEffect>(fileReader.ReadLine());
+            slimeDamage.CreateInstance();
+
+            skullDamage = Content.Load<SoundEffect>(fileReader.ReadLine());
+            skullDamage.CreateInstance();
+
+            buttonClick = Content.Load<SoundEffect>(fileReader.ReadLine());
+            buttonClick.CreateInstance();
+
+            // TODO: Unimplemented
+            targetDamage = Content.Load<SoundEffect>(fileReader.ReadLine());
+            targetDamage.CreateInstance();
 
             fileReader.Close();
         }

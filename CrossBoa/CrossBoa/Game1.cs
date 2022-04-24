@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using CrossBoa.Managers;
@@ -66,6 +68,16 @@ namespace CrossBoa
         public static Texture2D slimeSpritesheet;
         public static Texture2D slimeDeathSpritesheet;
         public static Texture2D xpSprite;
+        public static Texture2D targetSprite;
+        public static Texture2D healthRecoverySprite;
+        public static Texture2D leftRightDoorSprite;
+        public static Texture2D bottomTopDoorSprite;
+        public static Texture2D floorSprite;
+        public static Texture2D sideWallSprite;
+        public static Texture2D wallSprite;
+        public static Texture2D topDoorBottomHalfSprite;
+        public static Texture2D topExitBottomHalfSprite;
+
         private Texture2D snakeSpriteSheet;
         private Texture2D crossbowSprite;
         private Texture2D hitBox;
@@ -272,6 +284,15 @@ namespace CrossBoa
             crosshairSprite = Content.Load<Texture2D>("Crosshair");
             menuBGSheet = Content.Load<Texture2D>("bg-sheet");
             flashSprite = Content.Load<Texture2D>("RecoveryFlash");
+            healthRecoverySprite = Content.Load<Texture2D>("HealthCollectible");
+            targetSprite = Content.Load<Texture2D>("TargetSprite");
+            leftRightDoorSprite = Content.Load<Texture2D>("VeryCrackedWallLeftRight");
+            bottomTopDoorSprite = Content.Load<Texture2D>("VeryCrackedWallBottomTop");
+            floorSprite = Content.Load<Texture2D>("Floor");
+            sideWallSprite = Content.Load<Texture2D>("SideWall");
+            wallSprite = Content.Load<Texture2D>("Wall");
+            topDoorBottomHalfSprite = Content.Load<Texture2D>("Wall2");
+            topExitBottomHalfSprite = Content.Load<Texture2D>("VeryCrackedWallBottomHalf");
 
             // Upgrade sprites
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
@@ -433,6 +454,7 @@ namespace CrossBoa
 
             SpawnManager.GameObjectList = gameObjectList;
             LevelManager.LContent = Content;
+
 
             // Title Track starts playing
             MediaPlayer.Play(SoundManager.titleTheme);
@@ -754,8 +776,7 @@ namespace CrossBoa
                 }
 
                 // Fires a skull's arrow if the cooldown time reaches 0.
-                if (gameObjectList[i] is Skull skull && skull.IsAlive
-                    && skull.ReadyToFire)
+                if (gameObjectList[i] is Skull {IsAlive: true, ReadyToFire: true} skull)
                 {
                     Projectile newTotemProjectile = new Projectile(fireballSpritesheet,
                         new Rectangle(-100,
@@ -771,7 +792,7 @@ namespace CrossBoa
                 }
 
                 // Removes all inactive projectiles from play.
-                if (gameObjectList[i] is Projectile projectile && !projectile.IsActive)
+                if (gameObjectList[i] is Projectile {IsActive: false})
                 {
                     gameObjectList.RemoveAt(i);
                     i--;
@@ -779,7 +800,7 @@ namespace CrossBoa
 
                 // ~~~~~ DO ALL EXTERNAL GAMEOBJECT MODIFICATION ABOVE THIS CODE ~~~~~
                 // Delete enemies from lists after they die
-                if (gameObjectList[i] is Enemy enemy && !enemy.IsAlive)
+                if (gameObjectList[i] is Enemy {IsAlive: false})
                 {
                     gameObjectList.RemoveAt(i);
                     i--;
@@ -1166,7 +1187,7 @@ namespace CrossBoa
         /// <param name="gameTime"> Gametime </param>
         private void UpdateUpgradeScreen(GameTime gameTime)
         {
-            for (var i = 0; i < upgradeButtons.Length; i++)
+            for (int i = 0; i < upgradeButtons.Length; i++)
             {
                 upgradeButtons[i].Update(gameTime);
                 
@@ -1487,7 +1508,7 @@ namespace CrossBoa
         {
             upgradeChoices = UpgradeManager.GenerateUpgradeChoices();
 
-            for (var i = 0; i < upgradeButtons.Length; i++)
+            for (int i = 0; i < upgradeButtons.Length; i++)
             {
                 upgradeButtons[i].Sprite = upgradeChoices[i].Sprite;
             }
@@ -1597,14 +1618,14 @@ namespace CrossBoa
         public void LoadDefaultLevel()
         {
             // Level layout
-            LevelManager.RandomizeLevel();
+            LevelManager.CurrentLevel = "Level5";
             LevelManager.LoadLevel();
 
             // Temp enemy spawns for starting level
-            //SpawnManager.SpawnTotem(new Point(50, 100));
-            //SpawnManager.SpawnTotem(new Point(64, 64));
-            //SpawnManager.SpawnSkeleton(new Point(400, 400));
-            //SpawnManager.SpawnTarget(new Point(64, 64));
+            SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 4));
+            SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 4));
+            SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 10));
+            SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 10));
         }
     }
 

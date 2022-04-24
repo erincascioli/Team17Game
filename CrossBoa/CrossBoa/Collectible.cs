@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 
 namespace CrossBoa
 {
@@ -118,13 +119,14 @@ namespace CrossBoa
         /// <summary>
         /// Performs all necessary interactions when the player collects this
         /// </summary>
-        public void GetCollected()
+        public virtual void GetCollected()
         {
             if(isActive)
             {
                 isActive = false;
                 isAssigned = false;
                 Game1.Exp++;
+                SoundManager.collectXP.Play(.1f, 0, 0);
             }
         }
     }
