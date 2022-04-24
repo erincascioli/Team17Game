@@ -1100,7 +1100,7 @@ namespace CrossBoa
         // Settings
         private void UpdateSettings(GameTime gameTime)
         {
-            AnimateMainMenuBG(gameTime);
+            AnimateMainMenuBG(gameTime, false);
             mainMenuButton.Update(gameTime);
             debugButton.Update(gameTime);
 
@@ -1408,7 +1408,7 @@ namespace CrossBoa
         /// </summary>
         private void UpdateCredits(GameTime gameTime)
         {
-            AnimateMainMenuBG(gameTime);
+            AnimateMainMenuBG(gameTime, false);
 
             // Move Credits Text Up
             creditsTitle.Position += new Vector2(creditsTitle.Position.X, -0.25f);
