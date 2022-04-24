@@ -80,7 +80,7 @@ namespace CrossBoa.Managers
                 {
                     enemy.DealContactDamage(Game1.Player);
                     // If the enemy is a Beast, have it get knocked back
-                    if (enemy is Beast {InCharge: true} beast && !Game1.Player.InDodge)
+                    if (enemy is Beast {InCharge: true} beast && !Game1.Player.IsInvincible)
                     {
                         enemy.GetKnockedBack(Game1.Player, 500);
                         beast.HasCollided = true;
