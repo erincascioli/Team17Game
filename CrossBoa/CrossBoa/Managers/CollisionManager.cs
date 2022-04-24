@@ -61,11 +61,10 @@ namespace CrossBoa.Managers
                     // Next checks if any projectiles hit a wall/Obstacle
                     foreach (Tile j in levelObstacles)
                     {
-                        if (i.Hitbox.Intersects(j.Rectangle))
-                        {
-                            i.HitSomething();
-                            SoundManager.fireDissipate.Play(.1f, 0, 0);
-                        }
+                        if (!i.Hitbox.Intersects(j.Rectangle)) continue;
+                        
+                        i.HitSomething();
+                        SoundManager.fireDissipate.Play(.1f, 0, 0);
                     }
                 }
             }
@@ -131,14 +130,12 @@ namespace CrossBoa.Managers
 
                 foreach (PlayerArrow playerArrow in Game1.playerArrowList)
                 {
-                    if (playerArrow.IsActive && 
-                        playerArrow.IsInAir && 
-                        playerArrow.Hitbox.Intersects(tile.Rectangle))
-                    {
-                        // Sound of an arrow hitting a wall
-                        SoundManager.hitWall.Play(.3f, 0, 0);
-                        playerArrow.HitSomething();
-                    }
+                    if (!playerArrow.IsActive || !playerArrow.IsInAir ||
+                        !playerArrow.Hitbox.Intersects(tile.Rectangle)) continue;
+
+                    // Sound of an arrow hitting a wall
+                    SoundManager.hitWall.Play(.3f, 0, 0);
+                    playerArrow.HitSomething();
                 }
 
                 if (Game1.Player.Hitbox.Intersects(tile.Rectangle))
@@ -167,7 +164,6 @@ namespace CrossBoa.Managers
                             Camera.ShakeScreen(10);
                         }
                     }
-                    
                 }
 
                 // Collectibles with tiles
@@ -183,10 +179,8 @@ namespace CrossBoa.Managers
             }
 
             // Player against an inactive player arrow
-            for (int index = 0; index < Game1.playerArrowList.Count; index++)
+            foreach (PlayerArrow playerArrow in Game1.playerArrowList)
             {
-                PlayerArrow playerArrow = Game1.playerArrowList[index];
-
                 // If the arrow is on the ground and intersects with the player, give the arrow back
                 if (playerArrow.IsMainArrow && !playerArrow.IsInAir &&
                     Game1.Player.Hitbox.Intersects(playerArrow.Hitbox))
