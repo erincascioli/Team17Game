@@ -282,7 +282,7 @@ namespace CrossBoa
                 knockbackTime = 0;
                 velocity = Vector2.Zero;
                 kbDirection = direction;
-                SoundManager.hurtPlayer.Play(.4f, -.9f, 0);
+                SoundManager.hurtPlayer.Play(.2f, -.9f, 0);
             }
         }
 
