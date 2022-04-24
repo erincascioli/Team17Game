@@ -37,6 +37,13 @@ namespace CrossBoa
             get { return isInteractable; }
         }
 
+        public Texture2D HoverTexture
+        {
+            get { return hoverButtonTexture; }
+            set { hoverButtonTexture = value; }
+        }
+
+
         /// <summary>
         /// Used for an already established location
         /// </summary>
