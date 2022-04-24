@@ -98,7 +98,7 @@ namespace CrossBoa.Managers
                         // Health value not decided on yet
                         enemy.TakeDamage(1);
 
-                        if (enemy is Beast {InCharge: true} && enemy.Health != 0)
+                        if (enemy is Beast && enemy.Health != 0)
                         {
                             SoundManager.beastDamaged.Play(.3f, 0, 0);
                         }
