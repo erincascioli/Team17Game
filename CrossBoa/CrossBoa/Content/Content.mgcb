@@ -467,6 +467,18 @@
 /processorParam:Quality=Best
 /build:Jump 77.wav
 
+#begin Jump 79.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Jump 79.wav
+
+#begin Jump 89 (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Jump 89 (3).wav
+
 #begin Levels/Level1.txt
 /copy:Levels/Level1.txt
 
@@ -740,6 +752,9 @@
 /processorParam:TextureFormat=Color
 /build:SnakeSpritesheet.png
 
+#begin SoundEffects.txt
+/copy:SoundEffects.txt
+
 #begin TargetSprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -787,6 +802,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TotemSpriteSheet.png
+
+#begin VeryCrackedWall.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:VeryCrackedWall.png
 
 #begin Vine1.png
 /importer:TextureImporter

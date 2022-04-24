@@ -35,7 +35,7 @@ namespace CrossBoa.Managers
         public static SoundEffect hurtPlayer;
 
         // Will allow menu to control master volume
-        // All individual soundeffects also have their own volume when 
+        // All individual sound effects also have their own volume when 
         // played, which master volume should scale too
         public static float SFXVolume
         {
@@ -57,7 +57,7 @@ namespace CrossBoa.Managers
 
             titleTheme = Content.Load<Song>("Canopy Cacophony");
 
-            StreamReader fileReader = new StreamReader("../../../SoundEffects.txt");
+            StreamReader fileReader = new StreamReader("Content/SoundEffects.txt");
 
             // Sound Effects will be gotten one by one
             hitWall = Content.Load<SoundEffect>(fileReader.ReadLine());

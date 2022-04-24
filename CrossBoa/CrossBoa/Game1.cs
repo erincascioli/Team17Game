@@ -4,6 +4,7 @@ using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using CrossBoa.Managers;
@@ -994,7 +995,7 @@ namespace CrossBoa
         // Choosing Upgrade
         private void UpdateUpgradeScreen(GameTime gameTime)
         {
-            for (var i = 0; i < upgradeButtons.Length; i++)
+            for (int i = 0; i < upgradeButtons.Length; i++)
             {
                 upgradeButtons[i].Update(gameTime);
                 
@@ -1201,7 +1202,7 @@ namespace CrossBoa
         {
             upgradeChoices = UpgradeManager.GenerateUpgradeChoices();
 
-            for (var i = 0; i < upgradeButtons.Length; i++)
+            for (int i = 0; i < upgradeButtons.Length; i++)
             {
                 upgradeButtons[i].Sprite = upgradeChoices[i].Sprite;
             }
@@ -1311,14 +1312,12 @@ namespace CrossBoa
         public void LoadDefaultLevel()
         {
             // Level layout
-            LevelManager.CurrentLevel = "TutorialLevel";
+            LevelManager.CurrentLevel = "Level5";
             LevelManager.LoadLevel();
 
-            Dictionary<string, Texture2D> testDict;
-
             // Temp enemy spawns for starting level
-            SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 3));
-            SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 3));
+            SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 4));
+            SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 4));
             SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 10));
             SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 10));
         }
