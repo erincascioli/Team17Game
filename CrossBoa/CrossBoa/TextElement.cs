@@ -113,7 +113,7 @@ namespace CrossBoa
 
             this.scale = scale;
             this.font = font;
-            this.Text = text;
+            this.text = text;
         }
 
         /// <summary>
