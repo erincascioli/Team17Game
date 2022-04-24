@@ -467,11 +467,11 @@
 /processorParam:Quality=Best
 /build:Jump 77.wav
 
-#begin Jump 79.wav
+#begin Jump 79 (1).wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Jump 79.wav
+/build:Jump 79 (1).wav
 
 #begin Jump 89 (3).wav
 /importer:WavImporter

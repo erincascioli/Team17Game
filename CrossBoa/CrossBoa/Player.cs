@@ -401,7 +401,7 @@ namespace CrossBoa
                 inDodge = true;
                 maxSpeed *= dodgeSpeedBoost;
                 canFlashTrigger = true;
-                SoundManager.playerDodge.Play(.3f, -.4f, 0);
+                SoundManager.playerDodge.Play(.1f, -.4f, 0);
             }
         }
 
