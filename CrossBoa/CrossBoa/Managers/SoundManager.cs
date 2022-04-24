@@ -21,6 +21,7 @@ namespace CrossBoa.Managers
         // Sound Effects
         public static Song titleTheme;
         public static Song dungeonTheme;
+        public static Song gameOverJingle;
         public static SoundEffect hitWall;
         public static SoundEffect slimeHop;
         public static SoundEffect beastWallBump;
@@ -65,6 +66,7 @@ namespace CrossBoa.Managers
 
             titleTheme = Content.Load<Song>("Canopy Cacophony");
             dungeonTheme = Content.Load<Song>("Scene - The Long Journey");
+            gameOverJingle = Content.Load<Song>("Jingle - Gameover");
 
             StreamReader fileReader = new StreamReader("Content/SoundEffects.txt");
 
