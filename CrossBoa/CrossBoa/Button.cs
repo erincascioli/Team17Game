@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CrossBoa.Interfaces;
+using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -85,6 +86,7 @@ namespace CrossBoa
 
                 // Button was clicked
                 OnClick?.Invoke();
+                SoundManager.buttonClick.Play(.1f, 0, 0);
 
                 return true;
             }
