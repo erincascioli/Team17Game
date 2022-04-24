@@ -16,3 +16,4 @@ Jump 89 (3)
 Explosion 11 (3)
 Blip_select 6
 Hit_hurt 57
+Pickup_coin 108 (1)

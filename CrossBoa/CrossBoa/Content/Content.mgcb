@@ -626,6 +626,12 @@
 /processorParam:TextureFormat=Color
 /build:PauseText.png
 
+#begin Pickup_coin 108 (1).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Pickup_coin 108 (1).wav
+
 #begin Pillar1.png
 /importer:TextureImporter
 /processor:TextureProcessor
