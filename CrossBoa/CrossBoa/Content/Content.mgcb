@@ -503,6 +503,12 @@
 /processorParam:TextureFormat=Color
 /build:Icons_23.png;Upgrade_BloodOrb.png
 
+#begin Jingle - Gameover.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Jingle - Gameover.ogg
+
 #begin Jump 77.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

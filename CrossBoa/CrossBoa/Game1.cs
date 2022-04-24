@@ -1144,9 +1144,6 @@ namespace CrossBoa
             if (mainMenuButton.HasBeenPressed())
             {
                 gameState = GameState.MainMenu;
-                MediaPlayer.Stop();
-                MediaPlayer.Play(SoundManager.titleTheme);
-                MediaPlayer.IsRepeating = true;
             }
         }
 
@@ -1299,6 +1296,11 @@ namespace CrossBoa
             {
                 GameOver();
                 gameState = GameState.MainMenu;
+
+                // Song Change
+                MediaPlayer.Stop();
+                MediaPlayer.Play(SoundManager.titleTheme);
+                MediaPlayer.IsRepeating = true;
             }
         }
 
@@ -1589,6 +1591,8 @@ namespace CrossBoa
             gameState = GameState.GameOver;
 
             MediaPlayer.Stop();
+            MediaPlayer.Play(SoundManager.gameOverJingle);
+            MediaPlayer.IsRepeating = false;
 
             // Resets the player's stats and position, and resets the LevelManager
             player.ResetPlayer(new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)));
