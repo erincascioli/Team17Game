@@ -23,6 +23,24 @@ namespace CrossBoa
             get { return isOpen; }
         }
 
+        /// <summary>
+        /// The closed sprite for this door
+        /// </summary>
+        public Texture2D OpenSprite
+        {
+            get { return openSprite; }
+            set { openSprite = value; }
+        }
+
+        /// <summary>
+        /// The closed sprite for this door
+        /// </summary>
+        public Texture2D ClosedSprite
+        {
+            get { return closedSprite; }
+            set { closedSprite = value; }
+        }
+
         public Door(Texture2D openSprite, Texture2D closedSprite, Rectangle rectangle, bool canInteract) 
             : base(closedSprite, rectangle, canInteract)
         {
