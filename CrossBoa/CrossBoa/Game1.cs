@@ -1391,10 +1391,6 @@ namespace CrossBoa
                 {
                     i.Sprite = fullHeart;
                 }
-
-                // Title Track starts playing
-                MediaPlayer.Play(SoundManager.titleTheme);
-                MediaPlayer.IsRepeating = true;
             }
         }
 

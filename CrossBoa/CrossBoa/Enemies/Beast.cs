@@ -179,6 +179,10 @@ namespace CrossBoa.Enemies
             // and un-tireds[sic] the beast if it is.
             if (chargingState == ChargingState.Unnoticed || chargingState == ChargingState.Charging)
             {
+                if (chargingState == ChargingState.Unnoticed)
+                {
+                    SoundManager.beastCharge.Play(.2f, 0f, 0f);
+                }
 
                 chargingState = ChargingState.Readying;
                 chargeTimer = 0f;
@@ -211,6 +215,7 @@ namespace CrossBoa.Enemies
                 maxSpeed = MovementMaxSpd;
             else if (Math.Abs(DistanceBetween) < provokeRadius && chargingState == ChargingState.Unnoticed)
             {
+                SoundManager.beastCharge.Play(.2f, 0f, 0f);
                 chargingState = ChargingState.Readying;
                 chargeTimer = 0;
             }
@@ -240,7 +245,7 @@ namespace CrossBoa.Enemies
                                 new Point((int)position.X + Width / 2, (int)position.Y + Height / 2),
                                 new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y));
                             chargingState = ChargingState.Charging;
-                            SoundManager.beastCharge.Play(.2f, 0f, 0f);
+                            //SoundManager.beastCharge.Play(.2f, 0f, 0f);
                         }
 
                         break;
