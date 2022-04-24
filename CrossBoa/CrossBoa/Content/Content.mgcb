@@ -461,6 +461,12 @@
 /processorParam:Quality=Best
 /build:Hit_hurt 45 (2).wav
 
+#begin Hit_hurt 57.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 57.wav
+
 #begin Hit_hurt 7.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
