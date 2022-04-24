@@ -185,7 +185,7 @@ namespace CrossBoa
         {
             if (!isLoaded)
             {
-                SoundManager.arrowPickup.Play(.2f, -.9f, 0);
+                SoundManager.arrowPickup.Play(.1f, -.9f, 0);
             }
             timeSincePickup = 0f;
             isLoaded = true;

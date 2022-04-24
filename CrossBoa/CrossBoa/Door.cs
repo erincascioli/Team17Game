@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -65,6 +66,9 @@ namespace CrossBoa
                 isOpen = true;
                 isInteractable = false;
 
+                if (LevelManager.Stage != -1 && Game1.Player.CanMove)
+                    SoundManager.beastWallBump.Play();
+
                 return; // ends method
             }
 
@@ -72,6 +76,9 @@ namespace CrossBoa
             base.sprite = closedSprite;
             isOpen = false;
             isInteractable = true;
+
+            if (LevelManager.Stage != -1  && Game1.Player.CanMove)
+                SoundManager.beastWallBump.Play();
         }
     }
 }
