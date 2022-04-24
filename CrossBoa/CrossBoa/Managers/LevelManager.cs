@@ -36,7 +36,7 @@ namespace CrossBoa.Managers
         // Requires a reference
         public static ContentManager LContent
         {
-            get { return Content;}
+            get { return Content; }
             set { Content = value; }
         }
 
@@ -80,7 +80,7 @@ namespace CrossBoa.Managers
 
                 // Gets the default instructions out of the file
                 string[] fileData = reader.ReadLine().Split(',');
-                
+
                 while (!reader.EndOfStream)
                 {
                     fileData = reader.ReadLine().Split(',');
@@ -121,13 +121,13 @@ namespace CrossBoa.Managers
                 // This is done here because the load method can't be passed in before 
                 // this class's constructor is established
                 // Doors are created and will be constantly used
-                entrance = new Door(Content.Load<Texture2D>("Floor"), // Open Sprite
-                    Content.Load<Texture2D>("Wall"), // Closed Sprite
+                entrance = new Door(Game1.floorSprite, // Open Sprite
+                    Game1.wallSprite, // Closed Sprite
                     new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true);
 
-                exit = new Door(Content.Load<Texture2D>("Floor"), // Open Sprite
-                    Content.Load<Texture2D>("VeryCrackedWallLeftRight"), // Closed Sprite
+                exit = new Door(Game1.floorSprite, // Open Sprite
+                    Game1.leftRightDoorSprite, // Closed Sprite
                     new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true); // Has hitbox
             }
@@ -205,7 +205,7 @@ namespace CrossBoa.Managers
                 }
 
                 // Done before doors so enemies don't spawn in doorways
-                if(stage >= 1)
+                if (stage >= 1)
                     SpawnManager.UpdateLevel();
 
                 // Doors are inserted into the level
@@ -214,7 +214,7 @@ namespace CrossBoa.Managers
                 // passes all active tiles to the collision manager
                 CollisionManager.UpdateLevel();
                 Game1.Collectibles.Clear();
-                if(stage >= 1)
+                if (stage >= 1)
                     SpawnManager.FillLevel();
             }
             catch (Exception e)
@@ -392,6 +392,7 @@ namespace CrossBoa.Managers
                 {
                     case ExitLocation.Top:
                         // Door
+                        entrance.ClosedSprite = Game1.wallSprite;
                         entrance.Position = new Vector2(
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle
@@ -408,6 +409,7 @@ namespace CrossBoa.Managers
                         break;
 
                     case ExitLocation.Right:
+                        entrance.ClosedSprite = Game1.sideWallSprite;
                         entrance.Position = new Vector2(
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.X,
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.Y);
@@ -417,6 +419,7 @@ namespace CrossBoa.Managers
 
                     case ExitLocation.Bottom:
                         // Door
+                        entrance.ClosedSprite = Game1.wallSprite;
                         entrance.Position = new Vector2(
                             levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X,
                             levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.Y);
@@ -430,6 +433,7 @@ namespace CrossBoa.Managers
                         break;
 
                     case ExitLocation.Left:
+                        entrance.ClosedSprite = Game1.sideWallSprite;
                         entrance.Position = new Vector2(
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.X,
                             levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.Y);
@@ -441,97 +445,101 @@ namespace CrossBoa.Managers
 
             // Saves enum before it changes
             previousExit = exitLocation;
-            
+
 
             // Exit location placement
             switch (Game1.RNG.Next(0, 4))
             {
-            // Top
-            case 0:
-                if (stage >= 1 && exitLocation == ExitLocation.Bottom)
-                {
-                    // Invalid location for the exit. New attempt is made
-                    PlaceDoors();
-                    break;
-                }
-
-                // Door
-                exit.Position = new Vector2(
-                    levelTiles[(int) Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X,
-                    levelTiles[(int) Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.Y);
-                levelTiles[(int) Math.Round(levelWidth + levelWidth / 2.0) - 1] = exit; // Replacement
-
-                // Intro to Hallway; Tile is replaced to be something without interactions
-                levelTiles[(int) Math.Round(levelWidth / 2.0)] = new Tile(
-                    Content.Load<Texture2D>("Shadow"), // Asset
-                    levelTiles[(int) Math.Round(levelWidth / 2.0)].Rectangle, // Location
-                    false); // Hitbox
-
-                exitLocation = ExitLocation.Top;
-                break;
-
-            // Right
-            case 1:
-                if (stage >= 1 && exitLocation == ExitLocation.Left)
-                {
-                    // Invalid location for the exit. New attempt is made
-                    PlaceDoors();
-                    break;
-                } 
-                
-                exit.Position = new Vector2(
-                    levelTiles[(int) Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.X,
-                    levelTiles[(int) Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.Y);
-                levelTiles[(int) Math.Round(levelWidth * (levelHeight / 2.0)) - 1] = 
-                    exit; // Replacement
-
-                exitLocation = ExitLocation.Right;
-                break;
-
-            // Bottom
-            case 2:
-                if (stage >= 1 && exitLocation == ExitLocation.Top)
-                {
-                    // Invalid location for the exit. New attempt is made
-                    PlaceDoors();
-                    break;
-                }
+                // Top
+                case 0:
+                    if (stage >= 1 && exitLocation == ExitLocation.Bottom)
+                    {
+                        // Invalid location for the exit. New attempt is made
+                        PlaceDoors();
+                        break;
+                    }
 
                     // Door
+                    exit.Sprite = Game1.bottomTopDoorSprite;
                     exit.Position = new Vector2(
-                    levelTiles[(int) Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
-                    levelTiles[(int) Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle
-                        .Y);
-                levelTiles[(int) Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)] =
-                    exit; // Replacement
+                        levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.X,
+                        levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1].Rectangle.Y);
+                    levelTiles[(int)Math.Round(levelWidth + levelWidth / 2.0) - 1] = exit; // Replacement
 
-                // Intro to Hallway; Tile is replaced to be something without interactions
-                levelTiles[(int) Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1] = new Tile(
-                    Content.Load<Texture2D>("Shadow"), // Asset
-                    levelTiles[(int) Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1]
-                        .Rectangle, // Location
-                    false); // Hitbox
+                    // Intro to Hallway; Tile is replaced to be something without interactions
+                    levelTiles[(int)Math.Round(levelWidth / 2.0)] = new Tile(
+                        Content.Load<Texture2D>("Shadow"), // Asset
+                        levelTiles[(int)Math.Round(levelWidth / 2.0)].Rectangle, // Location
+                        false); // Hitbox
 
-                exitLocation = ExitLocation.Bottom;
-                break;
-
-            // Left
-            case 3:
-                if (stage >= 1 && exitLocation == ExitLocation.Right)
-                {
-                    // Invalid location for the exit. New attempt is made
-                    PlaceDoors();
+                    exitLocation = ExitLocation.Top;
                     break;
-                }
 
-                exit.Position = new Vector2(
-                    levelTiles[(int) Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.X,
-                    levelTiles[(int) Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.Y);
-                levelTiles[(int) Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth] =
-                    exit; // Replacement
+                // Right
+                case 1:
+                    if (stage >= 1 && exitLocation == ExitLocation.Left)
+                    {
+                        // Invalid location for the exit. New attempt is made
+                        PlaceDoors();
+                        break;
+                    }
 
-                exitLocation = ExitLocation.Left;
-                break;
+                    exit.Sprite = Game1.leftRightDoorSprite;
+                    exit.Position = new Vector2(
+                    levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.X,
+                    levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1].Rectangle.Y);
+                    levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - 1] =
+                        exit; // Replacement
+
+                    exitLocation = ExitLocation.Right;
+                    break;
+
+                // Bottom
+                case 2:
+                    if (stage >= 1 && exitLocation == ExitLocation.Top)
+                    {
+                        // Invalid location for the exit. New attempt is made
+                        PlaceDoors();
+                        break;
+                    }
+
+                    // Door
+                    exit.Sprite = Game1.bottomTopDoorSprite;
+                    exit.Position = new Vector2(
+                    levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle.X,
+                    levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)].Rectangle
+                            .Y);
+                    levelTiles[(int)Math.Round(levelWidth * (levelHeight - 2) + levelWidth / 2.0)] =
+                        exit; // Replacement
+
+                    // Intro to Hallway; Tile is replaced to be something without interactions
+                    levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1] = new Tile(
+                        Content.Load<Texture2D>("Shadow"), // Asset
+                        levelTiles[(int)Math.Round(levelWidth * (levelHeight - 1) + levelWidth / 2.0) - 1]
+                            .Rectangle, // Location
+                        false); // Hitbox
+
+                    exitLocation = ExitLocation.Bottom;
+                    break;
+
+                // Left
+                case 3:
+                    if (stage >= 1 && exitLocation == ExitLocation.Right)
+                    {
+                        // Invalid location for the exit. New attempt is made
+                        PlaceDoors();
+                        break;
+                    }
+                    exit.Sprite = Game1.leftRightDoorSprite;
+
+                    exit.Position = new Vector2(
+                        levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.X,
+                        levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth].Rectangle.Y);
+                    levelTiles[(int)Math.Round(levelWidth * (levelHeight / 2.0)) - levelWidth] =
+                        exit; // Replacement
+
+                    exitLocation = ExitLocation.Left;
+                    break;
             }
         }
 
@@ -545,7 +553,7 @@ namespace CrossBoa.Managers
         {
             // Part 1
             if (exitLocation == ExitLocation.Top)
-            {   
+            {
                 // Prevents player from getting trapped on the wall
                 if (player.Rectangle.Intersects(new Rectangle((int)exit.Position.X, (int)exit.Position.Y, exit.Width, exit.Height / 2)))
                 {
@@ -777,8 +785,8 @@ namespace CrossBoa.Managers
                 PlayerArrow playerArrow = Game1.playerArrowList[0];
                 if (playerArrow.IsActive)
                 {
-                    playerArrow.GetSuckedIntoPlayer((int) Helper.DistanceSquared(
-                        new Point((int) player.Position.X, (int) player.Position.Y), playerArrow.Size), 9000);
+                    playerArrow.GetSuckedIntoPlayer((int)Helper.DistanceSquared(
+                        new Point((int)player.Position.X, (int)player.Position.Y), playerArrow.Size), 9000);
 
                     // Doesn't let the player arrow zoom onto screen if it is too far out of bounds
                     if (playerArrow.Position.X < -50 || playerArrow.Position.X > Game1.gameRenderTarget.Width + 50
@@ -839,7 +847,7 @@ namespace CrossBoa.Managers
         public enum ExitLocation
         {
             Null, // So doors don't mess up
-            Top, 
+            Top,
             Right,
             Bottom,
             Left
