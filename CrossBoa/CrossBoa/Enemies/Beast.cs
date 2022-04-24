@@ -215,7 +215,7 @@ namespace CrossBoa.Enemies
                 maxSpeed = MovementMaxSpd;
             else if (Math.Abs(DistanceBetween) < provokeRadius && chargingState == ChargingState.Unnoticed)
             {
-                SoundManager.beastCharge.Play(.2f, 0f, 0f);
+                SoundManager.beastCharge.Play(.6f, 0f, 0f);
                 chargingState = ChargingState.Readying;
                 chargeTimer = 0;
             }

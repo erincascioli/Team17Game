@@ -62,6 +62,7 @@ namespace CrossBoa.Managers
             // Gives the ability to read in files
             ContentManager Content = LevelManager.LContent;
 
+
             titleTheme = Content.Load<Song>("Canopy Cacophony");
             dungeonTheme = Content.Load<Song>("Scene - The Long Journey");
 
