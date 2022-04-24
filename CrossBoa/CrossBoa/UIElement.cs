@@ -40,7 +40,11 @@ namespace CrossBoa
         public ScreenAnchor Anchor
         {
             get { return anchor; }
-            set { anchor = value; }
+            set
+            {
+                anchor = value;
+                OnResize();
+            }
         }
 
         /// <summary>
