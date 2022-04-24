@@ -15,12 +15,17 @@ namespace CrossBoa
     /// </summary>
     class HealthCollectible : Collectible
     {
+        // ~~~ THIS OBJECT HAS NO UNIQUE FIELDS OR PROPERTIES ~~~
+
         public HealthCollectible(Texture2D sprite, Point size) :
             base(sprite, size)
         {
-
+            // This object only calls its base constructor
         }
 
+        /// <summary>
+        /// Heals the player when collected.
+        /// </summary>
         public override void GetCollected()
         {
             if (IsActive)
