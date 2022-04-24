@@ -61,11 +61,10 @@ namespace CrossBoa.Managers
                     // Next checks if any projectiles hit a wall/Obstacle
                     foreach (Tile j in levelObstacles)
                     {
-                        if (i.Hitbox.Intersects(j.Rectangle))
-                        {
-                            i.HitSomething();
-                            SoundManager.fireDissipate.Play(.1f, 0, 0);
-                        }
+                        if (!i.Hitbox.Intersects(j.Rectangle)) continue;
+                        
+                        i.HitSomething();
+                        SoundManager.fireDissipate.Play(.1f, 0, 0);
                     }
                 }
             }
@@ -81,7 +80,7 @@ namespace CrossBoa.Managers
                 {
                     enemy.DealContactDamage(Game1.Player);
                     // If the enemy is a Beast, have it get knocked back
-                    if (enemy is Beast {InCharge: true} beast)
+                    if (enemy is Beast {InCharge: true} beast && !Game1.Player.InDodge)
                     {
                         enemy.GetKnockedBack(Game1.Player, 500);
                         beast.HasCollided = true;
@@ -99,9 +98,19 @@ namespace CrossBoa.Managers
                         // Health value not decided on yet
                         enemy.TakeDamage(1);
 
-                        if (enemy is Beast {InCharge: true})
+                        if (enemy is Beast {InCharge: true} && enemy.Health != 0)
                         {
                             SoundManager.beastDamaged.Play(.3f, 0, 0);
+                        }
+
+                        if (enemy is Slime && enemy.Health != 0)
+                        {
+                            SoundManager.slimeDamage.Play(.5f, .5f, 0);
+                        }
+
+                        if (enemy is Skull && enemy.Health != 0)
+                        {
+                            SoundManager.skullDamage.Play(.1f, 0, 0);
                         }
 
                         playerArrow.HitSomething();
@@ -131,14 +140,12 @@ namespace CrossBoa.Managers
 
                 foreach (PlayerArrow playerArrow in Game1.playerArrowList)
                 {
-                    if (playerArrow.IsActive && 
-                        playerArrow.IsInAir && 
-                        playerArrow.Hitbox.Intersects(tile.Rectangle))
-                    {
-                        // Sound of an arrow hitting a wall
-                        SoundManager.hitWall.Play(.3f, 0, 0);
-                        playerArrow.HitSomething();
-                    }
+                    if (!playerArrow.IsActive || !playerArrow.IsInAir ||
+                        !playerArrow.Hitbox.Intersects(tile.Rectangle)) continue;
+
+                    // Sound of an arrow hitting a wall
+                    SoundManager.hitWall.Play(.3f, 0, 0);
+                    playerArrow.HitSomething();
                 }
 
                 if (Game1.Player.Hitbox.Intersects(tile.Rectangle))
@@ -160,6 +167,8 @@ namespace CrossBoa.Managers
                             // -Leo
                             // I simplified the code
                             // -Donovan
+                            // Thanks
+                            // -Leo
                             enemy.GetKnockedBack(new Projectile(null, tile.Rectangle, 0, 0),
                                 500);
                             beast.HasCollided = true;
@@ -167,7 +176,6 @@ namespace CrossBoa.Managers
                             Camera.ShakeScreen(10);
                         }
                     }
-                    
                 }
 
                 // Collectibles with tiles
@@ -183,10 +191,8 @@ namespace CrossBoa.Managers
             }
 
             // Player against an inactive player arrow
-            for (int index = 0; index < Game1.playerArrowList.Count; index++)
+            foreach (PlayerArrow playerArrow in Game1.playerArrowList)
             {
-                PlayerArrow playerArrow = Game1.playerArrowList[index];
-
                 // If the arrow is on the ground and intersects with the player, give the arrow back
                 if (playerArrow.IsMainArrow && !playerArrow.IsInAir &&
                     Game1.Player.Hitbox.Intersects(playerArrow.Hitbox))

@@ -3,6 +3,7 @@ using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace CrossBoa
 {
@@ -20,6 +21,7 @@ namespace CrossBoa
         {
             isAlive = true;
             color = Color.White;
+            expReward = new List<Collectible>(0);
         }
 
         // ~~~ METHODS ~~~
@@ -29,7 +31,10 @@ namespace CrossBoa
         /// <param name="player">The player to not deal damage to.</param>
         public override void DealContactDamage(Player player)
         {
-            player.TakeDamage(0, 0);
+            float dir = Helper.DirectionBetween(
+                            new Point(Rectangle.X, Rectangle.Y),
+                            new Point(Game1.Player.Rectangle.X, Game1.Player.Rectangle.Y));
+            player.TakeDamage(0, dir);
         }
 
         /// <summary>

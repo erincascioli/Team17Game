@@ -98,6 +98,12 @@
 /processorParam:Quality=Best
 /build:Blip_select 22 (1).wav
 
+#begin Blip_select 6.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Blip_select 6.wav
+
 #begin Block.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -115,6 +121,30 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Canopy Cacophony.ogg
+
+#begin CheckboxFilled.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:CheckboxFilled.png
+
+#begin CheckboxUnfilled.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:CheckboxUnfilled.png
 
 #begin CornerWall.png
 /importer:TextureImporter
@@ -248,6 +278,12 @@
 /processorParam:TextureFormat=Color
 /build:Empty Heart.png
 
+#begin Explosion 11 (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Explosion 11 (3).wav
+
 #begin Explosion 17.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -365,6 +401,18 @@
 /processorParam:TextureFormat=Color
 /build:GrassTest.PNG
 
+#begin HealthCollectible.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HealthCollectible.png
+
 #begin Hit_hurt 114 (2).wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -389,12 +437,6 @@
 /processorParam:Quality=Best
 /build:Hit_hurt 114 (8).wav
 
-#begin Hit_hurt 200 (22).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Hit_hurt 200 (22).wav
-
 #begin Hit_hurt 200 (29).wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -418,6 +460,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Hit_hurt 45 (2).wav
+
+#begin Hit_hurt 57.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit_hurt 57.wav
 
 #begin Hit_hurt 7.wav
 /importer:WavImporter
@@ -460,6 +508,39 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Jump 77.wav
+
+#begin Jump 79 (1).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Jump 79 (1).wav
+
+#begin Jump 89 (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Jump 89 (3).wav
+
+#begin Levels/Level1.txt
+/copy:Levels/Level1.txt
+
+#begin Levels/Level2.txt
+/copy:Levels/Level2.txt
+
+#begin Levels/Level3.txt
+/copy:Levels/Level3.txt
+
+#begin Levels/Level4.txt
+/copy:Levels/Level4.txt
+
+#begin Levels/Level5.txt
+/copy:Levels/Level5.txt
+
+#begin Levels/LevelObjectList.txt
+/copy:Levels/LevelObjectList.txt
+
+#begin Levels/TutorialLevel.txt
+/copy:Levels/TutorialLevel.txt
 
 #begin LifePot.png
 /importer:TextureImporter
@@ -713,6 +794,21 @@
 /processorParam:TextureFormat=Color
 /build:SnakeSpritesheet.png
 
+#begin SoundEffects.txt
+/copy:SoundEffects.txt
+
+#begin TargetSprite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TargetSprite.png
+
 #begin TitleText.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -748,6 +844,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TotemSpriteSheet.png
+
+#begin VeryCrackedWallBottomHalf.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:VeryCrackedWallBottomHalf.png
+
+#begin VeryCrackedWallBottomTop.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:VeryCrackedWallBottomTop.png
+
+#begin VeryCrackedWallLeftRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:VeryCrackedWallLeftRight.png
 
 #begin Vine1.png
 /importer:TextureImporter

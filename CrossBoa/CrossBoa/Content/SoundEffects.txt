@@ -3,12 +3,16 @@ Jump 77
 Hit_hurt 7
 Hit_hurt 45 (1)
 Hit_hurt 45 (2)
-Hit_hurt 200 (22)
+Hit_hurt 200 (29)
 Hit_hurt 114 (4)
 Hit_hurt 114 (5)
 Blip_select 22 (1)
 Explosion 17
 Hit_hurt 114 (2)
 Hit_hurt 114 (8)
-Hit_hurt 200 (29)
 Hit_hurt 74 (3)
+Jump 79 (1)
+Jump 89 (3)
+Explosion 11 (3)
+Blip_select 6
+Hit_hurt 57
