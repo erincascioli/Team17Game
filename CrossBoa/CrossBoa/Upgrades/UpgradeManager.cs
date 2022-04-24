@@ -27,7 +27,7 @@ namespace CrossBoa.Upgrades
 
     public static class UpgradeManager
     {
-        private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>()
+        private static Dictionary<string, Upgrade> allUpgrades = new Dictionary<string, Upgrade>()
         {
             {"Multishot", new Upgrade("Multishot", "Fires two additional arrows\nevery few seconds", Multishot, UpgradeType.OnShot, Game1.playerArrowSprite)},
             {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.UpgradeBloodOrb)},
@@ -38,6 +38,8 @@ namespace CrossBoa.Upgrades
             {"Placeholder5", new Upgrade("Placeholder5", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
         };
 
+        private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>(allUpgrades);
+
         // Fields required to store behavior for upgrades
         public static PlayerArrow[] multishotArrows = null;
 
@@ -46,6 +48,23 @@ namespace CrossBoa.Upgrades
         /// </summary>
         public static Upgrade[] GenerateUpgradeChoices()
         {
+            Upgrade[] output;
+
+            // Check if there are less than 3 upgrades left
+            if (lockedUpgrades.Count < 3)
+            {
+                output = new Upgrade[lockedUpgrades.Count];
+
+                int i = 0;
+                foreach (Upgrade lockedUpgrade in lockedUpgrades.Values)
+                {
+                    output[i] = lockedUpgrade;
+                    i++;
+                }
+
+                return output;
+            }
+
             // Put all the locked upgrade names into a list
             List<string> lockedUpgradeNames = new List<string>(lockedUpgrades.Count);
             lockedUpgradeNames.AddRange(lockedUpgrades.Keys);
@@ -61,7 +80,7 @@ namespace CrossBoa.Upgrades
             }
 
             // Make the output array, and return it
-            Upgrade[] output = new[]
+            output = new[]
             {
                 lockedUpgrades[lockedUpgradeNames[0]],
                 lockedUpgrades[lockedUpgradeNames[1]],
@@ -94,11 +113,27 @@ namespace CrossBoa.Upgrades
             lockedUpgrades.Remove(upgradeName);
         }
 
-        #region Upgrade Delegate Methods
         /// <summary>
-        /// Shoot 3 arrows every shot
+        /// Resets all the upgrades
         /// </summary>
-        public static void Multishot()
+        public static void ResetUpgrades()
+        {
+            // Reset locked upgrades
+            lockedUpgrades = new Dictionary<string, Upgrade>(allUpgrades);
+
+            // Clear any events that might contain an upgrade
+            foreach (Upgrade upgrade in allUpgrades.Values)
+            {
+                Game1.Crossbow.OnShot -= upgrade.Effect;
+                Enemy.OnKill -= upgrade.Effect;
+            }
+        }
+
+    #region Upgrade Delegate Methods
+    /// <summary>
+    /// Shoot 3 arrows every shot
+    /// </summary>
+    public static void Multishot()
         {
             if (multishotArrows == null || multishotArrows[0].FlaggedForDeletion)
             {
