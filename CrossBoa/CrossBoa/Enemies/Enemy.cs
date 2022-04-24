@@ -151,10 +151,13 @@ namespace CrossBoa.Enemies
                 {
                     SoundManager.totemDeath.Play(.3f, 0, 0);
                 }
-
-                if (this is Beast)
+                else if (this is Beast)
                 {
                     SoundManager.beastDeath.Play(.2f, 0, 0);
+                }
+                else
+                {
+                    SoundManager.targetDamage.Play(.4f, -.2f, 0);
                 }
             }
         }
