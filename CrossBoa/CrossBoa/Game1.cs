@@ -992,7 +992,7 @@ namespace CrossBoa
         // Choosing Upgrade
         private void UpdateUpgradeScreen(GameTime gameTime)
         {
-            for (var i = 0; i < upgradeButtons.Length; i++)
+            for (int i = 0; i < upgradeButtons.Length; i++)
             {
                 upgradeButtons[i].Update(gameTime);
                 
@@ -1199,7 +1199,7 @@ namespace CrossBoa
         {
             upgradeChoices = UpgradeManager.GenerateUpgradeChoices();
 
-            for (var i = 0; i < upgradeButtons.Length; i++)
+            for (int i = 0; i < upgradeButtons.Length; i++)
             {
                 upgradeButtons[i].Sprite = upgradeChoices[i].Sprite;
             }
