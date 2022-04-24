@@ -57,8 +57,8 @@ namespace CrossBoa
 
         private static KeyboardState kbState;
         private static KeyboardState previousKBState;
-        private static MouseState mState;
-        private static MouseState previousMState;
+        public static MouseState MState;
+        public static MouseState PreviousMState;
 
         // Assets
         #region Asset Field Declarations
@@ -123,8 +123,9 @@ namespace CrossBoa
         public static List<PlayerArrow> playerArrowList;
         private static List<Collectible> collectibles;
 
-        // Main Menu Objects
         RenderTarget2D menuBGTarget;
+
+        // Text Elements
         private TextElement splashText;
         private TextElement titleText;
         private TextElement gameOverText;
@@ -132,7 +133,8 @@ namespace CrossBoa
         private TextElement settingsTitle;
         private TextElement controlsTitle;
         private TextElement optionsTitle;
-        private TextElement optionsText;
+        private TextElement debugText;
+        private TextElement godModeText;
         private TextElement settingsTextLine1;
         private TextElement settingsTextLine2;
         private TextElement settingsTextLine3;
@@ -152,6 +154,7 @@ namespace CrossBoa
         private Button mainMenuButton;
         private Button pauseButton;
         private Button debugButton;
+        private Button godModeButton;
         private Button gameOverButton;
         private Button[] upgradeButtons;
 
@@ -371,7 +374,9 @@ namespace CrossBoa
 
             optionsTitle = new TextElement("OPTIONS", ScreenAnchor.RightCenter, new Point(-65, -40), 1.5f);
 
-            optionsText = new TextElement("God Mode:", ScreenAnchor.RightCenter, new Point(-85, -10), 1.2f);
+            debugText = new TextElement("Debug Mode:", ScreenAnchor.RightCenter, new Point(-95, -10), 1.25f);
+
+            godModeText = new TextElement("God Mode:", ScreenAnchor.RightCenter, new Point(-85, 5), 1.25f);
 
             creditsTitle = new TextElement("CREDITS", ScreenAnchor.TopCenter, new Point(0, 20), 3f);
 
@@ -428,11 +433,17 @@ namespace CrossBoa
             debugButton = new Button(checkboxUnfilled, checkboxUnfilled, true,
                 ScreenAnchor.RightCenter, new Point(-30, -5), checkboxUnfilled.Bounds.Size * new Point(2,2));
 
+            debugButton.OnClick += ToggleDebug;
+
+            // God mode Button
+            godModeButton = new Button(checkboxUnfilled, checkboxUnfilled, true,
+                ScreenAnchor.RightCenter, new Point(-30, 10), checkboxUnfilled.Bounds.Size * new Point(2, 2));
+
+            godModeButton.OnClick += ToggleGodMode;
+
             // Game Over Button
             gameOverButton = new Button(mainMenuPressedSprite, mainMenuHoverSprite, true,
                 ScreenAnchor.Center, new Point(0, 30), mainMenuHoverSprite.Bounds.Size * new Point(7) / new Point(20));
-
-            debugButton.OnClick += ToggleDebug;
 
             // Upgrade UI Stuff
             levelUpText = new TextElement("LEVEL UP!", ScreenAnchor.TopCenter, new Point(0, 40), 2f);
@@ -479,7 +490,7 @@ namespace CrossBoa
         {
             // TODO: Add your update logic here
             kbState = Keyboard.GetState();
-            mState = Mouse.GetState();
+            MState = Mouse.GetState();
 
             boolThatAlternatesEveryFrame = !boolThatAlternatesEveryFrame;
 
@@ -488,7 +499,7 @@ namespace CrossBoa
                 ToggleFullscreen();
 
             // Get the position of the mouse for the d
-            crosshair.Position = mState.Position.ToVector2();
+            crosshair.Position = MState.Position.ToVector2();
 
             switch (gameState)
             {
@@ -497,25 +508,55 @@ namespace CrossBoa
                     // Update
                     UpdateMainMenu(gameTime);
 
-                    // Check state changes
+                    // Start game
                     if (playButton.HasBeenPressed())
                     {
                         LoadDefaultLevel();
                         gameState = GameState.Game;
 
+                        // Reposition Debug and God Mode buttons for pause menu
+                        debugText.Anchor = ScreenAnchor.RightCenter;
+
+                        debugButton.Position = new Vector2(-12, -32);
+                        debugButton.Anchor = ScreenAnchor.BottomRight;
+
+                        debugText.Position = new Vector2(-77, -37);
+                        debugText.Anchor = ScreenAnchor.BottomRight;
+
+                        godModeButton.Position = new Vector2(-12, -12);
+                        godModeButton.Anchor = ScreenAnchor.BottomRight;
+
+                        godModeText.Position = new Vector2(-67, -17);
+                        godModeText.Anchor = ScreenAnchor.BottomRight;
+
                         // Stops current song
                         MediaPlayer.Stop();
                     }
 
+                    // Go to credits
                     if (creditsButton.HasBeenPressed())
                     {
                         ResetCredits();
                         gameState = GameState.Credits;
                     }
 
+                    // Go to settings
                     if (settingsButton.HasBeenPressed())
                     {
                         gameState = GameState.Settings;
+
+                        // Reposition debug buttons
+                        debugButton.Position = new Vector2(-30, -5);
+                        debugButton.Anchor = ScreenAnchor.RightCenter;
+
+                        debugText.Position = new Vector2(-95, -10);
+                        debugText.Anchor = ScreenAnchor.RightCenter;
+
+                        godModeButton.Position = new Vector2(-30, 20);
+                        godModeButton.Anchor = ScreenAnchor.RightCenter;
+
+                        godModeText.Position = new Vector2(-85, 15);
+                        godModeText.Anchor = ScreenAnchor.RightCenter;
                     }
 
                     break;
@@ -580,7 +621,7 @@ namespace CrossBoa
             }
 
             previousKBState = kbState;
-            previousMState = mState;
+            PreviousMState = MState;
 
             base.Update(gameTime);
         }
@@ -864,7 +905,7 @@ namespace CrossBoa
             }
 
             // Fires the bow on click.
-            if (player.CanMove && mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released
+            if (player.CanMove && MState.LeftButton == ButtonState.Pressed && PreviousMState.LeftButton == ButtonState.Released
                 && !pauseButton.IsMouseOver())
             {
                 crossbow.Shoot();
@@ -933,14 +974,7 @@ namespace CrossBoa
                     UpgradeManager.UnlockUpgrade("Multishot");
                 if (WasKeyPressed(Keys.V))
                     UpgradeManager.UnlockUpgrade("Vampirism");*/
-
-                isGodModeActive = true;
             }
-            else
-            {
-                isGodModeActive = false;
-            }
-            
 
             /* DISABLED FOR PLAYTEST
              * 
@@ -1103,18 +1137,17 @@ namespace CrossBoa
             AnimateMainMenuBG(gameTime, false);
             mainMenuButton.Update(gameTime);
             debugButton.Update(gameTime);
+            godModeButton.Update(gameTime);
 
             if (mainMenuButton.HasBeenPressed())
             {
                 gameState = GameState.MainMenu;
             }
-
-            if (debugButton.HasBeenPressed())
-            {
-
-            }
         }
 
+        /// <summary>
+        /// Toggles the debug mode
+        /// </summary>
         private void ToggleDebug()
         {
             if (!isDebugActive)
@@ -1128,6 +1161,25 @@ namespace CrossBoa
                 isDebugActive = false;
                 debugButton.Sprite = checkboxUnfilled;
                 debugButton.HoverTexture = checkboxUnfilled;
+            }
+        }
+
+        /// <summary>
+        /// Toggles godmode
+        /// </summary>
+        private void ToggleGodMode()
+        {
+            if (!isGodModeActive)
+            {
+                isGodModeActive = true;
+                godModeButton.Sprite = checkboxFilled;
+                godModeButton.HoverTexture = checkboxFilled;
+            }
+            else
+            {
+                isGodModeActive = false;
+                godModeButton.Sprite = checkboxUnfilled;
+                godModeButton.HoverTexture = checkboxUnfilled;
             }
         }
 
@@ -1182,13 +1234,13 @@ namespace CrossBoa
 
             controlsTitle.Draw(_spriteBatch);
             optionsTitle.Draw(_spriteBatch);
-            
-            debugButton.Position = new Vector2(-30, -5);
-            optionsText.Position = new Vector2(-85, -10);
 
             mainMenuButton.Draw(_spriteBatch);
-            optionsText.Draw(_spriteBatch);
+            debugText.Draw(_spriteBatch);
             debugButton.Draw(_spriteBatch);
+
+            godModeText.Draw(_spriteBatch);
+            godModeButton.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -1214,12 +1266,10 @@ namespace CrossBoa
 
             mainMenuButton.Draw(_spriteBatch);
 
-            debugButton.Position = new Vector2(-15, 100);
-            optionsText.Position = new Vector2(-70, 95);
-
             debugButton.Draw(_spriteBatch);
-
-            optionsText.Draw(_spriteBatch);
+            debugText.Draw(_spriteBatch);
+            godModeText.Draw(_spriteBatch);
+            godModeButton.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -1231,10 +1281,9 @@ namespace CrossBoa
         private void UpdatePauseMenu(GameTime gameTime)
         {
             playButton.Update(gameTime);
-
             mainMenuButton.Update(gameTime);
-
             debugButton.Update(gameTime);
+            godModeButton.Update(gameTime);
 
             // Resume if player presses pause key or escape
             if (playButton.HasBeenPressed() ||
@@ -1246,12 +1295,6 @@ namespace CrossBoa
                 GameOver();
                 gameState = GameState.MainMenu;
             }
-
-            if (debugButton.HasBeenPressed())
-            {
-
-            }
-
         }
 
         // Upgrades
@@ -1426,7 +1469,6 @@ namespace CrossBoa
             {
                 gameState = GameState.MainMenu;
             }
-
         }
 
         /// <summary>
@@ -1608,16 +1650,6 @@ namespace CrossBoa
         public static bool WasKeyPressed(Keys key)
         {
             return kbState.IsKeyDown(key) && previousKBState.IsKeyUp(key);
-        }
-
-        /// <summary>
-        /// Checks if this was the first frame a key was released
-        /// </summary>
-        /// <param name="key">The key to check</param>
-        /// <returns>True if the key was just released this frame and was pressed last frame; false otherwise</returns>
-        public static bool WasKeyReleased(Keys key)
-        {
-            return kbState.IsKeyUp(key) && previousKBState.IsKeyDown(key);
         }
 
         /// <summary>

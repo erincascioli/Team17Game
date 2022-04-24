@@ -26,8 +26,6 @@ namespace CrossBoa
         /// </summary>
         public event OnClickHandler OnClick;
 
-        private MouseState mouseState;
-        private MouseState previousState;
         private bool isInteractable;
         private bool hovering;
         private Texture2D hoverButtonTexture;
@@ -69,8 +67,8 @@ namespace CrossBoa
         /// <returns></returns>
         public bool IsMouseOver()
         {
-            if (mouseState.X > Rectangle.Left && mouseState.X < Rectangle.Right &&
-                mouseState.Y > Rectangle.Top && mouseState.Y < Rectangle.Bottom)
+            if (Game1.MState.X > Rectangle.Left && Game1.MState.X < Rectangle.Right &&
+                Game1.MState.Y > Rectangle.Top && Game1.MState.Y < Rectangle.Bottom)
             {
                 // Mouse is over the button
                 return true;
@@ -87,19 +85,13 @@ namespace CrossBoa
         /// <returns>true if the mouse button was released on this frame; otherwise returns false</returns>
         public bool HasBeenPressed()
         {
-            if (hovering && previousState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
+            if (hovering && Game1.PreviousMState.LeftButton == ButtonState.Pressed && Game1.MState.LeftButton == ButtonState.Released)
             {
-                previousState = mouseState;
-
                 // Button was clicked
-                OnClick?.Invoke();
-                SoundManager.buttonClick.Play(.1f, 0, 0);
-
                 return true;
             }
             else
             {
-                previousState = mouseState;
                 return false;
             }
         }
@@ -141,8 +133,14 @@ namespace CrossBoa
         /// <param name="cursor"></param>
         public override void Update(GameTime gameTime)
         {
-            mouseState = Mouse.GetState();
             hovering = IsMouseOver();
+
+            // Run click event on this button
+            if (HasBeenPressed())
+            {
+                OnClick?.Invoke();
+                SoundManager.buttonClick.Play(.1f, 0, 0);
+            }
         }
     }
 }
