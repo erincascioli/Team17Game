@@ -157,6 +157,8 @@ namespace CrossBoa.Managers
                             // -Leo
                             // I simplified the code
                             // -Donovan
+                            // Thanks
+                            // -Leo
                             enemy.GetKnockedBack(new Projectile(null, tile.Rectangle, 0, 0),
                                 500);
                             beast.HasCollided = true;

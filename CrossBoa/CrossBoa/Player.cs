@@ -77,10 +77,10 @@ namespace CrossBoa
             get { return currentHealth; }
             set
             {
-                if (value <= maxHealth)
-                    currentHealth = value;
-                else
+                if (value >= maxHealth)
                     currentHealth = maxHealth;
+                else
+                    currentHealth = value;
             }
         }
 
@@ -206,7 +206,7 @@ namespace CrossBoa
             }
             // If the player can't dodge, tint them gray
             else if (timeUntilDodge > 0)
-                color = new Color(224, 224, 224);//Color.LightGray;
+                color = new Color(214, 214, 214);//Color.LightGray;
             else
             {
                 color = Color.White;
@@ -282,7 +282,7 @@ namespace CrossBoa
                 knockbackTime = 0;
                 velocity = Vector2.Zero;
                 kbDirection = direction;
-                SoundManager.hurtPlayer.Play(.4f, -.9f, 0);
+                SoundManager.hurtPlayer.Play(.2f, -.9f, 0);
             }
         }
 
@@ -324,6 +324,7 @@ namespace CrossBoa
             {
                 timeUntilDodge = 0;
                 canFlashTrigger = false;
+                flashAnimFrame = 4;
             }
 
             Vector2 movementVector = new Vector2(x, y);
@@ -428,15 +429,6 @@ namespace CrossBoa
             timeLeftInvincible = 0;
             canMove = true;
             knockbackTime = 1;
-        }
-
-        /// <summary>
-        /// Restores 1 HP to the player.
-        /// </summary>
-        public void Heal()
-        {
-            if (currentHealth < maxHealth)
-                currentHealth++;
         }
     }
 

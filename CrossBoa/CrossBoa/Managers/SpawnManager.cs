@@ -77,7 +77,7 @@ namespace CrossBoa.Managers
         public static void SpawnTarget(Point position)
         {
             Target newTarget = new Target(
-                Game1.whiteSquareSprite,
+                Game1.targetSprite,
                 new Rectangle(position, new Point(64, 64)));
             CollisionManager.AddEnemy(newTarget);
             gameObjectList.Add(newTarget);

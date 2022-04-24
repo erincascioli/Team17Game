@@ -23,8 +23,9 @@ namespace CrossBoa
 
         public override void GetCollected()
         {
+            if (IsActive)
+                Game1.Player.CurrentHealth++;
             base.GetCollected();
-            Game1.Player.Heal();
         }
     }
 }

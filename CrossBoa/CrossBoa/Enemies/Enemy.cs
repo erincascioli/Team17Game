@@ -77,7 +77,11 @@ namespace CrossBoa.Enemies
             // If there are not enough collectibles instantiated, generate more until the list is full
             while (expReward.Count < expReward.Capacity)
             {
-                Collectible newCollectible = new Collectible(Game1.xpSprite, new Point(32));
+                Collectible newCollectible;
+                if (Game1.RNG.Next(1,91) == 10)
+                    newCollectible = new HealthCollectible(Game1.healthRecoverySprite, new Point(32));
+                else
+                    newCollectible = new Collectible(Game1.xpSprite, new Point(32));
 
                 Game1.Collectibles.Add(newCollectible);
                 expReward.Add(newCollectible);
