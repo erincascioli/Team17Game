@@ -129,7 +129,7 @@ namespace CrossBoa.Upgrades
             }
         }
 
-    #region Upgrade Delegate Methods
+    #region Upgrade Behavior Methods
     /// <summary>
     /// Shoot 3 arrows every shot
     /// </summary>

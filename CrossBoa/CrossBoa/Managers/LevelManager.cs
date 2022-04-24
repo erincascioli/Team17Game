@@ -247,7 +247,8 @@ namespace CrossBoa.Managers
                 }
             }
 
-            //SpawnManager.SpawnSlime(new Point(100, 200));
+            // Clear any arrows that are left over from the previous level
+            ClearArrows();
         }
 
         /// <summary>
@@ -896,6 +897,21 @@ namespace CrossBoa.Managers
                 case 5:
                     currentLevel = "Level5";
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Clears all the arrows from the screen
+        /// </summary>
+        public static void ClearArrows()
+        {
+            PlayerArrow mainArrow = Game1.playerArrowList[0];
+
+            // Return the main arrow
+            foreach (PlayerArrow arrow in Game1.playerArrowList)
+            {
+                arrow.HitSomething();
+                arrow.GetPickedUp();
             }
         }
 

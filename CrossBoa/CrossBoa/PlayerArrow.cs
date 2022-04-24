@@ -234,6 +234,12 @@ namespace CrossBoa
             isActive = false;
             position = new Vector2(-1000, -1000);
 
+            // If this isn't the main arrow, flag it for deletion
+            if (!isMainArrow)
+            {
+                flaggedForDeletion = true;
+            }
+
             // Invoke OnPickup event
             OnPickup?.Invoke();
         }
