@@ -64,7 +64,7 @@ namespace CrossBoa.Managers
                         if (!i.Hitbox.Intersects(j.Rectangle)) continue;
                         
                         i.HitSomething();
-                        SoundManager.fireDissipate.Play(.1f, 0, 0);
+                        SoundManager.fireDissipate.Play(.6f, 0, 0);
                     }
                 }
             }
@@ -100,7 +100,7 @@ namespace CrossBoa.Managers
 
                         if (enemy is Beast && enemy.Health != 0)
                         {
-                            SoundManager.beastDamaged.Play(.3f, 0, 0);
+                            SoundManager.beastDamaged.Play(.6f, 0, 0);
                         }
 
                         if (enemy is Slime && enemy.Health != 0)

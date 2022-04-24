@@ -391,10 +391,10 @@ namespace CrossBoa.Managers
             // Will close off the entrance after a player fully enters a stage
             if (entrance.IsOpen)
             {
+                player.CanMove = true;
                 entrance.ChangeDoorState();
                 forcedX = 0;
                 forcedY = 0;
-                player.CanMove = true;
 
 
                 // Adds door to collisionManager

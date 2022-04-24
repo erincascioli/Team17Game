@@ -69,7 +69,7 @@ namespace CrossBoa.Enemies
                 500);
 
             // Play Sound Effect
-            SoundManager.fireShoot.Play(.3f, 0, 0);
+            SoundManager.fireShoot.Play(.6f, 0, 0);
         }
 
         public override void Update(GameTime gameTime)

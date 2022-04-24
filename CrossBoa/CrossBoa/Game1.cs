@@ -387,7 +387,7 @@ namespace CrossBoa
 
             thanksTitle = new TextElement("THANKS TO", ScreenAnchor.TopCenter, new Point(0, 155), 1.5f);
 
-            thanksText = new TextElement("adwitr\n\nansimuz\n\nGameSupplyGuy\n\nIrmandito\n\nJesse Munguia\n\nPixel Archipel\n\nReff Pixels\n\nzrghr",
+            thanksText = new TextElement("adwitr\n\nansimuz\n\nGameSupplyGuy\n\nIrmandito\n\nJesse Munguia\n\nPixel Archipel\n\nReff Pixels\n\nTheoAllen\n\nzrghr",
                 ScreenAnchor.TopCenter, new Point(0, 230), 1.2f);
 
             specialThanksTitle = new TextElement("SPECIAL THANKS TO", ScreenAnchor.TopCenter, new Point(0, 330), 1.5f);
@@ -529,8 +529,10 @@ namespace CrossBoa
                         godModeText.Position = new Vector2(-67, -17);
                         godModeText.Anchor = ScreenAnchor.BottomRight;
 
-                        // Stops current song
+                        // Song Transition
                         MediaPlayer.Stop();
+                        MediaPlayer.Play(SoundManager.dungeonTheme);
+                        MediaPlayer.IsRepeating = true;
                     }
 
                     // Go to credits
@@ -1142,6 +1144,9 @@ namespace CrossBoa
             if (mainMenuButton.HasBeenPressed())
             {
                 gameState = GameState.MainMenu;
+                MediaPlayer.Stop();
+                MediaPlayer.Play(SoundManager.titleTheme);
+                MediaPlayer.IsRepeating = true;
             }
         }
 
@@ -1386,6 +1391,10 @@ namespace CrossBoa
                 LoadDefaultLevel();
 
                 gameState = GameState.Game;
+                // Song Changes
+                MediaPlayer.Stop();
+                MediaPlayer.Play(SoundManager.dungeonTheme);
+                MediaPlayer.IsRepeating = true;
 
                 foreach (GameObject i in playerHealthBar)
                 {
@@ -1578,6 +1587,8 @@ namespace CrossBoa
         {
             // Sets the game state to Game Over
             gameState = GameState.GameOver;
+
+            MediaPlayer.Stop();
 
             // Resets the player's stats and position, and resets the LevelManager
             player.ResetPlayer(new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)));
