@@ -127,7 +127,7 @@ namespace CrossBoa.Managers
                     true);
 
                 exit = new Door(Content.Load<Texture2D>("Floor"), // Open Sprite
-                    Content.Load<Texture2D>("SideWall"), // Closed Sprite
+                    Content.Load<Texture2D>("VeryCrackedWallLeftRight"), // Closed Sprite
                     new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true); // Has hitbox
             }
