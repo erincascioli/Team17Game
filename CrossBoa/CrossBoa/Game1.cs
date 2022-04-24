@@ -684,8 +684,7 @@ namespace CrossBoa
                 }
 
                 // Fires a skull's arrow if the cooldown time reaches 0.
-                if (gameObjectList[i] is Skull skull && skull.IsAlive
-                    && skull.ReadyToFire)
+                if (gameObjectList[i] is Skull {IsAlive: true, ReadyToFire: true} skull)
                 {
                     Projectile newTotemProjectile = new Projectile(fireballSpritesheet,
                         new Rectangle(-100,
@@ -701,7 +700,7 @@ namespace CrossBoa
                 }
 
                 // Removes all inactive projectiles from play.
-                if (gameObjectList[i] is Projectile projectile && !projectile.IsActive)
+                if (gameObjectList[i] is Projectile {IsActive: false})
                 {
                     gameObjectList.RemoveAt(i);
                     i--;
@@ -709,7 +708,7 @@ namespace CrossBoa
 
                 // ~~~~~ DO ALL EXTERNAL GAMEOBJECT MODIFICATION ABOVE THIS CODE ~~~~~
                 // Delete enemies from lists after they die
-                if (gameObjectList[i] is Enemy enemy && !enemy.IsAlive)
+                if (gameObjectList[i] is Enemy {IsAlive: false})
                 {
                     gameObjectList.RemoveAt(i);
                     i--;

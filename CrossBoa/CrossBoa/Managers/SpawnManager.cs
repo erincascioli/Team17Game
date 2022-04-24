@@ -42,7 +42,7 @@ namespace CrossBoa.Managers
             Slime newSlime = new Slime(
                 Game1.slimeSpritesheet,
                 Game1.slimeDeathSpritesheet,
-                3,
+                2,
                 new Rectangle(position, new Point(64, 64)));
 
             CollisionManager.AddEnemy(newSlime);
@@ -57,7 +57,7 @@ namespace CrossBoa.Managers
         {
             Skull testSkull = new Skull(Game1.skullSpriteSheet,
                 new Rectangle(position, new Point(64, 64)),
-                3);
+                2);
 
             CollisionManager.AddEnemy(testSkull);
             gameObjectList.Add(testSkull);
