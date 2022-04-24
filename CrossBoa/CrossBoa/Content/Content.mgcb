@@ -467,6 +467,18 @@
 /processorParam:Quality=Best
 /build:Jump 77.wav
 
+#begin Jump 79.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Jump 79.wav
+
+#begin Jump 89 (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Jump 89 (3).wav
+
 #begin Levels/Level1.txt
 /copy:Levels/Level1.txt
 
