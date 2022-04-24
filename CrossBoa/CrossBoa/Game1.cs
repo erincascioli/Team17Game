@@ -1593,6 +1593,12 @@ namespace CrossBoa
                 playerArrowList[0].GetPickedUp();
                 crossbow.PickUpArrow();
             }
+
+            // Wipe any extra arrows on the screen
+            PlayerArrow mainArrow = playerArrowList[0];
+            playerArrowList.Clear();
+            playerArrowList.Add(mainArrow);
+
             exp = 0;
 
             // Removes every non-Player and non-Crossbow object from the GameObject list
