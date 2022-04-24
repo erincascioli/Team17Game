@@ -35,7 +35,7 @@ namespace CrossBoa.Managers
         public static SoundEffect hurtPlayer;
 
         // Will allow menu to control master volume
-        // All individual soundeffects also have their own volume when 
+        // All individual sound effects also have their own volume when 
         // played, which master volume should scale too
         public static float SFXVolume
         {
