@@ -53,6 +53,8 @@ namespace CrossBoa
         private static bool isDebugActive = false;
         public static bool isGodModeActive = false;
 
+        public static bool boolThatAlternatesEveryFrame;
+
         private static KeyboardState kbState;
         private static KeyboardState previousKBState;
         private static MouseState mState;
@@ -392,9 +394,11 @@ namespace CrossBoa
             // TODO: Add your update logic here
             kbState = Keyboard.GetState();
             mState = Mouse.GetState();
-            
-            // TEST CODE
-            if(WasKeyPressed(Keys.F11))
+
+            boolThatAlternatesEveryFrame = !boolThatAlternatesEveryFrame;
+
+            // Check for fullscreen press
+            if (WasKeyPressed(Keys.F11))
                 ToggleFullscreen();
 
             // Get the position of the mouse for the d
@@ -558,7 +562,7 @@ namespace CrossBoa
         /// <param name="gameTime">A reference to the GameTime</param>
         private void UpdateMainMenu(GameTime gameTime)
         {
-            AnimateMainMenuBG(gameTime);
+            AnimateMainMenuBG(gameTime, false);
 
             playButton.Update(gameTime);
         }
@@ -566,38 +570,69 @@ namespace CrossBoa
         /// <summary>
         /// Animates the main menu with parallax
         /// </summary>
-        private void AnimateMainMenuBG(GameTime gameTime)
+        private void AnimateMainMenuBG(GameTime gameTime, bool isHalfSpeed)
         {
-            int frame = (int) (gameTime.TotalGameTime.TotalSeconds * 60);
+            int frame = (int)(gameTime.TotalGameTime.TotalSeconds * 60);
 
-            // Layer 1 is a blank image
-
-            // Layer 2
-            if (frame % 3 == 0)
+            if(!isHalfSpeed)
             {
-                menuBGLayers[0].Location += new Point(1, 0);
-                menuBGLayers[1].Location += new Point(1, 0);
+                // Layer 1
+                if (frame % 3 == 0)
+                {
+                    menuBGLayers[0].Location += new Point(1, 0);
+                    menuBGLayers[1].Location += new Point(1, 0);
+                }
+
+                // Layer 2
+                if (frame % 2 == 0)
+                {
+                    menuBGLayers[2].Location += new Point(1, 0);
+                    menuBGLayers[3].Location += new Point(1, 0);
+                }
+
+                // Layer 3
+                if (frame % 3 == 0 || frame % 3 == 1)
+                {
+                    menuBGLayers[4].Location += new Point(1, 0);
+                    menuBGLayers[5].Location += new Point(1, 0);
+                }
+
+                // Layer 4
+                if (frame % 1 == 0)
+                {
+                    menuBGLayers[6].Location += new Point(1, 0);
+                    menuBGLayers[7].Location += new Point(1, 0);
+                }
             }
-
-            // Layer 3
-            if (frame % 2 == 0)
+            else
             {
-                menuBGLayers[2].Location += new Point(1, 0);
-                menuBGLayers[3].Location += new Point(1, 0);
-            }
+                // Layer 1
+                if (frame % 6 == 0)
+                {
+                    menuBGLayers[0].Location += new Point(1, 0);
+                    menuBGLayers[1].Location += new Point(1, 0);
+                }
 
-            // Layer 4
-            if (frame % 3 == 0 || frame % 3 == 1)
-            {
-                menuBGLayers[4].Location += new Point(1, 0);
-                menuBGLayers[5].Location += new Point(1, 0);
-            }
+                // Layer 2
+                if (frame % 4 == 0)
+                {
+                    menuBGLayers[2].Location += new Point(1, 0);
+                    menuBGLayers[3].Location += new Point(1, 0);
+                }
 
-            // Layer 5
-            if (frame % 1 == 0)
-            {
-                menuBGLayers[6].Location += new Point(1, 0);
-                menuBGLayers[7].Location += new Point(1, 0);
+                // Layer 3
+                if (frame % 3 == 0)
+                {
+                    menuBGLayers[4].Location += new Point(1, 0);
+                    menuBGLayers[5].Location += new Point(1, 0);
+                }
+
+                // Layer 4
+                if (frame % 2 == 0)
+                {
+                    menuBGLayers[6].Location += new Point(1, 0);
+                    menuBGLayers[7].Location += new Point(1, 0);
+                }
             }
 
             // Wrap image around the screen after it goes off the edge
@@ -1060,7 +1095,7 @@ namespace CrossBoa
         // Game Over
         private void UpdateGameOver(GameTime gameTime)
         {
-            AnimateMainMenuBG(gameTime);
+            AnimateMainMenuBG(gameTime, true);
 
             gameOverButton.Update(gameTime);
 
@@ -1088,19 +1123,11 @@ namespace CrossBoa
 
             // Draw main menu background to a smaller target, then scale up to reduce lag
             GraphicsDevice.SetRenderTarget(menuBGTarget);
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearClamp);
-
-            for (int i = 0; i < 6; i++)
-            {
-                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
-            }
-
-            _spriteBatch.End();
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
-            for (int i = 6; i < 8; i++)
+            for (int i = 0; i < 8; i++)
             {
-                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), Color.White);
+                _spriteBatch.Draw(menuBGSheet, menuBGLayers[i], new Rectangle((i / 2) * 384, 0, 384, 216), new Color(88, 73, 180));
             }
 
             _spriteBatch.End();
@@ -1208,6 +1235,13 @@ namespace CrossBoa
                 }
             }
 
+            // Resets upgrade buttons back to their original positions
+            for (int i = 0; i < upgradeButtons.Length; i++)
+            {
+                upgradeButtons[i].Position = new Vector2(upgradeButtons[i].Position.X, 0);
+            }
+
+            UpgradeManager.ResetUpgrades();
         }
 
         /// <summary>
@@ -1217,9 +1251,24 @@ namespace CrossBoa
         {
             upgradeChoices = UpgradeManager.GenerateUpgradeChoices();
 
-            for (int i = 0; i < upgradeButtons.Length; i++)
+            for (int i = 0; i < upgradeChoices.Length; i++)
             {
                 upgradeButtons[i].Sprite = upgradeChoices[i].Sprite;
+            }
+
+            // Disable extra buttons if there aren't enough upgrades
+            if (upgradeChoices.Length < 3)
+            {
+                for (int i = 2; i > upgradeChoices.Length - 1; i--)
+                {
+                    upgradeButtons[i].Position = new Vector2(upgradeButtons[i].Position.X, upgradeButtons[i].Position.Y + 1000);
+                }
+            }
+
+            // If there are no upgrades left, bring the player back to the game
+            if (upgradeChoices.Length <= 0)
+            {
+                gameState = GameState.Game;
             }
         }
 
