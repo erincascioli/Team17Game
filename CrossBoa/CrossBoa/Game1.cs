@@ -68,6 +68,9 @@ namespace CrossBoa
         public static Texture2D slimeSpritesheet;
         public static Texture2D slimeDeathSpritesheet;
         public static Texture2D xpSprite;
+        public static Texture2D targetSprite;
+        public static Texture2D healthRecoverySprite;
+
         private Texture2D snakeSpriteSheet;
         private Texture2D crossbowSprite;
         private Texture2D hitBox;
@@ -85,8 +88,6 @@ namespace CrossBoa
         private Texture2D collectibleSprite;
         private Texture2D crosshairSprite;
         private Texture2D flashSprite;
-        private Texture2D healthRecoverySprite;
-        private Texture2D targetSprite;
 
         public static Texture2D UpgradeBloodOrb;
 
@@ -361,6 +362,7 @@ namespace CrossBoa
 
             SpawnManager.GameObjectList = gameObjectList;
             LevelManager.LContent = Content;
+
 
             // Title Track starts playing
             MediaPlayer.Play(SoundManager.titleTheme);
