@@ -266,6 +266,7 @@ namespace CrossBoa
             sideWallSprite = Content.Load<Texture2D>("SideWall");
             wallSprite = Content.Load<Texture2D>("Wall");
             topDoorBottomHalfSprite = Content.Load<Texture2D>("Wall2");
+            topExitBottomHalfSprite = Content.Load<Texture2D>("VeryCrackedWallBottomHalf");
 
             // Upgrade sprites
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
