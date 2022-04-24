@@ -3,6 +3,7 @@ using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace CrossBoa
 {
@@ -20,6 +21,7 @@ namespace CrossBoa
         {
             isAlive = true;
             color = Color.White;
+            expReward = new List<Collectible>(0);
         }
 
         // ~~~ METHODS ~~~
