@@ -4,6 +4,7 @@ using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using CrossBoa.Managers;
