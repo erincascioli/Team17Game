@@ -248,6 +248,12 @@
 /processorParam:TextureFormat=Color
 /build:Empty Heart.png
 
+#begin Explosion 11 (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Explosion 11 (3).wav
+
 #begin Explosion 17.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
