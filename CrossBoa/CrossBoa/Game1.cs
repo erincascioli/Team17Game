@@ -1305,14 +1305,12 @@ namespace CrossBoa
         public void LoadDefaultLevel()
         {
             // Level layout
-            LevelManager.CurrentLevel = "TutorialLevel";
+            LevelManager.CurrentLevel = "Level5";
             LevelManager.LoadLevel();
 
-            Dictionary<string, Texture2D> testDict;
-
             // Temp enemy spawns for starting level
-            SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 3));
-            SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 3));
+            SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 4));
+            SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 4));
             SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 10));
             SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 10));
         }
