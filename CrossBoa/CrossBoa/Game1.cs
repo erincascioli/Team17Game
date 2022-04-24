@@ -70,6 +70,13 @@ namespace CrossBoa
         public static Texture2D xpSprite;
         public static Texture2D targetSprite;
         public static Texture2D healthRecoverySprite;
+        public static Texture2D leftRightDoorSprite;
+        public static Texture2D bottomTopDoorSprite;
+        public static Texture2D floorSprite;
+        public static Texture2D sideWallSprite;
+        public static Texture2D wallSprite;
+        public static Texture2D topDoorBottomHalfSprite;
+        public static Texture2D topExitBottomHalfSprite;
 
         private Texture2D snakeSpriteSheet;
         private Texture2D crossbowSprite;
@@ -253,6 +260,12 @@ namespace CrossBoa
             flashSprite = Content.Load<Texture2D>("RecoveryFlash");
             healthRecoverySprite = Content.Load<Texture2D>("HealthCollectible");
             targetSprite = Content.Load<Texture2D>("TargetSprite");
+            leftRightDoorSprite = Content.Load<Texture2D>("VeryCrackedWallLeftRight");
+            bottomTopDoorSprite = Content.Load<Texture2D>("VeryCrackedWallBottomTop");
+            floorSprite = Content.Load<Texture2D>("Floor");
+            sideWallSprite = Content.Load<Texture2D>("SideWall");
+            wallSprite = Content.Load<Texture2D>("Wall");
+            topDoorBottomHalfSprite = Content.Load<Texture2D>("Wall2");
 
             // Upgrade sprites
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
