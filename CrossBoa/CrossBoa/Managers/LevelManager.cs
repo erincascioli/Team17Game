@@ -388,11 +388,12 @@ namespace CrossBoa.Managers
         /// <returns></returns>
         public static void Update(Player player)
         {
+            player.CanMove = true;
+
             // Will close off the entrance after a player fully enters a stage
             if (entrance.IsOpen)
             {
                 entrance.ChangeDoorState();
-                player.CanMove = true;
                 forcedX = 0;
                 forcedY = 0;
 

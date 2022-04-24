@@ -19,9 +19,10 @@ namespace CrossBoa.Managers
     static class SoundManager
     {
         // Sound Effects
+        public static Song titleTheme;
+        public static Song dungeonTheme;
         public static SoundEffect hitWall;
         public static SoundEffect slimeHop;
-        public static Song titleTheme;
         public static SoundEffect beastWallBump;
         public static SoundEffect fireShoot;
         public static SoundEffect fireDissipate;
@@ -59,9 +60,10 @@ namespace CrossBoa.Managers
         static SoundManager()
         {
             // Gives the ability to read in files
-            Microsoft.Xna.Framework.Content.ContentManager Content = LevelManager.LContent;
+            ContentManager Content = LevelManager.LContent;
 
             titleTheme = Content.Load<Song>("Canopy Cacophony");
+            dungeonTheme = Content.Load<Song>("Scene - The Long Journey");
 
             StreamReader fileReader = new StreamReader("Content/SoundEffects.txt");
 

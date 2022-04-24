@@ -716,6 +716,12 @@
 /processorParam:TextureFormat=Color
 /build:RecoveryFlash.png
 
+#begin Scene - The Long Journey.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Scene - The Long Journey.ogg
+
 #begin SettingsPressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
