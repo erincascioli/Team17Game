@@ -94,12 +94,12 @@ namespace CrossBoa
         private Texture2D playAgainPressedSprite;
         private Texture2D pauseHoverSprite;
         private Texture2D pausePressedSprite;
+        private Texture2D checkboxFilled;
+        private Texture2D checkboxUnfilled;
         private Texture2D emptyHeart;
         private Texture2D fullHeart;
         private Texture2D menuBGSheet;
-        private Texture2D titleText;
         private Texture2D pauseText;
-        private Texture2D gameOverText;
         private Texture2D collectibleSprite;
         private Texture2D crosshairSprite;
         private Texture2D flashSprite;
@@ -123,6 +123,8 @@ namespace CrossBoa
         // Main Menu Objects
         RenderTarget2D menuBGTarget;
         private TextElement splashText;
+        private TextElement titleText;
+        private TextElement gameOverText;
         private TextElement FPSCounter;
         private TextElement settingsTitle;
         private TextElement controlsTitle;
@@ -277,9 +279,7 @@ namespace CrossBoa
             arrowHitBox = Content.Load<Texture2D>("White Pixel");
             playerArrowSprite = Content.Load<Texture2D>("arrow2");
             fireballSpritesheet = Content.Load<Texture2D>("FireballSpriteSheet");
-            titleText = Content.Load<Texture2D>("TitleText");
             pauseText = Content.Load<Texture2D>("PauseText");
-            gameOverText = Content.Load<Texture2D>("GameOverText");
             collectibleSprite = Content.Load<Texture2D>("LifePot");
             crosshairSprite = Content.Load<Texture2D>("Crosshair");
             menuBGSheet = Content.Load<Texture2D>("bg-sheet");
@@ -293,6 +293,8 @@ namespace CrossBoa
             wallSprite = Content.Load<Texture2D>("Wall");
             topDoorBottomHalfSprite = Content.Load<Texture2D>("Wall2");
             topExitBottomHalfSprite = Content.Load<Texture2D>("VeryCrackedWallBottomHalf");
+            checkboxFilled = Content.Load<Texture2D>("CheckboxFilled");
+            checkboxUnfilled = Content.Load<Texture2D>("CheckboxUnfilled");
 
             // Upgrade sprites
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
@@ -351,6 +353,10 @@ namespace CrossBoa
 
             FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(-10, -6));
 
+            titleText = new TextElement("CROSSBOA", ScreenAnchor.TopCenter, new Point(0, 45), 4f);
+
+            gameOverText = new TextElement("GAME OVER", ScreenAnchor.TopCenter, new Point(0, 45), 4f);
+
             settingsTitle = new TextElement("SETTINGS", ScreenAnchor.TopCenter, new Point(0, 20), 3f);
 
             controlsTitle = new TextElement("CONTROLS", ScreenAnchor.LeftCenter, new Point(65, -40), 1.5f);
@@ -361,7 +367,7 @@ namespace CrossBoa
 
             optionsTitle = new TextElement("OPTIONS", ScreenAnchor.RightCenter, new Point(-65, -40), 1.5f);
 
-            optionsText = new TextElement("God Mode:", ScreenAnchor.RightCenter, new Point(-100, -10), 1.2f);
+            optionsText = new TextElement("God Mode:", ScreenAnchor.RightCenter, new Point(-85, -10), 1.2f);
 
             creditsTitle = new TextElement("CREDITS", ScreenAnchor.TopCenter, new Point(0, 20), 3f);
 
@@ -396,15 +402,15 @@ namespace CrossBoa
 
             // Pause Button
             pauseButton = new Button(pausePressedSprite, pauseHoverSprite, true,
-                ScreenAnchor.TopRight, new Point(-14, 12), settingsHoverSprite.Bounds.Size / new Point(4));
+                ScreenAnchor.TopRight, new Point(-14, 12), pauseHoverSprite.Bounds.Size / new Point(4));
 
             // Credits Button
             creditsButton = new Button(creditsPressedSprite, creditsHoverSprite, true,
                 ScreenAnchor.Center, new Point(0, 60), creditsHoverSprite.Bounds.Size * new Point(7) / new Point(20));
 
             // Settings Button
-            settingsButton = new Button(creditsPressedSprite, creditsHoverSprite, true,
-                ScreenAnchor.Center, new Point(0, 30), creditsHoverSprite.Bounds.Size * new Point(7) / new Point(20));
+            settingsButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
+                ScreenAnchor.Center, new Point(0, 30), settingsHoverSprite.Bounds.Size * new Point(7) / new Point(20));
 
             // Main Menu Button
             mainMenuButton = new Button(mainMenuPressedSprite, mainMenuHoverSprite, true,
@@ -415,12 +421,14 @@ namespace CrossBoa
                 ScreenAnchor.Center, Point.Zero, playAgainHoverSprite.Bounds.Size * new Point(7) / new Point(20));
 
             // Debug Button
-            debugButton = new Button(settingsPressedSprite, settingsHoverSprite, true,
-                ScreenAnchor.BottomRight, new Point(-16, -14), settingsHoverSprite.Bounds.Size * new Point(2) / new Point(7));
+            debugButton = new Button(checkboxUnfilled, checkboxUnfilled, true,
+                ScreenAnchor.RightCenter, new Point(-30, -5), checkboxUnfilled.Bounds.Size * new Point(2,2));
 
             // Game Over Button
             gameOverButton = new Button(mainMenuPressedSprite, mainMenuHoverSprite, true,
                 ScreenAnchor.Center, new Point(0, 30), mainMenuHoverSprite.Bounds.Size * new Point(7) / new Point(20));
+
+            debugButton.OnClick += ToggleDebug;
 
             // Upgrade UI Stuff
             levelUpText = new TextElement("LEVEL UP!", ScreenAnchor.TopCenter, new Point(0, 40), 2f);
@@ -741,9 +749,7 @@ namespace CrossBoa
             _spriteBatch.Draw(menuBGTarget, new Rectangle(Point.Zero, menuBGSize), Color.White);
 
             // Title Text
-            _spriteBatch.Draw(titleText, 
-                Helper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), titleText.Bounds.Size * new Point(UIScale * 4)), 
-                Color.White);
+            titleText.Draw(_spriteBatch);
 
             playButton.Draw(_spriteBatch);
 
@@ -1059,10 +1065,32 @@ namespace CrossBoa
         {
             AnimateMainMenuBG(gameTime);
             mainMenuButton.Update(gameTime);
+            debugButton.Update(gameTime);
 
             if (mainMenuButton.HasBeenPressed())
             {
                 gameState = GameState.MainMenu;
+            }
+
+            if (debugButton.HasBeenPressed())
+            {
+
+            }
+        }
+
+        private void ToggleDebug()
+        {
+            if (!isDebugActive)
+            {
+                isDebugActive = true;
+                debugButton.Sprite = checkboxFilled;
+                debugButton.HoverTexture = checkboxFilled;
+            }
+            else
+            {
+                isDebugActive = false;
+                debugButton.Sprite = checkboxUnfilled;
+                debugButton.HoverTexture = checkboxUnfilled;
             }
         }
 
@@ -1117,9 +1145,13 @@ namespace CrossBoa
 
             controlsTitle.Draw(_spriteBatch);
             optionsTitle.Draw(_spriteBatch);
-            optionsText.Draw(_spriteBatch);
+            
+            debugButton.Position = new Vector2(-30, -5);
+            optionsText.Position = new Vector2(-85, -10);
 
             mainMenuButton.Draw(_spriteBatch);
+            optionsText.Draw(_spriteBatch);
+            debugButton.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -1145,10 +1177,12 @@ namespace CrossBoa
 
             mainMenuButton.Draw(_spriteBatch);
 
-            // Draw debug button
-            _spriteBatch.DrawString(arial32, isDebugActive ? "Disable God Mode:" : "Enable God Mode:", // Changed for Playtest
-                new Vector2(windowWidth - 500, windowHeight - 80), isDebugActive ? Color.Red : Color.Green);
+            debugButton.Position = new Vector2(-15, 100);
+            optionsText.Position = new Vector2(-70, 95);
+
             debugButton.Draw(_spriteBatch);
+
+            optionsText.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }
@@ -1176,11 +1210,14 @@ namespace CrossBoa
                 gameState = GameState.MainMenu;
             }
 
-            // Enables debug if player presses debug button
             if (debugButton.HasBeenPressed())
-                isDebugActive = !isDebugActive;
+            {
+
+            }
+
         }
 
+        // Upgrades
         /// <summary>
         /// Updates upgrade screen
         /// </summary>
@@ -1327,9 +1364,7 @@ namespace CrossBoa
             // Draw background
             _spriteBatch.Draw(menuBGTarget, new Rectangle(Point.Zero, menuBGSize), Color.White);
 
-            _spriteBatch.Draw(gameOverText, 
-                Helper.MakeRectangleFromCenter(windowRect.Center - new Point(0, UIScale * 40), gameOverText.Bounds.Size * new Point(UIScale * 4)), 
-                Color.White);
+            gameOverText.Draw(_spriteBatch);
 
             gameOverButton.Draw(_spriteBatch);
 
