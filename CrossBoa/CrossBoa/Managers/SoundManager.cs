@@ -57,7 +57,7 @@ namespace CrossBoa.Managers
 
             titleTheme = Content.Load<Song>("Canopy Cacophony");
 
-            StreamReader fileReader = new StreamReader("../../../SoundEffects.txt");
+            StreamReader fileReader = new StreamReader("Content/SoundEffects.txt");
 
             // Sound Effects will be gotten one by one
             hitWall = Content.Load<SoundEffect>(fileReader.ReadLine());
