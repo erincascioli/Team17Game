@@ -11,5 +11,5 @@ Explosion 17
 Hit_hurt 114 (2)
 Hit_hurt 114 (8)
 Hit_hurt 74 (3)
-Jump 79
+Jump 79 (1)
 Jump 89 (3)

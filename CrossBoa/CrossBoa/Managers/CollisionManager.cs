@@ -103,6 +103,11 @@ namespace CrossBoa.Managers
                             SoundManager.beastDamaged.Play(.3f, 0, 0);
                         }
 
+                        if (enemy is Slime && enemy.Health != 0)
+                        {
+                            SoundManager.slimeDamage.Play(.5f, .5f, 0);
+                        }
+
                         playerArrow.HitSomething();
 
                         // Knock the enemy back

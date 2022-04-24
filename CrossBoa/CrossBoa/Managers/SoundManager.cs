@@ -33,6 +33,8 @@ namespace CrossBoa.Managers
         public static SoundEffect totemDeath;
         public static SoundEffect beastDeath;
         public static SoundEffect hurtPlayer;
+        public static SoundEffect playerDodge;
+        public static SoundEffect slimeDamage;
 
         // Will allow menu to control master volume
         // All individual sound effects also have their own volume when 
@@ -98,6 +100,12 @@ namespace CrossBoa.Managers
 
             hurtPlayer = Content.Load<SoundEffect>(fileReader.ReadLine());
             hurtPlayer.CreateInstance();
+
+            playerDodge = Content.Load<SoundEffect>(fileReader.ReadLine());
+            playerDodge.CreateInstance();
+
+            slimeDamage = Content.Load<SoundEffect>(fileReader.ReadLine());
+            slimeDamage.CreateInstance();
 
             fileReader.Close();
         }
