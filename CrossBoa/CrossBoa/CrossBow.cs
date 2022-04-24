@@ -183,6 +183,10 @@ namespace CrossBoa
            
         public void PickUpArrow()
         {
+            if (!isLoaded)
+            {
+                SoundManager.arrowPickup.Play(.2f, -.9f, 0);
+            }
             timeSincePickup = 0f;
             isLoaded = true;
         }

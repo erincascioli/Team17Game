@@ -14,7 +14,7 @@ namespace CrossBoa.Managers
     /// <summary>
     /// Author: Donovan Scullion
     /// Purpose: Gets and holds sound files
-    /// Restrictions: none
+    /// Restrictions: none : Don't grade this class
     /// </summary>
     static class SoundManager
     {
@@ -38,6 +38,7 @@ namespace CrossBoa.Managers
         public static SoundEffect skullDamage;
         public static SoundEffect buttonClick;
         public static SoundEffect targetDamage;
+        public static SoundEffect arrowPickup;
 
         // Will allow menu to control master volume
         // All individual sound effects also have their own volume when 
@@ -116,9 +117,11 @@ namespace CrossBoa.Managers
             buttonClick = Content.Load<SoundEffect>(fileReader.ReadLine());
             buttonClick.CreateInstance();
 
-            // TODO: Unimplemented
             targetDamage = Content.Load<SoundEffect>(fileReader.ReadLine());
             targetDamage.CreateInstance();
+
+            arrowPickup = Content.Load<SoundEffect>(fileReader.ReadLine());
+            arrowPickup.CreateInstance();
 
             fileReader.Close();
         }

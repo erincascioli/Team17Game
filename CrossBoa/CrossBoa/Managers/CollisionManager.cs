@@ -110,7 +110,7 @@ namespace CrossBoa.Managers
 
                         if (enemy is Skull && enemy.Health != 0)
                         {
-                            SoundManager.skullDamage.Play(.1f, 0, 0);
+                            SoundManager.skullDamage.Play(.4f, 0, 0);
                         }
 
                         playerArrow.HitSomething();
