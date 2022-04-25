@@ -50,6 +50,8 @@ namespace CrossBoa
         private static bool isDebugActive = false;
         public static bool isGodModeActive = false;
 
+        private double levelUpTextTimer;
+
         public static bool boolThatAlternatesEveryFrame;
 
         private static KeyboardState kbState;
@@ -150,6 +152,8 @@ namespace CrossBoa
         private TextElement thanksText;
         private TextElement specialThanksTitle;
         private TextElement specialThanksText;
+
+        private TextElement inGameLevelUpText;
 
         // Buttons
         private Button playButton;
@@ -261,6 +265,8 @@ namespace CrossBoa
             _graphics.ApplyChanges();
 
             UIScale = 4;
+
+            levelUpTextTimer = 5;
 
             // Create a render target that can be much more easily rescaled
             menuBGTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
@@ -476,6 +482,12 @@ namespace CrossBoa
                 new Button(null, null, true, ScreenAnchor.Center, new Point(0, 0), new Point(32));
             upgradeButtons[2] =
                 new Button(null, null, true, ScreenAnchor.Center, new Point(65, 0), new Point(32));
+
+            inGameLevelUpText = new TextElement("Level Up!", ScreenAnchor.TopLeft, new Point(0, 0), 0.5f)
+            {
+                DoesSizeScale = false,
+                DoesPositionScale = false
+            };
 
             // Create player health bar
             for (int i = 0; i < DefaultPlayerHealth; i++)
@@ -871,6 +883,13 @@ namespace CrossBoa
                 LevelUp();
             }
 
+            // Level up text
+            if (levelUpTextTimer < 5)
+            {
+                levelUpTextTimer += gameTime.ElapsedGameTime.TotalSeconds;
+                inGameLevelUpText.Position += new Vector2(0, -0.5f);
+            }
+
             // Update all GameObjects
             Camera.Update(gameTime);
 
@@ -1067,11 +1086,23 @@ namespace CrossBoa
                 // _spriteBatch.Draw(whiteSquareSprite, playerArrow.Rectangle, Color.Tan)
             }
 
+            // Draw level up text
+            if (levelUpTextTimer < 1.5)
+            {
+                inGameLevelUpText.Draw(_spriteBatch);
+            }
+            else if (levelUpTextTimer < 3)
+            {
+                inGameLevelUpText.Color = boolThatAlternatesEveryFrame ?
+                    Color.White :
+                    Color.Transparent;
+                inGameLevelUpText.Draw(_spriteBatch);
+            }
+
             _spriteBatch.End();
 
             // Render the target to the backbuffer
             GraphicsDevice.SetRenderTarget(null);
-
 
             // Add Letterboxing
             // CODE TAKEN FROM: http://www.infinitespace-studios.co.uk/general/monogame-scaling-your-game-using-rendertargets-and-touchpanel/
@@ -1584,8 +1615,10 @@ namespace CrossBoa
             // Increase level
             currentExpLevel++;
 
-            // TODO: Player level up animation
-
+            // Player level up animation
+            inGameLevelUpText.Color = Color.White;
+            inGameLevelUpText.Position = player.Rectangle.Center.ToVector2();
+            levelUpTextTimer = 0;
 
             // Play sound
             SoundManager.playerDodge.Play(0.5f, 1f, 0);
