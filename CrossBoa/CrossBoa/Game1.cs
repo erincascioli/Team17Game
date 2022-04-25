@@ -1578,7 +1578,7 @@ namespace CrossBoa
         {
             // Remove exp and increase requirement for next level
             exp -= expToNextLevel;
-            expToNextLevel += 50;
+            expToNextLevel += 10;
             
             // Increase level
             currentExpLevel++;
@@ -1646,7 +1646,7 @@ namespace CrossBoa
             playerArrowList.Add(mainArrow);
 
             exp = 0;
-            expToNextLevel = 100;
+            expToNextLevel = 10;
             currentExpLevel = 0;
 
             // Removes every non-Player and non-Crossbow object from the GameObject list
