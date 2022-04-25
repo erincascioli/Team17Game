@@ -198,7 +198,7 @@ namespace CrossBoa
 
             // Don't reset temporary arrow despawns so they despawn at the same time
             if (isMainArrow)
-                timeUntilDespawn = PlayerStats.ArrowDespawnTime;
+                timeUntilDespawn = StatsManager.ArrowDespawnTime;
         }
 
         public override void GetShot(Vector2 position, float direction, float magnitude)
