@@ -109,7 +109,10 @@ namespace CrossBoa
         private Texture2D expBarFillSprite;
         private Texture2D expBarContainerSprite;
 
+        // Textures for upgrades
         public static Texture2D UpgradeBloodOrb;
+        public static Texture2D UpgradeFeather;
+        public static Texture2D UpgradeSharkTooth;
 
         private SpriteFont arial32;
         private static SpriteFont pressStart;
@@ -312,6 +315,8 @@ namespace CrossBoa
 
             // Upgrade sprites
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
+            UpgradeFeather = Content.Load<Texture2D>("Feather");
+            UpgradeSharkTooth = Content.Load<Texture2D>("SharkTooth");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
@@ -1652,6 +1657,9 @@ namespace CrossBoa
             {
                 t.Position = new Vector2(t.Position.X, 0);
             }
+
+            // Reset player stats
+            StatsManager.ResetStats();
 
             UpgradeManager.ResetUpgrades();
         }
