@@ -97,6 +97,7 @@ namespace CrossBoa.Managers
             {
                 case 1:
                 case 2:
+                case 3:
                     maxSlimes = 3;
                     maxSkeletons = 1;
                     maxTotems = 1;
@@ -104,9 +105,10 @@ namespace CrossBoa.Managers
                     minEnemies = 2;
                     break;
 
-                case 3:
                 case 4:
                 case 5:
+                case 6:
+                case 7:
                     maxSlimes = 4;
                     maxSkeletons = 2;
                     maxTotems = 1;
@@ -114,8 +116,9 @@ namespace CrossBoa.Managers
                     minEnemies = 2;
                     break;
 
-                case 6:
-                case 7:
+                case 8:
+                case 9:
+                case 10:
                     maxSlimes = 4;
                     maxSkeletons = 3;
                     maxTotems = 2;
@@ -123,9 +126,10 @@ namespace CrossBoa.Managers
                     minEnemies = 3;
                     break;
 
-                case 8:
-                case 9:
-                case 10:
+                case 11:
+                case 12:
+                case 13:
+                case 14:
                     maxSlimes = 5;
                     maxSkeletons = 3;
                     maxTotems = 2;
