@@ -67,16 +67,8 @@ namespace CrossBoa
         /// <returns></returns>
         public bool IsMouseOver()
         {
-            if (Game1.MState.X > Rectangle.Left && Game1.MState.X < Rectangle.Right &&
-                Game1.MState.Y > Rectangle.Top && Game1.MState.Y < Rectangle.Bottom)
-            {
-                // Mouse is over the button
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return Game1.MState.X > Rectangle.Left && Game1.MState.X < Rectangle.Right &&
+                   Game1.MState.Y > Rectangle.Top && Game1.MState.Y < Rectangle.Bottom;
         }
 
         /// <summary>
@@ -85,15 +77,7 @@ namespace CrossBoa
         /// <returns>true if the mouse button was released on this frame; otherwise returns false</returns>
         public bool HasBeenPressed()
         {
-            if (hovering && Game1.PreviousMState.LeftButton == ButtonState.Pressed && Game1.MState.LeftButton == ButtonState.Released)
-            {
-                // Button was clicked
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return hovering && Game1.PreviousMState.LeftButton == ButtonState.Pressed && Game1.MState.LeftButton == ButtonState.Released;
         }
 
         /// <summary>
@@ -130,17 +114,15 @@ namespace CrossBoa
         /// Purpose: Updates changing variables of object every frame
         /// Restrictions: should likely be called before any other class method
         /// </summary>
-        /// <param name="cursor"></param>
         public override void Update(GameTime gameTime)
         {
             hovering = IsMouseOver();
 
             // Run click event on this button
-            if (HasBeenPressed())
-            {
-                OnClick?.Invoke();
-                SoundManager.buttonClick.Play(.1f, 0, 0);
-            }
+            if (!HasBeenPressed()) return;
+
+            OnClick?.Invoke();
+            SoundManager.buttonClick.Play(.1f, 0, 0);
         }
     }
 }

@@ -26,13 +26,6 @@ namespace CrossBoa.Managers
         }
 
 
-        static SpawnManager()
-        {
-
-
-        }
-
-        
         /// <summary>
         /// Spawns a slime enemy
         /// </summary>

@@ -3,12 +3,12 @@
 namespace CrossBoa.Interfaces
 {
     /// <summary>
-    /// Interface that gives classes a hitbox property, allowing for easier collision checking
+    /// Interface that gives classes a hitBox property, allowing for easier collision checking
     /// </summary>
     public interface ICollidable 
     {
         /// <summary>
-        /// The hitbox for this object
+        /// The hitBox for this object
         /// </summary>
         public Rectangle Hitbox { get; }
 

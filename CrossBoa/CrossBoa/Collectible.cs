@@ -82,20 +82,18 @@ namespace CrossBoa
         /// <param name="force">How much force the collectible should be pulled toward the player with</param>
         public void GetSuckedIntoPlayer(int distance, float force)
         {
-            if(isActive)
-            {
-                Point playerCenter = Game1.Player.Hitbox.Center;
-                Point arrowCenter = this.Hitbox.Center;
+            if (!isActive) return;
 
-                if (Helper.DistanceSquared(playerCenter, arrowCenter) < MathF.Pow(distance, 2))
-                {
-                    // Update the velocity to point towards the player
-                    VelocityAngle = Helper.DirectionBetween(arrowCenter, playerCenter);
+            Point playerCenter = Game1.Player.Hitbox.Center;
+            Point arrowCenter = this.Hitbox.Center;
 
-                    // Apply more velocity
-                    ApplyForce(Helper.DirectionBetween(arrowCenter, playerCenter), force);
-                }
-            }
+            if (!(Helper.DistanceSquared(playerCenter, arrowCenter) < MathF.Pow(distance, 2))) return;
+
+            // Update the velocity to point towards the player
+            VelocityAngle = Helper.DirectionBetween(arrowCenter, playerCenter);
+
+            // Apply more velocity
+            ApplyForce(Helper.DirectionBetween(arrowCenter, playerCenter), force);
         }
 
         /// <summary>
@@ -121,13 +119,12 @@ namespace CrossBoa
         /// </summary>
         public virtual void GetCollected()
         {
-            if(isActive)
-            {
-                isActive = false;
-                isAssigned = false;
-                Game1.Exp++;
-                SoundManager.collectXP.Play(.1f, 0, 0);
-            }
+            if (!isActive) return;
+
+            isActive = false;
+            isAssigned = false;
+            Game1.Exp++;
+            SoundManager.collectXP.Play(.1f, 0, 0);
         }
     }
 }

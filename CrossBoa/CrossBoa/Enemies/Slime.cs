@@ -20,7 +20,7 @@ namespace CrossBoa.Enemies
     /// and damages them on contact. Inherits from PhysicsObject.
     /// Written by: Leo Schindler-Gerendasi
     /// </summary>
-    public class Slime : Enemy, ICollidable
+    public class Slime : Enemy
     {
         // ~~~ FIELDS ~~~
         private const float MovementForce = 45000f;
@@ -63,7 +63,6 @@ namespace CrossBoa.Enemies
         /// </summary>
         public override void Move()
         {
-            float direction; // No need to assign a default
             // Formula used for calculations: 
             // Cos(A) = (b^2 + c^2 - a^2) / 2bc
             // A = arccos the formula above
@@ -75,7 +74,7 @@ namespace CrossBoa.Enemies
                 / (2 * horizDist * totalDist);
             if (double.IsNaN(cosA))
                 cosA = 0;
-            direction = (float)Math.Acos(cosA);
+            float direction = (float)Math.Acos(cosA);
             if (targetY < position.Y)
                 direction *= -1;
             ApplyForce(direction, MovementForce);
@@ -88,24 +87,23 @@ namespace CrossBoa.Enemies
         }
 
         /// <summary>
-        /// Handles knockback when this enemy gets hit
+        /// Handles knockBack when this enemy gets hit
         /// </summary>
         /// <param name="other">The object causing this enemy to be knocked back</param>
         /// <param name="force">How much force to knock this enemy back by</param>
         public override void GetKnockedBack(ICollidable other, float force)
         {
-            if (animationState != SlimeAnimState.Dying)
-            {
-                // If the slime is in the air, move it to the ground
-                if (animationState != SlimeAnimState.Resting)
-                    timeSinceMove = 1.2f;
+            if (animationState == SlimeAnimState.Dying) return;
 
-                // Otherwise, if the slime hasn't moved for a while, stun it.
-                else if (timeSinceMove >= 1.2f)
-                    timeSinceMove = 1.2f;
+            // If the slime is in the air, move it to the ground
+            if (animationState != SlimeAnimState.Resting)
+                timeSinceMove = 1.2f;
 
-                base.GetKnockedBack(other, force);
-            }
+            // Otherwise, if the slime hasn't moved for a while, stun it.
+            else if (timeSinceMove >= 1.2f)
+                timeSinceMove = 1.2f;
+
+            base.GetKnockedBack(other, force);
         }
 
         /// <summary>
@@ -188,25 +186,21 @@ namespace CrossBoa.Enemies
         /// <summary>
         /// Updates this slime's animations
         /// </summary>
-        /// <param name="gameTime">A reference to the GameTime</param>
         public void UpdateAnimations()
         {
             // Movement animation state
-            if (isAlive && animationState != SlimeAnimState.Dying)
-            {
-                
+            if (!isAlive || animationState == SlimeAnimState.Dying) return;
 
-                if (timeSinceMove >= totalTimeBeforeNextJump - 0.2)     // Anticipate for 0.2 seconds
-                    animationState = SlimeAnimState.Squished;
-                else if (timeSinceMove < 0.25)                          // Jump for 0.25 seconds
-                    animationState = SlimeAnimState.Jumping;
-                else if (timeSinceMove < 0.4)                           // Fall for 0.15 seconds
-                    animationState = SlimeAnimState.Falling;
-                else if (timeSinceMove < 0.5)                           // Land for 0.1 seconds
-                    animationState = SlimeAnimState.Squished;
-                else                                                    // Rest if not doing anything else
-                    animationState = SlimeAnimState.Resting;
-            }
+            if (timeSinceMove >= totalTimeBeforeNextJump - 0.2)     // Anticipate for 0.2 seconds
+                animationState = SlimeAnimState.Squished;
+            else if (timeSinceMove < 0.25)                          // Jump for 0.25 seconds
+                animationState = SlimeAnimState.Jumping;
+            else if (timeSinceMove < 0.4)                           // Fall for 0.15 seconds
+                animationState = SlimeAnimState.Falling;
+            else if (timeSinceMove < 0.5)                           // Land for 0.1 seconds
+                animationState = SlimeAnimState.Squished;
+            else                                                    // Rest if not doing anything else
+                animationState = SlimeAnimState.Resting;
         }
 
         /// <summary>

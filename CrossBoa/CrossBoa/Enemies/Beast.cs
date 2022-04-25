@@ -36,7 +36,7 @@ namespace CrossBoa.Enemies
     /// its provoke radius, at which point it will charge at you constantly.
     /// Written by: Leo Schindler-Gerendasi.
     /// </summary>
-    class Beast : Enemy, ICollidable
+    class Beast : Enemy
     {
         // ~~~ FIELDS ~~~
         private const float MovementForce = 1000f;
@@ -51,7 +51,7 @@ namespace CrossBoa.Enemies
         private float provokeRadius;
         private ChargingState chargingState;
         private bool hasCollided;
-        private float chargeDirection;
+        //private float chargeDirection;
 
         // Other fields
         private Rectangle drawRect;
@@ -241,9 +241,9 @@ namespace CrossBoa.Enemies
                         Rectangle.Size);
                         if (chargeTimer >= 0.5f)
                         {
-                            chargeDirection = Helper.DirectionBetween(
+                            /*chargeDirection = Helper.DirectionBetween(
                                 new Point((int)position.X + Width / 2, (int)position.Y + Height / 2),
-                                new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y));
+                                new Point(target.Rectangle.Center.X, target.Rectangle.Center.Y));*/
                             chargingState = ChargingState.Charging;
                             //SoundManager.beastCharge.Play(.2f, 0f, 0f);
                         }
@@ -319,25 +319,23 @@ namespace CrossBoa.Enemies
             }
 
             // Look at the player if readying or charging
-            if (chargingState == ChargingState.Readying || chargingState == ChargingState.Charging)
+            if (chargingState != ChargingState.Readying && chargingState != ChargingState.Charging) return;
+            Point differenceBetweenPlayer = Game1.Player.Rectangle.Center - this.Rectangle.Center;
+
+            // Enemy should face left or right
+            if (MathF.Abs(differenceBetweenPlayer.X) > MathF.Abs(differenceBetweenPlayer.Y))
             {
-                Point differenceBetweenPlayer = Game1.Player.Rectangle.Center - this.Rectangle.Center;
+                animationState = differenceBetweenPlayer.X > 0 ?
+                    BeastAnimState.FacingRight :
+                    BeastAnimState.FacingLeft;
+            }
 
-                // Enemy should face left or right
-                if (MathF.Abs(differenceBetweenPlayer.X) > MathF.Abs(differenceBetweenPlayer.Y))
-                {
-                    animationState = differenceBetweenPlayer.X > 0 ?
-                        BeastAnimState.FacingRight :
-                        BeastAnimState.FacingLeft;
-                }
-
-                // Enemy should face up or down
-                else
-                {
-                    animationState = differenceBetweenPlayer.Y > 0 ?
-                        BeastAnimState.FacingDown :
-                        BeastAnimState.FacingUp;
-                }
+            // Enemy should face up or down
+            else
+            {
+                animationState = differenceBetweenPlayer.Y > 0 ?
+                    BeastAnimState.FacingDown :
+                    BeastAnimState.FacingUp;
             }
         }
         public override void Draw(SpriteBatch spriteBatch)
@@ -357,7 +355,7 @@ namespace CrossBoa.Enemies
         /// </summary>
         /// <param name="position">The Vector2 in question.</param>
         /// <returns>A point equivalent to that Vector2.</returns>
-        private Point ToPoint(Vector2 position)
+        private static Point ToPoint(Vector2 position)
         {
             return new Point((int)position.X, (int)position.Y);
         }

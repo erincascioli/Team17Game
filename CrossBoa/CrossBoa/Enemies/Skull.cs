@@ -50,7 +50,7 @@ namespace CrossBoa.Enemies
 
         // ~~~ METHODS ~~~
         /// <summary>
-        /// Handles knockback when this enemy gets hit
+        /// Handles knockBack when this enemy gets hit
         /// </summary>
         /// <param name="other">The object causing this enemy to be knocked back</param>
         /// <param name="force">How much force to knock this enemy back by</param>

@@ -50,11 +50,10 @@ namespace CrossBoa.Managers
                 // First checks for player projectile collisions
                 if (i.Hitbox.Intersects(Game1.Player.Hitbox) && !Game1.Player.IsInvincible)
                 {
-                    if (!isInvincibilityActive)
-                    {
-                        i.HitSomething();
-                        Game1.Player.TakeDamage(1, i.Direction);
-                    }
+                    if (isInvincibilityActive) continue;
+
+                    i.HitSomething();
+                    Game1.Player.TakeDamage(1, i.Direction);
                 }
                 else
                 {
@@ -91,33 +90,31 @@ namespace CrossBoa.Managers
                 // with player arrow
                 foreach (PlayerArrow playerArrow in Game1.playerArrowList)
                 {
-                    if (playerArrow.IsInAir && 
-                        playerArrow.Hitbox.Intersects(enemy.Hitbox) && 
-                        enemy.Health > 0)
+                    if (!playerArrow.IsInAir || !playerArrow.Hitbox.Intersects(enemy.Hitbox) ||
+                        enemy.Health <= 0) continue;
+
+                    // Health value not decided on yet
+                    enemy.TakeDamage(1);
+
+                    if (enemy is Beast && enemy.Health != 0)
                     {
-                        // Health value not decided on yet
-                        enemy.TakeDamage(1);
-
-                        if (enemy is Beast && enemy.Health != 0)
-                        {
-                            SoundManager.beastDamaged.Play(.6f, 0, 0);
-                        }
-
-                        if (enemy is Slime && enemy.Health != 0)
-                        {
-                            SoundManager.slimeDamage.Play(.5f, .5f, 0);
-                        }
-
-                        if (enemy is Skull && enemy.Health != 0)
-                        {
-                            SoundManager.skullDamage.Play(.4f, 0, 0);
-                        }
-
-                        playerArrow.HitSomething();
-
-                        // Knock the enemy back
-                        enemy.GetKnockedBack(playerArrow, 35000);
+                        SoundManager.beastDamaged.Play(.6f, 0, 0);
                     }
+
+                    if (enemy is Slime && enemy.Health != 0)
+                    {
+                        SoundManager.slimeDamage.Play(.5f, .5f, 0);
+                    }
+
+                    if (enemy is Skull && enemy.Health != 0)
+                    {
+                        SoundManager.skullDamage.Play(.4f, 0, 0);
+                    }
+
+                    playerArrow.HitSomething();
+
+                    // Knock the enemy back
+                    enemy.GetKnockedBack(playerArrow, 35000);
                 }
 
                 // Tracks Living Enemies
@@ -150,31 +147,30 @@ namespace CrossBoa.Managers
 
                 if (Game1.Player.Hitbox.Intersects(tile.Rectangle))
                 {
-                    EntityEnvironmentCollide<Player>(Game1.Player, tile);
+                    EntityEnvironmentCollide(Game1.Player, tile);
                 }
 
                 // Enemies with tile
                 foreach (Enemy enemy in enemies)
                 {
-                    if (enemy.Hitbox.Intersects(tile.Rectangle))
-                    {
-                        EntityEnvironmentCollide<Enemy>(enemy, tile);
+                    if (!enemy.Hitbox.Intersects(tile.Rectangle)) continue;
 
-                        // If the enemy is a Beast, have it get knocked back
-                        if (enemy is Beast {InCharge: true} beast)
-                        {
-                            // I am so good at coding
-                            // -Leo
-                            // I simplified the code
-                            // -Donovan
-                            // Thanks
-                            // -Leo
-                            enemy.GetKnockedBack(new Projectile(null, tile.Rectangle, 0, 0),
-                                500);
-                            beast.HasCollided = true;
-                            SoundManager.beastWallBump.Play();
-                            Camera.ShakeScreen(10);
-                        }
+                    EntityEnvironmentCollide(enemy, tile);
+
+                    // If the enemy is a Beast, have it get knocked back
+                    if (enemy is Beast {InCharge: true} beast)
+                    {
+                        // I am so good at coding
+                        // -Leo
+                        // I simplified the code
+                        // -Donovan
+                        // Thanks
+                        // -Leo
+                        enemy.GetKnockedBack(new Projectile(null, tile.Rectangle, 0, 0),
+                            500);
+                        beast.HasCollided = true;
+                        SoundManager.beastWallBump.Play();
+                        Camera.ShakeScreen(10);
                     }
                 }
 
@@ -218,11 +214,10 @@ namespace CrossBoa.Managers
             // Removes inactive arrows from collision
             for (int i = 0; i < enemyProjectiles.Count; i++)
             {
-                if (!enemyProjectiles[i].IsActive)
-                {
-                    enemyProjectiles.RemoveAt(i);
-                    i--;
-                }
+                if (enemyProjectiles[i].IsActive) continue;
+
+                enemyProjectiles.RemoveAt(i);
+                i--;
 
             }
         }
@@ -232,6 +227,8 @@ namespace CrossBoa.Managers
         /// Restrictions: none
         /// </summary>
         /// <param name="sb"></param>
+        /// <param name="hitBox"></param>
+        /// <param name="arrowPoint"></param>
         public static void Draw(SpriteBatch sb, Texture2D hitBox, Texture2D arrowPoint)
         {
             sb.Draw(hitBox, Game1.Player.Hitbox, Color.White);
@@ -348,17 +345,9 @@ namespace CrossBoa.Managers
             }
             else
             {
-                // X value must be changed
-
-                // Is the to the right of the tile
-                if (entity.Hitbox.X >= overlap.X)
-                {
-                    entity.Position = new Vector2(entity.Position.X + overlap.Width, entity.Position.Y);
-                }
-                else
-                {
-                    entity.Position = new Vector2(entity.Position.X - overlap.Width, entity.Position.Y);
-                }
+                // Is to the right of the tile ?
+                entity.Position = entity.Hitbox.X >= overlap.X ? new Vector2(entity.Position.X + overlap.Width, entity.Position.Y) 
+                    : new Vector2(entity.Position.X - overlap.Width, entity.Position.Y);
 
                 if (overlap.Width == overlap.Height)
                 {
@@ -369,6 +358,10 @@ namespace CrossBoa.Managers
             }
         }
 
+        /// <summary>
+        /// Purpose: Takes all enemies out of the list
+        /// Restrictions: none
+        /// </summary>
         public static void ClearEnemiesList()
         {
             enemies.Clear();
