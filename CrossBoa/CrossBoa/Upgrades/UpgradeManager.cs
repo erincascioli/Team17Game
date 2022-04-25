@@ -31,13 +31,11 @@ namespace CrossBoa.Upgrades
     {
         private static Dictionary<string, Upgrade> allUpgrades = new Dictionary<string, Upgrade>()
         {
-            {"Multishot", new Upgrade("Multishot", "Fires two additional arrows\nevery few seconds", Multishot, UpgradeType.OnShot, Game1.playerArrowSprite)},
             {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.UpgradeBloodOrb)},
             {"Better Fletching", new Upgrade("Better Fletching", "Arrows travel 15% faster", BetterFletching, UpgradeType.StatBoost, Game1.UpgradeFeather)},
             {"Tooth Brooch", new Upgrade("Tooth Brooch", "Stay invincible for 40%\nlonger after being hit", ToothBrooch, UpgradeType.StatBoost, Game1.UpgradeSharkTooth)},
             {"Tail Extension", new Upgrade("Tail Extension", "Move 15% faster", TailExtension, UpgradeType.StatBoost, Game1.UpgradeSausage)},
             {"Fangs", new Upgrade("Fangs", "Damage enemies that hit you", Fangs, UpgradeType.SpecialEffect, Game1.UpgradeFang)},
-            {"Placeholder5", new Upgrade("Placeholder5", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
         };
 
         private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>(allUpgrades);
