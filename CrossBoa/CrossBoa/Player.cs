@@ -397,7 +397,9 @@ namespace CrossBoa
             if (!Game1.WasKeyPressed(Keys.Space) || !(timeUntilDodge < 0) || (!kbState.IsKeyDown(Keys.A) &&
                                                                               !kbState.IsKeyDown(Keys.S) &&
                                                                               !kbState.IsKeyDown(Keys.W) &&
-                                                                              !kbState.IsKeyDown(Keys.D))) return;
+                                                                              !kbState.IsKeyDown(Keys.D)) ) return;
+            if (InKnockback)
+                return;
             timeUntilDodge = dodgeCooldown;
             dodgeVector = movementVector;
             canMove = false;
