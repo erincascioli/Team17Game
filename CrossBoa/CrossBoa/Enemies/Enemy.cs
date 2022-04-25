@@ -131,7 +131,7 @@ namespace CrossBoa.Enemies
             float dir = Helper.DirectionBetween(
                             new Point(Rectangle.X, Rectangle.Y),
                             new Point(Game1.Player.Rectangle.X, Game1.Player.Rectangle.Y));
-            player.TakeDamage(1, dir);
+            player.TakeDamage(this, 1, dir);
         }
 
         /// <summary>

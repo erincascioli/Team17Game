@@ -33,8 +33,6 @@ namespace CrossBoa
         // Fields
         public static Random RNG = new Random();
 
-        private const int DefaultPlayerMovementForce = 5000;
-        private const int DefaultPlayerMaxSpeed = 300;
         private const int DefaultPlayerFriction = 2500;
         private const int DefaultPlayerHealth = 5;
         private const float DefaultPlayerDodgeCooldown = 2;
@@ -113,6 +111,8 @@ namespace CrossBoa
         public static Texture2D UpgradeBloodOrb;
         public static Texture2D UpgradeFeather;
         public static Texture2D UpgradeSharkTooth;
+        public static Texture2D UpgradeSausage;
+        public static Texture2D UpgradeFang;
 
         private SpriteFont arial32;
         private static SpriteFont pressStart;
@@ -317,6 +317,8 @@ namespace CrossBoa
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
             UpgradeFeather = Content.Load<Texture2D>("Feather");
             UpgradeSharkTooth = Content.Load<Texture2D>("SharkTooth");
+            UpgradeSausage = Content.Load<Texture2D>("Sausage");
+            UpgradeFang = Content.Load<Texture2D>("Fang");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
@@ -325,8 +327,6 @@ namespace CrossBoa
             player = new Player(
                 snakeSpriteSheet,
                 new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)),
-                DefaultPlayerMovementForce,
-                DefaultPlayerMaxSpeed,
                 DefaultPlayerFriction,
                 DefaultPlayerHealth,
                 DefaultPlayerDodgeCooldown,
@@ -1660,6 +1660,7 @@ namespace CrossBoa
 
             // Reset player stats
             StatsManager.ResetStats();
+            Player.HasFangsUpgrade = false;
 
             UpgradeManager.ResetUpgrades();
         }

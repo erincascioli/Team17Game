@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Text;
+using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using CrossBoa.Managers;
+using CrossBoa.Upgrades;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,11 +24,13 @@ namespace CrossBoa
     /// </summary>
     public class Player : PhysicsObject, ICollidable
     {
+        // Special Effect Upgrades
+        public bool HasFangsUpgrade { get; set; }
+
         // Player stats
         private int maxHealth;
         private float dodgeCooldown;
         private float dodgeLength;
-        private float movementForce;
         private float dodgeInvulnerabilityTime;
         private float dodgeSpeedBoost;
 
@@ -160,11 +164,10 @@ namespace CrossBoa
         /// <param name="dodgeLength">How long the player will dodge for</param>
         /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         /// <param name="flashSprite"></param>
-        public Player(Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed, float friction,
+        public Player(Texture2D sprite, Rectangle rectangle, float friction,
             int maxHealth, float dodgeCooldown, float dodgeLength, float dodgeSpeed, Texture2D flashSprite) :
-            base(sprite, rectangle, maxSpeed, friction)
+            base(sprite, rectangle, StatsManager.BasePlayerMaxSpeed, friction)
         {
-            this.movementForce = movementForce;
             this.maxHealth = maxHealth;
             currentHealth = maxHealth;
             this.dodgeCooldown = dodgeCooldown;
@@ -215,7 +218,7 @@ namespace CrossBoa
             // Apply the player's movement
             if (canMove && !InKnockback)
             {
-                ApplyForce(movementVector * movementForce);
+                ApplyForce(movementVector * StatsManager.PlayerMovementForce);
 
                 if (movementVector.X < 0)
                     spriteFlipEffect = SpriteEffects.FlipHorizontally;
@@ -225,7 +228,7 @@ namespace CrossBoa
             else if (inDodge)
             {
                 dodgeInvulnerabilityTime -= totalSeconds;
-                ApplyForce(dodgeVector * movementForce * 2);
+                ApplyForce(dodgeVector * StatsManager.PlayerMovementForce * 2);
             }
             else if (InKnockback)
             {
@@ -267,11 +270,18 @@ namespace CrossBoa
         /// <summary>
         /// Checks if the player is invincible and deals damage
         /// </summary>
+        /// <param name="dealer">The enemy that dealt the damage</param>
         /// <param name="amount"></param>
         /// <param name="direction"></param>
-        public void TakeDamage(int amount, float direction)
+        public void TakeDamage(Enemy dealer, int amount, float direction)
         {
             if (IsInvincible) return;
+
+            if (HasFangsUpgrade)
+            {
+                dealer?.TakeDamage(1);
+            }
+            
             currentHealth -= amount;
             timeLeftInvincible = StatsManager.PlayerInvulnerabilityTime;
             knockbackTime = 0;
@@ -328,7 +338,7 @@ namespace CrossBoa
                 movementVector.Normalize();
 
             // Apply the movement
-            ApplyForce(movementVector * movementForce);
+            ApplyForce(movementVector * StatsManager.PlayerMovementForce);
             //ApplyFriction(gameTime);
 
             UpdateAnimations(gameTime);

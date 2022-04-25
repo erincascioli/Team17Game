@@ -23,6 +23,7 @@ namespace CrossBoa.Upgrades
     {
         OnShot,
         OnKill,
+        SpecialEffect,
         StatBoost
     }
 
@@ -34,8 +35,8 @@ namespace CrossBoa.Upgrades
             {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.UpgradeBloodOrb)},
             {"Better Fletching", new Upgrade("Better Fletching", "Arrows travel 15% faster", BetterFletching, UpgradeType.StatBoost, Game1.UpgradeFeather)},
             {"Tooth Brooch", new Upgrade("Tooth Brooch", "Stay invincible for 40%\nlonger after being hit", ToothBrooch, UpgradeType.StatBoost, Game1.UpgradeSharkTooth)},
-            {"Placeholder3", new Upgrade("Placeholder3", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
-            {"Placeholder4", new Upgrade("Placeholder4", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
+            {"Tail Extension", new Upgrade("Tail Extension", "Move 15% faster", TailExtension, UpgradeType.StatBoost, Game1.UpgradeSausage)},
+            {"Fangs", new Upgrade("Fangs", "Damage enemies that hit you", Fangs, UpgradeType.SpecialEffect, Game1.UpgradeFang)},
             {"Placeholder5", new Upgrade("Placeholder5", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
         };
 
@@ -108,6 +109,11 @@ namespace CrossBoa.Upgrades
 
                 case UpgradeType.OnKill:
                     Enemy.OnKill += upgrade.Effect;
+                    break;
+
+                // Special effect upgrades only modify a boolean
+                case UpgradeType.SpecialEffect:
+                    upgrade.Effect();
                     break;
 
                 // Stat boost upgrades only run once
@@ -185,6 +191,23 @@ namespace CrossBoa.Upgrades
         public static void ToothBrooch()
         {
             StatsManager.PlayerInvulnerabilityTime += StatsManager.BasePlayerInvulnerabilityTime * 0.4f;
+        }
+
+        /// <summary>
+        /// Move 15% faster
+        /// </summary>
+        public static void TailExtension()
+        {
+            StatsManager.PlayerMovementForce += StatsManager.BasePlayerMovementForce * 0.15f;
+            StatsManager.PlayerMaxSpeed += StatsManager.BasePlayerMaxSpeed * 0.15f;
+        }
+
+        /// <summary>
+        /// Damage enemies that hit you
+        /// </summary>
+        public static void Fangs()
+        {
+            Game1.Player.HasFangsUpgrade = true;
         }
 
         #endregion
