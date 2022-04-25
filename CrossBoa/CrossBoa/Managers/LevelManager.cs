@@ -8,6 +8,11 @@ using Microsoft.Xna.Framework.Content;
 namespace CrossBoa.Managers
 {
     /// <summary>
+    /// Delegate for matching methods that need to run when the level changes
+    /// </summary>
+    public delegate void LevelChangeDelegate();
+
+    /// <summary>
     /// Author: Donovan Scullion
     /// Purpose: handles the generation of levels
     /// Restrictions: levels must be made manually, 
@@ -16,6 +21,11 @@ namespace CrossBoa.Managers
     /// </summary>
     public static class LevelManager
     {
+        /// <summary>
+        /// Is invoked when the level is about to change, while the screen is fully black
+        /// </summary>
+        public static event LevelChangeDelegate LevelChanged;
+
         private static List<string[]> tileList;
         private static List<Tile> levelTiles;
         private static StreamReader reader;
@@ -108,6 +118,9 @@ namespace CrossBoa.Managers
         /// </summary>
         public static void LoadLevel()
         {
+            // Invoke level change event
+            LevelChanged?.Invoke();
+
             // Level is cleared so that the next may be loaded
             levelTiles.Clear();
 
