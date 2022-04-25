@@ -158,27 +158,26 @@ namespace CrossBoa
         public void Shoot()
         {
             // Shoot the arrow
-            if (!IsOnCooldown && isLoaded)
-            {
-                timeSinceShot = 0f;
-                isLoaded = false;
+            if (IsOnCooldown || !isLoaded) return;
 
-                // Invoke shot modifiers
-                OnShot?.Invoke();
+            timeSinceShot = 0f;
+            isLoaded = false;
 
-                // Fire additional arrows
-                FireArrows?.Invoke(DrawnPosition, Direction, PlayerStats.ArrowVelocity);
+            // Invoke shot modifiers
+            OnShot?.Invoke();
 
-                // Handled by event now
-                //playerArrow.GetShot(
-                //    DrawnPosition,
-                //    Direction,
-                //    arrowShotSpeed);
+            // Fire additional arrows
+            FireArrows?.Invoke(DrawnPosition, Direction, PlayerStats.ArrowVelocity);
 
-                // Shake the screen
-                Camera.ShakeScreen(12);
-                SoundManager.shootBow.Play(.1f, -.5f, 0);
-            }
+            // Handled by event now
+            //playerArrow.GetShot(
+            //    DrawnPosition,
+            //    Direction,
+            //    arrowShotSpeed);
+
+            // Shake the screen
+            Camera.ShakeScreen(12);
+            SoundManager.shootBow.Play(.1f, -.5f, 0);
         }
            
         public void PickUpArrow()

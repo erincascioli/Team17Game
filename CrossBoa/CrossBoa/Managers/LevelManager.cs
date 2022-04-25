@@ -82,11 +82,11 @@ namespace CrossBoa.Managers
                 reader = new StreamReader("Content/Levels/LevelObjectList.txt");
 
                 // Gets the default instructions out of the file
-                string[] fileData = reader.ReadLine().Split(',');
+                string[] fileData = reader.ReadLine()?.Split(',');
 
                 while (!reader.EndOfStream)
                 {
-                    fileData = reader.ReadLine().Split(',');
+                    fileData = reader.ReadLine()?.Split(',');
                     // Data for each basic block type is added
                     tileList.Add(fileData);
                 }
@@ -96,16 +96,8 @@ namespace CrossBoa.Managers
                 // Specific error can be read in the debug menu
                 Console.WriteLine("Error: {0}", e);
 
-                try
-                {
-                    // Just in case it's open
-                    if (reader != null)
-                        reader.Close();
-                }
-                catch
-                {
-                    // Needed in case the file failed to open or already closed
-                }
+                // Just in case it's open
+                reader?.Close();
             }
         }
 
@@ -164,9 +156,9 @@ namespace CrossBoa.Managers
                 reader = new StreamReader("Content/Levels/" + currentLevel + ".txt");
 
                 // Data for table size is stored
-                string[] tableInfo = reader.ReadLine().Split(',');
-                int.TryParse(tableInfo[0], out levelWidth);
-                int.TryParse(tableInfo[1], out levelHeight);
+                string[] tableInfo = reader.ReadLine()?.Split(',');
+                int.TryParse(tableInfo?[0], out levelWidth);
+                int.TryParse(tableInfo?[1], out levelHeight);
 
 
                 List<string> tableState = new List<string>();
@@ -183,9 +175,9 @@ namespace CrossBoa.Managers
 
                 // List is turned into a long string to make parsing easier
                 string parsingString = "";
-                for (int l = 0; l < tableState.Count; l++)
+                foreach (var t in tableState)
                 {
-                    parsingString = string.Format(parsingString + tableState[l]);
+                    parsingString = string.Format(parsingString + t);
                 }
 
                 string[] allTiles = parsingString.Split(',');
@@ -235,16 +227,8 @@ namespace CrossBoa.Managers
                 // wouldn't load otherwise
                 Console.WriteLine("Error: {0}", e);
 
-                try
-                {
-                    // Just in case
-                    if (reader != null)
-                        reader.Close();
-                }
-                catch
-                {
-                    // This block is required for the try block
-                }
+                // Just in case
+                reader?.Close();
             }
 
             // Clear any arrows that are left over from the previous level
@@ -316,59 +300,67 @@ namespace CrossBoa.Managers
             Stack<int> toRemove = new Stack<int>();
             int index = 0;
 
-            if (exitLocation == ExitLocation.Left)
+            switch (exitLocation)
             {
-                foreach (Tile i in safe)
+                case ExitLocation.Left:
                 {
-                    if (i.Rectangle.X > 21 * blockWidth &&
-                        i.Rectangle.Y <= (exit.Rectangle.Y + blockHeight) &&
-                        i.Rectangle.Y >= exit.Rectangle.Y - blockHeight)
+                    foreach (Tile i in safe)
                     {
-                        toRemove.Push(index);
+                        if (i.Rectangle.X > 21 * blockWidth &&
+                            i.Rectangle.Y <= (exit.Rectangle.Y + blockHeight) &&
+                            i.Rectangle.Y >= exit.Rectangle.Y - blockHeight)
+                        {
+                            toRemove.Push(index);
+                        }
+                        index++;
                     }
-                    index++;
-                }
-            }
 
-            if (exitLocation == ExitLocation.Right)
-            {
-                foreach (Tile i in safe)
-                {
-                    if (i.Rectangle.X < 3 * blockWidth &&
-                        i.Rectangle.Y <= (exit.Rectangle.Y + blockHeight) &&
-                        i.Rectangle.Y >= exit.Rectangle.Y - blockHeight)
-                    {
-                        toRemove.Push(index);
-                    }
-                    index++;
+                    break;
                 }
-            }
-
-            if (exitLocation == ExitLocation.Top)
-            {
-                foreach (Tile i in safe)
+                case ExitLocation.Right:
                 {
-                    if (i.Rectangle.Y > 9 * blockHeight &&
-                        i.Rectangle.X <= (exit.Rectangle.X + blockHeight) &&
-                        i.Rectangle.X >= exit.Rectangle.X - blockHeight)
+                    foreach (Tile i in safe)
                     {
-                        toRemove.Push(index);
+                        if (i.Rectangle.X < 3 * blockWidth &&
+                            i.Rectangle.Y <= (exit.Rectangle.Y + blockHeight) &&
+                            i.Rectangle.Y >= exit.Rectangle.Y - blockHeight)
+                        {
+                            toRemove.Push(index);
+                        }
+                        index++;
                     }
-                    index++;
+
+                    break;
                 }
-            }
-
-            if (exitLocation == ExitLocation.Bottom)
-            {
-                foreach (Tile i in safe)
+                case ExitLocation.Top:
                 {
-                    if (i.Rectangle.Y < 4 * blockHeight &&
-                        i.Rectangle.X <= (exit.Rectangle.X + blockHeight) &&
-                        i.Rectangle.X >= exit.Rectangle.X - blockHeight)
+                    foreach (Tile i in safe)
                     {
-                        toRemove.Push(index);
+                        if (i.Rectangle.Y > 9 * blockHeight &&
+                            i.Rectangle.X <= (exit.Rectangle.X + blockHeight) &&
+                            i.Rectangle.X >= exit.Rectangle.X - blockHeight)
+                        {
+                            toRemove.Push(index);
+                        }
+                        index++;
                     }
-                    index++;
+
+                    break;
+                }
+                case ExitLocation.Bottom:
+                {
+                    foreach (Tile i in safe)
+                    {
+                        if (i.Rectangle.Y < 4 * blockHeight &&
+                            i.Rectangle.X <= (exit.Rectangle.X + blockHeight) &&
+                            i.Rectangle.X >= exit.Rectangle.X - blockHeight)
+                        {
+                            toRemove.Push(index);
+                        }
+                        index++;
+                    }
+
+                    break;
                 }
             }
 
@@ -389,17 +381,15 @@ namespace CrossBoa.Managers
         public static void Update(Player player)
         {
             // Will close off the entrance after a player fully enters a stage
-            if (entrance.IsOpen)
-            {
-                player.CanMove = true;
-                entrance.ChangeDoorState();
-                forcedX = 0;
-                forcedY = 0;
+            if (!entrance.IsOpen) return;
+            player.CanMove = true;
+            entrance.ChangeDoorState();
+            forcedX = 0;
+            forcedY = 0;
 
 
-                // Adds door to collisionManager
-                CollisionManager.UpdateLevel();
-            }
+            // Adds door to collisionManager
+            CollisionManager.UpdateLevel();
         }
 
         /// <summary>
@@ -840,20 +830,17 @@ namespace CrossBoa.Managers
 
                 // Arrow will return to the player if still on screen
                 PlayerArrow playerArrow = Game1.playerArrowList[0];
-                if (playerArrow.IsActive)
-                {
-                    playerArrow.GetSuckedIntoPlayer((int)Helper.DistanceSquared(
-                        new Point((int)player.Position.X, (int)player.Position.Y), playerArrow.Size), 9000);
+                if (!playerArrow.IsActive) return;
 
-                    // Doesn't let the player arrow zoom onto screen if it is too far out of bounds
-                    if (playerArrow.Position.X < -50 || playerArrow.Position.X > Game1.gameRenderTarget.Width + 50
-                                                     || playerArrow.Position.Y < -50 || playerArrow.Position.Y >
-                                                     Game1.gameRenderTarget.Height + 50)
-                    {
-                        playerArrow.HitSomething();
-                        playerArrow.GetPickedUp();
-                    }
-                }
+                playerArrow.GetSuckedIntoPlayer((int)Helper.DistanceSquared(
+                    new Point((int)player.Position.X, (int)player.Position.Y), playerArrow.Size), 9000);
+
+                // Doesn't let the player arrow zoom onto screen if it is too far out of bounds
+                if (!(playerArrow.Position.X < -50) && !(playerArrow.Position.X > Game1.gameRenderTarget.Width + 50) &&
+                    !(playerArrow.Position.Y < -50) && !(playerArrow.Position.Y >
+                                                         Game1.gameRenderTarget.Height + 50)) return;
+                playerArrow.HitSomething();
+                playerArrow.GetPickedUp();
             }
         }
 
@@ -877,28 +864,15 @@ namespace CrossBoa.Managers
         public static void RandomizeLevel()
         {
             int level = Game1.RNG.Next(1, 6);
-            switch (level)
+            currentLevel = level switch
             {
-                case 1:
-                    currentLevel = "Level1";
-                    break;
-
-                case 2:
-                    currentLevel = "Level2";
-                    break;
-
-                case 3:
-                    currentLevel = "Level3";
-                    break;
-
-                case 4:
-                    currentLevel = "Level4";
-                    break;
-
-                case 5:
-                    currentLevel = "Level5";
-                    break;
-            }
+                1 => "Level1",
+                2 => "Level2",
+                3 => "Level3",
+                4 => "Level4",
+                5 => "Level5",
+                _ => currentLevel
+            };
         }
 
         /// <summary>

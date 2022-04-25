@@ -117,16 +117,16 @@ namespace CrossBoa
         private Rectangle[] menuBGLayers;
         private List<UIElement> playerHealthBar;
         public static List<UIElement> UIElementsList;
-        private UIElement crosshair;
+        private UIElement crossHair;
         private static CrossBow crossbow;
         private static Player player;
         public static List<PlayerArrow> playerArrowList;
         private static List<Collectible> collectibles;
 
-        RenderTarget2D menuBGTarget;
+        private RenderTarget2D menuBGTarget;
 
         // Text Elements
-        private TextElement splashText;
+        //private TextElement splashText;
         private TextElement titleText;
         private TextElement gameOverText;
         private TextElement FPSCounter;
@@ -238,7 +238,6 @@ namespace CrossBoa
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             gameObjectList = new List<GameObject>();
             menuBGLayers = new Rectangle[8];
             playerHealthBar = new List<UIElement>();
@@ -267,8 +266,6 @@ namespace CrossBoa
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
 
             // Load textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
@@ -465,8 +462,8 @@ namespace CrossBoa
                 playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(12 + i * 20, 10), new Point(20)));
             }
 
-            // Create crosshair
-            crosshair = new UIElement(crosshairSprite, ScreenAnchor.TopLeft, Point.Zero, crosshairSprite.Bounds.Size)
+            // Create crossHair
+            crossHair = new UIElement(crosshairSprite, ScreenAnchor.TopLeft, Point.Zero, crosshairSprite.Bounds.Size)
             {
                 DoesPositionScale = false
             };
@@ -488,7 +485,6 @@ namespace CrossBoa
 
         protected override void Update(GameTime gameTime)
         {
-            // TODO: Add your update logic here
             kbState = Keyboard.GetState();
             MState = Mouse.GetState();
 
@@ -498,8 +494,8 @@ namespace CrossBoa
             if (WasKeyPressed(Keys.F11))
                 ToggleFullscreen();
 
-            // Get the position of the mouse for the d
-            crosshair.Position = MState.Position.ToVector2();
+            // Get the position of the mouse for the crossHair
+            crossHair.Position = MState.Position.ToVector2();
 
             switch (gameState)
             {
@@ -632,8 +628,6 @@ namespace CrossBoa
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
-
             switch (gameState)
             {
                 // Main Menu
@@ -680,9 +674,9 @@ namespace CrossBoa
                     break;
             }
 
-            // Draw the crosshair
+            // Draw the crossHair
             _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
-            crosshair.Draw(_spriteBatch);
+            crossHair.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
@@ -812,18 +806,9 @@ namespace CrossBoa
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             // Determine background size
-            Point menuBGSize;
 
-            if (outputAspectRatio <= preferredAspectRatio)
-            {
-                // output is taller than it is wider, set size to window height
-                menuBGSize = new Point((int) MathF.Round(windowHeight * preferredAspectRatio), windowHeight);
-            }
-            else
-            {
-                // output is wider than it is tall, set size to window width
-                menuBGSize = new Point(windowWidth, (int) MathF.Round(windowWidth / preferredAspectRatio));
-            }
+            var menuBGSize = outputAspectRatio <= preferredAspectRatio ? new Point((int) MathF.Round(windowHeight * preferredAspectRatio), windowHeight) 
+                : new Point(windowWidth, (int) MathF.Round(windowWidth / preferredAspectRatio));
             
             // Draw background
             _spriteBatch.Draw(menuBGTarget, new Rectangle(Point.Zero, menuBGSize), Color.White);
@@ -855,26 +840,27 @@ namespace CrossBoa
 
             for (int i = 0; i < gameObjectList.Count; i++)
             {
-                // Fixes crossbow moving off of player character
-                if (gameObjectList[i] is CrossBow)
+                switch (gameObjectList[i])
                 {
-                    continue;
-                }
+                    // Fixes crossbow moving off of player character
+                    case CrossBow _:
+                        continue;
+                    // Fires a skull's arrow if the cooldown time reaches 0.
+                    case Skull {IsAlive: true, ReadyToFire: true} skull:
+                    {
+                        Projectile newTotemProjectile = new Projectile(fireballSpritesheet,
+                            new Rectangle(-100,
+                                -100,
+                                48,
+                                48),
+                            new Vector2(0, 0));
 
-                // Fires a skull's arrow if the cooldown time reaches 0.
-                if (gameObjectList[i] is Skull {IsAlive: true, ReadyToFire: true} skull)
-                {
-                    Projectile newTotemProjectile = new Projectile(fireballSpritesheet,
-                        new Rectangle(-100,
-                                      -100,
-                                      48,
-                                      48),
-                        new Vector2(0, 0));
+                        CollisionManager.AddProjectile(newTotemProjectile);
+                        gameObjectList.Add(newTotemProjectile);
 
-                    CollisionManager.AddProjectile(newTotemProjectile);
-                    gameObjectList.Add(newTotemProjectile);
-
-                    skull.Shoot(newTotemProjectile);
+                        skull.Shoot(newTotemProjectile);
+                        break;
+                    }
                 }
 
                 // Removes all inactive projectiles from play.
@@ -917,11 +903,11 @@ namespace CrossBoa
             for (int i = 0; i < playerArrowList.Count; i++)
             {
                 playerArrowList[i].Update(gameTime);
-                if (playerArrowList[i].FlaggedForDeletion)
-                {
-                    playerArrowList.Remove(playerArrowList[i]);
-                    i--;
-                }
+
+                if (!playerArrowList[i].FlaggedForDeletion) continue;
+
+                playerArrowList.Remove(playerArrowList[i]);
+                i--;
             }
 
             // CollisionManager checks for collisions
@@ -989,12 +975,12 @@ namespace CrossBoa
             if (LevelManager.Exit.IsOpen || (!player.CanMove && !player.InDodge))
             {
                 //Camera.FollowPlayer(player);
-                if (player.Rectangle.Intersects(LevelManager.Exit.Rectangle) || (!player.CanMove && !player.InDodge))
-                {
-                    player.InDodge = false;
-                    LevelManager.LevelTransition(player, crossbow, gameTime);
-                    //player.CanMove = false; // Prevents premature end
-                }
+                if (!player.Rectangle.Intersects(LevelManager.Exit.Rectangle) &&
+                    (player.CanMove || player.InDodge)) return;
+
+                player.InDodge = false;
+                LevelManager.LevelTransition(player, crossbow, gameTime);
+                //player.CanMove = false; // Prevents premature end
             }
             else
             {
@@ -1167,7 +1153,7 @@ namespace CrossBoa
         }
 
         /// <summary>
-        /// Toggles godmode
+        /// Toggles god mode
         /// </summary>
         private void ToggleGodMode()
         {
@@ -1212,18 +1198,9 @@ namespace CrossBoa
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             // Determine background size
-            Point menuBGSize;
 
-            if (outputAspectRatio <= preferredAspectRatio)
-            {
-                // output is taller than it is wider, set size to window height
-                menuBGSize = new Point((int)MathF.Round(windowHeight * preferredAspectRatio), windowHeight);
-            }
-            else
-            {
-                // output is wider than it is tall, set size to window width
-                menuBGSize = new Point(windowWidth, (int)MathF.Round(windowWidth / preferredAspectRatio));
-            }
+            Point menuBGSize = outputAspectRatio <= preferredAspectRatio ? new Point((int)MathF.Round(windowHeight * preferredAspectRatio), windowHeight) 
+                : new Point(windowWidth, (int)MathF.Round(windowWidth / preferredAspectRatio));
 
             // Draw background
             _spriteBatch.Draw(menuBGTarget, new Rectangle(Point.Zero, menuBGSize), Color.White);
@@ -1292,16 +1269,16 @@ namespace CrossBoa
                 WasKeyPressed(Keys.Escape))
                 gameState = GameState.Game;
 
-            if (mainMenuButton.HasBeenPressed())
-            {
-                GameOver();
-                gameState = GameState.MainMenu;
+            // Update is finished if no button was pressed
+            if (!mainMenuButton.HasBeenPressed()) return;
 
-                // Song Change
-                MediaPlayer.Stop();
-                MediaPlayer.Play(SoundManager.titleTheme);
-                MediaPlayer.IsRepeating = true;
-            }
+            GameOver();
+            gameState = GameState.MainMenu;
+
+            // Song Change
+            MediaPlayer.Stop();
+            MediaPlayer.Play(SoundManager.titleTheme);
+            MediaPlayer.IsRepeating = true;
         }
 
         // Upgrades
@@ -1324,14 +1301,13 @@ namespace CrossBoa
                 }
 
                 // If the player clicks on an upgrade, unlock it
-                if (upgradeButtons[i].HasBeenPressed())
-                {
-                    UpgradeManager.UnlockUpgrade(upgradeChoices[i].Name);
-                    prevUpgradeButtonHovered = -1;
-                    upgradeName.Text = "";
-                    upgradeDescription.Text = "";
-                    gameState = GameState.Game;
-                }
+                if (!upgradeButtons[i].HasBeenPressed()) continue;
+
+                UpgradeManager.UnlockUpgrade(upgradeChoices[i].Name);
+                prevUpgradeButtonHovered = -1;
+                upgradeName.Text = "";
+                upgradeDescription.Text = "";
+                gameState = GameState.Game;
             }
         }
 
@@ -1378,7 +1354,7 @@ namespace CrossBoa
             {
                 gameState = GameState.MainMenu;
 
-                foreach (GameObject i in playerHealthBar)
+                foreach (UIElement i in playerHealthBar)
                 {
                     i.Sprite = fullHeart;
                 }
@@ -1388,7 +1364,7 @@ namespace CrossBoa
                 MediaPlayer.IsRepeating = true;
             }
 
-            if (playAgainButton.HasBeenPressed())
+            if (!playAgainButton.HasBeenPressed()) return;
             {
                 LoadDefaultLevel();
 
@@ -1398,7 +1374,7 @@ namespace CrossBoa
                 MediaPlayer.Play(SoundManager.dungeonTheme);
                 MediaPlayer.IsRepeating = true;
 
-                foreach (GameObject i in playerHealthBar)
+                foreach (UIElement i in playerHealthBar)
                 {
                     i.Sprite = fullHeart;
                 }
@@ -1428,17 +1404,8 @@ namespace CrossBoa
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             // Determine background size
-            Point menuBGSize;
-            if (outputAspectRatio <= preferredAspectRatio)
-            {
-                // output is taller than it is wider, set size to window height
-                menuBGSize = new Point((int)MathF.Round(windowHeight * preferredAspectRatio), windowHeight);
-            }
-            else
-            {
-                // output is wider than it is tall, set size to window width
-                menuBGSize = new Point(windowWidth, (int)MathF.Round(windowWidth / preferredAspectRatio));
-            }
+            var menuBGSize = outputAspectRatio <= preferredAspectRatio ? new Point((int)MathF.Round(windowHeight * preferredAspectRatio), windowHeight) 
+                : new Point(windowWidth, (int)MathF.Round(windowWidth / preferredAspectRatio));
 
             // Draw background
             _spriteBatch.Draw(menuBGTarget, new Rectangle(Point.Zero, menuBGSize), Color.White);
@@ -1524,18 +1491,9 @@ namespace CrossBoa
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
             // Determine background size
-            Point menuBGSize;
 
-            if (outputAspectRatio <= preferredAspectRatio)
-            {
-                // output is taller than it is wider, set size to window height
-                menuBGSize = new Point((int)MathF.Round(windowHeight * preferredAspectRatio), windowHeight);
-            }
-            else
-            {
-                // output is wider than it is tall, set size to window width
-                menuBGSize = new Point(windowWidth, (int)MathF.Round(windowWidth / preferredAspectRatio));
-            }
+            var menuBGSize = outputAspectRatio <= preferredAspectRatio ? new Point((int)MathF.Round(windowHeight * preferredAspectRatio), windowHeight) 
+                : new Point(windowWidth, (int)MathF.Round(windowWidth / preferredAspectRatio));
 
             // Draw background
             _spriteBatch.Draw(menuBGTarget, new Rectangle(Point.Zero, menuBGSize), Color.White);
@@ -1615,17 +1573,15 @@ namespace CrossBoa
             // Removes every non-Player and non-Crossbow object from the GameObject list
             for (int i = 0; i < gameObjectList.Count; i++)
             {
-                if (!(gameObjectList[i] is Player) && !(gameObjectList[i] is CrossBow))
-                {
-                    gameObjectList.RemoveAt(i);
-                    i--;
-                }
+                if (gameObjectList[i] is Player || gameObjectList[i] is CrossBow) continue;
+                gameObjectList.RemoveAt(i);
+                i--;
             }
 
             // Resets upgrade buttons back to their original positions
-            for (int i = 0; i < upgradeButtons.Length; i++)
+            foreach (Button t in upgradeButtons)
             {
-                upgradeButtons[i].Position = new Vector2(upgradeButtons[i].Position.X, 0);
+                t.Position = new Vector2(t.Position.X, 0);
             }
 
             UpgradeManager.ResetUpgrades();
@@ -1674,7 +1630,7 @@ namespace CrossBoa
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void OnResize(Object sender = null, EventArgs e = null)
+        public void OnResize(object sender = null, EventArgs e = null)
         {
             // Update windowWidth and windowHeight
             windowWidth = Window.ClientBounds.Width;

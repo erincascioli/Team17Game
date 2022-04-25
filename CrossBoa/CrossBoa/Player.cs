@@ -75,13 +75,7 @@ namespace CrossBoa
         public int CurrentHealth
         {
             get { return currentHealth; }
-            set
-            {
-                if (value >= maxHealth)
-                    currentHealth = maxHealth;
-                else
-                    currentHealth = value;
-            }
+            set { currentHealth = value >= maxHealth ? maxHealth : value; }
         }
 
         /// <summary>
@@ -165,6 +159,7 @@ namespace CrossBoa
         /// <param name="dodgeCooldown">How long the player must wait before being able to dodge again</param>
         /// <param name="dodgeLength">How long the player will dodge for</param>
         /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
+        /// <param name="flashSprite"></param>
         public Player(Texture2D sprite, Rectangle rectangle, float movementForce, float maxSpeed, float friction,
             int maxHealth, float dodgeCooldown, float dodgeLength, float dodgeSpeed, Texture2D flashSprite) :
             base(sprite, rectangle, maxSpeed, friction)
@@ -273,17 +268,16 @@ namespace CrossBoa
         /// Checks if the player is invincible and deals damage
         /// </summary>
         /// <param name="amount"></param>
+        /// <param name="direction"></param>
         public void TakeDamage(int amount, float direction)
         {
-            if (!IsInvincible)
-            {
-                currentHealth -= amount;
-                timeLeftInvincible = PlayerStats.PlayerInvulnerabilityTime;
-                knockbackTime = 0;
-                velocity = Vector2.Zero;
-                kbDirection = direction;
-                SoundManager.hurtPlayer.Play(.2f, -.9f, 0);
-            }
+            if (IsInvincible) return;
+            currentHealth -= amount;
+            timeLeftInvincible = PlayerStats.PlayerInvulnerabilityTime;
+            knockbackTime = 0;
+            velocity = Vector2.Zero;
+            kbDirection = direction;
+            SoundManager.hurtPlayer.Play(.2f, -.9f, 0);
         }
 
         /// <summary>
@@ -373,15 +367,14 @@ namespace CrossBoa
                     break;
             }
 
-            if (flashAnimFrame <= 3)
-            {
-                prevFlashFrameChange += gameTime.ElapsedGameTime.TotalSeconds;
-                if (prevFlashFrameChange > 0.05)
-                {
-                    prevFlashFrameChange = 0;
-                    flashAnimFrame++;
-                }
-            }
+            if (flashAnimFrame > 3) return;
+
+            prevFlashFrameChange += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (!(prevFlashFrameChange > 0.05)) return;
+
+            prevFlashFrameChange = 0;
+            flashAnimFrame++;
         }
 
         /// <summary>
@@ -390,19 +383,18 @@ namespace CrossBoa
         public void Dodge(KeyboardState kbState)
         {
             // If the player presses space and can dodge
-            if (Game1.WasKeyPressed(Keys.Space) && timeUntilDodge < 0 &&
-                (kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) ||
-                 kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.D)))
-            {
-                timeUntilDodge = dodgeCooldown;
-                dodgeVector = movementVector;
-                canMove = false;
-                dodgeInvulnerabilityTime = dodgeLength;
-                inDodge = true;
-                maxSpeed *= dodgeSpeedBoost;
-                canFlashTrigger = true;
-                SoundManager.playerDodge.Play(.1f, -.4f, 0);
-            }
+            if (!Game1.WasKeyPressed(Keys.Space) || !(timeUntilDodge < 0) || (!kbState.IsKeyDown(Keys.A) &&
+                                                                              !kbState.IsKeyDown(Keys.S) &&
+                                                                              !kbState.IsKeyDown(Keys.W) &&
+                                                                              !kbState.IsKeyDown(Keys.D))) return;
+            timeUntilDodge = dodgeCooldown;
+            dodgeVector = movementVector;
+            canMove = false;
+            dodgeInvulnerabilityTime = dodgeLength;
+            inDodge = true;
+            maxSpeed *= dodgeSpeedBoost;
+            canFlashTrigger = true;
+            SoundManager.playerDodge.Play(.1f, -.4f, 0);
         }
 
         /// <summary>
@@ -432,10 +424,4 @@ namespace CrossBoa
             knockbackTime = 1;
         }
     }
-
-
-    
-
-
-
 }

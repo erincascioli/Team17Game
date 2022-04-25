@@ -16,7 +16,7 @@ namespace CrossBoa
         private SpriteFont font;
         private float scale;
 
-        private int lineHeight;
+        //private int lineHeight;
         private string[] lines;
         private Rectangle[] lineRects;
 
@@ -75,15 +75,14 @@ namespace CrossBoa
                 OnResize();
 
                 // If the text has multiple lines, loop through it and edit the positions of each line
-                if (lines != null)
+                if (lines == null) return;
+
+                for (int i = 0; i < lines.Length; i++)
                 {
-                    for (int i = 0; i < lines.Length; i++)
-                    {
-                        lineRects[i] = Helper.MakeRectangleFromCenter(
-                            new Vector2(rectangle.Center.X,
-                                rectangle.Center.Y - (rectangle.Height / 2f) + (lineRects[i].Size.Y * i) + (lineRects[i].Size.Y / 2f)).ToPoint(),
-                            lineRects[i].Size);
-                    }
+                    lineRects[i] = Helper.MakeRectangleFromCenter(
+                        new Vector2(rectangle.Center.X,
+                            rectangle.Center.Y - (rectangle.Height / 2f) + (lineRects[i].Size.Y * i) + (lineRects[i].Size.Y / 2f)).ToPoint(),
+                        lineRects[i].Size);
                 }
             }
         }

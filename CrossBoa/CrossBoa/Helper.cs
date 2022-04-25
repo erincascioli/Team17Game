@@ -65,7 +65,7 @@ namespace CrossBoa
 
             double cosA = (Math.Pow(totalDist, 2) + Math.Pow(horizDist, 2) - Math.Pow(vertDist, 2))
                           / (2 * horizDist * totalDist);
-            if (cosA == double.NaN)
+            if (double.IsNaN(cosA))
                 cosA = 0;
             if (vectorToFace.Y < baseVector.Y)
                 return (float)Math.Acos(cosA) * -1;

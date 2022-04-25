@@ -78,10 +78,8 @@ namespace CrossBoa.Enemies
             while (expReward.Count < expReward.Capacity)
             {
                 Collectible newCollectible;
-                if (Game1.RNG.Next(1,91) == 10)
-                    newCollectible = new HealthCollectible(Game1.healthRecoverySprite, new Point(32));
-                else
-                    newCollectible = new Collectible(Game1.xpSprite, new Point(32));
+                newCollectible = Game1.RNG.Next(1,91) == 10 ? new HealthCollectible(Game1.healthRecoverySprite, new Point(32)) 
+                    : new Collectible(Game1.xpSprite, new Point(32));
 
                 Game1.Collectibles.Add(newCollectible);
                 expReward.Add(newCollectible);
@@ -144,21 +142,22 @@ namespace CrossBoa.Enemies
         {
             health -= damage;
             hurtFlashTime = 0.1f;
-            if (health <= 0)
+            if (health > 0) return;
+
+            Die();
+            switch (this)
             {
-                Die();
-                if (this is Skull)
-                {
+                case Skull _:
                     SoundManager.totemDeath.Play(.6f, 0, 0);
-                }
-                else if (this is Beast)
-                {
+                    break;
+
+                case Beast _:
                     SoundManager.beastDeath.Play(.7f, 0, 0);
-                }
-                else
-                {
+                    break;
+
+                default:
                     SoundManager.targetDamage.Play(.7f, -.2f, 0);
-                }
+                    break;
             }
         }
 

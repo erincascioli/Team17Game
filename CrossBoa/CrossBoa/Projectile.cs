@@ -94,14 +94,13 @@ namespace CrossBoa
         private void UpdateAnimations(GameTime gameTime)
         {
             // Change frame every 0.1 seconds
-            if (gameTime.TotalGameTime.TotalSeconds > previousFrameChange + 0.1)
-            {
-                previousFrameChange = gameTime.TotalGameTime.TotalSeconds;
+            if (!(gameTime.TotalGameTime.TotalSeconds > previousFrameChange + 0.1)) return;
 
-                currentAnimationFrame++;
-                if (currentAnimationFrame > 3)
-                    currentAnimationFrame = 0;
-            }
+            previousFrameChange = gameTime.TotalGameTime.TotalSeconds;
+
+            currentAnimationFrame++;
+            if (currentAnimationFrame > 3)
+                currentAnimationFrame = 0;
         }
 
         /// <summary>

@@ -125,10 +125,7 @@ namespace CrossBoa
                 if (timeUntilDespawn <= 2.5f && timeUntilDespawn > 0)
                 {
                     flashFrames = !flashFrames;
-                    if (flashFrames)
-                        color = new Color(Color.Black, 60);
-                    else
-                        color = Color.White;
+                    color = flashFrames ? new Color(Color.Black, 60) : Color.White;
                 }
 
                 // If there's no time left on the despawn timer, give it back to the player
@@ -255,14 +252,13 @@ namespace CrossBoa
             Point arrowCenter = this.Hitbox.Center;
 
             // If the player is within the distance, return the arrow
-            if (Helper.DistanceSquared(playerCenter, arrowCenter) < MathF.Pow(distance, 2))
-            {
-                // Update the velocity to point towards the player
-                VelocityAngle = Helper.DirectionBetween(arrowCenter, playerCenter);
+            if (!(Helper.DistanceSquared(playerCenter, arrowCenter) < MathF.Pow(distance, 2))) return;
 
-                // Apply more velocity
-                ApplyForce(Helper.DirectionBetween(arrowCenter, playerCenter), force);
-            }
+            // Update the velocity to point towards the player
+            VelocityAngle = Helper.DirectionBetween(arrowCenter, playerCenter);
+
+            // Apply more velocity
+            ApplyForce(Helper.DirectionBetween(arrowCenter, playerCenter), force);
         }
 
         /// <summary>
