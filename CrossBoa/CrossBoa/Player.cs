@@ -113,10 +113,13 @@ namespace CrossBoa
         {
             get
             {
-                return new Rectangle(Rectangle.X + 1, // x position 
-                    Rectangle.Y + 16, // y position
-                    Rectangle.Width - 2, // width
-                    Rectangle.Height - 16); // height
+                // Save the rectangle to avoid creating 4 new value types every time this is accessed
+                Rectangle rect = Rectangle;
+
+                return new Rectangle(rect.X + 4, // x position 
+                    rect.Y + 14, // y position
+                    rect.Width - 8, // width
+                    rect.Height - 14); // height
             }
         }
 
@@ -261,11 +264,15 @@ namespace CrossBoa
 
         public override void Draw(SpriteBatch sb)
         { 
-            sb.Draw(sprite, Rectangle, new Rectangle(currentAnimationFrame * 16, 0, 16, 16), color, 0, Vector2.Zero, spriteFlipEffect, 0);
+            sb.Draw(sprite, Rectangle, new Rectangle(currentAnimationFrame * 14, 0, 14, 14), color, 0, Vector2.Zero, spriteFlipEffect, 0);
+            
+            // Dodge recovery flash animation
             if (flashAnimFrame <= 3)
+            {
                 sb.Draw(flashAnimSheet, new Rectangle(Rectangle.X - 8, Rectangle.Y - 8, 64, 64),
                     new Rectangle(flashAnimFrame * 16, 0, 16, 16), 
                     Color.White, 0, Vector2.Zero, SpriteEffects.None, 0);
+            }
         }
 
         /// <summary>
