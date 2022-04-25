@@ -41,6 +41,7 @@ namespace CrossBoa.Managers
         public static SoundEffect buttonClick;
         public static SoundEffect targetDamage;
         public static SoundEffect arrowPickup;
+        public static SoundEffect dodgeRegain;
 
         // Will allow menu to control master volume
         // All individual sound effects also have their own volume when 
@@ -127,6 +128,9 @@ namespace CrossBoa.Managers
 
             arrowPickup = Content.Load<SoundEffect>(fileReader.ReadLine());
             arrowPickup.CreateInstance();
+
+            dodgeRegain = Content.Load<SoundEffect>(fileReader.ReadLine());
+            dodgeRegain.CreateInstance();
 
             fileReader.Close();
         }
