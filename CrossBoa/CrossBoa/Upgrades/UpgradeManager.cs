@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CrossBoa.Enemies;
+using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
 
 namespace CrossBoa.Upgrades
@@ -31,8 +32,8 @@ namespace CrossBoa.Upgrades
         {
             {"Multishot", new Upgrade("Multishot", "Fires two additional arrows\nevery few seconds", Multishot, UpgradeType.OnShot, Game1.playerArrowSprite)},
             {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.UpgradeBloodOrb)},
-            {"Placeholder1", new Upgrade("Placeholder1", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
-            {"Placeholder2", new Upgrade("Placeholder2", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
+            {"Better Fletching", new Upgrade("Better Fletching", "Arrows travel 15% faster", BetterFletching, UpgradeType.StatBoost, Game1.UpgradeFeather)},
+            {"Tooth Brooch", new Upgrade("Tooth Brooch", "Stay invincible for 40%\nlonger after being hit", ToothBrooch, UpgradeType.StatBoost, Game1.UpgradeSharkTooth)},
             {"Placeholder3", new Upgrade("Placeholder3", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
             {"Placeholder4", new Upgrade("Placeholder4", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
             {"Placeholder5", new Upgrade("Placeholder5", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.whiteSquareSprite)},
@@ -104,8 +105,14 @@ namespace CrossBoa.Upgrades
                 case UpgradeType.OnShot:
                     Game1.Crossbow.OnShot += upgrade.Effect;
                     break;
+
                 case UpgradeType.OnKill:
                     Enemy.OnKill += upgrade.Effect;
+                    break;
+
+                // Stat boost upgrades only run once
+                case UpgradeType.StatBoost:
+                    upgrade.Effect();
                     break;
             }
 
@@ -162,6 +169,22 @@ namespace CrossBoa.Upgrades
         {
             if(Game1.RNG.NextDouble() <= 0.05)
                Game1.Player.CurrentHealth++;
+        }
+
+        /// <summary>
+        /// Arrows travel 15% faster
+        /// </summary>
+        public static void BetterFletching()
+        {
+            StatsManager.ArrowVelocity += StatsManager.BaseArrowVelocity * 0.15f;
+        }
+
+        /// <summary>
+        /// Stay invincible for 40% longer after being hit
+        /// </summary>
+        public static void ToothBrooch()
+        {
+            StatsManager.PlayerInvulnerabilityTime += StatsManager.BasePlayerInvulnerabilityTime * 0.4f;
         }
 
         #endregion
