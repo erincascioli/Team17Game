@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Mime;
+using System.Security.Cryptography;
 using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
 using Microsoft.Xna.Framework;
@@ -20,6 +21,8 @@ namespace CrossBoa.Managers
         private static List<Projectile> enemyProjectiles;
         private static List<Tile> levelObstacles;
         private static int alternate;
+
+        private static int stagesUntilHealthPickup = 2;
 
         // Every field requires a reference
 
@@ -133,12 +136,17 @@ namespace CrossBoa.Managers
                 if (tile == LevelManager.Exit && enemies.Count == 0 && !LevelManager.Exit.IsOpen && Game1.Player.CanMove)
                 {
                     LevelManager.Exit.ChangeDoorState();
-                    if (LevelManager.Stage % 5 == 0 && LevelManager.Stage != 0)
+
+                    if (--stagesUntilHealthPickup <= 0 && LevelManager.Stage != 0)
                     {
+                        // Spawn a health collectible
                         HealthCollectible hc =
-                            new HealthCollectible(Game1.healthRecoverySprite, new Point(32, 32));
+                            new HealthCollectible(Game1.healthRecoverySprite, new Point(48));
                         Game1.Collectibles.Add(hc);
-                        hc.Spawn(new Enemy(null, new Rectangle(Game1.gameRenderTarget.Bounds.Center, new Point(48)), 0, 0, 0));
+                        hc.Spawn(Game1.gameRenderTarget.Bounds.Center);
+
+                        // Randomize the amount of time until the next health pickup between 3 and 5
+                        stagesUntilHealthPickup = Game1.RNG.Next(3, 6);
                     }
                 }
 

@@ -169,7 +169,7 @@ namespace CrossBoa.Enemies
             // Spawn collectibles
             foreach (Collectible collectible in expReward)
             {
-                collectible.Spawn(this);
+                collectible.Spawn(Hitbox.Center);
                 collectible.IsAssigned = false;
                 collectible.IsActive = true;
             }
