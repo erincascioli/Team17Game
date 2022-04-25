@@ -400,7 +400,7 @@ namespace CrossBoa
 
             thanksTitle = new TextElement("THANKS TO", ScreenAnchor.TopCenter, new Point(0, 155), 1.5f);
 
-            thanksText = new TextElement("adwitr\n\nansimuz\n\nGameSupplyGuy\n\nIrmandito\n\nJesse Munguia\n\nPixel Archipel\n\nReff Pixels\n\nTheoAllen\n\nzrghr",
+            thanksText = new TextElement("adwitr\n\nansimuz\n\nCraftPix\n\nGameSupplyGuy\n\nIrmandito\n\nJesse Munguia\n\nPixel Archipel\n\nReff Pixels\n\nTheoAllen\n\nzrghr",
                 ScreenAnchor.TopCenter, new Point(0, 230), 1.2f);
 
             specialThanksTitle = new TextElement("SPECIAL THANKS TO", ScreenAnchor.TopCenter, new Point(0, 330), 1.5f);
@@ -1516,8 +1516,8 @@ namespace CrossBoa
             developersText.Position = new Vector2(0, 100);
             thanksTitle.Position = new Vector2(0, 205);
             thanksText.Position = new Vector2(0, 230);
-            specialThanksTitle.Position = new Vector2(0, 420);
-            specialThanksText.Position = new Vector2(0, 445);
+            specialThanksTitle.Position = new Vector2(0, 430);
+            specialThanksText.Position = new Vector2(0, 455);
             
         }
 
