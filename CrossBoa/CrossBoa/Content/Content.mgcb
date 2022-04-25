@@ -770,6 +770,12 @@
 /processorParam:TextureFormat=Color
 /build:PlayRegular.png
 
+#begin Powerup 109 (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Powerup 109 (3).wav
+
 #begin RecoveryFlash.png
 /importer:TextureImporter
 /processor:TextureProcessor
