@@ -1586,6 +1586,11 @@ namespace CrossBoa
 
             // TODO: Player level up animation
 
+
+            // Play sound
+            SoundManager.playerDodge.Play(0.5f, 1f, 0);
+            SoundManager.dodgeRegain.Play(0.5f, -0.2f, 0);
+
             // Allow the player to choose an upgrade once they leave the level
             LevelManager.LevelChanged += DisplayUpgradeChoices;
         }
