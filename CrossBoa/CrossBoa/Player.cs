@@ -274,7 +274,7 @@ namespace CrossBoa
         {
             if (IsInvincible) return;
             currentHealth -= amount;
-            timeLeftInvincible = PlayerStats.PlayerInvulnerabilityTime;
+            timeLeftInvincible = StatsManager.PlayerInvulnerabilityTime;
             knockbackTime = 0;
             velocity = Vector2.Zero;
             kbDirection = direction;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -39,8 +40,6 @@ namespace CrossBoa
         private const float DefaultPlayerDodgeCooldown = 2;
         private const float DefaultPlayerDodgeLength = 0.25f;
         private const float DefaultPlayerDodgeSpeed = 3f;
-
-        private static int exp;
 
         public static int UIScale;
         public static int windowWidth;
@@ -106,8 +105,14 @@ namespace CrossBoa
         private Texture2D collectibleSprite;
         private Texture2D crosshairSprite;
         private Texture2D flashSprite;
+        private Texture2D expBarBackground;
+        private Texture2D expBarFillSprite;
+        private Texture2D expBarContainerSprite;
 
+        // Textures for upgrades
         public static Texture2D UpgradeBloodOrb;
+        public static Texture2D UpgradeFeather;
+        public static Texture2D UpgradeSharkTooth;
 
         private SpriteFont arial32;
         private static SpriteFont pressStart;
@@ -116,6 +121,7 @@ namespace CrossBoa
         // Objects
         private Rectangle[] menuBGLayers;
         private List<UIElement> playerHealthBar;
+        private UIElement expBarContainer;
         public static List<UIElement> UIElementsList;
         private UIElement crossHair;
         private static CrossBow crossbow;
@@ -164,6 +170,10 @@ namespace CrossBoa
         private TextElement upgradeDescription;
         private Upgrade[] upgradeChoices;
         private int prevUpgradeButtonHovered;
+
+        private static int exp;
+        private static int currentExpLevel;
+        private static int expToNextLevel;
 
         // GameState Stuff
         private List<GameObject> gameObjectList;
@@ -299,11 +309,16 @@ namespace CrossBoa
             checkboxFilled = Content.Load<Texture2D>("CheckboxFilled");
             checkboxUnfilled = Content.Load<Texture2D>("CheckboxUnfilled");
             blackSquareSprite = Content.Load<Texture2D>("Shadow");
+            expBarFillSprite = Content.Load<Texture2D>("ExpBarFillColors");
+            expBarBackground = Content.Load<Texture2D>("ExpBarBackground");
+            expBarContainerSprite = Content.Load<Texture2D>("ExpBar");
 
             #endregion
 
             // Upgrade sprites
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
+            UpgradeFeather = Content.Load<Texture2D>("Feather");
+            UpgradeSharkTooth = Content.Load<Texture2D>("SharkTooth");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
@@ -467,6 +482,16 @@ namespace CrossBoa
             {
                 playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(12 + i * 20, 10), new Point(20)));
             }
+
+            // Create exp bar
+            expBarContainer = new UIElement(expBarContainerSprite,
+                ScreenAnchor.TopLeft, 
+                new Point(44, 28),
+                new Point(80, 20));
+
+            exp = 0;
+            expToNextLevel = 100;
+            currentExpLevel = 0;
 
             // Create crossHair
             crossHair = new UIElement(crosshairSprite, ScreenAnchor.TopLeft, Point.Zero, crosshairSprite.Bounds.Size)
@@ -840,6 +865,12 @@ namespace CrossBoa
         /// <param name="gameTime">A reference to the GameTime</param>
         private void UpdateGame(GameTime gameTime)
         {
+            // Check if the player has levelled up
+            if (exp > expToNextLevel)
+            {
+                LevelUp();
+            }
+
             // Update all GameObjects
             Camera.Update(gameTime);
 
@@ -940,6 +971,12 @@ namespace CrossBoa
                     SpawnManager.SpawnSlime(MousePositionInGame().ToPoint());
                 }
 
+                // Give free exp when pressing L
+                if (WasKeyPressed(Keys.L))
+                {
+                    exp += 10;
+                }
+
                 // Shake the screen if the player presses Enter while debug is active
                 if (kbState.IsKeyDown(Keys.Enter))
                 {
@@ -968,14 +1005,6 @@ namespace CrossBoa
                 if (WasKeyPressed(Keys.V))
                     UpgradeManager.UnlockUpgrade("Vampirism");*/
             }
-
-            /* DISABLED FOR PLAYTEST
-             * 
-            if (isDebugActive && WasKeyPressed(Keys.F))
-                isGodModeActive = !isGodModeActive;
-            if (!isDebugActive)
-                isGodModeActive = false;
-            */
 
             if (LevelManager.Exit.IsOpen || (!player.CanMove && !player.InDodge))
             {
@@ -1100,10 +1129,35 @@ namespace CrossBoa
                 }
             }
 
+            // Draw Exp Bar
+            _spriteBatch.Draw(expBarBackground, 
+                new Vector2(10, 25) * UIScale, 
+                null, 
+                new Color(Color.Gray, 180), 
+                0, 
+                Vector2.Zero, 
+                UIScale, 
+                SpriteEffects.None, 
+                0.5f);
+
+            _spriteBatch.Draw(expBarFillSprite,
+                new Vector2(10, 25) * UIScale,
+                null,
+                Color.White,
+                0,
+                Vector2.Zero,
+                new Vector2((exp / (float)expToNextLevel) * 68 * UIScale, UIScale),
+                SpriteEffects.None,
+                0.5f);
+
+            expBarContainer.Draw(_spriteBatch);
+
+            /*
             // Draw score text
             _spriteBatch.DrawString(pressStart, "Exp: " + exp, 
                 new Vector2(playerHealthBar[0].Rectangle.Left, playerHealthBar[0].Rectangle.Bottom) + new Vector2(3 * UIScale),
                 Color.White, 0, Vector2.Zero, new Vector2(UIScale), SpriteEffects.None, 1);
+                */
 
 
             // ---- DEBUG UI ----
@@ -1518,6 +1572,24 @@ namespace CrossBoa
 
         // Helper Methods
         /// <summary>
+        /// Runs when the player levels up
+        /// </summary>
+        public void LevelUp()
+        {
+            // Remove exp and increase requirement for next level
+            exp -= expToNextLevel;
+            expToNextLevel += 50;
+            
+            // Increase level
+            currentExpLevel++;
+
+            // TODO: Player level up animation
+
+            // Allow the player to choose an upgrade once they leave the level
+            LevelManager.LevelChanged += DisplayUpgradeChoices;
+        }
+
+        /// <summary>
         /// Gets the coordinates of the mouse position in the game world
         /// </summary>
         public static Vector2 MousePositionInGame()
@@ -1574,6 +1646,8 @@ namespace CrossBoa
             playerArrowList.Add(mainArrow);
 
             exp = 0;
+            expToNextLevel = 100;
+            currentExpLevel = 0;
 
             // Removes every non-Player and non-Crossbow object from the GameObject list
             for (int i = 0; i < gameObjectList.Count; i++)
@@ -1589,6 +1663,9 @@ namespace CrossBoa
                 t.Position = new Vector2(t.Position.X, 0);
             }
 
+            // Reset player stats
+            StatsManager.ResetStats();
+
             UpgradeManager.ResetUpgrades();
         }
 
@@ -1597,6 +1674,8 @@ namespace CrossBoa
         /// </summary>
         public void DisplayUpgradeChoices()
         {
+            gameState = GameState.Upgrading;
+
             upgradeChoices = UpgradeManager.GenerateUpgradeChoices();
 
             for (int i = 0; i < upgradeChoices.Length; i++)
@@ -1618,6 +1697,8 @@ namespace CrossBoa
             {
                 gameState = GameState.Game;
             }
+
+            LevelManager.LevelChanged -= DisplayUpgradeChoices;
         }
 
         /// <summary>

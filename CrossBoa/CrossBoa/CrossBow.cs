@@ -167,7 +167,7 @@ namespace CrossBoa
             OnShot?.Invoke();
 
             // Fire additional arrows
-            FireArrows?.Invoke(DrawnPosition, Direction, PlayerStats.ArrowVelocity);
+            FireArrows?.Invoke(DrawnPosition, Direction, StatsManager.ArrowVelocity);
 
             // Handled by event now
             //playerArrow.GetShot(
