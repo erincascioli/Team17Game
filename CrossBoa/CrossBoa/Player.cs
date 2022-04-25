@@ -228,7 +228,7 @@ namespace CrossBoa
             else if (inDodge)
             {
                 dodgeInvulnerabilityTime -= totalSeconds;
-                ApplyForce(dodgeVector * StatsManager.PlayerMovementForce * 2);
+                ApplyForce(dodgeVector * StatsManager.BasePlayerMovementForce * 2);
             }
             else if (InKnockback)
             {
