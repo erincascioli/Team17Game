@@ -63,6 +63,15 @@ namespace CrossBoa
             set { velocity *= value / velocity.Length(); }
         }
 
+        /// <summary>
+        /// The maximum speed that this object can move at
+        /// </summary>
+        public float? MaxSpeed
+        {
+            get { return maxSpeed; }
+            set { maxSpeed = value; }
+        }
+
         // --------------
         //  Constructors
         // --------------

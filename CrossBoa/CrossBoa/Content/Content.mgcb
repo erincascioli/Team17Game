@@ -350,6 +350,18 @@
 /processorParam:TextureFormat=Color
 /build:FacelessSlimeSpritesheet.png
 
+#begin Fang.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Fang.png
+
 #begin Feather.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -769,6 +781,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:RecoveryFlash.png
+
+#begin Sausage.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sausage.png
 
 #begin Scene - The Long Journey.ogg
 /importer:OggImporter

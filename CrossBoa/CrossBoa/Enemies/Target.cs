@@ -34,7 +34,7 @@ namespace CrossBoa
             float dir = Helper.DirectionBetween(
                             new Point(Rectangle.X, Rectangle.Y),
                             new Point(Game1.Player.Rectangle.X, Game1.Player.Rectangle.Y));
-            player.TakeDamage(0, dir);
+            player.TakeDamage(this, 0, dir);
         }
 
         /// <summary>
