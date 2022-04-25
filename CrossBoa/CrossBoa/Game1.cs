@@ -126,7 +126,6 @@ namespace CrossBoa
         private RenderTarget2D menuBGTarget;
 
         // Text Elements
-        //private TextElement splashText;
         private TextElement titleText;
         private TextElement gameOverText;
         private TextElement FPSCounter;
@@ -268,6 +267,7 @@ namespace CrossBoa
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Load textures
+            #region Loading Textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
             skullSpriteSheet = Content.Load<Texture2D>("TotemSpriteSheet");
             beastSprite = Content.Load<Texture2D>("BeastSpriteSheet");
@@ -299,6 +299,8 @@ namespace CrossBoa
             checkboxFilled = Content.Load<Texture2D>("CheckboxFilled");
             checkboxUnfilled = Content.Load<Texture2D>("CheckboxUnfilled");
             blackSquareSprite = Content.Load<Texture2D>("Shadow");
+
+            #endregion
 
             // Upgrade sprites
             UpgradeBloodOrb = Content.Load<Texture2D>("Upgrade_BloodOrb");
@@ -353,8 +355,7 @@ namespace CrossBoa
             playAgainHoverSprite = Content.Load<Texture2D>("PlayAgainRegular");
             playAgainPressedSprite = Content.Load<Texture2D>("PlayAgainPressed");
 
-            //splashText = new TextElement("A quick brown fox\njumps over the lazy dog", ScreenAnchor.Center, new Point(0, 50));
-
+            #region Set-Up for Text Elements
             FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(-10, -6));
 
             titleText = new TextElement("CROSSBOA", ScreenAnchor.TopCenter, new Point(0, 45), 4f);
@@ -392,6 +393,8 @@ namespace CrossBoa
             specialThanksText = new TextElement("Erin Cascioli\n\nRyan Keller\n\nRyan Ress\n\nOur Playtesters\n\nAnd You!",
                 ScreenAnchor.TopCenter, new Point(0, 385), 1.2f);
 
+            #endregion
+
             // Load menu background layers
             Point bgSize = new Point(1920, 1080);
             for (int i = 0; i < 8; i++)
@@ -402,6 +405,7 @@ namespace CrossBoa
                     bgSize);
             }
 
+            #region Set-Up for Buttons
             // Play Button
             playButton = new Button(playHoverSprite, playPressedSprite, true,
                 ScreenAnchor.Center, Point.Zero, playHoverSprite.Bounds.Size * new Point(2) / new Point(5));
@@ -442,6 +446,8 @@ namespace CrossBoa
             gameOverButton = new Button(mainMenuPressedSprite, mainMenuHoverSprite, true,
                 ScreenAnchor.Center, new Point(0, 30), mainMenuHoverSprite.Bounds.Size * new Point(7) / new Point(20));
 
+            #endregion
+
             // Upgrade UI Stuff
             levelUpText = new TextElement("LEVEL UP!", ScreenAnchor.TopCenter, new Point(0, 40), 2f);
             selectAnUpgradeText = new TextElement("Select an upgrade", ScreenAnchor.TopCenter, new Point(0, 60), 1.5f);
@@ -474,7 +480,6 @@ namespace CrossBoa
 
             SpawnManager.GameObjectList = gameObjectList;
             LevelManager.LContent = Content;
-
 
             // Title Track starts playing
             MediaPlayer.Play(SoundManager.titleTheme);
@@ -1456,8 +1461,8 @@ namespace CrossBoa
             developersText.Position = new Vector2(0, 100);
             thanksTitle.Position = new Vector2(0, 205);
             thanksText.Position = new Vector2(0, 230);
-            specialThanksTitle.Position = new Vector2(0, 400);
-            specialThanksText.Position = new Vector2(0, 425);
+            specialThanksTitle.Position = new Vector2(0, 420);
+            specialThanksText.Position = new Vector2(0, 445);
             
         }
 

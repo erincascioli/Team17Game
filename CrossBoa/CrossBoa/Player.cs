@@ -247,6 +247,7 @@ namespace CrossBoa
             {
                 canFlashTrigger = false;
                 flashAnimFrame = 0;
+                SoundManager.dodgeRegain.Play(.2f, -0.3f, 0);
             }
 
             // Update animations for this frame
@@ -259,7 +260,7 @@ namespace CrossBoa
         { 
             sb.Draw(sprite, Rectangle, new Rectangle(currentAnimationFrame * 16, 0, 16, 16), color, 0, Vector2.Zero, spriteFlipEffect, 0);
             if (flashAnimFrame <= 3)
-                sb.Draw(flashAnimSheet, new Rectangle(Rectangle.X, Rectangle.Y - 4, Rectangle.Width, Rectangle.Height),
+                sb.Draw(flashAnimSheet, new Rectangle(Rectangle.X - 8, Rectangle.Y - 8, 64, 64),
                     new Rectangle(flashAnimFrame * 16, 0, 16, 16), 
                     Color.White, 0, Vector2.Zero, SpriteEffects.None, 0);
         }
