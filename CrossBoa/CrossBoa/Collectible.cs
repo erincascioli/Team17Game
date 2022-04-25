@@ -99,13 +99,13 @@ namespace CrossBoa
         /// <summary>
         /// Reactivates this collectible and fires it out randomly after an enemy's death
         /// </summary>
-        /// <param name="enemy">A reference to the enemy this collectible has spawned from</param>
-        public void Spawn(Enemy enemy)
+        /// <param name="position">The location to spawn this collectible at</param>
+        public void Spawn(Point position)
         {
             isActive = true;
             
             // Set the position to the enemy
-            position = (enemy.Hitbox.Center - Size / new Point(2)).ToVector2();
+            this.position = (position - Size / new Point(2)).ToVector2();
             
             // Generate a random direction and velocity
             float direction = (float) ((Game1.RNG.NextDouble() * 2 - 1) * Math.PI);
