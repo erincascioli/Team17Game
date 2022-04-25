@@ -67,7 +67,10 @@ namespace CrossBoa
                 isInteractable = false;
 
                 if (LevelManager.Stage != -1 && Game1.Player.CanMove)
+                {
                     SoundManager.beastWallBump.Play();
+                    Camera.ShakeScreen(20);
+                }
 
                 return; // ends method
             }
@@ -78,7 +81,10 @@ namespace CrossBoa
             isInteractable = true;
 
             if (LevelManager.Stage != -1  && Game1.Player.CanMove)
+            {
                 SoundManager.beastWallBump.Play();
+                Camera.ShakeScreen(10);
+            }
         }
     }
 }
