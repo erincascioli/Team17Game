@@ -133,7 +133,7 @@ namespace CrossBoa.Managers
                     Game1.wallSprite, // Closed Sprite
                     new Rectangle(-100, -100, blockWidth, blockHeight), // Location and size
                     true);
-
+                
                 entranceOtherHalf = new Tile(Game1.topDoorBottomHalfSprite,
                     new Rectangle(-100, -100, blockWidth, blockHeight),
                     true);
