@@ -208,8 +208,8 @@ namespace CrossBoa
 
             spriteBatch.Draw(sprite,                                              // Texture2D
                              new Rectangle(                                       // Rectangle
-                                 (int)(position.X + 60*Math.Cos(rotation)),       // Rectangle X
-                                 (int)(position.Y + 60*Math.Sin(rotation)),       // Rectangle Y
+                                 (int)(position.X + 65*Math.Cos(rotation)),       // Rectangle X
+                                 (int)(position.Y + 65*Math.Sin(rotation)),       // Rectangle Y
                                  60,                                              // Rectangle width
                                  60),                                             // Rectangle height
                              new Rectangle(8 * (int)animationState, 0, 8, 8),     // Source rectangle

@@ -334,7 +334,7 @@ namespace CrossBoa
             // Load Player
             player = new Player(
                 snakeSpriteSheet,
-                new Rectangle(gameRenderTarget.Bounds.Center, new Point(48)),
+                new Rectangle(gameRenderTarget.Bounds.Center, new Point(56)),
                 DefaultPlayerFriction,
                 DefaultPlayerHealth,
                 DefaultPlayerDodgeCooldown,
