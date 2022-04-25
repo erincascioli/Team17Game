@@ -220,6 +220,7 @@ namespace CrossBoa
 
             // Makes the playerArrow appear from the bow instead of behind the player.
             this.position += (velocity / velocity.Length()) * 4;
+            this.position -= velocity * 0.0167f;
         }
 
         /// <summary>
