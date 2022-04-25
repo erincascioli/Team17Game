@@ -906,6 +906,7 @@ namespace CrossBoa
                     i--;
                 }
 
+                
                 // ~~~~~ DO ALL EXTERNAL GAMEOBJECT MODIFICATION ABOVE THIS CODE ~~~~~
                 // Delete enemies from lists after they die
                 if (gameObjectList[i] is Enemy {IsAlive: false})

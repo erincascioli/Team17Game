@@ -133,6 +133,13 @@ namespace CrossBoa.Managers
                 if (tile == LevelManager.Exit && enemies.Count == 0 && !LevelManager.Exit.IsOpen && Game1.Player.CanMove)
                 {
                     LevelManager.Exit.ChangeDoorState();
+                    if (LevelManager.Stage % 5 == 0 && LevelManager.Stage != 0)
+                    {
+                        HealthCollectible hc =
+                            new HealthCollectible(Game1.healthRecoverySprite, new Point(32, 32));
+                        Game1.Collectibles.Add(hc);
+                        hc.Spawn(new Enemy(null, new Rectangle(Game1.gameRenderTarget.Bounds.Center, new Point(48)), 0, 0, 0));
+                    }
                 }
 
                 foreach (PlayerArrow playerArrow in Game1.playerArrowList)
