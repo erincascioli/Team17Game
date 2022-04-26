@@ -53,6 +53,9 @@ namespace CrossBoa.Enemies
         private bool hasCollided;
         //private float chargeDirection;
 
+        private double timeToRecover; // Makes the beast take a second to recover after hitting a wall
+        private bool wasJustShot; // Prevents the sound from playing repeatedly
+
         // Other fields
         private Rectangle drawRect;
 
@@ -165,7 +168,11 @@ namespace CrossBoa.Enemies
             knockbackTimer = 0;
             maxSpeed = KnockbackMaxSpd;
             if (other is Projectile && !(other is PlayerArrow))
+            {
+                // Runs when the beast hits a wall
+                timeToRecover = 1.3;
                 chargingState = ChargingState.Unnoticed;
+            }
             base.GetKnockedBack(other, force * 1000);
         }
 
@@ -181,7 +188,7 @@ namespace CrossBoa.Enemies
             {
                 if (chargingState == ChargingState.Unnoticed)
                 {
-                    SoundManager.beastCharge.Play(.2f, 0f, 0f);
+                    SoundManager.beastCharge.Play(.4f, 0f, 0f);
                 }
 
                 chargingState = ChargingState.Readying;
@@ -189,6 +196,7 @@ namespace CrossBoa.Enemies
             }
             else
             {
+                wasJustShot = true;
                 chargingState = ChargingState.Charging;
                 chargeTimer = 2f;
             }
@@ -213,9 +221,14 @@ namespace CrossBoa.Enemies
             }
             else if (maxSpeed != MovementMaxSpd)
                 maxSpeed = MovementMaxSpd;
-            else if (Math.Abs(DistanceBetween) < provokeRadius && chargingState == ChargingState.Unnoticed)
+            else if (Math.Abs(DistanceBetween) < provokeRadius && chargingState == ChargingState.Unnoticed && timeToRecover <= 0)
             {
-                SoundManager.beastCharge.Play(.6f, 0f, 0f);
+                // Don't play the sound repeatedly if the beast was just shot
+                if (!wasJustShot)
+                {
+                    SoundManager.beastCharge.Play(.6f, 0f, 0f);
+                    wasJustShot = false;
+                }
                 chargingState = ChargingState.Readying;
                 chargeTimer = 0;
             }
@@ -233,6 +246,10 @@ namespace CrossBoa.Enemies
 
                 switch (chargingState)
                 {
+                    case ChargingState.Unnoticed:
+                        timeToRecover -= totalSeconds;
+                        break;
+
                     case ChargingState.Readying:
                         Point vibrationMod =
                             new Point(Game1.RNG.Next(-1, 1), Game1.RNG.Next(-1, 1));
