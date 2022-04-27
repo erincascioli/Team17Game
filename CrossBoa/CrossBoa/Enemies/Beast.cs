@@ -198,7 +198,6 @@ namespace CrossBoa.Enemies
             {
                 wasJustShot = true;
                 chargingState = ChargingState.Charging;
-                chargeTimer = 2f;
             }
             base.TakeDamage(damage);
         }

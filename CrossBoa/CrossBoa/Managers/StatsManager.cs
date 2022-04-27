@@ -9,35 +9,39 @@ namespace CrossBoa.Managers
     /// </summary>
     public static class StatsManager
     {
-        // Backing fields for stats that need additional logic
-        private static float playerMaxSpeed = 300;
-
         // Base stats for additive upgrades
         public const float BasePlayerInvulnerabilityTime = 1.5f;
-        public const float BaseArrowVelocity = 400f;
+        public const float BaseArrowVelocity = 450f;
         public const float BaseArrowDespawnTime = 20f;
+        public const float BaseArrowBounceForce = 400f;
         public const float BasePlayerMovementForce = 5000;
         public const float BasePlayerMaxSpeed = 300;
 
-        /// <summary>
-        /// The speed that the player's arrow will fire at
-        /// </summary>
-        public static float PlayerInvulnerabilityTime { get; set; } = 1.5f;
+        // Backing fields for stats that need additional logic
+        private static float playerMaxSpeed = BasePlayerMaxSpeed;
 
         /// <summary>
         /// The speed that the player's arrow will fire at
         /// </summary>
-        public static float ArrowVelocity { get; set; } = 400f;
+        public static float PlayerInvulnerabilityTime { get; set; } 
+            = BasePlayerInvulnerabilityTime;
+
+        /// <summary>
+        /// The speed that the player's arrow will fire at
+        /// </summary>
+        public static float ArrowVelocity { get; set; } = BaseArrowVelocity;
 
         /// <summary>
         /// The time before the player arrow will return automatically
         /// </summary>
-        public static float ArrowDespawnTime { get; set; } = 20f;
+        public static float ArrowDespawnTime { get; set; } = BaseArrowDespawnTime;
+
+        public static float ArrowBounceForce { get; set; } = BaseArrowBounceForce;
 
         /// <summary>
         /// How quickly the player accelerates to their max speed
         /// </summary>
-        public static float PlayerMovementForce { get; set; } = 5000;
+        public static float PlayerMovementForce { get; set; } = BasePlayerMovementForce;
 
         /// <summary>
         /// The maximum speed of the player
@@ -60,6 +64,7 @@ namespace CrossBoa.Managers
             PlayerInvulnerabilityTime = BasePlayerInvulnerabilityTime;
             ArrowVelocity = BaseArrowVelocity;
             ArrowDespawnTime = BaseArrowDespawnTime;
+            ArrowBounceForce = BaseArrowBounceForce;
             PlayerMovementForce = BasePlayerMovementForce;
             PlayerMaxSpeed = BasePlayerMaxSpeed;
         }

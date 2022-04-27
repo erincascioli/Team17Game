@@ -191,7 +191,8 @@ namespace CrossBoa
         /// </summary>
         public override void HitSomething()
         {
-            velocity *= -1f;
+            // Set velocity to inverse direction, with bounce force as the magnitude
+            velocity = StatsManager.ArrowBounceForce * -VelocityNormal;
             maxSpeed = 1000;
             friction = 1000;
             isInAir = false;

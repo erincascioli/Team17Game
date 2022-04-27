@@ -32,10 +32,11 @@ namespace CrossBoa.Upgrades
         private static Dictionary<string, Upgrade> allUpgrades = new Dictionary<string, Upgrade>()
         {
             {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.UpgradeBloodOrb)},
-            {"Better Fletching", new Upgrade("Better Fletching", "Arrows travel 15% faster", BetterFletching, UpgradeType.StatBoost, Game1.UpgradeFeather)},
+            {"Better Fletching", new Upgrade("Better Fletching", "Arrows travel 20% faster", BetterFletching, UpgradeType.StatBoost, Game1.UpgradeFeather)},
             {"Tooth Brooch", new Upgrade("Tooth Brooch", "Stay invincible for 40%\nlonger after being hit", ToothBrooch, UpgradeType.StatBoost, Game1.UpgradeSharkTooth)},
             {"Tail Extension", new Upgrade("Tail Extension", "Move 15% faster", TailExtension, UpgradeType.StatBoost, Game1.UpgradeSausage)},
             {"Fangs", new Upgrade("Fangs", "Damage enemies that hit you", Fangs, UpgradeType.SpecialEffect, Game1.UpgradeFang)},
+            {"Time Shift", new Upgrade("Time Shift", "Move and shoot 10% faster", TimeShift, UpgradeType.StatBoost, Game1.UpgradePocketWatch)},
         };
 
         private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>(allUpgrades);
@@ -176,11 +177,11 @@ namespace CrossBoa.Upgrades
         }
 
         /// <summary>
-        /// Arrows travel 15% faster
+        /// Arrows travel 20% faster
         /// </summary>
         public static void BetterFletching()
         {
-            StatsManager.ArrowVelocity += StatsManager.BaseArrowVelocity * 0.15f;
+            StatsManager.ArrowVelocity += StatsManager.ArrowVelocity * 0.20f;
         }
 
         /// <summary>
@@ -196,8 +197,8 @@ namespace CrossBoa.Upgrades
         /// </summary>
         public static void TailExtension()
         {
-            StatsManager.PlayerMovementForce += StatsManager.BasePlayerMovementForce * 0.15f;
-            StatsManager.PlayerMaxSpeed += StatsManager.BasePlayerMaxSpeed * 0.15f;
+            StatsManager.PlayerMovementForce += StatsManager.PlayerMovementForce * 0.15f;
+            StatsManager.PlayerMaxSpeed += StatsManager.PlayerMaxSpeed * 0.15f;
         }
 
         /// <summary>
@@ -206,6 +207,17 @@ namespace CrossBoa.Upgrades
         public static void Fangs()
         {
             Game1.Player.HasFangsUpgrade = true;
+        }
+
+        /// <summary>
+        /// Move and shoot 10% faster
+        /// </summary>
+        public static void TimeShift()
+        {
+            StatsManager.PlayerMovementForce += StatsManager.PlayerMovementForce * 0.10f;
+            StatsManager.PlayerMaxSpeed += StatsManager.PlayerMaxSpeed * 0.10f;
+
+            StatsManager.ArrowVelocity += StatsManager.ArrowVelocity * 0.10f;
         }
 
         #endregion
