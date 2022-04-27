@@ -181,8 +181,10 @@ namespace CrossBoa.Managers
                         // -Donovan
                         // Thanks
                         // -Leo
-                        enemy.GetKnockedBack(new Projectile(null, tile.Rectangle, 0, 0),
-                            500);
+                        // I made tiles into ICollidables so you no longer
+                        // have to hack it with a fake projectile object
+                        // -
+                        enemy.GetKnockedBack(tile, 500000);
                         beast.HasCollided = true;
                         SoundManager.beastWallBump.Play();
                         Camera.ShakeScreen(10);
