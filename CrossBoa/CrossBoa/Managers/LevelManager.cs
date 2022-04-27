@@ -23,9 +23,19 @@ namespace CrossBoa.Managers
     public static class LevelManager
     {
         /// <summary>
+        /// Is invoked when the player touches the exit
+        /// </summary>
+        public static event LevelChangeDelegate PlayerTouchedExit;
+
+        /// <summary>
         /// Is invoked when the level is about to change, while the screen is fully black
         /// </summary>
         public static event LevelChangeDelegate LevelChanged;
+
+        /// <summary>
+        /// Is invoked when the camera reaches the center of the screen during a level transition
+        /// </summary>
+        public static event LevelChangeDelegate PlayerRegainedControl;
 
         private static List<string[]> tileList;
         private static List<Tile> levelTiles;
@@ -874,6 +884,9 @@ namespace CrossBoa.Managers
         /// </summary>
         private static void EnterLevel(Player player, CrossBow crossbow)
         {
+            // Invoke respective event
+            PlayerRegainedControl?.Invoke();
+
             // Camera is locked to the center of the screen
             Camera.Center();
 
@@ -887,6 +900,9 @@ namespace CrossBoa.Managers
         /// </summary>
         private static void PlayerCollidedWithExit(Player player)
         {
+            // Invoke respective event
+            PlayerTouchedExit?.Invoke();
+
             // Player Movement is locked for the transition
             player.CanMove = false;
 

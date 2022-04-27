@@ -116,6 +116,18 @@
 /processorParam:TextureFormat=Color
 /build:Block.png
 
+#begin Bone.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Bone.png
+
 #begin Canopy Cacophony.ogg
 /importer:OggImporter
 /processor:SongProcessor
@@ -484,6 +496,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:HealthCollectible.png
+
+#begin HeartMeat.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HeartMeat.png
 
 #begin Hit_hurt 114 (2).wav
 /importer:WavImporter
@@ -988,6 +1012,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TotemSpriteSheet.png
+
+#begin TreasureChest.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TreasureChest.png
 
 #begin VeryCrackedWallBottomHalf.png
 /importer:TextureImporter
