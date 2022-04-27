@@ -222,24 +222,14 @@ namespace CrossBoa.Enemies
             animationState = SlimeAnimState.Dying;
             SoundManager.slimeDeath.Play(.5f, .7f, 0);
 
-            // Spawn collectibles
-            foreach (Collectible collectible in expReward)
-            {
-                collectible.Spawn(Hitbox.Center);
-                collectible.IsAssigned = false;
-                collectible.IsActive = true;
-            }
+            OnDeathBehaviors();
         }
 
         /// <summary>
-        /// Deletes this slime after the death animation finishes
+        /// Deletes this enemy
         /// </summary>
         public void Destroy()
         {
-            // Delete this slime
-            animationState = SlimeAnimState.Resting;
-            //position = new Vector2(-1000, -1000);
-            timeSinceDeath = 0;
             isAlive = false;
         }
 

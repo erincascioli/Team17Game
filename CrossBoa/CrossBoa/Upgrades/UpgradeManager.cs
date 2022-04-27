@@ -21,10 +21,10 @@ namespace CrossBoa.Upgrades
     /// </summary>
     public enum UpgradeType
     {
-        OnShot,
-        OnKill,
-        SpecialEffect,
-        StatBoost
+        OnShot,         // Runs with CrossBow.OnShot event
+        OnKill,         // Runs with Enemy.OnDeath event
+        StatBoost,      // Runs once on unlock and adds stats to StatsManager
+        SpecialEffect   // Flags a boolean inside of a specific class
     }
 
     public static class UpgradeManager
@@ -37,13 +37,17 @@ namespace CrossBoa.Upgrades
             {"Tail Extension", new Upgrade("Tail Extension", "Move 15% faster", TailExtension, UpgradeType.StatBoost, Game1.UpgradeSausage)},
             {"Fangs", new Upgrade("Fangs", "Damage enemies that hit you", Fangs, UpgradeType.SpecialEffect, Game1.UpgradeFang)},
             {"Time Shift", new Upgrade("Time Shift", "Move and shoot 8% faster", TimeShift, UpgradeType.StatBoost, Game1.UpgradePocketWatch)},
+            {"Arrow Wrangling", new Upgrade("Arrow Wrangling", "The arrow returns from 30% farther away", ArrowWrangling, UpgradeType.StatBoost, Game1.UpgradeRope)},
+            {"Overclock", new Upgrade("Overclock", "+4% arrow speed every kill\nResets each room", Overclock, UpgradeType.SpecialEffect, Game1.UpgradeGadget)},
+
         };
 
         private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>(allUpgrades);
 
         // Fields required to store behavior for upgrades
         public static PlayerArrow[] multishotArrows = null;
-        public static int enemiesUntilVampirismProc = 4;
+        private static int enemiesUntilVampirismProc = 4;
+        public static float ArrowSpeedWithoutOverclock;
 
         /// <summary>
         /// Chooses 3 random upgrades to display to the player
@@ -124,6 +128,12 @@ namespace CrossBoa.Upgrades
 
             // Remove this upgrade from the locked upgrades list
             lockedUpgrades.Remove(upgradeName);
+
+            // Updates the overclock arrow speed
+            if (LevelManager.HasOverclockUpgrade)
+            {
+                ArrowSpeedWithoutOverclock = StatsManager.ArrowSpeed;
+            }
         }
 
         /// <summary>
@@ -142,14 +152,19 @@ namespace CrossBoa.Upgrades
             }
 
             // Reset upgrade-specific fields
+            Game1.Player.HasFangsUpgrade = false;
+            LevelManager.HasOverclockUpgrade = false;
+
             enemiesUntilVampirismProc = 4;
+            
+            Enemy.OnKill -= OverclockOnKill;
         }
 
-    #region Upgrade Behavior Methods
-    /// <summary>
-    /// Shoot 3 arrows every shot
-    /// </summary>
-    public static void Multishot()
+        #region Upgrade Behavior Methods
+        /// <summary>
+        /// Shoot 3 arrows every shot
+        /// </summary>
+        public static void Multishot()
         {
             if (multishotArrows == null || multishotArrows[0].FlaggedForDeletion)
             {
@@ -193,7 +208,7 @@ namespace CrossBoa.Upgrades
         /// </summary>
         public static void BetterFletching()
         {
-            StatsManager.ArrowVelocity += StatsManager.ArrowVelocity * 0.15f;
+            StatsManager.ArrowSpeed *= 1.15f;
         }
 
         /// <summary>
@@ -209,8 +224,8 @@ namespace CrossBoa.Upgrades
         /// </summary>
         public static void TailExtension()
         {
-            StatsManager.PlayerMovementForce += StatsManager.PlayerMovementForce * 0.075f;
-            StatsManager.PlayerMaxSpeed += StatsManager.PlayerMaxSpeed * 0.15f;
+            StatsManager.PlayerMovementForce *= 1.075f;
+            StatsManager.PlayerMaxSpeed *= 1.15f;
         }
 
         /// <summary>
@@ -226,12 +241,43 @@ namespace CrossBoa.Upgrades
         /// </summary>
         public static void TimeShift()
         {
-            StatsManager.PlayerMovementForce += StatsManager.PlayerMovementForce * 0.04f;
-            StatsManager.PlayerMaxSpeed += StatsManager.PlayerMaxSpeed * 0.08f;
+            StatsManager.PlayerMovementForce *= 1.04f;
+            StatsManager.PlayerMaxSpeed *= 1.08f;
 
-            StatsManager.ArrowVelocity += StatsManager.ArrowVelocity * 0.08f;
+            StatsManager.ArrowSpeed *= 1.08f;
+        }
+
+        /// <summary>
+        /// The arrow returns from 30% farther away.
+        /// </summary>
+        public static void ArrowWrangling()
+        {
+            StatsManager.ArrowReturnRadius *= 1.3f;
+        }
+
+        /// <summary>
+        /// +4% arrow speed every kill. Resets each room.
+        /// </summary>
+        public static void Overclock()
+        {
+            // Subscribe the helper method to the OnKill event
+            Enemy.OnKill += OverclockOnKill;
+
+            ArrowSpeedWithoutOverclock = StatsManager.ArrowSpeed;
+
+            // Flag CollisionManager boolean
+            LevelManager.HasOverclockUpgrade = true;
         }
 
         #endregion
+
+        // Specific upgrade helper methods
+        /// <summary>
+        /// Adds arrow speed each kill automatically
+        /// </summary>
+        public static void OverclockOnKill()
+        {
+            StatsManager.ArrowSpeed += ArrowSpeedWithoutOverclock * 0.04f;
+        }
     }
 }

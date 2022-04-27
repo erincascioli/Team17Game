@@ -182,7 +182,7 @@ namespace CrossBoa
         private static int currentExpLevel;
         private static int expToNextLevel;
 
-        private const int FirstLevelExpReq = 40;
+        private const int FirstLevelExpReq = 25;
         private const int ExtraExpReqPerLevel = 15;
 
         // GameState Stuff
@@ -1208,16 +1208,14 @@ namespace CrossBoa
             // ---- DEBUG UI ----
             if (isDebugActive)
             {
-                // ~~~ Draws the crossbow's timeSinceShot timer
-                _spriteBatch.DrawString(arial32, "" + crossbow.TimeSinceShot, new Vector2(10, windowHeight - 50), Color.White);
+                // ~~~ Draws the arrow's current speed
+                _spriteBatch.DrawString(arial32, "Arrow Speed: " + StatsManager.ArrowSpeed, new Vector2(10, windowHeight - 50), Color.White);
 
                 // Draws the crossbow's rotation
-                _spriteBatch.DrawString(arial32, "" + crossbow.Direction, new Vector2(10, windowHeight - 100), Color.White);
+                _spriteBatch.DrawString(arial32, "w/o Overclock: " + UpgradeManager.ArrowSpeedWithoutOverclock, new Vector2(10, windowHeight - 100), Color.White);
 
                 // Draws the FPS Counter
                 FPSCounter.Draw(_spriteBatch);
-
-               
             }
 
             _spriteBatch.End();
@@ -1719,7 +1717,6 @@ namespace CrossBoa
 
             // Reset player stats
             StatsManager.ResetStats();
-            Player.HasFangsUpgrade = false;
 
             UpgradeManager.ResetUpgrades();
         }

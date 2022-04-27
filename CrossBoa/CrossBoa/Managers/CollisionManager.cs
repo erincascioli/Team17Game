@@ -3,6 +3,7 @@ using System.Net.Mime;
 using System.Security.Cryptography;
 using CrossBoa.Enemies;
 using CrossBoa.Interfaces;
+using CrossBoa.Upgrades;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -135,19 +136,7 @@ namespace CrossBoa.Managers
             {
                 if (tile == LevelManager.Exit && enemies.Count == 0 && !LevelManager.Exit.IsOpen && Game1.Player.CanMove)
                 {
-                    LevelManager.Exit.ChangeDoorState();
-
-                    if (--stagesUntilHealthPickup <= 0 && LevelManager.Stage != 0)
-                    {
-                        // Spawn a health collectible
-                        HealthCollectible hc =
-                            new HealthCollectible(Game1.healthRecoverySprite, new Point(48));
-                        Game1.Collectibles.Add(hc);
-                        hc.Spawn(Game1.gameRenderTarget.Bounds.Center);
-
-                        // Randomize the amount of time until the next health pickup between 3 and 5
-                        stagesUntilHealthPickup = Game1.RNG.Next(3, 6);
-                    }
+                    OpenExit();
                 }
 
                 foreach (PlayerArrow playerArrow in Game1.playerArrowList)
@@ -382,6 +371,26 @@ namespace CrossBoa.Managers
         public static void ClearEnemiesList()
         {
             enemies.Clear();
+        }
+
+        /// <summary>
+        /// Runs when the exit opens
+        /// </summary>
+        private static void OpenExit()
+        {
+            LevelManager.Exit.ChangeDoorState();
+
+            if (--stagesUntilHealthPickup <= 0 && LevelManager.Stage != 0)
+            {
+                // Spawn a health collectible
+                HealthCollectible hc =
+                    new HealthCollectible(Game1.healthRecoverySprite, new Point(48));
+                Game1.Collectibles.Add(hc);
+                hc.Spawn(Game1.gameRenderTarget.Bounds.Center);
+
+                // Randomize the amount of time until the next health pickup between 3 and 5
+                stagesUntilHealthPickup = Game1.RNG.Next(3, 6);
+            }
         }
     }
 }
