@@ -32,6 +32,24 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// The normal vector of this object's velocity
+        /// </summary>
+        public Vector2 VelocityNormal
+        {
+            get
+            {
+                // Prevent NaN errors by returning 0 instead
+                if (velocity == Vector2.Zero) 
+                    return Vector2.Zero;
+                
+                Vector2 normalVelocity = velocity;
+                normalVelocity.Normalize();
+                return normalVelocity;
+
+            }
+        }
+
+        /// <summary>
         /// The rate at which the object's velocity returns to 0
         /// </summary>
         public float Friction

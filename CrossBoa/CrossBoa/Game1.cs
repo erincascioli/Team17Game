@@ -115,6 +115,7 @@ namespace CrossBoa
         public static Texture2D UpgradeSharkTooth;
         public static Texture2D UpgradeSausage;
         public static Texture2D UpgradeFang;
+        public static Texture2D UpgradePocketWatch;
 
         private SpriteFont arial32;
         private static SpriteFont pressStart;
@@ -266,14 +267,16 @@ namespace CrossBoa
 
             UIScale = 4;
 
-            levelUpTextTimer = 5;
-
             // Create a render target that can be much more easily rescaled
             menuBGTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
             gameRenderTarget = new RenderTarget2D(GraphicsDevice, 1600, 900);
 
             // Save aspect ratio
             preferredAspectRatio = 16 / 9f;
+
+            // Game Fields
+            levelUpTextTimer = 5;
+            prevUpgradeButtonHovered = -1;
 
             base.Initialize();
         }
@@ -327,6 +330,7 @@ namespace CrossBoa
             UpgradeSharkTooth = Content.Load<Texture2D>("SharkTooth");
             UpgradeSausage = Content.Load<Texture2D>("Sausage");
             UpgradeFang = Content.Load<Texture2D>("Fang");
+            UpgradePocketWatch = Content.Load<Texture2D>("PocketWatch");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
@@ -1702,6 +1706,8 @@ namespace CrossBoa
                 t.Position = new Vector2(t.Position.X, 0);
             }
 
+            prevUpgradeButtonHovered = -1;
+
             // Reset player stats
             StatsManager.ResetStats();
             Player.HasFangsUpgrade = false;
@@ -1737,6 +1743,9 @@ namespace CrossBoa
             {
                 gameState = GameState.Game;
             }
+
+            // Get rid of the in-game level up text if it's still on screen
+            levelUpTextTimer = 5;
 
             LevelManager.LevelChanged -= DisplayUpgradeChoices;
         }
