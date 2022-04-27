@@ -170,8 +170,7 @@ namespace CrossBoa.Managers
                         // -Donovan
                         // Thanks
                         // -Leo
-                        // I made tiles into ICollidables so you no longer
-                        // have to hack it with a fake projectile object
+                        // I made it even simpler now
                         // -Ian
                         enemy.GetKnockedBack(tile, 500000);
                         beast.HasCollided = true;
