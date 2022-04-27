@@ -10,6 +10,7 @@ namespace CrossBoa.Managers
     public static class StatsManager
     {
         // Base stats for additive upgrades
+        public const int BasePlayerMaxHealth = 5;
         public const float BasePlayerInvulnerabilityTime = 1.5f;
         public const float BaseArrowVelocity = 450f;
         public const float BaseArrowDespawnTime = 20f;
@@ -21,11 +22,16 @@ namespace CrossBoa.Managers
         // Backing fields for stats that need additional logic
         private static float playerMaxSpeed = BasePlayerMaxSpeed;
 
+        // Stat Properties
+        /// <summary>
+        /// The player's maximum health
+        /// </summary>
+        public static int PlayerMaxHealth { get; set; } = BasePlayerMaxHealth;
+
         /// <summary>
         /// The speed that the player's arrow will fire at
         /// </summary>
-        public static float PlayerInvulnerabilityTime { get; set; } 
-            = BasePlayerInvulnerabilityTime;
+        public static float PlayerInvulnerabilityTime { get; set; } = BasePlayerInvulnerabilityTime;
 
         /// <summary>
         /// The speed that the player's arrow will fire at
@@ -70,6 +76,9 @@ namespace CrossBoa.Managers
         /// </summary>
         public static void ResetStats()
         {
+            Game1.Player.CurrentHealth = BasePlayerMaxHealth;
+
+            PlayerMaxHealth = BasePlayerMaxHealth;
             PlayerInvulnerabilityTime = BasePlayerInvulnerabilityTime;
             ArrowSpeed = BaseArrowVelocity;
             ArrowDespawnTime = BaseArrowDespawnTime;

@@ -34,7 +34,6 @@ namespace CrossBoa
         public static Random RNG = new Random();
 
         private const int DefaultPlayerFriction = 2500;
-        private const int DefaultPlayerHealth = 5;
         private const float DefaultPlayerDodgeCooldown = 2;
         private const float DefaultPlayerDodgeLength = 0.25f;
         private const float DefaultPlayerDodgeSpeed = 3f;
@@ -50,7 +49,7 @@ namespace CrossBoa
         private static bool isDebugActive = false;
         public static bool isGodModeActive = false;
 
-        private double levelUpTextTimer;
+        private static double levelUpTextTimer;
 
         public static bool boolThatAlternatesEveryFrame;
 
@@ -118,6 +117,11 @@ namespace CrossBoa
         public static Texture2D UpgradePocketWatch;
         public static Texture2D UpgradeGadget;
         public static Texture2D UpgradeRope;
+        public static Texture2D UpgradeHeartMeat;
+        public static Texture2D UpgradeBone;
+
+
+        public static Texture2D UpgradeTreasureChest; // Unused
 
         private SpriteFont arial32;
         private static SpriteFont pressStart;
@@ -168,26 +172,27 @@ namespace CrossBoa
         private Button debugButton;
         private Button godModeButton;
         private Button gameOverButton;
-        private Button[] upgradeButtons;
+        private static Button[] upgradeButtons;
 
         // Stuff for Upgrade State
         private TextElement levelUpText;
         private TextElement selectAnUpgradeText;
         private TextElement upgradeName;
         private TextElement upgradeDescription;
-        private Upgrade[] upgradeChoices;
+        private static Upgrade[] upgradeChoices;
         private int prevUpgradeButtonHovered;
 
         private static int exp;
         private static int currentExpLevel;
         private static int expToNextLevel;
 
+        public static int UpgradesQueued;
         private const int FirstLevelExpReq = 25;
         private const int ExtraExpReqPerLevel = 15;
 
         // GameState Stuff
         private List<GameObject> gameObjectList;
-        private GameState gameState;
+        private static GameState gameState;
 
         #region Static properties
         /// <summary>
@@ -338,7 +343,12 @@ namespace CrossBoa
             UpgradePocketWatch = Content.Load<Texture2D>("PocketWatch");
             UpgradeGadget = Content.Load<Texture2D>("Gadget");
             UpgradeRope = Content.Load<Texture2D>("Rope");
+            UpgradeHeartMeat = Content.Load<Texture2D>("HeartMeat");
+            UpgradeBone = Content.Load<Texture2D>("Bone");
 
+            UpgradeTreasureChest = Content.Load<Texture2D>("TreasureChest"); // Unused
+
+            // Fonts
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
 
@@ -347,7 +357,6 @@ namespace CrossBoa
                 snakeSpriteSheet,
                 new Rectangle(gameRenderTarget.Bounds.Center, new Point(56)),
                 DefaultPlayerFriction,
-                DefaultPlayerHealth,
                 DefaultPlayerDodgeCooldown,
                 DefaultPlayerDodgeLength,
                 DefaultPlayerDodgeSpeed,
@@ -501,7 +510,7 @@ namespace CrossBoa
             };
 
             // Create player health bar
-            for (int i = 0; i < DefaultPlayerHealth; i++)
+            for (int i = 0; i < StatsManager.PlayerMaxHealth; i++)
             {
                 playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(12 + i * 20, 10), new Point(20)));
             }
@@ -944,6 +953,19 @@ namespace CrossBoa
                     }
                 }
             } // End of GameObject Update calls
+
+            // Check if the player has a different amount of health than the health bar
+            if (playerHealthBar.Count != StatsManager.PlayerMaxHealth)
+            {
+                playerHealthBar.Clear();
+
+                // Create player health bar
+                for (int i = 0; i < StatsManager.PlayerMaxHealth; i++)
+                {
+                    playerHealthBar.Add(new UIElement(fullHeart, ScreenAnchor.TopLeft, new Point(12 + i * 20, 10), new Point(20)));
+                    playerHealthBar[i].OnResize();
+                }
+            }
 
             // Update collectibles
             foreach (Collectible collectible in collectibles)
@@ -1615,31 +1637,6 @@ namespace CrossBoa
 
         // Helper Methods
         /// <summary>
-        /// Runs when the player levels up
-        /// </summary>
-        public void LevelUp()
-        {
-            // Remove exp and increase requirement for next level
-            exp -= expToNextLevel;
-            expToNextLevel += ExtraExpReqPerLevel;
-            
-            // Increase level
-            currentExpLevel++;
-
-            // Player level up animation
-            inGameLevelUpText.Color = Color.White;
-            inGameLevelUpText.Position = player.Rectangle.Center.ToVector2();
-            levelUpTextTimer = 0;
-
-            // Play sound
-            SoundManager.playerDodge.Play(0.5f, 1f, 0);
-            SoundManager.dodgeRegain.Play(0.5f, -0.2f, 0);
-
-            // Allow the player to choose an upgrade once they leave the level
-            LevelManager.LevelChanged += DisplayUpgradeChoices;
-        }
-
-        /// <summary>
         /// Gets the coordinates of the mouse position in the game world
         /// </summary>
         public static Vector2 MousePositionInGame()
@@ -1722,9 +1719,43 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// Runs when the player levels up
+        /// </summary>
+        public void LevelUp()
+        {
+            // Remove exp and increase requirement for next level
+            exp -= expToNextLevel;
+            expToNextLevel += ExtraExpReqPerLevel;
+
+            // Increase level
+            currentExpLevel++;
+
+            // Player level up animation
+            inGameLevelUpText.Color = Color.White;
+            inGameLevelUpText.Position = player.Rectangle.Center.ToVector2();
+            levelUpTextTimer = 0;
+
+            // Play sound
+            SoundManager.playerDodge.Play(0.5f, 1f, 0);
+            SoundManager.dodgeRegain.Play(0.5f, -0.2f, 0);
+
+            // Allow the player to choose an upgrade once they leave the level
+            QueueUpgrade();
+        }
+
+        /// <summary>
+        /// Allows the player to receive an additional upgrade next time they exit a level
+        /// </summary>
+        public static void QueueUpgrade()
+        {
+            UpgradesQueued++;
+            LevelManager.LevelChanged += DisplayUpgradeChoices;
+        }
+
+        /// <summary>
         /// Run this when the player should unlock an upgrade
         /// </summary>
-        public void DisplayUpgradeChoices()
+        public static void DisplayUpgradeChoices()
         {
             gameState = GameState.Upgrading;
 
@@ -1753,7 +1784,10 @@ namespace CrossBoa
             // Get rid of the in-game level up text if it's still on screen
             levelUpTextTimer = 5;
 
-            LevelManager.LevelChanged -= DisplayUpgradeChoices;
+            // Check if there are any upgrades left
+            UpgradesQueued--;
+            if(UpgradesQueued <= 0)
+                LevelManager.LevelChanged -= DisplayUpgradeChoices;
         }
 
         /// <summary>

@@ -37,9 +37,10 @@ namespace CrossBoa.Upgrades
             {"Tail Extension", new Upgrade("Tail Extension", "Move 15% faster", TailExtension, UpgradeType.StatBoost, Game1.UpgradeSausage)},
             {"Fangs", new Upgrade("Fangs", "Damage enemies that hit you", Fangs, UpgradeType.SpecialEffect, Game1.UpgradeFang)},
             {"Time Shift", new Upgrade("Time Shift", "Move and shoot 8% faster", TimeShift, UpgradeType.StatBoost, Game1.UpgradePocketWatch)},
-            {"Arrow Wrangling", new Upgrade("Arrow Wrangling", "The arrow returns from 30% farther away", ArrowWrangling, UpgradeType.StatBoost, Game1.UpgradeRope)},
+            {"Arrow Wrangling", new Upgrade("Arrow Wrangling", "The arrow returns from 40% farther away", ArrowWrangling, UpgradeType.StatBoost, Game1.UpgradeRope)},
             {"Overclock", new Upgrade("Overclock", "+4% arrow speed every kill\nResets each room", Overclock, UpgradeType.SpecialEffect, Game1.UpgradeGadget)},
-
+            {"Hearty Meat", new Upgrade("Hearty Meat", "+1 Max Health", HeartyMeat, UpgradeType.StatBoost, Game1.UpgradeHeartMeat)},
+            {"Slim Pickings", new Upgrade("Slim Pickings", "Choose a new upgrade after the next level", SlimPickings, UpgradeType.SpecialEffect, Game1.UpgradeBone)},
         };
 
         private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>(allUpgrades);
@@ -164,7 +165,7 @@ namespace CrossBoa.Upgrades
         /// <summary>
         /// Shoot 3 arrows every shot
         /// </summary>
-        public static void Multishot()
+        private static void Multishot()
         {
             if (multishotArrows == null || multishotArrows[0].FlaggedForDeletion)
             {
@@ -189,7 +190,7 @@ namespace CrossBoa.Upgrades
         /// <summary>
         /// 8% Chance to heal when killing an enemy
         /// </summary>
-        public static void Vampirism()
+        private static void Vampirism()
         {
             // Decrease vampirism tracking variable until it hits 0
             if (--enemiesUntilVampirismProc <= 0)
@@ -206,7 +207,7 @@ namespace CrossBoa.Upgrades
         /// <summary>
         /// Arrows travel 15% faster
         /// </summary>
-        public static void BetterFletching()
+        private static void BetterFletching()
         {
             StatsManager.ArrowSpeed *= 1.15f;
         }
@@ -222,7 +223,7 @@ namespace CrossBoa.Upgrades
         /// <summary>
         /// Move 15% faster
         /// </summary>
-        public static void TailExtension()
+        private static void TailExtension()
         {
             StatsManager.PlayerMovementForce *= 1.075f;
             StatsManager.PlayerMaxSpeed *= 1.15f;
@@ -231,7 +232,7 @@ namespace CrossBoa.Upgrades
         /// <summary>
         /// Damage enemies that hit you
         /// </summary>
-        public static void Fangs()
+        private static void Fangs()
         {
             Game1.Player.HasFangsUpgrade = true;
         }
@@ -239,7 +240,7 @@ namespace CrossBoa.Upgrades
         /// <summary>
         /// Move and shoot 8% faster
         /// </summary>
-        public static void TimeShift()
+        private static void TimeShift()
         {
             StatsManager.PlayerMovementForce *= 1.04f;
             StatsManager.PlayerMaxSpeed *= 1.08f;
@@ -248,17 +249,17 @@ namespace CrossBoa.Upgrades
         }
 
         /// <summary>
-        /// The arrow returns from 30% farther away.
+        /// The arrow returns from 40% farther away.
         /// </summary>
-        public static void ArrowWrangling()
+        private static void ArrowWrangling()
         {
-            StatsManager.ArrowReturnRadius *= 1.3f;
+            StatsManager.ArrowReturnRadius *= 1.4f;
         }
 
         /// <summary>
         /// +4% arrow speed every kill. Resets each room.
         /// </summary>
-        public static void Overclock()
+        private static void Overclock()
         {
             // Subscribe the helper method to the OnKill event
             Enemy.OnKill += OverclockOnKill;
@@ -269,7 +270,27 @@ namespace CrossBoa.Upgrades
             LevelManager.HasOverclockUpgrade = true;
         }
 
+        /// <summary>
+        /// +1 Max Health
+        /// </summary>
+        private static void HeartyMeat()
+        {
+            StatsManager.PlayerMaxHealth += 1;
+            Game1.Player.CurrentHealth += 1;
+        }
+
+        /// <summary>
+        /// Choose a new upgrade after the next level
+        /// </summary>
+        private static void SlimPickings()
+        {
+            Game1.QueueUpgrade();
+        }
+
         #endregion
+
+
+
 
         // Specific upgrade helper methods
         /// <summary>

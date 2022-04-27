@@ -28,7 +28,6 @@ namespace CrossBoa
         public bool HasFangsUpgrade { get; set; }
 
         // Player stats
-        private int maxHealth;
         private float dodgeCooldown;
         private float dodgeLength;
         private float dodgeInvulnerabilityTime;
@@ -79,16 +78,7 @@ namespace CrossBoa
         public int CurrentHealth
         {
             get { return currentHealth; }
-            set { currentHealth = value >= maxHealth ? maxHealth : value; }
-        }
-
-        /// <summary>
-        /// The maximum health the player can have
-        /// </summary>
-        public int MaxHealth
-        {
-            get { return maxHealth; }
-            set { maxHealth = value; }
+            set { currentHealth = value >= StatsManager.PlayerMaxHealth ? StatsManager.PlayerMaxHealth : value; }
         }
 
         /// <summary>
@@ -168,11 +158,10 @@ namespace CrossBoa
         /// <param name="dodgeSpeed">How quickly the player will move while dodging</param>
         /// <param name="flashSprite"></param>
         public Player(Texture2D sprite, Rectangle rectangle, float friction,
-            int maxHealth, float dodgeCooldown, float dodgeLength, float dodgeSpeed, Texture2D flashSprite) :
+            float dodgeCooldown, float dodgeLength, float dodgeSpeed, Texture2D flashSprite) :
             base(sprite, rectangle, StatsManager.BasePlayerMaxSpeed, friction)
         {
-            this.maxHealth = maxHealth;
-            currentHealth = maxHealth;
+            currentHealth = StatsManager.BasePlayerMaxHealth;
             this.dodgeCooldown = dodgeCooldown;
             this.dodgeLength = dodgeLength;
             dodgeSpeedBoost = dodgeSpeed;
@@ -437,7 +426,7 @@ namespace CrossBoa
         /// <param name="startingPos"></param>
         public void ResetPlayer(Rectangle startingPos)
         {
-            currentHealth = maxHealth;
+            currentHealth = StatsManager.BasePlayerMaxHealth;
             position = new Vector2(startingPos.X, startingPos.Y);
             timeLeftInvincible = 0;
             canMove = true;
