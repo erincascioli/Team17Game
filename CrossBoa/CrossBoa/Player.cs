@@ -425,7 +425,7 @@ namespace CrossBoa
         public void EndDodge()
         {
             canMove = true;
-            maxSpeed /= dodgeSpeedBoost;
+            maxSpeed = StatsManager.PlayerMaxSpeed;
             inDodge = false;
             dodgeInvulnerabilityTime = 0;
         }
