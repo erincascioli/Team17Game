@@ -126,8 +126,8 @@ namespace CrossBoa.Enemies
         /// (no death animation is programmed yet, so just throw anything in there).</param>
         /// <param name="health">The max health of the skeleton.</param>
         /// <param name="rectangle">The rectangular hitbox of the skeleton.</param>
-        public Beast(Texture2D spriteSheet, Texture2D deathSheet, int health, Rectangle rectangle) :
-            base(spriteSheet, rectangle, health, null, FrictionForce)
+        public Beast(Texture2D spriteSheet, Texture2D deathSheet, int health, (int, int) expRange, Rectangle rectangle) :
+            base(spriteSheet, rectangle, health, expRange, null, FrictionForce)
         {
             color = Color.White;
             isAlive = true;
