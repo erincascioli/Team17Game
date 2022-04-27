@@ -163,6 +163,18 @@ namespace CrossBoa.Enemies
         /// </summary>
         public virtual void Die()
         {
+            OnDeathBehaviors();
+            
+            // Disable this enemy
+            isAlive = false;
+            position = new Vector2(-1000, -1000);
+        }
+
+        /// <summary>
+        /// Runs events and spawns collectibles
+        /// </summary>
+        protected void OnDeathBehaviors()
+        {
             // Invoke OnKill upgrades
             OnKill?.Invoke();
 
@@ -173,10 +185,6 @@ namespace CrossBoa.Enemies
                 collectible.IsAssigned = false;
                 collectible.IsActive = true;
             }
-
-            // Disable this enemy
-            isAlive = false;
-            position = new Vector2(-1000, -1000);
         }
 
         /// <summary>

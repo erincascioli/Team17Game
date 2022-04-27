@@ -14,6 +14,7 @@ namespace CrossBoa.Managers
         public const float BaseArrowVelocity = 450f;
         public const float BaseArrowDespawnTime = 20f;
         public const float BaseArrowBounceForce = 400f;
+        public const float BaseArrowReturnRadius = 80;
         public const float BasePlayerMovementForce = 5000;
         public const float BasePlayerMaxSpeed = 300;
 
@@ -29,14 +30,22 @@ namespace CrossBoa.Managers
         /// <summary>
         /// The speed that the player's arrow will fire at
         /// </summary>
-        public static float ArrowVelocity { get; set; } = BaseArrowVelocity;
+        public static float ArrowSpeed { get; set; } = BaseArrowVelocity;
 
         /// <summary>
         /// The time before the player arrow will return automatically
         /// </summary>
         public static float ArrowDespawnTime { get; set; } = BaseArrowDespawnTime;
 
+        /// <summary>
+        /// How much the arrow will bounce when it hits an object
+        /// </summary>
         public static float ArrowBounceForce { get; set; } = BaseArrowBounceForce;
+
+        /// <summary>
+        /// The radius that the arrow will return to the player from
+        /// </summary>
+        public static float ArrowReturnRadius { get; set; } = BaseArrowReturnRadius;
 
         /// <summary>
         /// How quickly the player accelerates to their max speed
@@ -62,9 +71,10 @@ namespace CrossBoa.Managers
         public static void ResetStats()
         {
             PlayerInvulnerabilityTime = BasePlayerInvulnerabilityTime;
-            ArrowVelocity = BaseArrowVelocity;
+            ArrowSpeed = BaseArrowVelocity;
             ArrowDespawnTime = BaseArrowDespawnTime;
             ArrowBounceForce = BaseArrowBounceForce;
+            ArrowReturnRadius = BaseArrowReturnRadius;
             PlayerMovementForce = BasePlayerMovementForce;
             PlayerMaxSpeed = BasePlayerMaxSpeed;
         }

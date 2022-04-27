@@ -118,7 +118,7 @@ namespace CrossBoa
                 if (!IsInAir && isMainArrow)
                 {
                     // Move to player if arrow is nearby and arrow is on ground
-                    GetSuckedIntoPlayer(80, 5000);
+                    GetSuckedIntoPlayer(StatsManager.ArrowReturnRadius, 5000);
                 }
 
                 // Begin flashing when arrow is about to despawn
@@ -248,7 +248,7 @@ namespace CrossBoa
         /// </summary>
         /// <param name="distance">The radius the player enter must be before the arrow is returned</param>
         /// <param name="force">How much force the arrow should return to the player with</param>
-        public void GetSuckedIntoPlayer(int distance, float force)
+        public void GetSuckedIntoPlayer(float distance, float force)
         {
             Point playerCenter = Game1.Player.Hitbox.Center;
             Point arrowCenter = this.Hitbox.Center;

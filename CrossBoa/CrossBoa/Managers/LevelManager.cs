@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using CrossBoa.Upgrades;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
@@ -78,6 +79,11 @@ namespace CrossBoa.Managers
             get { return currentLevel; }
             set { currentLevel = value; }
         }
+
+        /// <summary>
+        /// Whether or not the player has the overclock upgrade unlocked
+        /// </summary>
+        public static bool HasOverclockUpgrade { get; set; }
 
         static LevelManager()
         {
@@ -617,8 +623,7 @@ namespace CrossBoa.Managers
                 // Prevents player from getting trapped on the wall
                 if (player.Rectangle.Intersects(new Rectangle((int)exit.Position.X, (int)exit.Position.Y, exit.Width, exit.Height / 2)))
                 {
-                    // Player Movement is locked for the transition
-                    player.CanMove = false;
+                    PlayerCollidedWithExit(player);
 
                     // Vectors for player movement
                     forcedX = 0;
@@ -651,8 +656,7 @@ namespace CrossBoa.Managers
                 // Prevents player from getting trapped on the wall
                 if (player.Rectangle.Intersects(new Rectangle((int)exit.Position.X, (int)exit.Position.Y + exit.Height / 2, exit.Width, exit.Height / 2)))
                 {
-                    // Player Movement is locked for the transition
-                    player.CanMove = false;
+                    PlayerCollidedWithExit(player);
 
                     // Vectors for player movement
                     forcedX = 0;
@@ -685,8 +689,7 @@ namespace CrossBoa.Managers
                 // Prevents player from getting trapped on the wall
                 if (player.Rectangle.Intersects(new Rectangle((int)exit.Position.X + exit.Width / 2, (int)exit.Position.Y, exit.Width / 2, exit.Height)))
                 {
-                    // Player Movement is locked for the transition
-                    player.CanMove = false;
+                    PlayerCollidedWithExit(player);
 
                     // Vectors for player movement
                     forcedX = 1;
@@ -719,8 +722,7 @@ namespace CrossBoa.Managers
                 // Prevents player from getting trapped on the wall
                 if (player.Rectangle.Intersects(new Rectangle((int)exit.Position.X, (int)exit.Position.Y, exit.Width / 2, exit.Height)))
                 {
-                    // Player Movement is locked for the transition
-                    player.CanMove = false;
+                    PlayerCollidedWithExit(player);
 
                     // Vectors for player movement
                     forcedX = -1;
@@ -760,15 +762,9 @@ namespace CrossBoa.Managers
                 {
                     Camera.MoveCamera(0, 90);
 
-
                     if (!(Camera.CameraY < 0))
                     {
-                        // Camera is locked to the center of the screen
-                        Camera.Center();
-
-                        // The player is made visible again
-                        player.Color = Color.White;
-                        crossbow.Color = Color.White;
+                        EnterLevel(player, crossbow);
 
                         // Conditions to give player control again
                         if (player.Position.Y + player.Height + 10 < entrance.Position.Y)
@@ -784,12 +780,7 @@ namespace CrossBoa.Managers
 
                     if (!(Camera.CameraY > 0))
                     {
-                        // Camera is locked to the center of the screen
-                        Camera.Center();
-
-                        // The player is made visible again
-                        player.Color = Color.White;
-                        crossbow.Color = Color.White;
+                        EnterLevel(player, crossbow);
 
                         // Conditions to give player control again
                         if (player.Position.Y - player.Height - 10 > entrance.Position.Y)
@@ -805,12 +796,7 @@ namespace CrossBoa.Managers
 
                     if (!(Camera.CameraX > 0))
                     {
-                        // Camera is locked to the center of the screen
-                        Camera.Center();
-
-                        // The player is made visible again
-                        player.Color = Color.White;
-                        crossbow.Color = Color.White;
+                        EnterLevel(player, crossbow);
 
                         // Conditions to give player control again
                         if (player.Position.X > entrance.Position.X + player.Width + 10)
@@ -826,12 +812,7 @@ namespace CrossBoa.Managers
 
                     if (!(Camera.CameraX < 0))
                     {
-                        // Camera is locked to the center of the screen
-                        Camera.Center();
-
-                        // The player is made visible again
-                        player.Color = Color.White;
-                        crossbow.Color = Color.White;
+                        EnterLevel(player, crossbow);
 
                         // Conditions to give player control again
                         if (player.Position.X < entrance.Position.X - player.Width - 10)
@@ -886,6 +867,34 @@ namespace CrossBoa.Managers
                 5 => "Level5",
                 _ => currentLevel
             };
+        }
+
+        /// <summary>
+        /// Helper method for when the camera reaches the center of the level
+        /// </summary>
+        private static void EnterLevel(Player player, CrossBow crossbow)
+        {
+            // Camera is locked to the center of the screen
+            Camera.Center();
+
+            // The player is made visible again
+            player.Color = Color.White;
+            crossbow.Color = Color.White;
+        }
+
+        /// <summary>
+        /// Helper method for when the player touches the exit
+        /// </summary>
+        private static void PlayerCollidedWithExit(Player player)
+        {
+            // Player Movement is locked for the transition
+            player.CanMove = false;
+
+            // Resets the arrow speed for the next level
+            if (HasOverclockUpgrade)
+            {
+                StatsManager.ArrowSpeed = UpgradeManager.ArrowSpeedWithoutOverclock;
+            }
         }
 
         /// <summary>
