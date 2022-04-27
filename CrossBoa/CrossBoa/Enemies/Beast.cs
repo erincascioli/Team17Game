@@ -167,13 +167,14 @@ namespace CrossBoa.Enemies
         {
             knockbackTimer = 0;
             maxSpeed = KnockbackMaxSpd;
-            if (other is Projectile && !(other is PlayerArrow))
+            chargingState = ChargingState.Charging;
+            if (other is Tile)
             {
                 // Runs when the beast hits a wall
                 timeToRecover = 1.3;
                 chargingState = ChargingState.Unnoticed;
             }
-            base.GetKnockedBack(other, force * 1000);
+            base.GetKnockedBack(other, force);
         }
 
         public override void TakeDamage(int damage)
