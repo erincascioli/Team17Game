@@ -31,7 +31,7 @@ namespace CrossBoa.Upgrades
     {
         private static Dictionary<string, Upgrade> allUpgrades = new Dictionary<string, Upgrade>()
         {
-            {"Vampirism", new Upgrade("Vampirism", "5% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.UpgradeBloodOrb)},
+            {"Vampirism", new Upgrade("Vampirism", "8% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.UpgradeBloodOrb)},
             {"Better Fletching", new Upgrade("Better Fletching", "Arrows travel 20% faster", BetterFletching, UpgradeType.StatBoost, Game1.UpgradeFeather)},
             {"Tooth Brooch", new Upgrade("Tooth Brooch", "Stay invincible for 40%\nlonger after being hit", ToothBrooch, UpgradeType.StatBoost, Game1.UpgradeSharkTooth)},
             {"Tail Extension", new Upgrade("Tail Extension", "Move 15% faster", TailExtension, UpgradeType.StatBoost, Game1.UpgradeSausage)},
@@ -43,6 +43,7 @@ namespace CrossBoa.Upgrades
 
         // Fields required to store behavior for upgrades
         public static PlayerArrow[] multishotArrows = null;
+        public static int enemiesUntilVampirismProc = 4;
 
         /// <summary>
         /// Chooses 3 random upgrades to display to the player
@@ -139,6 +140,9 @@ namespace CrossBoa.Upgrades
                 Game1.Crossbow.OnShot -= upgrade.Effect;
                 Enemy.OnKill -= upgrade.Effect;
             }
+
+            // Reset upgrade-specific fields
+            enemiesUntilVampirismProc = 4;
         }
 
     #region Upgrade Behavior Methods
@@ -168,12 +172,20 @@ namespace CrossBoa.Upgrades
         }
 
         /// <summary>
-        /// 5% Chance to heal when killing an enemy
+        /// 8% Chance to heal when killing an enemy
         /// </summary>
         public static void Vampirism()
         {
-            if(Game1.RNG.NextDouble() <= 0.05)
-               Game1.Player.CurrentHealth++;
+            // Decrease vampirism tracking variable until it hits 0
+            if (--enemiesUntilVampirismProc <= 0)
+            {
+                // Heal the player
+                Game1.Player.CurrentHealth++;
+
+                // Choose a random number of enemies from 1 to 26
+                // to give the player health back after killing
+                enemiesUntilVampirismProc = Game1.RNG.Next(1, 5);
+            }
         }
 
         /// <summary>

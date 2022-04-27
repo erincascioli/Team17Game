@@ -116,6 +116,8 @@ namespace CrossBoa
         public static Texture2D UpgradeSausage;
         public static Texture2D UpgradeFang;
         public static Texture2D UpgradePocketWatch;
+        public static Texture2D UpgradeGadget;
+        public static Texture2D UpgradeRope;
 
         private SpriteFont arial32;
         private static SpriteFont pressStart;
@@ -179,6 +181,9 @@ namespace CrossBoa
         private static int exp;
         private static int currentExpLevel;
         private static int expToNextLevel;
+
+        private const int FirstLevelExpReq = 40;
+        private const int ExtraExpReqPerLevel = 15;
 
         // GameState Stuff
         private List<GameObject> gameObjectList;
@@ -331,6 +336,8 @@ namespace CrossBoa
             UpgradeSausage = Content.Load<Texture2D>("Sausage");
             UpgradeFang = Content.Load<Texture2D>("Fang");
             UpgradePocketWatch = Content.Load<Texture2D>("PocketWatch");
+            UpgradeGadget = Content.Load<Texture2D>("Gadget");
+            UpgradeRope = Content.Load<Texture2D>("Rope");
 
             arial32 = Content.Load<SpriteFont>("Arial32");
             pressStart = Content.Load<SpriteFont>("Fonts/PressStart6");
@@ -506,7 +513,7 @@ namespace CrossBoa
                 new Point(80, 20));
 
             exp = 0;
-            expToNextLevel = 25;
+            expToNextLevel = FirstLevelExpReq;
             currentExpLevel = 0;
 
             // Create crossHair
@@ -612,14 +619,6 @@ namespace CrossBoa
                     UpdateGame(gameTime);
 
                     // --- Check state changes ---
-                    // Upgrade
-                    // TEMPORARY TEST CODE TO SWITCH TO UPGRADE STATE
-                    if (WasKeyPressed(Keys.M))
-                    {
-                        gameState = GameState.Upgrading;
-                        DisplayUpgradeChoices();
-                    }
-
                     // Game Over
                     if (player.CurrentHealth <= 0)
                         GameOver();
@@ -977,6 +976,9 @@ namespace CrossBoa
             crossbow.Update(gameTime);
 
             // ---- DEBUG UPDATE ----
+            if(WasKeyPressed(Keys.F4))
+                ToggleDebug();
+
             if (isDebugActive)
             {
                 // Update FPS Counter
@@ -999,6 +1001,13 @@ namespace CrossBoa
                 if (WasKeyPressed(Keys.L))
                 {
                     exp += 10;
+                }
+
+                // Instantly give an upgrade
+                if (WasKeyPressed(Keys.M))
+                {
+                    gameState = GameState.Upgrading;
+                    DisplayUpgradeChoices();
                 }
 
                 // Shake the screen if the player presses Enter while debug is active
@@ -1614,7 +1623,7 @@ namespace CrossBoa
         {
             // Remove exp and increase requirement for next level
             exp -= expToNextLevel;
-            expToNextLevel += 25;
+            expToNextLevel += ExtraExpReqPerLevel;
             
             // Increase level
             currentExpLevel++;
@@ -1689,7 +1698,7 @@ namespace CrossBoa
             playerArrowList.Add(mainArrow);
 
             exp = 0;
-            expToNextLevel = 25;
+            expToNextLevel = FirstLevelExpReq;
             currentExpLevel = 0;
 
             // Removes every non-Player and non-Crossbow object from the GameObject list
