@@ -53,13 +53,14 @@ namespace CrossBoa.Enemies
         /// <param name="rectangle">A Rectangle containing this GameObject's position and size</param>
         /// <param name="health">The health this enemy will have when it spawns</param>
         /// <param name="friction">How fast this object will stop moving.</param>
+        /// <param name="expRange">The minimum and maximum exp that this enemy can drop</param>
         /// <param name="maxSpeed">The maximum speed this object can reach</param>
-        public Enemy(Texture2D sprite, Rectangle rectangle, int health, float? maxSpeed, float friction) : base(sprite, rectangle, maxSpeed, friction)
+        public Enemy(Texture2D sprite, Rectangle rectangle, int health, (int, int) expRange, float? maxSpeed, float friction) : base(sprite, rectangle, maxSpeed, friction)
         {
             this.health = health;
             this.isAlive = true;
 
-            expReward = new List<Collectible>(Game1.RNG.Next(4, 10));
+            expReward = new List<Collectible>(Game1.RNG.Next(expRange.Item1, expRange.Item2));
 
             // Check the collectible list for inactive orbs that are not yet assigned to an enemy
             foreach (Collectible collectible in Game1.Collectibles)

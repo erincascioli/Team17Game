@@ -44,8 +44,8 @@ namespace CrossBoa.Enemies
         }
 
         // ~~~ CONSTRUCTORS ~~~
-        public Slime(Texture2D spriteSheet, Texture2D deathSheet, int health, Rectangle rectangle) :
-            base(spriteSheet, rectangle, health, null, FrictionForce)
+        public Slime(Texture2D spriteSheet, Texture2D deathSheet, int health, (int, int) expRange, Rectangle rectangle) :
+            base(spriteSheet, rectangle, health, expRange, null, FrictionForce)
         {
             deathSpritesheet = deathSheet;
 

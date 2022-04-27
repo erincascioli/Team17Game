@@ -37,8 +37,8 @@ namespace CrossBoa.Enemies
         }
 
         // ~~~ CONSTRUCTOR ~~~
-        public Skull(Texture2D sprite, Rectangle rectangle, int health) :
-            base(sprite, rectangle, health, null, 0)
+        public Skull(Texture2D sprite, Rectangle rectangle, int health, (int, int) expRange) :
+            base(sprite, rectangle, health, expRange, null, 0)
         {
             timeSinceShot = 0f;
             isAlive = true;

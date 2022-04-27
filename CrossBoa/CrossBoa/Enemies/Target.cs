@@ -17,7 +17,7 @@ namespace CrossBoa
 
         // ~~~ CONSTRUCTOR ~~~
         public Target(Texture2D sprite, Rectangle rectangle) :
-            base(sprite, rectangle, 1, null, 0)
+            base(sprite, rectangle, 1, (0, 0), null, 0)
         {
             isAlive = true;
             color = Color.White;

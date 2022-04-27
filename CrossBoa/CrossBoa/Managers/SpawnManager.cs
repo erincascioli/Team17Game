@@ -36,6 +36,7 @@ namespace CrossBoa.Managers
                 Game1.slimeSpritesheet,
                 Game1.slimeDeathSpritesheet,
                 2,
+                (4, 7),
                 new Rectangle(position, new Point(64, 64)));
 
             CollisionManager.AddEnemy(newSlime);
@@ -46,22 +47,24 @@ namespace CrossBoa.Managers
         /// Spawns a totem enemy
         /// </summary>
         /// <param name="position">The position to spawn the totem at</param>
-        public static void SpawnTotem(Point position)
+        public static void SpawnSkull(Point position)
         {
             Skull testSkull = new Skull(Game1.skullSpriteSheet,
                 new Rectangle(position, new Point(64, 64)),
-                2);
+                2,
+                (6, 10));
 
             CollisionManager.AddEnemy(testSkull);
             gameObjectList.Add(testSkull);
         }
 
-        public static void SpawnSkeleton(Point position)
+        public static void SpawnBeast(Point position)
         {
             Beast newBeast = new Beast(
                 Game1.beastSprite,
                 Game1.slimeDeathSpritesheet,
                 3,
+                (10, 20),
                 new Rectangle(position, new Point(58, 58)));
             CollisionManager.AddEnemy(newBeast);
             gameObjectList.Add(newBeast);
@@ -171,7 +174,7 @@ namespace CrossBoa.Managers
                             Vector2 position = openSpots[index].Position;
                             openSpots.RemoveAt(index);
 
-                            SpawnTotem(new Point((int)position.X, (int)position.Y));
+                            SpawnSkull(new Point((int)position.X, (int)position.Y));
                             currentEnemyAmount++;
                             totemAmount++;
                         }
@@ -184,7 +187,7 @@ namespace CrossBoa.Managers
                             Vector2 position = openSpots[index].Position;
                             openSpots.RemoveAt(index);
 
-                            SpawnSkeleton(new Point((int)position.X, (int)position.Y));
+                            SpawnBeast(new Point((int)position.X, (int)position.Y));
                             currentEnemyAmount++;
                             skeletonAmount++;
                         }
