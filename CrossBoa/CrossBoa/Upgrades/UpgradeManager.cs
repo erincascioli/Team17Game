@@ -32,11 +32,11 @@ namespace CrossBoa.Upgrades
         private static Dictionary<string, Upgrade> allUpgrades = new Dictionary<string, Upgrade>()
         {
             {"Vampirism", new Upgrade("Vampirism", "8% Chance to heal when killing an enemy", Vampirism, UpgradeType.OnKill, Game1.UpgradeBloodOrb)},
-            {"Better Fletching", new Upgrade("Better Fletching", "Arrows travel 20% faster", BetterFletching, UpgradeType.StatBoost, Game1.UpgradeFeather)},
+            {"Better Fletching", new Upgrade("Better Fletching", "Arrows travel 15% faster", BetterFletching, UpgradeType.StatBoost, Game1.UpgradeFeather)},
             {"Tooth Brooch", new Upgrade("Tooth Brooch", "Stay invincible for 40%\nlonger after being hit", ToothBrooch, UpgradeType.StatBoost, Game1.UpgradeSharkTooth)},
             {"Tail Extension", new Upgrade("Tail Extension", "Move 15% faster", TailExtension, UpgradeType.StatBoost, Game1.UpgradeSausage)},
             {"Fangs", new Upgrade("Fangs", "Damage enemies that hit you", Fangs, UpgradeType.SpecialEffect, Game1.UpgradeFang)},
-            {"Time Shift", new Upgrade("Time Shift", "Move and shoot 10% faster", TimeShift, UpgradeType.StatBoost, Game1.UpgradePocketWatch)},
+            {"Time Shift", new Upgrade("Time Shift", "Move and shoot 8% faster", TimeShift, UpgradeType.StatBoost, Game1.UpgradePocketWatch)},
         };
 
         private static Dictionary<string, Upgrade> lockedUpgrades = new Dictionary<string, Upgrade>(allUpgrades);
@@ -182,18 +182,18 @@ namespace CrossBoa.Upgrades
                 // Heal the player
                 Game1.Player.CurrentHealth++;
 
-                // Choose a random number of enemies from 1 to 26
+                // Choose a random number of enemies from 1 to 25
                 // to give the player health back after killing
-                enemiesUntilVampirismProc = Game1.RNG.Next(1, 5);
+                enemiesUntilVampirismProc = Game1.RNG.Next(1, 26);
             }
         }
 
         /// <summary>
-        /// Arrows travel 20% faster
+        /// Arrows travel 15% faster
         /// </summary>
         public static void BetterFletching()
         {
-            StatsManager.ArrowVelocity += StatsManager.ArrowVelocity * 0.20f;
+            StatsManager.ArrowVelocity += StatsManager.ArrowVelocity * 0.15f;
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace CrossBoa.Upgrades
         /// </summary>
         public static void TailExtension()
         {
-            StatsManager.PlayerMovementForce += StatsManager.PlayerMovementForce * 0.15f;
+            StatsManager.PlayerMovementForce += StatsManager.PlayerMovementForce * 0.075f;
             StatsManager.PlayerMaxSpeed += StatsManager.PlayerMaxSpeed * 0.15f;
         }
 
@@ -222,14 +222,14 @@ namespace CrossBoa.Upgrades
         }
 
         /// <summary>
-        /// Move and shoot 10% faster
+        /// Move and shoot 8% faster
         /// </summary>
         public static void TimeShift()
         {
-            StatsManager.PlayerMovementForce += StatsManager.PlayerMovementForce * 0.10f;
-            StatsManager.PlayerMaxSpeed += StatsManager.PlayerMaxSpeed * 0.10f;
+            StatsManager.PlayerMovementForce += StatsManager.PlayerMovementForce * 0.04f;
+            StatsManager.PlayerMaxSpeed += StatsManager.PlayerMaxSpeed * 0.08f;
 
-            StatsManager.ArrowVelocity += StatsManager.ArrowVelocity * 0.10f;
+            StatsManager.ArrowVelocity += StatsManager.ArrowVelocity * 0.08f;
         }
 
         #endregion
