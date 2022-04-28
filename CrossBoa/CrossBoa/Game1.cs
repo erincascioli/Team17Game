@@ -1313,6 +1313,10 @@ namespace CrossBoa
                     godModeButton.HoverTexture = checkboxUnfilled;
                 }
             }
+            else
+            {
+                SoundManager.hitWall.Play(0.45f, 0, 0);
+            }
         }
 
         /// <summary>
