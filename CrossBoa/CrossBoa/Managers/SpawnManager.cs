@@ -121,9 +121,9 @@ namespace CrossBoa.Managers
             // Determines how many enemies may spawn.
             if (Game1.isHellModeActive)
             {
-                maxSlimes = 6;
-                maxSkeletons = 5;
-                maxTotems = 6;
+                maxSlimes = 10;
+                maxSkeletons = 10;
+                maxTotems = 10;
                 minEnemies = 3 + LevelManager.Stage / 2;
                 if (minEnemies > 10)
                     minEnemies = 10;
