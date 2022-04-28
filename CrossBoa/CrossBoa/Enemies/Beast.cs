@@ -237,12 +237,8 @@ namespace CrossBoa.Enemies
                 maxSpeed = HardModeMaxSpd;
             else if (Math.Abs(DistanceBetween) < provokeRadius && chargingState == ChargingState.Unnoticed && timeToRecover <= 0)
             {
-                // Don't play the sound repeatedly if the beast was just shot
-                if (!wasJustShot)
-                {
-                    SoundManager.beastCharge.Play(.6f, 0f, 0f);
-                    wasJustShot = false;
-                }
+                SoundManager.beastCharge.Play(.6f, 0f, 0f);
+
                 chargingState = ChargingState.Readying;
                 chargeTimer = 0;
             }
