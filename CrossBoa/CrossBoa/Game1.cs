@@ -1349,7 +1349,7 @@ namespace CrossBoa
                 godModeButton.HoverTexture = checkboxUnfilled;
                 hardModeButton.Sprite = checkboxFilled;
                 hardModeButton.HoverTexture = checkboxFilled;
-                SoundManager.beastCharge.Play(.7f, 0, 0);
+                SoundManager.beastCharge.Play(.8f, 0, 0);
             }
             else
             {
