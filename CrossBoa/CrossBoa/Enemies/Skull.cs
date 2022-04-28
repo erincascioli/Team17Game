@@ -76,7 +76,7 @@ namespace CrossBoa.Enemies
                 new Vector2(Rectangle.X + Width/2,
                             Rectangle.Y + Height/2),
                 Helper.DirectionBetween(Rectangle.Location, target.Rectangle.Location),
-                500);
+                350);
 
             // Play Sound Effect
             SoundManager.fireShoot.Play(.6f, 0, 0);

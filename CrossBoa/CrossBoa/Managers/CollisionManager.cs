@@ -102,17 +102,20 @@ namespace CrossBoa.Managers
 
                     if (enemy is Beast && enemy.Health != 0)
                     {
-                        SoundManager.beastDamaged.Play(.6f, 0, 0);
+                        // Random pitch from 0 to 0.5
+                        SoundManager.beastDamaged.Play(.6f, (float)(Game1.RNG.NextDouble() * 0.5 + 0), 0);
                     }
 
                     if (enemy is Slime && enemy.Health != 0)
                     {
-                        SoundManager.slimeDamage.Play(.5f, .5f, 0);
+                        // Random pitch from 0.3 to 0.6
+                        SoundManager.slimeDamage.Play(.5f, (float)(Game1.RNG.NextDouble() * 0.3 + 0.3), 0);
                     }
 
                     if (enemy is Skull && enemy.Health != 0)
                     {
-                        SoundManager.skullDamage.Play(.4f, 0, 0);
+                        // Random pitch from -0.25 to 0.25
+                        SoundManager.skullDamage.Play(.8f, (float)(-1), 0);
                     }
 
                     playerArrow.HitSomething();
