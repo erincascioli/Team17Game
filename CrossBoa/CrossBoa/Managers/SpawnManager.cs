@@ -32,11 +32,21 @@ namespace CrossBoa.Managers
         /// <param name="position">The position to spawn the slime at</param>
         public static void SpawnSlime(Point position)
         {
+            int health = 2;
+            int expMin = 4;
+            int expMax = 7;
+            if (Game1.isHardModeActive)
+                health = 3;
+            if (Game1.isHellModeActive)
+            {
+                expMin = 2;
+                expMax = 4;
+            }
             Slime newSlime = new Slime(
                 Game1.slimeSpritesheet,
                 Game1.slimeDeathSpritesheet,
-                2,
-                (4, 7),
+                health,
+                (expMin, expMax),
                 new Rectangle(position, new Point(64, 64)));
 
             CollisionManager.AddEnemy(newSlime);
@@ -49,10 +59,20 @@ namespace CrossBoa.Managers
         /// <param name="position">The position to spawn the totem at</param>
         public static void SpawnSkull(Point position)
         {
+            int health = 2;
+            int expMin = 6;
+            int expMax = 10;
+            if (Game1.isHardModeActive)
+                health = 3;
+            if (Game1.isHellModeActive)
+            {
+                expMin = 3;
+                expMax = 5;
+            }
             Skull testSkull = new Skull(Game1.skullSpriteSheet,
                 new Rectangle(position, new Point(64, 64)),
-                2,
-                (6, 10));
+                health,
+                (expMin, expMax));
 
             CollisionManager.AddEnemy(testSkull);
             gameObjectList.Add(testSkull);
@@ -60,11 +80,21 @@ namespace CrossBoa.Managers
 
         public static void SpawnBeast(Point position)
         {
+            int health = 3;
+            int expMin = 10;
+            int expMax = 20;
+            if (Game1.isHardModeActive)
+                health = 4;
+            if (Game1.isHellModeActive)
+            {
+                expMin = 5;
+                expMax = 10;
+            }
             Beast newBeast = new Beast(
                 Game1.beastSprite,
                 Game1.slimeDeathSpritesheet,
-                3,
-                (10, 20),
+                health,
+                (expMin, expMax),
                 new Rectangle(position, new Point(58, 58)));
             CollisionManager.AddEnemy(newBeast);
             gameObjectList.Add(newBeast);
@@ -88,60 +118,76 @@ namespace CrossBoa.Managers
             int maxTotems;
             int maxSkeletons;
 
-            // Determines how many enemies may spawn
-            switch (LevelManager.Stage)
+            // Determines how many enemies may spawn.
+            if (Game1.isHellModeActive)
             {
-                case 1:
-                case 2:
-                case 3:
-                    maxSlimes = 3;
-                    maxSkeletons = 1;
-                    maxTotems = 1;
-                    maxEnemies = 3;
-                    minEnemies = 2;
-                    break;
-
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                    maxSlimes = 4;
-                    maxSkeletons = 2;
-                    maxTotems = 1;
-                    maxEnemies = 4;
-                    minEnemies = 2;
-                    break;
-
-                case 8:
-                case 9:
-                case 10:
-                    maxSlimes = 4;
-                    maxSkeletons = 3;
-                    maxTotems = 2;
-                    maxEnemies = 4;
-                    minEnemies = 3;
-                    break;
-
-                case 11:
-                case 12:
-                case 13:
-                case 14:
-                    maxSlimes = 5;
-                    maxSkeletons = 3;
-                    maxTotems = 2;
-                    maxEnemies = 6;
-                    minEnemies = 3;
-                    break;
-
-                // Any subsequent levels
-                default:
-                    maxSlimes = 5;
-                    maxSkeletons = 3;
-                    maxTotems = 3;
-                    maxEnemies = 6;
-                    minEnemies = 4;
-                    break;
+                maxSlimes = 6;
+                maxSkeletons = 5;
+                maxTotems = 6;
+                minEnemies = 3 + LevelManager.Stage / 2;
+                if (minEnemies > 10)
+                    minEnemies = 10;
+                maxEnemies = 4 + LevelManager.Stage;
+                if (maxEnemies > 20)
+                    maxEnemies = 20;
             }
+            else
+            {
+                switch (LevelManager.Stage)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                        maxSlimes = 3;
+                        maxSkeletons = 1;
+                        maxTotems = 1;
+                        maxEnemies = 3;
+                        minEnemies = 2;
+                        break;
+
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        maxSlimes = 4;
+                        maxSkeletons = 2;
+                        maxTotems = 1;
+                        maxEnemies = 4;
+                        minEnemies = 2;
+                        break;
+
+                    case 8:
+                    case 9:
+                    case 10:
+                        maxSlimes = 4;
+                        maxSkeletons = 3;
+                        maxTotems = 2;
+                        maxEnemies = 4;
+                        minEnemies = 3;
+                        break;
+
+                    case 11:
+                    case 12:
+                    case 13:
+                    case 14:
+                        maxSlimes = 5;
+                        maxSkeletons = 3;
+                        maxTotems = 2;
+                        maxEnemies = 6;
+                        minEnemies = 3;
+                        break;
+
+                    // Any subsequent levels
+                    default:
+                        maxSlimes = 5;
+                        maxSkeletons = 3;
+                        maxTotems = 3;
+                        maxEnemies = 6;
+                        minEnemies = 4;
+                        break;
+                }
+            }
+            
 
             // Actual values for the level
             int slimeAmount = 0;

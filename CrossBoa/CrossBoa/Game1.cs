@@ -48,6 +48,8 @@ namespace CrossBoa
 
         private static bool isDebugActive = false;
         public static bool isGodModeActive = false;
+        public static bool isHardModeActive = false;
+        public static bool isHellModeActive = false;
 
         private static double levelUpTextTimer;
 
@@ -149,6 +151,8 @@ namespace CrossBoa
         private TextElement optionsTitle;
         private TextElement debugText;
         private TextElement godModeText;
+        private TextElement hardModeText;
+        private TextElement hellModeText;
         private TextElement settingsTextLine1;
         private TextElement settingsTextLine2;
         private TextElement settingsTextLine3;
@@ -171,6 +175,7 @@ namespace CrossBoa
         private Button pauseButton;
         private Button debugButton;
         private Button godModeButton;
+        private Button hardModeButton;
         private Button gameOverButton;
         private static Button[] upgradeButtons;
 
@@ -417,6 +422,10 @@ namespace CrossBoa
 
             godModeText = new TextElement("God Mode:", ScreenAnchor.RightCenter, new Point(-85, 5), 1.25f);
 
+            hardModeText = new TextElement("Hard Mode:", ScreenAnchor.RightCenter, new Point(-89, 40), 1.25f);
+
+            hellModeText = new TextElement("Hell Mode:", ScreenAnchor.RightCenter, new Point(-89, 40), 1.25f);
+
             creditsTitle = new TextElement("CREDITS", ScreenAnchor.TopCenter, new Point(0, 20), 3f);
 
             developersTitle = new TextElement("DEVELOPERS", ScreenAnchor.TopCenter, new Point(0, 55), 1.5f);
@@ -482,6 +491,13 @@ namespace CrossBoa
                 ScreenAnchor.RightCenter, new Point(-30, 10), checkboxUnfilled.Bounds.Size * new Point(2, 2));
 
             godModeButton.OnClick += ToggleGodMode;
+
+            // Hard/Hell mode Button
+            hardModeButton = new Button(checkboxUnfilled, checkboxUnfilled, true,
+                ScreenAnchor.RightCenter, new Point(-30, 45), checkboxUnfilled.Bounds.Size * new Point(2, 2));
+
+            hardModeButton.OnClick += ToggleHardMode;
+            hardModeButton.OnRightClick += ToggleHellMode;
 
             // Game Over Button
             gameOverButton = new Button(mainMenuPressedSprite, mainMenuHoverSprite, true,
@@ -645,7 +661,7 @@ namespace CrossBoa
                     UpdateUpgradeScreen(gameTime);
                     break;
 
-                // Settings - NOT YET IMPLEMENTED
+                // Settings
                 case GameState.Settings:
                     UpdateSettings(gameTime);
                     break;
@@ -1250,6 +1266,7 @@ namespace CrossBoa
             mainMenuButton.Update(gameTime);
             debugButton.Update(gameTime);
             godModeButton.Update(gameTime);
+            hardModeButton.Update(gameTime);
 
             if (mainMenuButton.HasBeenPressed())
             {
@@ -1292,6 +1309,43 @@ namespace CrossBoa
                 isGodModeActive = false;
                 godModeButton.Sprite = checkboxUnfilled;
                 godModeButton.HoverTexture = checkboxUnfilled;
+            }
+        }
+
+        private void ToggleHardMode()
+        {
+            if (!isHardModeActive)
+            {
+                isHardModeActive = true;
+                hardModeButton.Sprite = checkboxFilled;
+                hardModeButton.HoverTexture = checkboxFilled;
+            }
+            else
+            {
+                hardModeButton.Sprite = checkboxUnfilled;
+                hardModeButton.HoverTexture = checkboxUnfilled;
+                isHardModeActive = false;
+                isHellModeActive = false;
+            }
+        }
+
+        private void ToggleHellMode()
+        {
+            if (!isHellModeActive)
+            {
+                isHardModeActive = true;
+                isHellModeActive = true;
+                hardModeButton.Sprite = checkboxFilled;
+                hardModeButton.HoverTexture = checkboxFilled;
+                SoundManager.beastCharge.Play(.7f, 0, 0);
+            }
+            else
+            {
+                hardModeButton.Sprite = checkboxUnfilled;
+                hardModeButton.HoverTexture = checkboxUnfilled;
+                isHardModeActive = false;
+                isHellModeActive = false;
+                SoundManager.buttonClick.Play(.1f, 0, 0);
             }
         }
 
@@ -1344,6 +1398,12 @@ namespace CrossBoa
 
             godModeText.Draw(_spriteBatch);
             godModeButton.Draw(_spriteBatch);
+
+            hardModeButton.Draw(_spriteBatch);
+            if (!isHellModeActive)
+                hardModeText.Draw(_spriteBatch);
+            else
+                hellModeText.Draw(_spriteBatch, Color.Red);
 
             _spriteBatch.End();
         }

@@ -209,8 +209,12 @@ namespace CrossBoa.Enemies
         /// <returns>A double</returns>
         private double TimeUntilNextJump()
         {
-            // Random number between 2 and 3.75
-            totalTimeBeforeNextJump = Game1.RNG.NextDouble() * 1.75 + 2;
+            // Random number between 2 and 3.75 for normal mode
+            if (Game1.isHardModeActive)
+                totalTimeBeforeNextJump = Game1.RNG.NextDouble() * 1.75 + 2;
+            // Random number between 1.25 and 2.75 for hard mode
+            else
+                totalTimeBeforeNextJump = Game1.RNG.NextDouble() * 1.5 + 1.25;
             return totalTimeBeforeNextJump;
         }
 

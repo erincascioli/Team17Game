@@ -148,6 +148,27 @@ namespace CrossBoa
         }
 
         /// <summary>
+        /// An alternate override for drawing text that allows for alternate colors.
+        /// </summary>
+        /// <param name="spriteBatch">SpriteBatch from main</param>
+        /// <param name="color">The color to draw the text</param>
+        public void Draw(SpriteBatch spriteBatch, Color color)
+        {
+            for (int i = 0; i < lines.Length; i++)
+            {
+                spriteBatch.DrawString(font,
+                    lines[i],
+                    lineRects[i].Location.ToVector2(),
+                    color,
+                    0f,
+                    Vector2.Zero,
+                    scale * Game1.UIScale,
+                    SpriteEffects.None,
+                    1f);
+            }
+        }
+
+        /// <summary>
         /// Splits the text up into lines
         /// </summary>
         private void SplitText()

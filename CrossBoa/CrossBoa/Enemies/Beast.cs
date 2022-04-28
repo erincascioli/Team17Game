@@ -42,6 +42,7 @@ namespace CrossBoa.Enemies
         private const float MovementForce = 1000f;
         private const float FrictionForce = 100f;
         private const float MovementMaxSpd = 250f;
+        private const float HardModeMaxSpd = 300f;
         private const float KnockbackMaxSpd = 450f;
 
         // Movement fields
@@ -132,7 +133,10 @@ namespace CrossBoa.Enemies
             color = Color.White;
             isAlive = true;
             target = Game1.Player;
-            maxSpeed = MovementMaxSpd;
+            if (!Game1.isHardModeActive)
+                maxSpeed = MovementMaxSpd;
+            else
+                maxSpeed = HardModeMaxSpd;
             knockbackTimer = 0.25f;
             provokeRadius = 250f;
             chargeTimer = 0;
@@ -182,6 +186,8 @@ namespace CrossBoa.Enemies
             // Cool feature to increase the beast's provoke radius
             // the more damage it takes
             provokeRadius += 50f;
+            if (Game1.isHardModeActive)
+                provokeRadius += 25f;
 
             // Provokes the beast if it's not yet provoked, 
             // and un-tireds[sic] the beast if it is.
@@ -219,8 +225,10 @@ namespace CrossBoa.Enemies
                 drawRect = Rectangle;
                 knockbackTimer += totalSeconds;
             }
-            else if (maxSpeed != MovementMaxSpd)
+            else if (!Game1.isHardModeActive && maxSpeed != MovementMaxSpd)
                 maxSpeed = MovementMaxSpd;
+            else if (Game1.isHardModeActive && maxSpeed != HardModeMaxSpd)
+                maxSpeed = HardModeMaxSpd;
             else if (Math.Abs(DistanceBetween) < provokeRadius && chargingState == ChargingState.Unnoticed && timeToRecover <= 0)
             {
                 // Don't play the sound repeatedly if the beast was just shot

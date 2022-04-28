@@ -25,6 +25,7 @@ namespace CrossBoa
         /// Event that runs when this button is clicked
         /// </summary>
         public event OnClickHandler OnClick;
+        public event OnClickHandler OnRightClick;
 
         private bool isInteractable;
         private bool hovering;
@@ -80,6 +81,11 @@ namespace CrossBoa
             return hovering && Game1.PreviousMState.LeftButton == ButtonState.Pressed && Game1.MState.LeftButton == ButtonState.Released;
         }
 
+        public bool HasBeenRightClicked()
+        {
+            return hovering && Game1.PreviousMState.RightButton == ButtonState.Pressed && Game1.MState.RightButton == ButtonState.Released;
+        }
+
         /// <summary>
         /// Purpose: Draws button to the screen
         /// Restrictions: spritebatch.Draw must have been called already
@@ -119,7 +125,13 @@ namespace CrossBoa
             hovering = IsMouseOver();
 
             // Run click event on this button
-            if (!HasBeenPressed()) return;
+            if (!HasBeenPressed() && !HasBeenRightClicked()) return;
+
+            if (HasBeenRightClicked())
+            {
+                OnRightClick?.Invoke();
+                return;
+            }
 
             OnClick?.Invoke();
             SoundManager.buttonClick.Play(.1f, 0, 0);

@@ -15,6 +15,10 @@ namespace CrossBoa.Enemies
         FacingRight
     }
 
+    /// <summary>
+    /// A skull. It fires shots towards the player.
+    /// Written by: Leo S-G
+    /// </summary>
     class Skull : Enemy
     {
         // ~~~ FIELDS ~~~
@@ -40,7 +44,10 @@ namespace CrossBoa.Enemies
         public Skull(Texture2D sprite, Rectangle rectangle, int health, (int, int) expRange) :
             base(sprite, rectangle, health, expRange, null, 0)
         {
-            timeSinceShot = 0f;
+            if (!Game1.isHardModeActive)
+                timeSinceShot = 0f;
+            else
+                timeSinceShot = 0.75f;
             isAlive = true;
             color = Color.White;
             target = Game1.Player;
@@ -50,7 +57,7 @@ namespace CrossBoa.Enemies
 
         // ~~~ METHODS ~~~
         /// <summary>
-        /// Handles knockBack when this enemy gets hit
+        /// Handles knockback when this enemy gets hit
         /// </summary>
         /// <param name="other">The object causing this enemy to be knocked back</param>
         /// <param name="force">How much force to knock this enemy back by</param>
@@ -61,7 +68,10 @@ namespace CrossBoa.Enemies
 
         public void Shoot(Projectile projectile)
         {
-            timeSinceShot = 0f;
+            if (!Game1.isHardModeActive)
+                timeSinceShot = 0f;
+            else
+                timeSinceShot = 0.75f;
             projectile.GetShot(
                 new Vector2(Rectangle.X + Width/2,
                             Rectangle.Y + Height/2),
