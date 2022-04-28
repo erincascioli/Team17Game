@@ -116,6 +116,11 @@ namespace CrossBoa
             }
         }
 
+        public void DrawDisabled(SpriteBatch sb)
+        {
+            sb.Draw(hoverButtonTexture, Rectangle, Color.Gray);
+        }
+
         /// <summary>
         /// Purpose: Updates changing variables of object every frame
         /// Restrictions: should likely be called before any other class method

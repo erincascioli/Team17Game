@@ -1298,20 +1298,26 @@ namespace CrossBoa
         /// </summary>
         private void ToggleGodMode()
         {
-            if (!isGodModeActive)
+            if (!isHellModeActive)
             {
-                isGodModeActive = true;
-                godModeButton.Sprite = checkboxFilled;
-                godModeButton.HoverTexture = checkboxFilled;
-            }
-            else
-            {
-                isGodModeActive = false;
-                godModeButton.Sprite = checkboxUnfilled;
-                godModeButton.HoverTexture = checkboxUnfilled;
+                if (!isGodModeActive)
+                {
+                    isGodModeActive = true;
+                    godModeButton.Sprite = checkboxFilled;
+                    godModeButton.HoverTexture = checkboxFilled;
+                }
+                else
+                {
+                    isGodModeActive = false;
+                    godModeButton.Sprite = checkboxUnfilled;
+                    godModeButton.HoverTexture = checkboxUnfilled;
+                }
             }
         }
 
+        /// <summary>
+        /// Toggles hard mode.
+        /// </summary>
         private void ToggleHardMode()
         {
             if (!isHardModeActive)
@@ -1329,12 +1335,18 @@ namespace CrossBoa
             }
         }
 
+        /// <summary>
+        /// Toggles Hell mode.
+        /// </summary>
         private void ToggleHellMode()
         {
             if (!isHellModeActive)
             {
                 isHardModeActive = true;
                 isHellModeActive = true;
+                isGodModeActive = false;
+                godModeButton.Sprite = checkboxUnfilled;
+                godModeButton.HoverTexture = checkboxUnfilled;
                 hardModeButton.Sprite = checkboxFilled;
                 hardModeButton.HoverTexture = checkboxFilled;
                 SoundManager.beastCharge.Play(.7f, 0, 0);
@@ -1396,8 +1408,16 @@ namespace CrossBoa
             debugText.Draw(_spriteBatch);
             debugButton.Draw(_spriteBatch);
 
-            godModeText.Draw(_spriteBatch);
-            godModeButton.Draw(_spriteBatch);
+            if (!isHellModeActive)
+            {
+                godModeButton.Draw(_spriteBatch);
+                godModeText.Draw(_spriteBatch);
+            }
+            else
+            {
+                godModeButton.DrawDisabled(_spriteBatch);
+                godModeText.Draw(_spriteBatch, Color.Gray);
+            }
 
             hardModeButton.Draw(_spriteBatch);
             if (!isHellModeActive)
@@ -1431,8 +1451,16 @@ namespace CrossBoa
 
             debugButton.Draw(_spriteBatch);
             debugText.Draw(_spriteBatch);
-            godModeText.Draw(_spriteBatch);
-            godModeButton.Draw(_spriteBatch);
+            if (!isHellModeActive)
+            {
+                godModeButton.Draw(_spriteBatch);
+                godModeText.Draw(_spriteBatch);
+            }
+            else
+            {
+                godModeButton.DrawDisabled(_spriteBatch);
+                godModeText.Draw(_spriteBatch, Color.Gray);
+            }
 
             _spriteBatch.End();
         }
