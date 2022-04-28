@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using CrossBoa.Interfaces;
 using CrossBoa.Managers;
 using Microsoft.Xna.Framework;
@@ -37,6 +38,9 @@ namespace CrossBoa.Enemies
         private Texture2D deathSpritesheet;
         private SlimeAnimState animationState;
 
+        // Sound fields
+        private float damageSoundPitch;
+
         // ~~~ PROPERTIES ~~~
         public override Rectangle Hitbox
         {
@@ -56,6 +60,9 @@ namespace CrossBoa.Enemies
             color = Color.White;
             isAlive = true;
             animationState = SlimeAnimState.Resting;
+            
+            // Random pitch from 0.3 to 0.5
+            damageSoundPitch = (float)(Game1.RNG.NextDouble() * 0.2 + 0.3);
         }
 
         /// <summary>
@@ -216,6 +223,25 @@ namespace CrossBoa.Enemies
             else
                 totalTimeBeforeNextJump = Game1.RNG.NextDouble() * 1.5 + 1.25;
             return totalTimeBeforeNextJump;
+        }
+
+        /// <summary>
+        /// Method to have the enemy take damage, and if their health reaches 0,
+        /// kill them.
+        /// </summary>
+        public override void TakeDamage(int damage)
+        {
+            if (health > 1)
+            {
+                SoundManager.slimeDamage.Play(.5f, damageSoundPitch, 0);
+                
+                // Cool feature where slime damage sounds increase every time they get hit
+                if (damageSoundPitch < 0.89f)
+                    damageSoundPitch += 0.11f;
+                else
+                    damageSoundPitch = 1;
+            }
+            base.TakeDamage(damage);
         }
 
         /// <summary>
