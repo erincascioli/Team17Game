@@ -186,6 +186,14 @@ namespace CrossBoa.Managers
                         minEnemies = 4;
                         break;
                 }
+                if (Game1.isHardModeActive)
+                {
+                    minEnemies++;
+                    maxEnemies++;
+                    maxSkeletons++;
+                    maxSlimes++;
+                    maxTotems++;
+                }
             }
             
 
