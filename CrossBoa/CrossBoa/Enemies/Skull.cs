@@ -133,5 +133,19 @@ namespace CrossBoa.Enemies
                     SkullAnimState.FacingUp;
             }
         }
+
+        /// <summary>
+        /// Method to have the enemy take damage, and if their health reaches 0,
+        /// kill them.
+        /// </summary>
+        public override void TakeDamage(int damage)
+        {
+            if (health > 1)
+            {
+                // Random pitch from -0.25 to 0.25
+                SoundManager.skullDamage.Play(.8f, (float)(-1), 0);
+            }
+            base.TakeDamage(damage);
+        }
     }
 }

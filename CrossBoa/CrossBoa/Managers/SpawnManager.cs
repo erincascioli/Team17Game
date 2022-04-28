@@ -39,6 +39,8 @@ namespace CrossBoa.Managers
                 health = 3;
             if (Game1.isHellModeActive)
             {
+                health = 5;
+
                 expMin = 2;
                 expMax = 4;
             }

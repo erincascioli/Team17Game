@@ -84,8 +84,8 @@ namespace CrossBoa.Enemies
         {
             get
             {
-                return Helper.Distance(ToPoint(position),
-                ToPoint(target.Position));
+                return Helper.Distance(position.ToPoint(),
+                target.Position.ToPoint());
             }
         }
 
@@ -205,6 +205,12 @@ namespace CrossBoa.Enemies
             {
                 wasJustShot = true;
                 chargingState = ChargingState.Charging;
+                
+                if (health > 1)
+                {
+                    // Random pitch from 0 to 0.5
+                    SoundManager.beastDamaged.Play(.6f, (float)(Game1.RNG.NextDouble() * 0.5 + 0), 0);
+                }
             }
             base.TakeDamage(damage);
         }
@@ -363,6 +369,7 @@ namespace CrossBoa.Enemies
                     BeastAnimState.FacingUp;
             }
         }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (isAlive)
@@ -372,17 +379,6 @@ namespace CrossBoa.Enemies
                     new Rectangle((int)animationState * 16, currentAnimationFrame * 16, 16, 16),
                     color);
             }
-        }
-
-        /// <summary>
-        /// A helper method to convert a Vector2 to a Point,
-        /// usable by the Helper method DirectionBetween().
-        /// </summary>
-        /// <param name="position">The Vector2 in question.</param>
-        /// <returns>A point equivalent to that Vector2.</returns>
-        private static Point ToPoint(Vector2 position)
-        {
-            return new Point((int)position.X, (int)position.Y);
         }
     }
 }
