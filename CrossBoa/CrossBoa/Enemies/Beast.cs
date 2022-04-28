@@ -191,7 +191,7 @@ namespace CrossBoa.Enemies
 
             // Provokes the beast if it's not yet provoked, 
             // and un-tireds[sic] the beast if it is.
-            if (chargingState == ChargingState.Unnoticed || chargingState == ChargingState.Charging)
+            if (chargingState == ChargingState.Unnoticed)
             {
                 if (chargingState == ChargingState.Unnoticed)
                 {
