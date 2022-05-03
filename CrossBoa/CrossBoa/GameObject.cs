@@ -17,6 +17,7 @@ namespace CrossBoa
         //    Fields
         // ------------
         protected Texture2D sprite;
+        protected Rectangle? sourceRectangle;
         protected Vector2 position;
         protected Point size;
         protected Color color;
@@ -42,6 +43,15 @@ namespace CrossBoa
             {
                 return new Rectangle(position.ToPoint(), size);
             }
+        }
+
+        /// <summary>
+        /// The source rectangle to draw from the spritesheet
+        /// </summary>
+        public Rectangle? SourceRectangle
+        {
+            get { return sourceRectangle; }
+            set { sourceRectangle = value; }
         }
 
         /// <summary>
@@ -98,6 +108,22 @@ namespace CrossBoa
         public GameObject(Texture2D sprite, Rectangle rectangle)
         {
             this.sprite = sprite;
+            this.sourceRectangle = null;
+            this.position = rectangle.Location.ToVector2();
+            this.size = rectangle.Size;
+            this.color = Color.White;
+        }
+
+        /// <summary>
+        /// Constructs a GameObject that reads from a spritesheet
+        /// </summary>
+        /// <param name="spritesheet">The spritesheet for this GameObject</param>
+        /// <param name="sourceRectangle">The source rectangle to draw from the spritesheet</param>
+        /// <param name="rectangle">a Rectangle containing this GameObject's position and size</param>
+        public GameObject(Texture2D spritesheet, Rectangle sourceRectangle, Rectangle rectangle)
+        {
+            this.sprite = spritesheet;
+            this.sourceRectangle = sourceRectangle;
             this.position = rectangle.Location.ToVector2();
             this.size = rectangle.Size;
             this.color = Color.White;
@@ -121,7 +147,7 @@ namespace CrossBoa
         /// <param name="spriteBatch">A reference to the SpriteBatch</param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite, Rectangle, color);
+            spriteBatch.Draw(sprite, Rectangle, sourceRectangle, color);
         }
     }
 }

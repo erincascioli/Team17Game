@@ -45,6 +45,7 @@ namespace CrossBoa
         private float outputAspectRatio;
         private float preferredAspectRatio;
         private float FPS;
+        public bool isInputTutorialActive;
 
         private static bool isDebugActive = false;
         public static bool isGodModeActive = false;
@@ -62,6 +63,7 @@ namespace CrossBoa
 
         // Assets
         #region Asset Field Declarations
+        // Public textures
         public static Texture2D whiteSquareSprite;
         public static Texture2D blackSquareSprite;
         public static Texture2D skullSpriteSheet;
@@ -81,6 +83,7 @@ namespace CrossBoa
         public static Texture2D topDoorBottomHalfSprite;
         public static Texture2D topExitBottomHalfSprite;
 
+        // Private textures
         private Texture2D snakeSpriteSheet;
         private Texture2D crossbowSprite;
         private Texture2D hitBox;
@@ -109,6 +112,7 @@ namespace CrossBoa
         private Texture2D expBarBackground;
         private Texture2D expBarFillSprite;
         private Texture2D expBarContainerSprite;
+        private Texture2D inputPromptsSheet;
 
         // Textures for upgrades
         public static Texture2D UpgradeBloodOrb;
@@ -133,11 +137,15 @@ namespace CrossBoa
         private Rectangle[] menuBGLayers;
         private List<UIElement> playerHealthBar;
         private UIElement expBarContainer;
-        public static List<UIElement> UIElementsList;
         private UIElement crossHair;
         private static CrossBow crossbow;
         private static Player player;
+        private UIElement[] WASDPrompt;
+        private UIElement[] spacebarPrompt;
+        private UIElement[] rightClickMousePrompt;
+        
         public static List<PlayerArrow> playerArrowList;
+        public static List<UIElement> UIElementsList;
         private static List<Collectible> collectibles;
 
         private RenderTarget2D menuBGTarget;
@@ -290,6 +298,7 @@ namespace CrossBoa
             preferredAspectRatio = 16 / 9f;
 
             // Game Fields
+            isInputTutorialActive = true;
             levelUpTextTimer = 5;
             prevUpgradeButtonHovered = -1;
 
@@ -303,6 +312,7 @@ namespace CrossBoa
             // Load textures
             #region Loading Textures
             whiteSquareSprite = Content.Load<Texture2D>("White Pixel");
+            inputPromptsSheet = Content.Load<Texture2D>("InputPrompts");
             skullSpriteSheet = Content.Load<Texture2D>("TotemSpriteSheet");
             beastSprite = Content.Load<Texture2D>("BeastSpriteSheet");
             slimeSpritesheet = Content.Load<Texture2D>("FacelessSlimeSpritesheet");
@@ -336,6 +346,20 @@ namespace CrossBoa
             expBarFillSprite = Content.Load<Texture2D>("ExpBarFillColors");
             expBarBackground = Content.Load<Texture2D>("ExpBarBackground");
             expBarContainerSprite = Content.Load<Texture2D>("ExpBar");
+
+            // Button Sprites
+            playHoverSprite = Content.Load<Texture2D>("PlayPressed");
+            playPressedSprite = Content.Load<Texture2D>("PlayRegular");
+            settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
+            settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
+            mainMenuHoverSprite = Content.Load<Texture2D>("MainMenuReguar");
+            mainMenuPressedSprite = Content.Load<Texture2D>("MainMenuPressed");
+            pauseHoverSprite = Content.Load<Texture2D>("PauseRegular");
+            pausePressedSprite = Content.Load<Texture2D>("PausePressed");
+            creditsHoverSprite = Content.Load<Texture2D>("CreditsRegular");
+            creditsPressedSprite = Content.Load<Texture2D>("CreditsPressed");
+            playAgainHoverSprite = Content.Load<Texture2D>("PlayAgainRegular");
+            playAgainPressedSprite = Content.Load<Texture2D>("PlayAgainPressed");
 
             #endregion
 
@@ -388,18 +412,33 @@ namespace CrossBoa
             CollisionManager.Crossbow = crossbow;
 
             // Set up UI Elements
-            playHoverSprite = Content.Load<Texture2D>("PlayPressed");
-            playPressedSprite = Content.Load<Texture2D>("PlayRegular");
-            settingsHoverSprite = Content.Load<Texture2D>("SettingsRegular");
-            settingsPressedSprite = Content.Load<Texture2D>("SettingsPressed");
-            mainMenuHoverSprite = Content.Load<Texture2D>("MainMenuReguar");
-            mainMenuPressedSprite = Content.Load<Texture2D>("MainMenuPressed");
-            pauseHoverSprite = Content.Load<Texture2D>("PauseRegular");
-            pausePressedSprite = Content.Load<Texture2D>("PausePressed");
-            creditsHoverSprite = Content.Load<Texture2D>("CreditsRegular");
-            creditsPressedSprite = Content.Load<Texture2D>("CreditsPressed");
-            playAgainHoverSprite = Content.Load<Texture2D>("PlayAgainRegular");
-            playAgainPressedSprite = Content.Load<Texture2D>("PlayAgainPressed");
+            Point inputPromptLocation = new Point(-48, 16);
+            WASDPrompt = new[]
+            {
+                new UIElement(inputPromptsSheet,
+                    new Rectangle(0, 0, 15, 16),
+                    ScreenAnchor.TopCenter,
+                    inputPromptLocation,
+                    new Point(15, 16)),
+
+                new UIElement(inputPromptsSheet,
+                    new Rectangle(16, 0, 15, 16),
+                    ScreenAnchor.TopCenter,
+                    inputPromptLocation + new Point(-16, 16),
+                    new Point(15, 16)),
+
+                new UIElement(inputPromptsSheet,
+                    new Rectangle(32, 0, 15, 16),
+                    ScreenAnchor.TopCenter,
+                    inputPromptLocation + new Point(0, 16),
+                    new Point(15, 16)),
+
+                new UIElement(inputPromptsSheet,
+                    new Rectangle(48, 0, 15, 16),
+                    ScreenAnchor.TopCenter,
+                    inputPromptLocation + new Point(16, 16),
+                    new Point(15, 16))
+            };
 
             #region Set-Up for Text Elements
             FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(-10, -6));
@@ -1234,6 +1273,14 @@ namespace CrossBoa
                 0.5f);
 
             expBarContainer.Draw(_spriteBatch);
+
+            if (isInputTutorialActive)
+            {
+                foreach (UIElement buttonPrompt in WASDPrompt)
+                {
+                    buttonPrompt.Draw(_spriteBatch);
+                }
+            }
 
             /*
             // Draw score text

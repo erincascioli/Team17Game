@@ -93,7 +93,29 @@ namespace CrossBoa
         /// <param name="anchor">The position to center this UI Element at</param>
         /// <param name="offset">How much to offset this UI Element from the anchor point</param>
         /// <param name="size">The size of this object is dependent on the UIScale in Game1</param>
-        public UIElement(Texture2D sprite, ScreenAnchor anchor, Point offset, Point size) : base(sprite, new Rectangle(offset, size))
+        public UIElement(Texture2D sprite, ScreenAnchor anchor, Point offset, Point size) :
+            base(sprite, new Rectangle(offset, size))
+        {
+            this.position = offset.ToVector2();
+            this.size = size;
+            this.rectangle = Helper.MakeRectangleFromCenter(offset, size * new Point(Game1.UIScale));
+            this.anchor = anchor;
+
+            windowCenter = Game1.windowRect.Center;
+
+            Game1.UIElementsList.Add(this);
+        }
+
+        /// <summary>
+        /// Constructs a UI Element with a spritesheet. The position is dependent on the anchor.
+        /// </summary>
+        /// <param name="spritesheet">The spritesheet for this GameObject</param>
+        /// <param name="sourceRectangle">The source rectangle to draw from the spritesheet with</param>
+        /// <param name="anchor">The position to center this UI Element at</param>
+        /// <param name="offset">How much to offset this UI Element from the anchor point</param>
+        /// <param name="size">The size of this object is dependent on the UIScale in Game1</param>
+        public UIElement(Texture2D spritesheet, Rectangle sourceRectangle, ScreenAnchor anchor, Point offset, Point size) : 
+            base(spritesheet, sourceRectangle, new Rectangle(offset, size))
         {
             this.position = offset.ToVector2();
             this.size = size;
