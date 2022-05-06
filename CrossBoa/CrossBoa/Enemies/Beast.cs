@@ -193,11 +193,6 @@ namespace CrossBoa.Enemies
             // and un-tireds[sic] the beast if it is.
             if (chargingState == ChargingState.Unnoticed)
             {
-                if (chargingState == ChargingState.Unnoticed)
-                {
-                    SoundManager.beastCharge.Play(.4f, 0f, 0f);
-                }
-
                 chargingState = ChargingState.Readying;
                 chargeTimer = 0f;
             }
@@ -206,7 +201,7 @@ namespace CrossBoa.Enemies
                 wasJustShot = true;
                 chargingState = ChargingState.Charging;
                 
-                if (health > 1)
+                if (health - 1 > 0)
                 {
                     // Random pitch from 0 to 0.5
                     SoundManager.beastDamaged.Play(.6f, (float)(Game1.RNG.NextDouble() * 0.5 + 0), 0);
