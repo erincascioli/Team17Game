@@ -151,21 +151,22 @@ namespace CrossBoa.Managers
                     EntityEnvironmentCollide(enemy, tile);
 
                     // If the enemy is a Beast, have it get knocked back
-                    if (enemy is Beast {InCharge: true} beast)
-                    {
-                        // I am so good at coding
-                        // -Leo
-                        // I simplified the code
-                        // -Donovan
-                        // Thanks
-                        // -Leo
-                        // I made it even simpler now
-                        // -Ian
-                        enemy.GetKnockedBack(tile, 500000);
-                        beast.HasCollided = true;
-                        SoundManager.beastWallBump.Play();
-                        Camera.ShakeScreen(10);
-                    }
+                    if (!(enemy is Beast {InCharge: true} beast)) continue;
+
+                    // I am so good at coding
+                    // -Leo
+                    // I simplified the code
+                    // -Donovan
+                    // Thanks
+                    // -Leo
+                    // I made it even simpler now
+                    // -Ian
+                    // I have strike again
+                    // -Donovan
+                    enemy.GetKnockedBack(tile, 500000);
+                    beast.HasCollided = true;
+                    SoundManager.beastWallBump.Play();
+                    Camera.ShakeScreen(10);
                 }
 
                 // Collectibles with tiles
