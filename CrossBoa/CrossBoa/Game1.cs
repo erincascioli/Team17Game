@@ -181,6 +181,9 @@ namespace CrossBoa
         private Button decreaseMusic;
         private Button increaseMusic;
         private Button[] musicIncrementVisual;
+        private Button increaseSFX;
+        private Button decreaseSFX;
+        private Button[] sfxIncrementVisual;
 
         // Stuff for Upgrade State
         private TextElement levelUpText;
@@ -517,12 +520,27 @@ namespace CrossBoa
 
             increaseMusic.OnClick += IncreaseMusicVolume;
 
+            // Volume Buttons
+            decreaseSFX = new Button(floorSprite, whiteSquareSprite, true, ScreenAnchor.BottomRight,
+                new Point(-148, -20), new Point(9, 15));
+
+            decreaseSFX.OnClick += DecreaseSFXVolume;
+
+            increaseSFX = new Button(floorSprite, whiteSquareSprite, true, ScreenAnchor.BottomRight,
+                new Point(-27, -20), new Point(9, 15));
+
+            increaseSFX.OnClick += IncreaseSFXVolume;
+
             // Volume Sliders
             musicIncrementVisual = new Button[10];
+            sfxIncrementVisual = new Button[10];
             for (int i = 0; i < 10; i++)
             {
                 musicIncrementVisual[i] = new Button(whiteSquareSprite, whiteSquareSprite, false, ScreenAnchor.BottomRight, 
                     new Point((int)decreaseMusic.Position.X + 11 + i * 11, (int)decreaseMusic.Position.Y), new Point(9, 15));
+
+                sfxIncrementVisual[i] = new Button(whiteSquareSprite, whiteSquareSprite, false, ScreenAnchor.BottomRight,
+                    new Point((int)decreaseSFX.Position.X + 11 + i * 11, (int)decreaseSFX.Position.Y), new Point(9, 15));
             }
 
             #endregion
@@ -1291,6 +1309,8 @@ namespace CrossBoa
             hardModeButton.Update(gameTime);
             increaseMusic.Update(gameTime);
             decreaseMusic.Update(gameTime);
+            increaseSFX.Update(gameTime);
+            decreaseSFX.Update(gameTime);
 
             if (mainMenuButton.HasBeenPressed())
             {
@@ -1437,10 +1457,18 @@ namespace CrossBoa
             debugButton.Draw(_spriteBatch);
             decreaseMusic.Draw(_spriteBatch);
             increaseMusic.Draw(_spriteBatch);
+            increaseSFX.Draw(_spriteBatch);
+            decreaseSFX.Draw(_spriteBatch);
 
+            // Volume sliders
             for (int j = 1; (float)(j) / 10 <= SoundManager.MusicVolume && j != 11; j++)
             {
                 musicIncrementVisual[j - 1].Draw(_spriteBatch);
+            }
+
+            for (int j = 1; (float)(j) / 10 <= SoundManager.SFXVolume && j != 11; j++)
+            {
+                sfxIncrementVisual[j - 1].Draw(_spriteBatch);
             }
 
 
@@ -2040,6 +2068,30 @@ namespace CrossBoa
 
             // Necessary because .9 - . 1 = .799982 apparently
             SoundManager.MusicVolume = MathF.Round(SoundManager.MusicVolume, 1);
+        }
+
+        /// <summary>
+        /// Purpose: Increases the SFX volume
+        /// Restrictions: Can not go past max volume 
+        /// </summary>
+        public void IncreaseSFXVolume()
+        {
+            if (SoundManager.SFXVolume == 1) return;
+            SoundManager.SFXVolume += .1f;
+            SoundManager.SFXVolume = MathF.Round(SoundManager.SFXVolume, 1);
+        }
+
+        /// <summary>
+        /// Purpose: Decreases the SFX volume
+        /// Restrictions: Can not lower if already muted
+        /// </summary>
+        public void DecreaseSFXVolume()
+        {
+            if (SoundManager.SFXVolume == 0) return;
+            SoundManager.SFXVolume -= .1f;
+
+            // Necessary because .9 - . 1 = .799982 apparently
+            SoundManager.SFXVolume = MathF.Round(SoundManager.SFXVolume, 1);
         }
     }
 
