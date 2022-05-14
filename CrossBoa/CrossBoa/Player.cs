@@ -242,7 +242,7 @@ namespace CrossBoa
             {
                 canFlashTrigger = false;
                 flashAnimFrame = 0;
-                SoundManager.dodgeRegain.Play(.2f, -0.3f, 0);
+                SoundManager.dodgeRegain.Play(.14f, -0.3f, 0);
             }
 
             // Update animations for this frame
