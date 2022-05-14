@@ -178,6 +178,9 @@ namespace CrossBoa
         private Button hardModeButton;
         private Button gameOverButton;
         private static Button[] upgradeButtons;
+        private Button decreaseMusic;
+        private Button increaseMusic;
+        private Button[] musicIncrementVisual;
 
         // Stuff for Upgrade State
         private TextElement levelUpText;
@@ -502,6 +505,25 @@ namespace CrossBoa
             // Game Over Button
             gameOverButton = new Button(mainMenuPressedSprite, mainMenuHoverSprite, true,
                 ScreenAnchor.Center, new Point(0, 30), mainMenuHoverSprite.Bounds.Size * new Point(7) / new Point(20));
+
+            // Volume Buttons
+            decreaseMusic = new Button(floorSprite, whiteSquareSprite, true, ScreenAnchor.BottomRight,
+                new Point(-148, -40), new Point(9, 15));
+
+            decreaseMusic.OnClick += DecreaseMusicVolume;
+
+            increaseMusic = new Button(floorSprite, whiteSquareSprite, true, ScreenAnchor.BottomRight,
+                new Point(-27, -40), new Point(9, 15));
+
+            increaseMusic.OnClick += IncreaseMusicVolume;
+
+            // Volume Sliders
+            musicIncrementVisual = new Button[10];
+            for (int i = 0; i < 10; i++)
+            {
+                musicIncrementVisual[i] = new Button(whiteSquareSprite, whiteSquareSprite, false, ScreenAnchor.BottomRight, 
+                    new Point((int)decreaseMusic.Position.X + 11 + i * 11, (int)decreaseMusic.Position.Y), new Point(9, 15));
+            }
 
             #endregion
 
@@ -1267,6 +1289,8 @@ namespace CrossBoa
             debugButton.Update(gameTime);
             godModeButton.Update(gameTime);
             hardModeButton.Update(gameTime);
+            increaseMusic.Update(gameTime);
+            decreaseMusic.Update(gameTime);
 
             if (mainMenuButton.HasBeenPressed())
             {
@@ -1411,6 +1435,14 @@ namespace CrossBoa
             mainMenuButton.Draw(_spriteBatch);
             debugText.Draw(_spriteBatch);
             debugButton.Draw(_spriteBatch);
+            decreaseMusic.Draw(_spriteBatch);
+            increaseMusic.Draw(_spriteBatch);
+
+            for (int j = 1; (float)(j) / 10 <= SoundManager.MusicVolume && j != 11; j++)
+            {
+                musicIncrementVisual[j - 1].Draw(_spriteBatch);
+            }
+
 
             if (!isHellModeActive)
             {
@@ -1984,6 +2016,30 @@ namespace CrossBoa
             SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 4));
             SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 10));
             SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 10));
+        }
+
+        /// <summary>
+        /// Purpose: Increases the music volume
+        /// Restrictions: Can not go past max volume 
+        /// </summary>
+        public void IncreaseMusicVolume()
+        {
+            if (SoundManager.MusicVolume == 1) return;
+            SoundManager.MusicVolume += .1f;
+            SoundManager.MusicVolume = MathF.Round(SoundManager.MusicVolume, 1);
+        }
+
+        /// <summary>
+        /// Purpose: Decreases the music volume
+        /// Restrictions: Can not lower if already muted
+        /// </summary>
+        public void DecreaseMusicVolume()
+        {
+            if (SoundManager.MusicVolume == 0) return;
+            SoundManager.MusicVolume -= .1f;
+
+            // Necessary because .9 - . 1 = .799982 apparently
+            SoundManager.MusicVolume = MathF.Round(SoundManager.MusicVolume, 1);
         }
     }
 

@@ -193,6 +193,8 @@ namespace CrossBoa.Enemies
             // and un-tireds[sic] the beast if it is.
             if (chargingState == ChargingState.Unnoticed)
             {
+                SoundManager.beastCharge.Play(.4f, 0f, 0f);
+
                 chargingState = ChargingState.Readying;
                 chargeTimer = 0f;
             }
