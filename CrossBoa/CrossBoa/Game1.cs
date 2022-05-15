@@ -109,6 +109,8 @@ namespace CrossBoa
         private Texture2D expBarBackground;
         private Texture2D expBarFillSprite;
         private Texture2D expBarContainerSprite;
+        private Texture2D unpressedVolume;
+        private Texture2D pressedVolume;
 
         // Textures for upgrades
         public static Texture2D UpgradeBloodOrb;
@@ -163,6 +165,8 @@ namespace CrossBoa
         private TextElement thanksText;
         private TextElement specialThanksTitle;
         private TextElement specialThanksText;
+        private TextElement volumeText;
+        private TextElement sfxText;
 
         private TextElement inGameLevelUpText;
 
@@ -406,6 +410,8 @@ namespace CrossBoa
             creditsPressedSprite = Content.Load<Texture2D>("CreditsPressed");
             playAgainHoverSprite = Content.Load<Texture2D>("PlayAgainRegular");
             playAgainPressedSprite = Content.Load<Texture2D>("PlayAgainPressed");
+            unpressedVolume = Content.Load<Texture2D>("UnpressedVolume");
+            pressedVolume = Content.Load<Texture2D>("PressedVolume");
 
             #region Set-Up for Text Elements
             FPSCounter = new TextElement("", ScreenAnchor.BottomRight, new Point(-10, -6));
@@ -430,13 +436,18 @@ namespace CrossBoa
 
             hardModeText = new TextElement("Hard Mode:", ScreenAnchor.RightCenter, new Point(-89, 40), 1.25f);
 
+            volumeText = new TextElement("Music Volume:", ScreenAnchor.BottomRight, new Point(-230, -42), 1.25f);
+
+            sfxText = new TextElement("SFX Volume:", ScreenAnchor.BottomRight, new Point(-220, -22), 1.25f);
+
             hellModeText = new TextElement("Hell Mode:", ScreenAnchor.RightCenter, new Point(-89, 40), 1.25f);
 
             creditsTitle = new TextElement("CREDITS", ScreenAnchor.TopCenter, new Point(0, 20), 3f);
 
             developersTitle = new TextElement("DEVELOPERS", ScreenAnchor.TopCenter, new Point(0, 55), 1.5f);
 
-            developersText = new TextElement("Justin Baez\n\n TacNayn\n\nLeo Schindler-Gerendasi\n\nDonovan Scullion",
+            // All Credits are alphabetical by first name
+            developersText = new TextElement("Donovan Scullion\n\n TacNayn\n\nJustin Baez\n\nLeo Schindler-Gerendasi",
                 ScreenAnchor.TopCenter, new Point(0, 100), 1.2f);
 
             thanksTitle = new TextElement("THANKS TO", ScreenAnchor.TopCenter, new Point(0, 155), 1.5f);
@@ -510,24 +521,24 @@ namespace CrossBoa
                 ScreenAnchor.Center, new Point(0, 30), mainMenuHoverSprite.Bounds.Size * new Point(7) / new Point(20));
 
             // Volume Buttons
-            decreaseMusic = new Button(floorSprite, whiteSquareSprite, true, ScreenAnchor.BottomRight,
-                new Point(-148, -40), new Point(9, 15));
+            decreaseMusic = new Button(pressedVolume, unpressedVolume, true, ScreenAnchor.BottomRight,
+                new Point(-159, -40), new Point(10, 17));
 
             decreaseMusic.OnClick += DecreaseMusicVolume;
 
-            increaseMusic = new Button(floorSprite, whiteSquareSprite, true, ScreenAnchor.BottomRight,
-                new Point(-27, -40), new Point(9, 15));
+            increaseMusic = new Button(pressedVolume, unpressedVolume, true, ScreenAnchor.BottomRight,
+                new Point(-27, -40), new Point(10, 17));
 
             increaseMusic.OnClick += IncreaseMusicVolume;
 
             // Volume Buttons
-            decreaseSFX = new Button(floorSprite, whiteSquareSprite, true, ScreenAnchor.BottomRight,
-                new Point(-148, -20), new Point(9, 15));
+            decreaseSFX = new Button(pressedVolume, unpressedVolume, true, ScreenAnchor.BottomRight,
+                new Point(-159, -20), new Point(10, 17));
 
             decreaseSFX.OnClick += DecreaseSFXVolume;
 
-            increaseSFX = new Button(floorSprite, whiteSquareSprite, true, ScreenAnchor.BottomRight,
-                new Point(-27, -20), new Point(9, 15));
+            increaseSFX = new Button(pressedVolume, unpressedVolume, true, ScreenAnchor.BottomRight,
+                new Point(-27, -20), new Point(10, 17));
 
             increaseSFX.OnClick += IncreaseSFXVolume;
 
@@ -537,10 +548,10 @@ namespace CrossBoa
             for (int i = 0; i < 10; i++)
             {
                 musicIncrementVisual[i] = new Button(whiteSquareSprite, whiteSquareSprite, false, ScreenAnchor.BottomRight, 
-                    new Point((int)decreaseMusic.Position.X + 11 + i * 11, (int)decreaseMusic.Position.Y), new Point(9, 15));
+                    new Point((int)decreaseMusic.Position.X + 12 + i * 12, (int)decreaseMusic.Position.Y), new Point(10, 17));
 
                 sfxIncrementVisual[i] = new Button(whiteSquareSprite, whiteSquareSprite, false, ScreenAnchor.BottomRight,
-                    new Point((int)decreaseSFX.Position.X + 11 + i * 11, (int)decreaseSFX.Position.Y), new Point(9, 15));
+                    new Point((int)decreaseSFX.Position.X + 12 + i * 12, (int)decreaseSFX.Position.Y), new Point(10, 17));
             }
 
             #endregion
@@ -1456,9 +1467,12 @@ namespace CrossBoa
             debugText.Draw(_spriteBatch);
             debugButton.Draw(_spriteBatch);
             decreaseMusic.Draw(_spriteBatch);
-            increaseMusic.Draw(_spriteBatch);
-            increaseSFX.Draw(_spriteBatch);
+            increaseMusic.AdvancedDraw(_spriteBatch, SpriteEffects.FlipHorizontally);
+            increaseSFX.AdvancedDraw(_spriteBatch, SpriteEffects.FlipHorizontally);
             decreaseSFX.Draw(_spriteBatch);
+
+            volumeText.Draw(_spriteBatch);
+            sfxText.Draw(_spriteBatch);
 
             // Volume sliders
             for (int j = 1; (float)(j) / 10 <= SoundManager.MusicVolume && j != 11; j++)
