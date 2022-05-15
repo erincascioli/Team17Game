@@ -812,6 +812,18 @@
 /processorParam:Quality=Best
 /build:Powerup 109 (3).wav
 
+#begin PressedVolume.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PressedVolume.png
+
 #begin RecoveryFlash.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1024,6 +1036,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TreasureChest.png
+
+#begin UnpressedVolume.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UnpressedVolume.png
 
 #begin VeryCrackedWallBottomHalf.png
 /importer:TextureImporter

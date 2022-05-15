@@ -116,6 +116,31 @@ namespace CrossBoa
             }
         }
 
+        public void AdvancedDraw(SpriteBatch spriteBatch, SpriteEffects orientation)
+        {
+            if (hovering)
+            {
+                // If there is no texture assigned, draw the regular sprite larger
+                if (hoverButtonTexture == null)
+                {
+                    spriteBatch.Draw(sprite,
+                        Helper.MakeRectangleFromCenter(Rectangle.Center,
+                            new Vector2(rectangle.Size.X * 1.1f, rectangle.Size.Y * 1.1f).ToPoint()), null,
+                        Color.White, 0, Vector2.Zero, orientation, 0);
+                }
+                else
+                {
+                    // Draw the hover sprite
+                    spriteBatch.Draw(hoverButtonTexture, Rectangle, null, Color.White, 0, Vector2.Zero, orientation, 0);
+                }
+            }
+            else
+            {
+                // Draw the regular sprite
+                spriteBatch.Draw(sprite, Rectangle, null, Color.White, 0, Vector2.Zero, orientation, 0);
+            }
+        }
+
         public void DrawDisabled(SpriteBatch sb)
         {
             sb.Draw(hoverButtonTexture, Rectangle, Color.Gray);
