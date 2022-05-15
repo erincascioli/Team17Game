@@ -372,7 +372,7 @@ namespace CrossBoa
             // Load Player
             player = new Player(
                 snakeSpriteSheet,
-                new Rectangle(gameRenderTarget.Bounds.Center, new Point(56)),
+                new Rectangle(new Point(gameRenderTarget.Bounds.Center.X, gameRenderTarget.Bounds.Center.Y - 64), new Point(56)),
                 DefaultPlayerFriction,
                 DefaultPlayerDodgeCooldown,
                 DefaultPlayerDodgeLength,
@@ -2066,10 +2066,10 @@ namespace CrossBoa
             LevelManager.LoadLevel();
 
             // Temp enemy spawns for starting level
-            SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 4));
-            SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 4));
-            SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 10));
-            SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 10));
+            SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 3));
+            SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 3));
+            SpawnManager.SpawnTarget(new Point(64 * 8, 64 * 9));
+            SpawnManager.SpawnTarget(new Point(64 * 16, 64 * 9));
         }
 
         /// <summary>
