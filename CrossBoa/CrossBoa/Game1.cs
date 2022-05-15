@@ -29,7 +29,7 @@ namespace CrossBoa
         // A render target will make the game render to a much smaller, virtual screen
         //     before scaling it up to the proper window size
         public static RenderTarget2D gameRenderTarget;
-        public static Rectangle gameTargetRect;                 // A rectangle representing the whole window inside the black bars
+        public static Rectangle gameTargetRect; // A rectangle representing the whole window inside the black bars
 
         // Fields
         public static Random RNG = new Random();
