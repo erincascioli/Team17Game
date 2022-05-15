@@ -116,6 +116,12 @@ namespace CrossBoa
             }
         }
 
+        /// <summary>
+        /// Purpose: Allows to draw a button utilizing a spriteffect for direction
+        /// Restrictions: none
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="orientation"></param>
         public void AdvancedDraw(SpriteBatch spriteBatch, SpriteEffects orientation)
         {
             if (hovering)
@@ -163,6 +169,7 @@ namespace CrossBoa
                 return;
             }
 
+            if (!Game1.isSoundOn) return;
             OnClick?.Invoke();
             SoundManager.buttonClick.Play(.1f, 0, 0);
         }

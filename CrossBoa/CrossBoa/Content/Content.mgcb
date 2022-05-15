@@ -860,6 +860,9 @@
 /processorParam:TextureFormat=Color
 /build:Sausage.png
 
+#begin SavedSettingsFile.txt
+/copy:SavedSettingsFile.txt
+
 #begin Scene - The Long Journey.ogg
 /importer:OggImporter
 /processor:SongProcessor

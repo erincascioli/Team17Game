@@ -90,6 +90,12 @@ namespace CrossBoa.Managers
             set { currentLevel = value; }
         }
 
+        public static StreamReader Reader
+        {
+            get { return reader; }
+            set { reader = value; }
+        }
+
         /// <summary>
         /// Whether or not the player has the overclock upgrade unlocked
         /// </summary>

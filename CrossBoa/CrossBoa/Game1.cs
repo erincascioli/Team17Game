@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
@@ -50,6 +51,7 @@ namespace CrossBoa
         public static bool isGodModeActive = false;
         public static bool isHardModeActive = false;
         public static bool isHellModeActive = false;
+        public static bool isSoundOn = false;
 
         private static double levelUpTextTimer;
 
@@ -608,6 +610,9 @@ namespace CrossBoa
             // Title Track starts playing
             MediaPlayer.Play(SoundManager.titleTheme);
             MediaPlayer.IsRepeating = true;
+
+            // Get's users previous settings
+            LoadSettings();
 
             OnResize();
         }
@@ -1408,7 +1413,9 @@ namespace CrossBoa
                 godModeButton.HoverTexture = checkboxUnfilled;
                 hardModeButton.Sprite = checkboxFilled;
                 hardModeButton.HoverTexture = checkboxFilled;
-                SoundManager.beastCharge.Play(.8f, 0, 0);
+
+                if (isSoundOn)
+                    SoundManager.beastCharge.Play(.8f, 0, 0);
             }
             else
             {
@@ -1416,7 +1423,9 @@ namespace CrossBoa
                 hardModeButton.HoverTexture = checkboxUnfilled;
                 isHardModeActive = false;
                 isHellModeActive = false;
-                SoundManager.buttonClick.Play(.1f, 0, 0);
+
+                if (isSoundOn)
+                    SoundManager.buttonClick.Play(.1f, 0, 0);
             }
         }
 
@@ -2106,6 +2115,61 @@ namespace CrossBoa
 
             // Necessary because .9 - . 1 = .799982 apparently
             SoundManager.SFXVolume = MathF.Round(SoundManager.SFXVolume, 1);
+        }
+
+        /// <summary>
+        /// Purpose: Get's and applies the last settings used upon closing the game
+        /// Restrictions: none, as this file should always exist
+        /// </summary>
+        public void LoadSettings()
+        {
+            try
+            {
+                LevelManager.Reader = new StreamReader("Content/SavedSettingsFile.txt");
+
+                // Difficulty
+                switch (LevelManager.Reader.ReadLine())
+                {
+                    case "hard":
+                        ToggleHardMode();
+                        break;
+
+                    case "hell":
+                        ToggleHellMode();
+                        break;
+                }
+
+                // Debug
+                if (bool.Parse(LevelManager.Reader.ReadLine()))
+                {
+                    ToggleDebug();
+                }
+
+                // Invincibility
+                if (bool.Parse(LevelManager.Reader.ReadLine()))
+                {
+                    ToggleGodMode();
+                }
+
+                // Music Volume
+                SoundManager.MusicVolume = float.Parse(LevelManager.Reader.ReadLine());
+
+                // SFX Volume
+                SoundManager.SFXVolume = float.Parse(LevelManager.Reader.ReadLine());
+
+                LevelManager.Reader.Close();
+            }
+            catch (Exception e)
+            {
+                // Specific error can be read in the debug menu
+                Console.WriteLine("Error: {0}", e);
+
+                // Just in case it's open
+                LevelManager.Reader?.Close();
+            }
+
+            // SoundEffects will now play
+            isSoundOn = true;
         }
     }
 
