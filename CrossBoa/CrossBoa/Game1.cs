@@ -1328,10 +1328,9 @@ namespace CrossBoa
             increaseSFX.Update(gameTime);
             decreaseSFX.Update(gameTime);
 
-            if (mainMenuButton.HasBeenPressed())
-            {
-                gameState = GameState.MainMenu;
-            }
+            if (!mainMenuButton.HasBeenPressed()) return;
+            gameState = GameState.MainMenu;
+            SaveSettings();
         }
 
         /// <summary>
@@ -1566,13 +1565,17 @@ namespace CrossBoa
             // Resume if player presses pause key or escape
             if (playButton.HasBeenPressed() ||
                 WasKeyPressed(Keys.Escape))
+            {
                 gameState = GameState.Game;
+                SaveSettings();
+            }
 
             // Update is finished if no button was pressed
             if (!mainMenuButton.HasBeenPressed()) return;
 
             GameOver();
             gameState = GameState.MainMenu;
+            SaveSettings();
 
             // Song Change
             MediaPlayer.Stop();
@@ -2170,6 +2173,43 @@ namespace CrossBoa
 
             // SoundEffects will now play
             isSoundOn = true;
+        }
+
+        /// <summary>
+        /// Purpose: Writes current settings to the file so that they get used upon start-up
+        /// Restrictions: None because file exists by default
+        /// </summary>
+        public void SaveSettings()
+        {
+            StreamWriter writer = new StreamWriter("Content/SavedSettingsFile.txt");
+
+            // Difficulty
+            if (isHellModeActive)
+            {
+                writer.WriteLine("hell");
+            }
+            else if (isHardModeActive)
+            {
+                writer.WriteLine("hard");
+            }
+            else
+            {
+                writer.WriteLine("Normal");
+            }
+
+            // Debug
+            writer.WriteLine(isDebugActive ? "true" : "false");
+
+            // God mode
+            writer.WriteLine(isGodModeActive ? "true" : "false");
+
+            // Music Volume
+            writer.WriteLine(SoundManager.MusicVolume);
+
+            // SFX Volume
+            writer.WriteLine(SoundManager.SFXVolume);
+
+            writer.Close();
         }
     }
 

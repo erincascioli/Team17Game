@@ -1,5 +1,5 @@
-hell
-true
+normal
 false
-.2
-.5
+false
+1
+1
