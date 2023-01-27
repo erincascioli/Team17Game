@@ -19,7 +19,7 @@ namespace CrossBoa
     }
 
     /// <summary>
-    /// Author: Ian Knecht
+    /// Author: TacNayn
     /// Purpose: Allows the user to interact with the game world 
     /// </summary>
     public class Player : PhysicsObject, ICollidable

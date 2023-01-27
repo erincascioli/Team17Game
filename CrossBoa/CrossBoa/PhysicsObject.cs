@@ -10,7 +10,7 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 namespace CrossBoa
 {
     /// <summary>
-    /// Author: Ian Knecht
+    /// Author: TacNayn
     /// <para>A specialized GameObject parent class that contains physics-related fields</para>
     /// </summary>
     public class PhysicsObject : GameObject

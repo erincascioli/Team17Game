@@ -15,7 +15,7 @@ namespace CrossBoa
     public delegate void ArrowReturnHandler();
 
     /// <summary>
-    /// Author: Ian Knecht
+    /// Author: TacNayn
     /// <para>Represents a playerArrow with a rotation and a constant movement speed</para>
     /// </summary>
     public class PlayerArrow : Projectile

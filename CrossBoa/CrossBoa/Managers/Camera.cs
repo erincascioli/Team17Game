@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 namespace CrossBoa
 {
     /// <summary>
-    /// Author: Ian Knecht
+    /// Author: TacNayn
     /// <para>A class that represents the game's camera system</para>
     /// </summary>
     public static class Camera

@@ -449,7 +449,7 @@ namespace CrossBoa
             developersTitle = new TextElement("DEVELOPERS", ScreenAnchor.TopCenter, new Point(0, 55), 1.5f);
 
             // All Credits are alphabetical by first name
-            developersText = new TextElement("Donovan Scullion\n\nIan Knecht\n\nJustin Baez\n\nLeo Schindler-Gerendasi",
+            developersText = new TextElement("Donovan Scullion\n\nTacNayn\n\nJustin Baez\n\nLeo Schindler-Gerendasi",
                 ScreenAnchor.TopCenter, new Point(0, 100), 1.2f);
 
             thanksTitle = new TextElement("THANKS TO", ScreenAnchor.TopCenter, new Point(0, 155), 1.5f);
