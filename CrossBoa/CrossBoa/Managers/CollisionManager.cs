@@ -159,8 +159,6 @@ namespace CrossBoa.Managers
                     // -Donovan
                     // Thanks
                     // -Leo
-                    // I made it even simpler now
-                    // -
                     // I have strike again
                     // -Donovan
                     enemy.GetKnockedBack(tile, 500000);
